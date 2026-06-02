@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCZ Consultoria — Inteligência Comercial Aplicada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #0D1B2A;
+    --navy2:      #162B40;
+    --gold:       #C8922A;
+    --gold-light: #E2AC4C;
+    --gold-aged:  #B7A073;
+    --warm-white: #F0EDED;
+    --cream:      #F5F0E8;
+    --fog:        #D4DDED;
+    --steel:      #9AAABB;
+    --graphite:   #2E2E2E;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--fog);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ─────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    height: 72px;
+    border-bottom: 1px solid rgba(183,160,115,0.15);
+    background: rgba(13,27,42,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--warm-white);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(200,146,42,0.4);
+    padding: 9px 20px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .nav-cta:hover {
+    background: rgba(200,146,42,0.08);
+    border-color: var(--gold);
+  }
+
+  /* ── HERO ─────────────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 5vw 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(183,160,115,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(183,160,115,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    right: -100px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(200,146,42,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--warm-white);
+    max-width: 780px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.4s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-line {
+    width: 60px;
+    height: 1px;
+    background: var(--gold-aged);
+    margin: 2.5rem 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--fog);
+    max-width: 520px;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.75s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    text-decoration: none;
+    font-weight: 400;
+    transition: background 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); }
+
+  .btn-ghost {
+    color: var(--steel);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--warm-white); }
+  .btn-ghost::after { content: '↓'; font-size: 14px; }
+
+  /* ── SECTION BASE ─────────────────────────────── */
+  section { padding: 100px 5vw; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 300;
+    color: var(--warm-white);
+    line-height: 1.15;
+    max-width: 640px;
+  }
+
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ── SOBRE ─────────────────────────────────────── */
+  #sobre { background: var(--navy2); }
+
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6vw;
+    margin-top: 4rem;
+    align-items: start;
+  }
+
+  .sobre-text p {
+    color: var(--fog);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.85;
+    margin-bottom: 1.4rem;
+  }
+
+  .sobre-text p:last-child { margin-bottom: 0; }
+
+  .sobre-text strong {
+    color: var(--warm-white);
+    font-weight: 500;
+  }
+
+  .sobre-pilares {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-left: 1px solid rgba(183,160,115,0.2);
+  }
+
+  .pilar {
+    padding: 1.8rem 2rem;
+    border-bottom: 1px solid rgba(183,160,115,0.1);
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .pilar:last-child { border-bottom: none; }
+  .pilar:hover { background: rgba(200,146,42,0.04); }
+
+  .pilar-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .pilar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--warm-white);
+    margin-bottom: 0.5rem;
+  }
+
+  .pilar-desc {
+    font-size: 14px;
+    color: var(--steel);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── SERVIÇOS ─────────────────────────────────── */
+  #servicos { background: var(--navy); }
+
+  .servicos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 4rem;
+  }
+
+  .servico-card {
+    background: var(--navy2);
+    padding: 3rem 3rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .servico-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--gold);
+    transition: height 0.4s ease;
+  }
+
+  .servico-card:hover::before { height: 100%; }
+  .servico-card:hover { background: rgba(22,43,64,0.95); }
+
+  .servico-icon {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .servico-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--warm-white);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+
+  .servico-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--fog);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .servico-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .servico-items li {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--steel);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .servico-items li::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 1px;
+    background: var(--gold-aged);
+    flex-shrink: 0;
+  }
+
+  /* ── MÉTODO ───────────────────────────────────── */
+  #metodo { background: var(--cream); }
+
+  #metodo .section-label { color: var(--graphite); }
+  #metodo .section-label::before { background: var(--graphite); }
+  #metodo .section-title { color: var(--graphite); }
+  #metodo .section-title em { color: var(--gold); }
+
+  .metodo-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    border-top: 1px solid rgba(46,46,46,0.15);
+  }
+
+  .step {
+    padding: 2.5rem 2rem 2.5rem 0;
+    border-right: 1px solid rgba(46,46,46,0.12);
+    position: relative;
+  }
+
+  .step:first-child { padding-left: 0; }
+  .step:last-child { border-right: none; padding-right: 0; }
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(200,146,42,0.2);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--graphite);
+    margin-bottom: 0.7rem;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: #5a5a5a;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* ── DIFERENCIAIS ─────────────────────────────── */
+  #diferenciais { background: var(--navy2); }
+
+  .diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 4rem;
+    background: rgba(183,160,115,0.1);
+  }
+
+  .diferencial {
+    background: var(--navy2);
+    padding: 2.5rem;
+  }
+
+  .dif-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.2rem;
+  }
+
+  .dif-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--warm-white);
+    margin-bottom: 0.8rem;
+  }
+
+  .dif-desc {
+    font-size: 14px;
+    color: var(--steel);
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* ── CTA CENTRAL ──────────────────────────────── */
+  #cta {
+    background: var(--navy);
+    text-align: center;
+    padding: 120px 5vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(200,146,42,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  #cta .section-label {
+    justify-content: center;
+  }
+
+  #cta .section-label::before { display: none; }
+
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+    font-weight: 300;
+    color: var(--warm-white);
+    line-height: 1.1;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .cta-title em { font-style: italic; color: var(--gold); }
+
+  .cta-sub {
+    font-size: 16px;
+    color: var(--steel);
+    font-weight: 300;
+    max-width: 420px;
+    margin: 0 auto 3rem;
+    line-height: 1.75;
+  }
+
+  /* ── CONTATO ──────────────────────────────────── */
+  #contato { background: var(--navy2); }
+
+  .contato-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6vw;
+    margin-top: 4rem;
+    align-items: start;
+  }
+
+  .contato-info p {
+    font-size: 15px;
+    color: var(--fog);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .contato-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .contato-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .contato-value {
+    font-size: 15px;
+    color: var(--warm-white);
+    font-weight: 300;
+  }
+
+  .contato-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    background: rgba(13,27,42,0.6);
+    border: 1px solid rgba(183,160,115,0.2);
+    color: var(--fog);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    appearance: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: rgba(200,146,42,0.5);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--steel);
+    opacity: 0.5;
+  }
+
+  .form-group textarea { resize: vertical; min-height: 120px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .btn-submit {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 15px 32px;
+    border: none;
+    cursor: pointer;
+    font-weight: 400;
+    transition: background 0.2s;
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .btn-submit:hover { background: var(--gold-light); }
+
+  /* ── FOOTER ───────────────────────────────────── */
+  footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(183,160,115,0.1);
+    padding: 3rem 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--warm-white);
+  }
+
+  .footer-brand span { color: var(--gold); }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--steel);
+    text-align: right;
+  }
+
+  /* ── ANIMATIONS ───────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ───────────────────────────────────── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .sobre-grid,
+    .servicos-grid,
+    .contato-grid { grid-template-columns: 1fr; }
+    .metodo-steps { grid-template-columns: 1fr 1fr; }
+    .diferenciais-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .step { border-right: none; border-bottom: 1px solid rgba(46,46,46,0.12); padding: 2rem 0; }
+    .step:last-child { border-bottom: none; }
+    .hero-actions { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">VC<span>Z</span></a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#metodo">Método</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <a href="#contato" class="nav-cta">Fale conosco</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <p class="hero-eyebrow">Inteligência Comercial Aplicada</p>
+  <h1 class="hero-title">Decisões mais <em>claras.</em><br>Resultados mais sólidos.</h1>
+  <div class="hero-line"></div>
+  <p class="hero-sub">A VCZ transforma dados de mercado em direção estratégica — para que cada decisão comercial seja tomada com método, evidência e critério.</p>
+  <div class="hero-actions">
+    <a href="#servicos" class="btn-primary">Conheça os serviços</a>
+    <a href="#sobre" class="btn-ghost">Sobre a VCZ</a>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <p class="section-label reveal">A consultoria</p>
+  <h2 class="section-title reveal">Rigor de método,<br><em>sem jargão</em> desnecessário.</h2>
+  <div class="sobre-grid">
+    <div class="sobre-text reveal">
+      <p>A VCZ é uma consultoria de <strong>inteligência comercial aplicada</strong>. Existe para transformar dados de mercado em decisões — ajudando empresas a entender onde competir, como crescer e o que priorizar.</p>
+      <p>Não vendemos relatórios. Vendemos <strong>clareza</strong>. Atuamos como parceira analítica — sóbria, confiável e orientada a resultado — que investiga o mercado com o rigor necessário e entrega o que realmente importa para cada decisão.</p>
+      <p>Nossa premissa é simples: incerteza tem custo. Reduzir essa incerteza, com o método correto e no momento certo, é o que separa as empresas que crescem das que reagem.</p>
+    </div>
+    <div class="sobre-pilares reveal">
+      <div class="pilar">
+        <p class="pilar-num">01</p>
+        <p class="pilar-title">Inteligência Comercial</p>
+        <p class="pilar-desc">Organiza e interpreta os sinais do negócio para orientar a estratégia comercial com base em evidências — não em suposições.</p>
+      </div>
+      <div class="pilar">
+        <p class="pilar-num">02</p>
+        <p class="pilar-title">Pesquisa de Mercado</p>
+        <p class="pilar-desc">Investiga o mercado, o cliente e a concorrência para reduzir a incerteza antes de cada movimento estratégico relevante.</p>
+      </div>
+      <div class="pilar">
+        <p class="pilar-num">03</p>
+        <p class="pilar-title">Análise de Contexto</p>
+        <p class="pilar-desc">Lê o ambiente competitivo com critério, identificando o que é ruído e o que é sinal — para que o foco vá ao que importa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <p class="section-label reveal">O que fazemos</p>
+  <h2 class="section-title reveal">Duas frentes.<br><em>Uma direção.</em></h2>
+  <div class="servicos-grid reveal">
+    <div class="servico-card">
+      <p class="servico-icon">01 — Inteligência Comercial</p>
+      <h3 class="servico-title">Do dado ao<br>movimento comercial.</h3>
+      <p class="servico-desc">Estruturamos a leitura dos sinais internos e externos do negócio para que a estratégia comercial seja guiada por critério — não por intuição isolada.</p>
+      <ul class="servico-items">
+        <li>Diagnóstico de performance comercial</li>
+        <li>Mapeamento de oportunidades e ameaças</li>
+        <li>Modelos de priorização e segmentação</li>
+        <li>Painéis de acompanhamento estratégico</li>
+        <li>Inteligência competitiva contínua</li>
+      </ul>
+    </div>
+    <div class="servico-card">
+      <p class="servico-icon">02 — Pesquisa de Mercado</p>
+      <h3 class="servico-title">Menos suposição.<br>Mais <em>evidência.</em></h3>
+      <p class="servico-desc">Investigamos o mercado, o cliente e a concorrência com rigor metodológico — para que cada decisão estratégica parta de uma base sólida.</p>
+      <ul class="servico-items">
+        <li>Pesquisas qualitativas e quantitativas</li>
+        <li>Análise de percepção e posicionamento</li>
+        <li>Estudos de viabilidade e entrada em mercados</li>
+        <li>Mapeamento de jornada e comportamento</li>
+        <li>Benchmarking setorial</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTODO -->
+<section id="metodo">
+  <p class="section-label reveal">Como trabalhamos</p>
+  <h2 class="section-title reveal">Processo claro,<br><em>entrega objetiva.</em></h2>
+  <div class="metodo-steps">
+    <div class="step reveal">
+      <p class="step-num">01</p>
+      <p class="step-title">Escuta</p>
+      <p class="step-desc">Entendemos o contexto, a decisão em jogo e o que a empresa já sabe — antes de propor qualquer análise.</p>
+    </div>
+    <div class="step reveal">
+      <p class="step-num">02</p>
+      <p class="step-title">Investigação</p>
+      <p class="step-desc">Coletamos dados primários e secundários com método rigoroso, priorizando fontes que reduzem incerteza real.</p>
+    </div>
+    <div class="step reveal">
+      <p class="step-num">03</p>
+      <p class="step-title">Síntese</p>
+      <p class="step-desc">Transformamos volume de dado em interpretação aplicável — eliminando ruído e destacando o que orienta a ação.</p>
+    </div>
+    <div class="step reveal">
+      <p class="step-num">04</p>
+      <p class="step-title">Entrega</p>
+      <p class="step-desc">Apresentamos resultados com clareza e contexto, em formato útil para quem decide — não para quem arquiva.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section id="diferenciais">
+  <p class="section-label reveal">Por que a VCZ</p>
+  <h2 class="section-title reveal">O que nos<br><em>distingue.</em></h2>
+  <div class="diferenciais-grid reveal">
+    <div class="diferencial">
+      <p class="dif-num">01</p>
+      <p class="dif-title">Parceira, não fornecedora</p>
+      <p class="dif-desc">Trabalhamos como extensão analítica do time — alinhadas ao contexto do negócio, não ao escopo de um relatório padronizado.</p>
+    </div>
+    <div class="diferencial">
+      <p class="dif-num">02</p>
+      <p class="dif-title">Método com propósito</p>
+      <p class="dif-desc">Cada análise começa pela pergunta que precisa ser respondida — e termina com o que orienta a próxima decisão, não o próximo projeto.</p>
+    </div>
+    <div class="diferencial">
+      <p class="dif-num">03</p>
+      <p class="dif-title">Clareza acima do volume</p>
+      <p class="dif-desc">Entregamos o essencial com precisão. Dashboards não substituem interpretação, e relatórios extensos não substituem síntese.</p>
+    </div>
+    <div class="diferencial">
+      <p class="dif-num">04</p>
+      <p class="dif-title">Rigor sem complexidade desnecessária</p>
+      <p class="dif-desc">Usamos o método correto para cada problema — sem jargão que esconda insegurança nem simplificação que perca a nuance.</p>
+    </div>
+    <div class="diferencial">
+      <p class="dif-num">05</p>
+      <p class="dif-title">Independência analítica</p>
+      <p class="dif-desc">Não temos produto a vender nem solução predefinida. A conclusão segue a evidência — mesmo quando ela contradiz a hipótese inicial.</p>
+    </div>
+    <div class="diferencial">
+      <p class="dif-num">06</p>
+      <p class="dif-title">Orientação a resultado</p>
+      <p class="dif-desc">O sucesso de um projeto não se mede pela qualidade do deck — mas pela qualidade da decisão que ele tornou possível.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-glow"></div>
+  <p class="section-label reveal">Próximo passo</p>
+  <h2 class="cta-title reveal">Sua próxima decisão<br>merece <em>mais contexto.</em></h2>
+  <p class="cta-sub reveal">Conte o desafio que enfrenta. Avaliamos juntos onde a inteligência comercial pode reduzir a incerteza e ampliar a clareza estratégica.</p>
+  <a href="#contato" class="btn-primary reveal">Iniciar conversa</a>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <p class="section-label reveal">Contato</p>
+  <h2 class="section-title reveal">Vamos <em>conversar.</em></h2>
+  <div class="contato-grid">
+    <div class="contato-info reveal">
+      <p>Trabalhamos com empresas que enfrentam decisões com alto custo de erro — e querem reduzi-lo com método e critério, não com volume de dado.</p>
+      <div class="contato-item">
+        <p class="contato-label">E-mail</p>
+        <p class="contato-value">contato@vczconsultoria.com.br</p>
+      </div>
+      <div class="contato-item">
+        <p class="contato-label">LinkedIn</p>
+        <p class="contato-value">VCZ Consultoria</p>
+      </div>
+      <div class="contato-item">
+        <p class="contato-label">Localização</p>
+        <p class="contato-value">Brasil — atendimento remoto e presencial</p>
+      </div>
+    </div>
+    <form class="contato-form reveal" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group">
+          <label for="empresa">Empresa</label>
+          <input type="text" id="empresa" placeholder="Sua empresa">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="form-group">
+        <label for="assunto">Área de interesse</label>
+        <select id="assunto">
+          <option value="" disabled selected>Selecione</option>
+          <option>Inteligência Comercial</option>
+          <option>Pesquisa de Mercado</option>
+          <option>Ambas as frentes</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mensagem">Contexto</label>
+        <textarea id="mensagem" placeholder="Descreva brevemente o desafio ou a decisão em jogo..." required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Enviar mensagem</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-brand">VC<span>Z</span> Consultoria</p>
+  <p class="footer-copy">© 2025 VCZ Consultoria<br>Inteligência Comercial Aplicada</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Mensagem enviada';
+    btn.style.background = '#2a6040';
+    btn.style.color = '#d4edda';
+    setTimeout(() => {
+      btn.textContent = 'Enviar mensagem';
+      btn.style.background = '';
+      btn.style.color = '';
+      e.target.reset();
+    }, 3000);
+  }
+</script>
+</body>
+</html>
