@@ -109,11 +109,11 @@
 
   /* ── HERO ─────────────────────────────────────── */
   #hero {
-    min-height: 100vh;
+    min-height: 88vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 120px 5vw 80px;
+    padding: 90px 5vw 56px;
     position: relative;
     overflow: hidden;
   }
@@ -161,13 +161,36 @@
     flex-shrink: 0;
   }
 
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 54% 46%;
+    gap: 3vw;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1s;
+  }
+
+  .hero-logo-large {
+    width: 130%;
+    max-width: 620px;
+    opacity: 0.14;
+    transform: translateX(8%);
+  }
+
   .hero-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.8rem, 6.5vw, 6rem);
+    font-size: clamp(2.2rem, 4.2vw, 4.8rem);
     font-weight: 300;
-    line-height: 1.08;
+    line-height: 1.1;
     color: var(--warm-white);
-    max-width: 820px;
     opacity: 0;
     animation: fadeUp 0.9s ease forwards 0.4s;
   }
@@ -176,8 +199,6 @@
     font-style: italic;
     color: var(--gold);
   }
-
-  .hero-title .nowrap { white-space: nowrap; }
 
   .hero-line {
     width: 60px;
@@ -240,7 +261,7 @@
   .btn-ghost::after { content: '↓'; font-size: 14px; }
 
   /* ── SECTION BASE ─────────────────────────────── */
-  section { padding: 100px 5vw; }
+  section { padding: 68px 5vw; }
 
   .section-label {
     font-family: 'DM Mono', monospace;
@@ -278,10 +299,9 @@
 
   .sobre-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6vw;
-    margin-top: 4rem;
-    align-items: start;
+    grid-template-columns: 46% 50%;
+    gap: 4vw;
+    align-items: center;
   }
 
   .sobre-text p {
@@ -298,6 +318,84 @@
     color: var(--warm-white);
     font-weight: 500;
   }
+
+  .sobre-servicos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-self: start;
+  }
+
+  .sobre-servico-card {
+    background: var(--cream);
+    padding: 1.6rem 1.4rem 1.8rem;
+    border-top: 2px solid var(--gold);
+  }
+
+  .sobre-servico-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.8rem;
+  }
+
+  .sobre-servico-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+
+  .sobre-servico-icon { color: var(--gold); }
+
+  .sobre-servico-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--graphite);
+    margin-bottom: 0.6rem;
+  }
+
+  .sobre-servico-desc {
+    font-size: 13px;
+    color: #5a5a5a;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(46,46,46,0.1);
+  }
+
+  .sobre-servico-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .sobre-servico-items li {
+    font-size: 12px;
+    color: #888;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .sobre-servico-items li.destaque {
+    color: var(--graphite);
+    font-weight: 400;
+  }
+
+  .sobre-servico-items li::before {
+    content: '—';
+    color: var(--gold-aged);
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  .sobre-servico-items li.destaque::before { color: var(--gold); }
 
   .sobre-pilares {
     display: flex;
@@ -339,30 +437,73 @@
     line-height: 1.7;
   }
 
-  /* ── FRENTE ───────────────────────────────────── */
-  #frente { background: var(--navy); }
+  /* ── ENTREGÁVEIS ─────────────────────────────── */
+  #entregas { background: var(--navy); padding: 52px 5vw; }
 
-  .frente-grid {
+  .entregas-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6vw;
-    margin-top: 4rem;
-    align-items: start;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 2rem;
+    border-top: 1px solid rgba(183,160,115,0.15);
   }
 
-  .frente-text p {
-    color: var(--fog);
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 1.85;
-    margin-bottom: 1.4rem;
+  .entrega {
+    padding: 1.4rem 1.4rem 1.4rem 1rem;
+    border-left: 2px solid var(--gold);
+    border-right: 1px solid rgba(183,160,115,0.12);
   }
 
-  .frente-text p:last-child { margin-bottom: 0; }
+  .entrega:last-child { border-right: none; }
 
-  .frente-text strong {
+  .entrega-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--warm-white);
-    font-weight: 500;
+    margin-bottom: 0.5rem;
+    line-height: 1.35;
+  }
+
+  .entrega-desc {
+    font-size: 12.5px;
+    color: var(--steel);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── FRENTE ───────────────────────────────────── */
+  #frente { background: var(--cream); }
+
+  #frente .section-label { color: var(--graphite); }
+  #frente .section-label::before { background: var(--graphite); }
+  #frente .section-title { color: var(--graphite); }
+  #frente .section-title em { color: var(--gold); }
+
+  .frente-texto {
+    max-width: 860px;
+    margin-top: 2.5rem;
+  }
+
+  .frente-texto p {
+    color: #3a3a3a;
+    font-weight: 300;
+    font-size: 15.5px;
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+
+  .frente-texto p:last-child { margin-bottom: 0; }
+
+  .frente-texto strong {
+    color: var(--graphite);
+    font-weight: 600;
+  }
+
+  .frente-resumo {
+    font-style: italic;
+    color: #777 !important;
+    font-size: 14px !important;
+    margin-top: 0.5rem;
   }
 
   .frente-stats {
@@ -836,6 +977,8 @@
     .step { border-right: none; border-bottom: 1px solid rgba(183,160,115,0.12); padding: 2rem 0; }
     .step:last-child { border-bottom: none; }
     .hero-actions { flex-direction: column; align-items: flex-start; }
+    .hero-layout { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
   }
 </style>
 </head>
@@ -849,8 +992,6 @@
   <ul class="nav-links">
     <li><a href="#sobre">Sobre</a></li>
     <li><a href="#frente">Experiência</a></li>
-    <li><a href="#servicos">Serviços</a></li>
-    <li><a href="#metodo">Método</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
   <a href="#contato" class="nav-cta">Fale conosco</a>
@@ -860,42 +1001,100 @@
 <section id="hero">
   <div class="hero-grid-bg"></div>
   <div class="hero-glow"></div>
-  <p class="hero-eyebrow">Inteligência Comercial Aplicada</p>
-  <h1 class="hero-title"><span class="nowrap">Decisões mais <em>claras.</em></span> Resultados mais sólidos.</h1>
-  <div class="hero-line"></div>
-  <p class="hero-sub">A VCZ transforma dados de mercado em direção estratégica — para que cada decisão comercial seja tomada com método, evidência e critério. Atuamos em varejo, indústria e e-commerce, em todo o Brasil.</p>
-  <div class="hero-actions">
-    <a href="#servicos" class="btn-primary">Conheça os serviços</a>
-    <a href="#sobre" class="btn-ghost">Sobre a VCZ</a>
+  <div class="hero-layout">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Inteligência Comercial Aplicada</p>
+      <h1 class="hero-title">Decisões mais <em>claras.</em><br>Resultados mais sólidos.</h1>
+      <div class="hero-line"></div>
+      <p class="hero-sub">A VCZ transforma dados de mercado em direção estratégica — para que cada decisão comercial seja tomada com método, evidência e critério. Atuamos em varejo, indústria e e-commerce, em todo o Brasil.</p>
+      <div class="hero-actions">
+        <a href="#servicos" class="btn-primary">Conheça os serviços</a>
+        <a href="#sobre" class="btn-ghost">Sobre a VCZ</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="logo-mark.svg" alt="" aria-hidden="true" class="hero-logo-large">
+    </div>
   </div>
 </section>
 
 <!-- SOBRE -->
 <section id="sobre">
-  <p class="section-label reveal">A consultoria</p>
-  <h2 class="section-title reveal">Rigor de método,<br><em>sem jargão</em> desnecessário.</h2>
   <div class="sobre-grid">
-    <div class="sobre-text reveal">
-      <p>A VCZ é uma consultoria de <strong>inteligência comercial aplicada</strong>. Existe para transformar dados de mercado em decisões — ajudando empresas a entender onde competir, como crescer e o que priorizar.</p>
-      <p>Não vendemos relatórios. Vendemos <strong>clareza</strong>. Atuamos como parceira analítica — sóbria, confiável e orientada a resultado — que investiga o mercado com o rigor necessário e entrega o que realmente importa para cada decisão.</p>
-      <p>Nossa premissa é simples: incerteza tem custo. Reduzir essa incerteza, com o método correto e no momento certo, é o que separa as empresas que crescem das que reagem.</p>
+    <div>
+      <p class="section-label reveal">A consultoria</p>
+      <h2 class="section-title reveal">Da visão de mercado<br>à <em>decisão certa.</em></h2>
+      <div class="sobre-text reveal" style="margin-top: 2rem;">
+        <p>A VCZ é uma consultoria especializada em <strong>inteligência comercial</strong>, <strong>pesquisa de mercado</strong> e <strong>desenvolvimento de JBP</strong> para empresas que querem crescer de forma sustentável.</p>
+        <p>Transformamos dados e visão de mercado em estratégia aplicada — com foco em <strong>performance de vendas</strong>, <strong>rentabilidade</strong> e <strong>posicionamento estratégico</strong>.</p>
+        <p>Da pesquisa de mercado à inteligência comercial aplicada, atuamos em todo o ciclo analítico — com método, evidência e foco no que gera resultado real para o negócio.</p>
+      </div>
     </div>
-    <div class="sobre-pilares reveal">
-      <div class="pilar">
-        <p class="pilar-num">01</p>
-        <p class="pilar-title">Inteligência Comercial</p>
-        <p class="pilar-desc">Organiza e interpreta os sinais do negócio para orientar a estratégia comercial com base em evidências — não em suposições.</p>
+    <div>
+      <p class="section-label reveal">Sobre os produtos</p>
+      <div class="sobre-servicos reveal" style="margin-top: 1.2rem;">
+      <div class="sobre-servico-card">
+        <div class="sobre-servico-header">
+          <span class="sobre-servico-num">01</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <p class="sobre-servico-title">Inteligência Comercial</p>
+        <p class="sobre-servico-desc">Análise da operação para identificar onde o negócio pode crescer mais, com mais margem e consistência.</p>
+        <ul class="sobre-servico-items">
+          <li class="destaque">Análise de resultado e rentabilidade</li>
+          <li>Estratégia e análise de precificação</li>
+          <li>Mix e qualificação do portfólio</li>
+          <li class="destaque">Dashboards gerenciais e visualizações</li>
+          <li>Análise de projetos piloto</li>
+          <li class="destaque">Forecast e diarização de vendas</li>
+          <li>Monitoramento de metas</li>
+        </ul>
       </div>
-      <div class="pilar">
-        <p class="pilar-num">02</p>
-        <p class="pilar-title">Pesquisa de Mercado</p>
-        <p class="pilar-desc">Investiga o mercado, o cliente e a concorrência para reduzir a incerteza antes de cada movimento estratégico relevante.</p>
+      <div class="sobre-servico-card">
+        <div class="sobre-servico-header">
+          <span class="sobre-servico-num">02</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <p class="sobre-servico-title">Pesquisa de Mercado</p>
+        <p class="sobre-servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades.</p>
+        <ul class="sobre-servico-items">
+          <li class="destaque">Comportamento e jornada do consumidor</li>
+          <li>Percepção de marca e produtos</li>
+          <li>Alinhamento e validação de estratégia</li>
+          <li class="destaque">Análise da dinâmica competitiva</li>
+          <li>Inteligência estratégica e cenários</li>
+          <li>Análises recorrentes de mercado</li>
+          <li>Benchmarks setoriais</li>
+        </ul>
       </div>
-      <div class="pilar">
-        <p class="pilar-num">03</p>
-        <p class="pilar-title">Análise de Contexto</p>
-        <p class="pilar-desc">Lê o ambiente competitivo com critério, identificando o que é ruído e o que é sinal — para que o foco vá ao que importa.</p>
-      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENTREGÁVEIS ANALÍTICOS -->
+<section id="entregas">
+  <p class="section-label reveal">Entregáveis Analíticos</p>
+  <div class="entregas-grid reveal">
+    <div class="entrega">
+      <p class="entrega-title">Dashboards & Visualizações</p>
+      <p class="entrega-desc">Visão gerencial clara para facilitar a tomada de decisão no dia a dia.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">Forecast & Diarização</p>
+      <p class="entrega-desc">Projeções e ritmo diário para saber se as vendas estão alinhadas à meta.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">Estratégia de Precificação</p>
+      <p class="entrega-desc">Análise de preço alinhada à estratégia e ao mercado, com foco em rentabilizar o portfólio.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">Mix & Portfólio</p>
+      <p class="entrega-desc">Revisão do mix para que cada produto tenha papel claro e contribua com a estratégia.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">100% Personalizado</p>
+      <p class="entrega-desc">Cada entregável construído sob medida para a realidade e o contexto do cliente.</p>
     </div>
   </div>
 </section>
@@ -904,154 +1103,16 @@
 <section id="frente">
   <p class="section-label reveal">Quem está à frente</p>
   <h2 class="section-title reveal">Experiência de quem<br><em>viveu</em> o mercado.</h2>
-  <div class="frente-grid">
-    <div class="frente-text reveal">
-      <p>A VCZ é conduzida por <strong>Augusto Luiz</strong>, profissional com mais de <strong>8 anos de experiência</strong> em inteligência comercial — construída na prática, no varejo, na indústria e no e-commerce.</p>
-      <p>No varejo, atuou como especialista em inteligência comercial no <strong>Grupo Koch</strong>, 8ª maior rede supermercadista do Brasil, sendo responsável por JBP, análises de mercado, performance comercial, rentabilidade, precificação, qualificação de sortimento, forecast e dashboards gerenciais.</p>
-      <p>Na indústria, experiência com <strong>dados Nielsen</strong>, pesquisa de mercado, performance comercial, precificação, qualificação de portfólio, planejamento de demanda e forecast de vendas.</p>
-      <p>Além da análise estratégica, capacidade técnica para <strong>desenvolver dashboards e projetos analíticos customizados</strong> — transformando dados brutos de mercado em instrumentos visuais de decisão, sob medida para cada realidade.</p>
-    </div>
-    <div class="frente-stats reveal">
-      <div class="stat">
-        <p class="stat-num">8+</p>
-        <p class="stat-label">Anos de experiência</p>
-      </div>
-      <div class="stat">
-        <p class="stat-num">3</p>
-        <p class="stat-label">Setores de atuação</p>
-      </div>
-      <div class="stat">
-        <p class="stat-num">100%</p>
-        <p class="stat-label">Projetos personalizados</p>
-      </div>
-      <div class="stat">
-        <p class="stat-num">BR</p>
-        <p class="stat-label">Atendimento nacional</p>
-      </div>
-    </div>
+  <div class="frente-texto reveal">
+    <p><strong>Augusto Luiz</strong> está à frente da VCZ — especialista em inteligência comercial com mais de 8 anos de experiência construída na prática, no varejo, na indústria e no e-commerce.</p>
+    <p><strong>No varejo</strong>, especialista em inteligência comercial no <strong>Grupo Koch</strong>, 8ª maior rede supermercadista do Brasil — responsável pelo <strong>JBP</strong>, <strong>análises de mercado</strong>, <strong>performance comercial</strong>, <strong>rentabilidade</strong>, <strong>precificação</strong>, qualificação de sortimento, <strong>forecast</strong> e <strong>dashboards gerenciais</strong>. Trabalhou ainda com <strong>dados Nielsen</strong> e <strong>pesquisa de mercado</strong> aplicada à estratégia e ao posicionamento competitivo.</p>
+    <p><strong>Na indústria</strong>, experiência em <strong>pesquisa de mercado</strong>, <strong>performance comercial</strong>, <strong>precificação</strong>, qualificação de portfólio, <strong>planejamento de demanda</strong>, análise de ruptura e <strong>forecast de vendas</strong>.</p>
+    <p class="frente-resumo">Mais de 8 anos de experiência em varejo, indústria e e-commerce, com especialização em inteligência comercial.</p>
   </div>
 </section>
 
-<!-- SERVIÇOS -->
-<section id="servicos">
-  <p class="section-label reveal">O que fazemos</p>
-  <h2 class="section-title reveal">Duas frentes.<br><em>Uma direção.</em></h2>
-  <div class="servicos-grid reveal">
-    <div class="servico-card">
-      <p class="servico-icon">01 — Inteligência Comercial</p>
-      <h3 class="servico-title">Do dado ao<br>movimento comercial.</h3>
-      <p class="servico-desc">Estruturamos a leitura dos sinais internos e externos do negócio para que a estratégia comercial seja guiada por critério — não por intuição isolada. Inclui performance comercial, precificação, portfólio e dashboards gerenciais.</p>
-      <ul class="servico-items">
-        <li>Análise de resultado e rentabilidade</li>
-        <li>Estratégia e análise de precificação</li>
-        <li>Mix e qualificação do portfólio</li>
-        <li>Dashboards gerenciais e visualizações</li>
-        <li>Forecast e diarização de vendas</li>
-        <li>Monitoramento e desenvolvimento de metas</li>
-        <li>Análise de projetos piloto</li>
-      </ul>
-      <div class="servico-subsection">
-        <p class="servico-subtitle">JBP — Joint Business Plan</p>
-        <ul class="servico-items">
-          <li>Plano conjunto estruturado</li>
-          <li>Definição de KPIs compartilhados</li>
-          <li>Relatórios periódicos de performance</li>
-          <li>Acompanhamento e revisão do plano</li>
-          <li>Facilitação das reuniões de negócio</li>
-        </ul>
-      </div>
-    </div>
-    <div class="servico-card">
-      <p class="servico-icon">02 — Pesquisa de Mercado</p>
-      <h3 class="servico-title">Menos suposição.<br>Mais <em>evidência.</em></h3>
-      <p class="servico-desc">Investigamos o mercado, o consumidor e a concorrência com rigor metodológico — para que cada decisão estratégica parta de uma base sólida e reduzindo a incerteza antes de cada movimento relevante.</p>
-      <ul class="servico-items">
-        <li>Comportamento e jornada do consumidor</li>
-        <li>Percepção de marca e produtos</li>
-        <li>Alinhamento e validação de estratégia</li>
-        <li>Análise da dinâmica competitiva</li>
-        <li>Inteligência estratégica e cenários</li>
-        <li>Análises recorrentes de mercado</li>
-        <li>Benchmarks setoriais</li>
-      </ul>
-    </div>
-  </div>
-</section>
 
-<!-- MÉTODO -->
-<section id="metodo">
-  <p class="section-label reveal">Como trabalhamos</p>
-  <h2 class="section-title reveal">Processo claro,<br><em>entrega objetiva.</em></h2>
-  <div class="metodo-steps">
-    <div class="step reveal">
-      <p class="step-num">01</p>
-      <p class="step-title">Escuta</p>
-      <p class="step-desc">Entendemos o contexto, a decisão em jogo e o que a empresa já sabe — antes de propor qualquer análise.</p>
-    </div>
-    <div class="step reveal">
-      <p class="step-num">02</p>
-      <p class="step-title">Investigação</p>
-      <p class="step-desc">Coletamos dados primários e secundários com método rigoroso, priorizando fontes que reduzem incerteza real.</p>
-    </div>
-    <div class="step reveal">
-      <p class="step-num">03</p>
-      <p class="step-title">Síntese</p>
-      <p class="step-desc">Transformamos volume de dado em interpretação aplicável — eliminando ruído e destacando o que orienta a ação.</p>
-    </div>
-    <div class="step reveal">
-      <p class="step-num">04</p>
-      <p class="step-title">Entrega</p>
-      <p class="step-desc">Apresentamos resultados com clareza e contexto, em formato útil para quem decide — não para quem arquiva.</p>
-    </div>
-  </div>
-</section>
 
-<!-- DIFERENCIAIS -->
-<section id="diferenciais">
-  <p class="section-label reveal">Por que a VCZ</p>
-  <h2 class="section-title reveal">O que nos<br><em>distingue.</em></h2>
-  <div class="diferenciais-grid reveal">
-    <div class="diferencial">
-      <p class="dif-num">01</p>
-      <p class="dif-title">Parceira, não fornecedora</p>
-      <p class="dif-desc">Trabalhamos como extensão analítica do time — alinhadas ao contexto do negócio, não ao escopo de um relatório padronizado.</p>
-    </div>
-    <div class="diferencial">
-      <p class="dif-num">02</p>
-      <p class="dif-title">Método com propósito</p>
-      <p class="dif-desc">Cada análise começa pela pergunta que precisa ser respondida — e termina com o que orienta a próxima decisão, não o próximo projeto.</p>
-    </div>
-    <div class="diferencial">
-      <p class="dif-num">03</p>
-      <p class="dif-title">Clareza acima do volume</p>
-      <p class="dif-desc">Entregamos o essencial com precisão. Dashboards não substituem interpretação, e relatórios extensos não substituem síntese.</p>
-    </div>
-    <div class="diferencial">
-      <p class="dif-num">04</p>
-      <p class="dif-title">Rigor sem complexidade desnecessária</p>
-      <p class="dif-desc">Usamos o método correto para cada problema — sem jargão que esconda insegurança nem simplificação que perca a nuance.</p>
-    </div>
-    <div class="diferencial">
-      <p class="dif-num">05</p>
-      <p class="dif-title">Independência analítica</p>
-      <p class="dif-desc">Não temos produto a vender nem solução predefinida. A conclusão segue a evidência — mesmo quando ela contradiz a hipótese inicial.</p>
-    </div>
-    <div class="diferencial">
-      <p class="dif-num">06</p>
-      <p class="dif-title">Orientação a resultado</p>
-      <p class="dif-desc">O sucesso de um projeto não se mede pela qualidade do deck — mas pela qualidade da decisão que ele tornou possível.</p>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section id="cta">
-  <div class="cta-glow"></div>
-  <p class="section-label reveal">Próximo passo</p>
-  <h2 class="cta-title reveal">Sua próxima decisão<br>merece <em>mais contexto.</em></h2>
-  <p class="cta-sub reveal">Conte o desafio que enfrenta. Avaliamos juntos onde a inteligência comercial pode reduzir a incerteza e ampliar a clareza estratégica.</p>
-  <a href="#contato" class="btn-primary reveal">Iniciar conversa</a>
-</section>
 
 <!-- CONTATO -->
 <section id="contato">
