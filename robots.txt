@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vczconsultoria.com.br/sitemap.xml

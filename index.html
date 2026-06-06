@@ -1,31 +1,94 @@
 <!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  VCZ CONSULTORIA — Site institucional                        ║
+  ║  vczconsultoria.com.br                                       ║
+  ╚══════════════════════════════════════════════════════════════╝
+
+  TECNOLOGIA
+  ──────────
+  Site estático em HTML/CSS/JS puro, hospedado no GitHub Pages.
+  Sem frameworks ou dependências externas (exceto Google Fonts).
+  Deploy automático a cada git push na branch master.
+
+  ESTRUTURA DE ARQUIVOS
+  ──────────────────────
+  index.html              → Página principal (PT-BR) ← VOCÊ ESTÁ AQUI
+  en/index.html           → Versão em inglês
+  es/index.html           → Versão em espanhol
+  insights/index.html     → Listagem de conteúdos e estudos
+  insights/*.html         → Artigos individuais
+  privacidade.html        → Política de Privacidade (PT)
+  en/privacy.html         → Privacy Policy (EN)
+  es/privacidad.html      → Política de Privacidad (ES)
+  termos.html             → Termos de Uso
+  sitemap.xml             → Mapa do site para o Google
+  robots.txt              → Permissões de rastreamento para buscadores
+
   POLÍTICA DE IDIOMAS
   ───────────────────
   Esta é a PÁGINA-MÃE em Português (PT-BR).
   Qualquer nova funcionalidade, seção ou alteração de conteúdo
   deve ser VALIDADA AQUI PRIMEIRO antes de ser replicada para EN e ES.
 
-  Estrutura:
-    PT (principal) → /index.html          (vczconsultoria.com.br/)
-    EN (inglês)    → /en/index.html       (vczconsultoria.com.br/en/)
-    ES (espanhol)  → /es/index.html       (vczconsultoria.com.br/es/)
+  FORMULÁRIO DE CONTATO
+  ─────────────────────
+  Usa Formspree (formspree.io/f/mojzjllq) para envio sem backend.
+  Os dados chegam no e-mail vcz.grupo@gmail.com.
+  Para trocar o destino: criar novo form em formspree.io e atualizar o ID.
+
+  SEÇÕES DA PÁGINA (ordem de exibição)
+  ──────────────────────────────────────
+  1. NAV        → Navegação fixa no topo com menu hambúrguer mobile
+  2. HERO       → Banner principal com título e CTAs
+  3. SOBRE      → Apresentação da consultoria e cards de serviços
+  4. ENTREGAS   → Grid de 5 entregáveis analíticos
+  5. FRENTE     → Biografia do Augusto Luiz
+  6. CONTATO    → Formulário + informações de contato
+  7. FOOTER     → Rodapé com links legais
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ── SEO BÁSICO ─────────────────────────────────────────────────
+     title      → Título azul clicável no Google (max ~60 chars)
+     description → Texto cinza abaixo do título (max ~155 chars)
+     keywords   → Lista de termos — ajuda buscadores a categorizar
+──────────────────────────────────────────────────────────────── -->
 <title>VCZ Consultoria — Inteligência Comercial Aplicada</title>
-<meta name="description" content="VCZ Consultoria: inteligência comercial aplicada, pesquisa de mercado e JBP (Joint Business Plan) para varejo, indústria e e-commerce. Dashboards gerenciais, forecast, precificação e consultoria de performance.">
-<meta name="keywords" content="consultoria comercial, inteligência comercial, pesquisa de mercado, JBP, joint business plan, JVC, dashboard gerencial, construção de dashboards, consultoria de performance, performance de vendas, precificação, forecast, planejamento de demanda, análise de mercado, análise de ruptura, qualificação de portfólio, sortimento, rentabilidade, share de mercado, sell-in, sell-out, dados Nielsen, FMCG, varejo, indústria, e-commerce, varejo alimentar, supermercado, estratégia comercial, posicionamento estratégico, consultoria brasil">
+<meta name="description" content="VCZ Consultoria em Curitiba e Santa Catarina: inteligência comercial aplicada, pesquisa de mercado e JBP para varejo, indústria e e-commerce. Atendimento em todo o Brasil.">
+<meta name="keywords" content="consultoria comercial, inteligência comercial, pesquisa de mercado, JBP, joint business plan, JVC, dashboard gerencial, construção de dashboards, consultoria de performance, performance de vendas, precificação, forecast, planejamento de demanda, análise de mercado, análise de ruptura, qualificação de portfólio, sortimento, rentabilidade, share de mercado, sell-in, sell-out, dados Nielsen, FMCG, varejo, indústria, e-commerce, varejo alimentar, supermercado, estratégia comercial, posicionamento estratégico, consultoria brasil, consultoria curitiba, consultoria paraná, consultoria PR, consultoria santa catarina, consultoria SC, consultoria balneário camboriú, inteligência comercial curitiba, pesquisa de mercado curitiba, consultoria varejo curitiba, consultoria indústria curitiba">
+
+<!-- ── OPEN GRAPH (compartilhamento em redes sociais) ─────────────
+     Controla como o link aparece ao ser compartilhado no
+     WhatsApp, LinkedIn, Facebook, Instagram etc.
+     og:image → Imagem de preview (ideal: 1200x630px)
+     Para trocar a imagem: substituir logo.png por uma capa personalizada
+──────────────────────────────────────────────────────────────── -->
 <meta property="og:title" content="VCZ Consultoria — Inteligência Comercial Aplicada">
 <meta property="og:description" content="Inteligência comercial aplicada, pesquisa de mercado e JBP para varejo, indústria e e-commerce. Dashboards, forecast e consultoria de performance.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://vczconsultoria.com.br">
+<meta property="og:image" content="https://vczconsultoria.com.br/logo.png">
+<meta property="og:image:alt" content="VCZ Consultoria — Inteligência Comercial Aplicada">
 <meta property="og:locale" content="pt_BR">
+
+<!-- ── TWITTER / X CARD ──────────────────────────────────────────
+     Controla o preview ao compartilhar no Twitter/X
+──────────────────────────────────────────────────────────────── -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VCZ Consultoria — Inteligência Comercial Aplicada">
 <meta name="twitter:description" content="Inteligência comercial, pesquisa de mercado e JBP para varejo, indústria e e-commerce. Dashboards, forecast e consultoria de performance.">
+<meta name="twitter:image" content="https://vczconsultoria.com.br/logo.png">
+
+<!-- ── METADADOS TÉCNICOS ─────────────────────────────────────────
+     robots    → Permite que o Google indexe e siga links
+     canonical → URL oficial da página (evita conteúdo duplicado)
+     hreflang  → Informa ao Google as versões em outros idiomas
+     google-site-verification → Confirma propriedade no Search Console
+──────────────────────────────────────────────────────────────── -->
 <meta name="author" content="VCZ Consultoria">
 <meta name="language" content="pt-BR">
 <meta name="geo.region" content="BR">
@@ -33,13 +96,19 @@
 <meta name="google-site-verification" content="nHUFLIz2n74qZW-XwU84bP7hlSYp_w0NH8px7BOjKIw">
 <link rel="canonical" href="https://vczconsultoria.com.br/">
 <link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/">
-<link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/">
-<link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/">
+<link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/">
+<link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/">
 <link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
+<!-- ── SCHEMA.ORG — DADOS ESTRUTURADOS DO NEGÓCIO ────────────────
+     Bloco invisível para visitantes, lido pelo Google para
+     entender quem é a empresa. Alimenta o Knowledge Panel,
+     buscas locais e resultados enriquecidos.
+     Para atualizar: editar os campos abaixo conforme necessário.
+──────────────────────────────────────────────────────────────── -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
+  "@type": ["ProfessionalService", "LocalBusiness"],
   "name": "VCZ Consultoria",
   "alternateName": "VCZ Consultoria Comercial",
   "description": "Consultoria especializada em inteligência comercial, pesquisa de mercado e Joint Business Plan (JBP) para varejo, indústria e e-commerce. Desenvolvimento de dashboards gerenciais, forecast de vendas, precificação e consultoria de performance comercial.",
@@ -48,9 +117,10 @@
   "email": "contato@vczconsultoria.com.br",
   "areaServed": { "@type": "Country", "name": "Brasil" },
   "address": [
-    { "@type": "PostalAddress", "addressLocality": "Curitiba", "addressRegion": "PR", "addressCountry": "BR" },
-    { "@type": "PostalAddress", "addressLocality": "Balneário Camboriú", "addressRegion": "SC", "addressCountry": "BR" }
+    { "@type": "PostalAddress", "addressLocality": "Curitiba", "addressRegion": "Paraná", "addressCountry": "BR" },
+    { "@type": "PostalAddress", "addressLocality": "Balneário Camboriú", "addressRegion": "Santa Catarina", "addressCountry": "BR" }
   ],
+  "geo": { "@type": "GeoCoordinates", "latitude": -25.4284, "longitude": -49.2733 },
   "serviceType": [
     "Inteligência Comercial",
     "Pesquisa de Mercado",
@@ -81,10 +151,67 @@
   }
 }
 </script>
+<!-- ── SCHEMA.ORG — FAQ ───────────────────────────────────────────
+     Perguntas e respostas que o Google pode exibir diretamente
+     nos resultados de busca (featured snippets / rich results).
+     Para adicionar mais perguntas: copiar um bloco "Question" e
+     adicionar dentro de "mainEntity".
+──────────────────────────────────────────────────────────────── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "O que é JBP (Joint Business Plan)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JBP (Joint Business Plan) é um planejamento conjunto entre indústria e varejo com o objetivo de alinhar metas, estratégias e ações comerciais. A VCZ Consultoria desenvolve e estrutura JBPs para empresas que buscam crescimento sustentável e parceria estratégica com seus clientes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "O que faz uma consultoria de inteligência comercial?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Uma consultoria de inteligência comercial analisa dados de mercado, performance de vendas, precificação e portfólio para transformar informações em decisões estratégicas. A VCZ atua com dashboards gerenciais, forecast, pesquisa de mercado e JBP para varejo, indústria e e-commerce."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "A VCZ Consultoria atende em todo o Brasil?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. A VCZ Consultoria atende remotamente em todo o Brasil, com sedes em Curitiba (PR) e Balneário Camboriú (SC). O atendimento presencial é focado na região Sul, mas projetos são desenvolvidos para clientes em todo o país."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quais serviços a VCZ Consultoria oferece?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A VCZ oferece: inteligência comercial aplicada, pesquisa de mercado, desenvolvimento de JBP (Joint Business Plan), construção de dashboards gerenciais, forecast e diarização de vendas, estratégia de precificação e qualificação de portfólio."
+      }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
+  /* ── DESIGN SYSTEM — PALETA DE CORES ─────────────────────────
+     Variáveis CSS globais usadas em todo o site.
+     Para mudar uma cor: alterar aqui e afeta o site inteiro.
+     --navy/navy2  → fundos escuros (background principal)
+     --gold        → cor de destaque (dourado — CTAs, labels, bordas)
+     --warm-white  → títulos e textos de alto contraste
+     --fog         → texto padrão do corpo
+     --steel       → texto secundário, placeholders
+     --cream        → fundo dos cards de serviço (seção Sobre)
+     --graphite     → texto escuro (usado sobre fundo claro)
+  ──────────────────────────────────────────────────────────────── */
   :root {
     --navy:       #0D1B2A;
     --navy2:      #162B40;
@@ -1255,8 +1382,10 @@
       </div>
       <div class="contato-item">
         <p class="contato-label">Localização</p>
-        <p class="contato-value">Curitiba — PR &amp; Balneário Camboriú — SC</p>
-        <p class="contato-value" style="font-size:13px; color: var(--steel); margin-top:4px;">Atendimento remoto e presencial em todo o Brasil</p>
+        <p class="contato-value">Atendimento remoto e presencial em todo o Brasil</p>
+        <p class="contato-value" style="font-size:13px; color: var(--warm-white); font-weight:500; margin-top:4px; margin-bottom:2px;">Sedes em:</p>
+        <p class="contato-value" style="font-size:13px; color: var(--steel); margin-bottom:2px;">Curitiba — PR</p>
+        <p class="contato-value" style="font-size:13px; color: var(--steel); margin-bottom:0;">Balneário Camboriú — SC</p>
       </div>
       <div class="contato-sociais">
         <a href="tel:+5541996242909" class="contato-social">
@@ -1317,6 +1446,11 @@
 </footer>
 
 <script>
+  /* ── MENU MOBILE (HAMBÚRGUER) ─────────────────────────────────
+     toggleMenu → abre/fecha o menu ao clicar no ☰
+     closeMenu  → fecha o menu ao clicar em qualquer link
+     A classe "open" é controlada pelo CSS para mostrar/esconder
+  ──────────────────────────────────────────────────────────────── */
   function toggleMenu() {
     document.getElementById('nav-links').classList.toggle('open');
     document.getElementById('nav-hamburger').classList.toggle('open');
@@ -1326,6 +1460,11 @@
     document.getElementById('nav-hamburger').classList.remove('open');
   }
 
+  /* ── ANIMAÇÕES DE SCROLL ───────────────────────────────────────
+     Elementos com classe "reveal" ficam invisíveis até aparecerem
+     na tela — então recebem a classe "visible" com animação fade-up.
+     i * 80ms cria um efeito cascata entre elementos próximos.
+  ──────────────────────────────────────────────────────────────── */
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -1337,6 +1476,13 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(el => observer.observe(el));
 
+  /* ── FORMULÁRIO DE CONTATO ─────────────────────────────────────
+     Envia os dados via Formspree (sem backend próprio).
+     Endpoint: formspree.io/f/mojzjllq → chega em vcz.grupo@gmail.com
+     Para trocar o destino: criar novo form em formspree.io e
+     substituir o ID "mojzjllq" na URL do fetch abaixo.
+     Estados do botão: Enviando... → Mensagem enviada / Erro
+  ──────────────────────────────────────────────────────────────── */
   function handleSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('.btn-submit');
