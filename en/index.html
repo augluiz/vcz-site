@@ -1,16 +1,10 @@
 <!--
   LANGUAGE POLICY
   ───────────────
-  This is the ENGLISH version of the VCZ Consultoria website.
-  The PARENT PAGE is the Portuguese version at /index.html.
-
-  Any new feature, section, or content change must be
-  VALIDATED ON THE PT PAGE FIRST, then replicated here.
-
-  Structure:
-    PT (parent)  → /index.html       (vczconsultoria.com.br/)
-    EN (english) → /en/index.html    (vczconsultoria.com.br/en/)
-    ES (spanish) → /es/index.html    (vczconsultoria.com.br/es/)
+  This is the ENGLISH version (child page).
+  The PARENT PAGE is Portuguese at /index.html.
+  Any new feature or content change must be VALIDATED ON PT FIRST,
+  then replicated here.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -18,91 +12,402 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VCZ Consultoria — Applied Commercial Intelligence</title>
-<meta name="description" content="VCZ Consultoria: applied commercial intelligence, market research and JBP (Joint Business Plan) for retail, industry and e-commerce in Brazil.">
+<meta name="description" content="VCZ Consultoria: applied commercial intelligence, market research and JBP (Joint Business Plan) for retail, industry and e-commerce. Clearer decisions, stronger results.">
+<meta name="keywords" content="commercial intelligence, market research, JBP, joint business plan, management dashboards, pricing strategy, forecast, retail, industry, e-commerce, Brazil consulting">
+<meta property="og:title" content="VCZ Consultoria — Applied Commercial Intelligence">
+<meta property="og:description" content="We transform market data into applied strategy — focused on sales performance, profitability and strategic positioning.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vczconsultoria.com.br/en/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VCZ Consultoria — Applied Commercial Intelligence">
+<meta name="twitter:description" content="Commercial intelligence, market research and JBP for retail, industry and e-commerce. Dashboards, forecast and performance consulting.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://vczconsultoria.com.br/en/">
 <link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/">
-<link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/">
-<link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/">
+<link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/">
+<link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/">
 <link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0D1B2A; --navy2: #162B40; --gold: #C8922A;
-    --gold-light: #E2AC4C; --warm-white: #F0EDED;
-    --fog: #D4DDED; --steel: #9AAABB;
+    --navy:       #0D1B2A;
+    --navy2:      #162B40;
+    --gold:       #C8922A;
+    --gold-light: #E2AC4C;
+    --gold-aged:  #B7A073;
+    --warm-white: #F0EDED;
+    --cream:      #F5F0E8;
+    --fog:        #D4DDED;
+    --steel:      #9AAABB;
+    --graphite:   #2E2E2E;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--fog); }
-
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 5vw; height: 72px;
-    border-bottom: 1px solid rgba(183,160,115,0.15);
-    background: rgba(13,27,42,0.92); backdrop-filter: blur(12px);
-  }
-  .nav-logo img { height: 46px; width: auto; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--fog); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; height: 72px; border-bottom: 1px solid rgba(183,160,115,0.15); background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .nav-logo { display: flex; align-items: center; text-decoration: none; }
+  .nav-logo-img { height: 46px; width: auto; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+  .nav-cta:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
   .nav-right { display: flex; align-items: center; gap: 1.5rem; }
   .lang-switcher { display: flex; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; }
-  .lang-active { color: var(--gold); }
+  .lang-active { color: var(--gold); font-weight: 400; }
   .lang-option { color: var(--steel); text-decoration: none; transition: color 0.2s; }
   .lang-option:hover { color: var(--fog); }
-  .lang-switcher .lang-option + .lang-option::before,
-  .lang-active + .lang-option::before { content: '·'; margin-right: 0.5rem; color: rgba(183,160,115,0.3); }
-  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s; }
-  .nav-cta:hover { background: rgba(200,146,42,0.08); }
-
-  .coming-soon {
-    min-height: 100vh; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 5vw;
-  }
-  .eyebrow {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 2rem;
-  }
-  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; color: var(--warm-white); line-height: 1.2; margin-bottom: 1.5rem; }
-  h1 em { font-style: italic; color: var(--gold); }
-  p { font-size: 16px; font-weight: 300; color: var(--steel); max-width: 420px; line-height: 1.8; margin-bottom: 2.5rem; }
-  .btn { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--navy); background: var(--gold); padding: 14px 32px; text-decoration: none; transition: background 0.2s; }
-  .btn:hover { background: var(--gold-light); }
-
-  footer { padding: 2rem 5vw; border-top: 1px solid rgba(183,160,115,0.1); display: flex; justify-content: space-between; align-items: center; }
+  .lang-switcher .lang-active + .lang-option::before, .lang-option + .lang-option::before { content: '·'; margin-right: 0.5rem; color: rgba(183,160,115,0.3); }
+  #hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 90px 5vw 56px; position: relative; overflow: hidden; }
+  .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(183,160,115,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(183,160,115,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+  .hero-glow { position: absolute; top: -200px; right: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,146,42,0.06) 0%, transparent 70%); pointer-events: none; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; display: flex; align-items: center; gap: 14px; }
+  .hero-eyebrow::before { content: ''; display: block; width: 36px; height: 1px; background: var(--gold); flex-shrink: 0; }
+  .hero-layout { display: grid; grid-template-columns: 54% 46%; gap: 3vw; align-items: center; width: 100%; }
+  .hero-right { display: flex; justify-content: flex-end; align-items: center; overflow: hidden; opacity: 0; animation: fadeUp 1.2s ease forwards 1s; }
+  .hero-logo-large { width: 130%; max-width: 620px; opacity: 0.14; transform: translateX(8%); }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4.2vw, 4.8rem); font-weight: 300; line-height: 1.1; color: var(--warm-white); opacity: 0; animation: fadeUp 0.9s ease forwards 0.4s; }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-line { width: 60px; height: 1px; background: var(--gold-aged); margin: 2.5rem 0; opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s; }
+  .hero-sub { font-size: 17px; font-weight: 300; color: var(--fog); max-width: 520px; line-height: 1.8; opacity: 0; animation: fadeUp 0.8s ease forwards 0.75s; }
+  .hero-actions { display: flex; gap: 1.5rem; margin-top: 3rem; align-items: center; opacity: 0; animation: fadeUp 0.8s ease forwards 0.9s; }
+  .btn-primary { background: var(--gold); color: var(--navy); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 14px 32px; text-decoration: none; font-weight: 400; transition: background 0.2s; display: inline-block; }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-ghost { color: var(--steel); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+  .btn-ghost:hover { color: var(--warm-white); }
+  .btn-ghost::after { content: '↓'; font-size: 14px; }
+  section { padding: 68px 5vw; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 12px; }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 300; color: var(--warm-white); line-height: 1.15; max-width: 640px; }
+  .section-title em { font-style: italic; color: var(--gold); }
+  #sobre { background: var(--navy2); }
+  .sobre-grid { display: grid; grid-template-columns: 46% 50%; gap: 4vw; align-items: center; }
+  .sobre-text p { color: var(--fog); font-weight: 300; font-size: 16px; line-height: 1.85; margin-bottom: 1.4rem; }
+  .sobre-text p:last-child { margin-bottom: 0; }
+  .sobre-text strong { color: var(--warm-white); font-weight: 500; }
+  .sobre-servicos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-self: start; }
+  .sobre-servico-card { background: var(--cream); padding: 1.6rem 1.4rem 1.8rem; border-top: 2px solid var(--gold); }
+  .sobre-servico-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; }
+  .sobre-servico-num { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--gold); }
+  .sobre-servico-icon { color: var(--gold); }
+  .sobre-servico-title { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--graphite); margin-bottom: 0.6rem; }
+  .sobre-servico-desc { font-size: 13px; color: #5a5a5a; font-weight: 300; line-height: 1.7; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(46,46,46,0.1); }
+  .sobre-servico-items { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  .sobre-servico-items li { font-size: 12px; color: #888; display: flex; align-items: flex-start; gap: 6px; font-weight: 300; line-height: 1.5; }
+  .sobre-servico-items li.destaque { color: var(--graphite); font-weight: 400; }
+  .sobre-servico-items li::before { content: '—'; color: var(--gold-aged); flex-shrink: 0; font-size: 11px; }
+  .sobre-servico-items li.destaque::before { color: var(--gold); }
+  #entregas { background: var(--navy); padding: 52px 5vw; }
+  .entregas-grid { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 2rem; border-top: 1px solid rgba(183,160,115,0.15); }
+  .entrega { padding: 1.4rem 1.4rem 1.4rem 1rem; border-left: 2px solid var(--gold); border-right: 1px solid rgba(183,160,115,0.12); }
+  .entrega:last-child { border-right: none; }
+  .entrega-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--warm-white); margin-bottom: 0.5rem; line-height: 1.35; }
+  .entrega-desc { font-size: 12.5px; color: var(--steel); font-weight: 300; line-height: 1.7; }
+  #frente { background: var(--cream); }
+  #frente .section-label { color: var(--graphite); }
+  #frente .section-label::before { background: var(--graphite); }
+  #frente .section-title { color: var(--graphite); }
+  #frente .section-title em { color: var(--gold); }
+  .frente-texto { max-width: 860px; margin-top: 2.5rem; }
+  .frente-texto p { color: #3a3a3a; font-weight: 300; font-size: 15.5px; line-height: 1.9; margin-bottom: 1.2rem; }
+  .frente-texto p:last-child { margin-bottom: 0; }
+  .frente-texto strong { color: var(--graphite); font-weight: 600; }
+  .frente-resumo { font-style: italic; color: #777 !important; font-size: 14px !important; margin-top: 0.5rem; }
+  #contato { background: var(--navy2); }
+  .contato-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; margin-top: 4rem; align-items: start; }
+  .contato-info p { font-size: 15px; color: var(--fog); font-weight: 300; line-height: 1.8; margin-bottom: 2.5rem; }
+  .contato-item { margin-bottom: 1.5rem; }
+  .contato-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+  .contato-value { font-size: 15px; color: var(--warm-white); font-weight: 300; }
+  .contato-form { display: flex; flex-direction: column; gap: 1.2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); }
+  .form-group input, .form-group textarea, .form-group select { background: rgba(13,27,42,0.6); border: 1px solid rgba(183,160,115,0.2); color: var(--fog); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 300; padding: 12px 16px; outline: none; transition: border-color 0.2s; width: 100%; appearance: none; }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: rgba(200,146,42,0.5); }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: var(--steel); opacity: 0.5; }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .btn-submit { background: var(--gold); color: var(--navy); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 15px 32px; border: none; cursor: pointer; font-weight: 400; transition: background 0.2s; align-self: flex-start; margin-top: 0.5rem; }
+  .btn-submit:hover { background: var(--gold-light); }
+  .form-lgpd { font-size: 11px; color: var(--steel); font-weight: 300; line-height: 1.6; opacity: 0.7; }
+  .form-lgpd a { color: var(--steel); text-decoration: underline; }
+  .form-lgpd a:hover { color: var(--gold); }
+  .contato-link { text-decoration: none; color: var(--warm-white); font-weight: 300; transition: color 0.2s; }
+  .contato-link:hover { color: var(--gold); }
+  .contato-sociais { display: flex; flex-direction: column; gap: 0.9rem; margin-top: 1rem; }
+  .contato-social { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: opacity 0.2s; }
+  .contato-social:hover { opacity: 0.75; }
+  .contato-social svg { color: var(--cream); flex-shrink: 0; transition: color 0.2s; }
+  .contato-social-text { font-size: 15px; color: var(--cream); font-weight: 300; transition: color 0.2s; }
+  .contato-social:hover svg, .contato-social:hover .contato-social-text { color: var(--gold-light); }
+  footer { background: var(--navy); border-top: 1px solid rgba(183,160,115,0.1); padding: 3rem 5vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand img { height: 40px; width: auto; }
   .footer-copy { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--steel); text-align: right; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .sobre-grid, .contato-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; align-items: flex-start; }
+    .hero-layout { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .contato-form { order: -1; }
+    .entregas-grid { grid-template-columns: 1fr 1fr; }
+    .sobre-servicos { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
 <nav>
   <a href="/en/" class="nav-logo">
-    <img src="/logo-ouro.svg" alt="VCZ Consultoria">
+    <img src="../logo-ouro.svg" alt="VCZ Consultoria" class="nav-logo-img">
   </a>
+  <ul class="nav-links">
+    <li><a href="#sobre">About</a></li>
+    <li><a href="#frente">Experience</a></li>
+    <li><a href="#contato">Contact</a></li>
+  </ul>
   <div class="nav-right">
     <div class="lang-switcher">
-      <a href="/" class="lang-option">PT</a>
+      <a href="/" class="lang-option" target="_blank" rel="noopener">PT</a>
       <span class="lang-active">EN</span>
-      <a href="/es/" class="lang-option">ES</a>
+      <a href="/es/" class="lang-option" target="_blank" rel="noopener">ES</a>
     </div>
-    <a href="#" class="nav-cta">Contact us</a>
+    <a href="#contato" class="nav-cta">Get in touch</a>
   </div>
 </nav>
 
-<div class="coming-soon">
-  <p class="eyebrow">English version</p>
-  <h1>Coming <em>soon.</em></h1>
-  <p>We are preparing the English version of our website. In the meantime, visit our Portuguese page to learn more about VCZ Consultoria.</p>
-  <a href="/" class="btn">Visit PT version</a>
-</div>
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-layout">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Applied Commercial Intelligence</p>
+      <h1 class="hero-title">Clearer <em>decisions.</em><br>Stronger results.</h1>
+      <div class="hero-line"></div>
+      <p class="hero-sub">VCZ transforms market data into strategic direction — so every commercial decision is made with method, evidence, and criteria. We work in retail, industry, and e-commerce across Brazil.</p>
+      <div class="hero-actions">
+        <a href="#sobre" class="btn-primary">Explore our services</a>
+        <a href="#sobre" class="btn-ghost">About VCZ</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="../logo-mark.svg" alt="" aria-hidden="true" class="hero-logo-large">
+    </div>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="sobre-grid">
+    <div>
+      <p class="section-label reveal">The consultancy</p>
+      <h2 class="section-title reveal">From market insight<br>to the <em>right decision.</em></h2>
+      <div class="sobre-text reveal" style="margin-top: 2rem;">
+        <p>VCZ is a consultancy specialized in <strong>commercial intelligence</strong>, <strong>market research</strong>, and <strong>JBP (Joint Business Plan)</strong> development for companies seeking sustainable growth.</p>
+        <p>We transform data and market insight into applied strategy — focused on <strong>sales performance</strong>, <strong>profitability</strong>, and <strong>strategic positioning</strong>.</p>
+        <p>From market research to applied commercial intelligence, we work across the full analytical cycle — with method, evidence, and focus on what drives real results for the business.</p>
+      </div>
+    </div>
+    <div>
+      <p class="section-label reveal">Our products</p>
+      <div class="sobre-servicos reveal" style="margin-top: 1.2rem;">
+        <div class="sobre-servico-card">
+          <div class="sobre-servico-header">
+            <span class="sobre-servico-num">01</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <p class="sobre-servico-title">Commercial Intelligence</p>
+          <p class="sobre-servico-desc">Operational analysis to identify where the business can grow with greater margin and consistency.</p>
+          <ul class="sobre-servico-items">
+            <li class="destaque">Results and profitability analysis</li>
+            <li>Pricing strategy and analysis</li>
+            <li>Portfolio mix and qualification</li>
+            <li class="destaque">Management dashboards and visualizations</li>
+            <li>Pilot project analysis</li>
+            <li class="destaque">Sales forecast and daily planning</li>
+            <li>Goal monitoring</li>
+          </ul>
+        </div>
+        <div class="sobre-servico-card">
+          <div class="sobre-servico-header">
+            <span class="sobre-servico-num">02</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <p class="sobre-servico-title">Market Research</p>
+          <p class="sobre-servico-desc">Study of the market, consumer, and competition to validate strategies and identify opportunities.</p>
+          <ul class="sobre-servico-items">
+            <li class="destaque">Consumer behavior and journey</li>
+            <li>Brand and product perception</li>
+            <li>Strategy alignment and validation</li>
+            <li class="destaque">Competitive dynamics analysis</li>
+            <li>Strategic intelligence and scenarios</li>
+            <li>Recurring market analyses</li>
+            <li>Sector benchmarks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="entregas">
+  <p class="section-label reveal">Analytical Deliverables</p>
+  <div class="entregas-grid reveal">
+    <div class="entrega">
+      <p class="entrega-title">Dashboards & Visualizations</p>
+      <p class="entrega-desc">Clear management view to support day-to-day decision making.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">Forecast & Daily Planning</p>
+      <p class="entrega-desc">Projections and daily pacing to track whether sales are aligned with targets.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">Pricing Strategy</p>
+      <p class="entrega-desc">Price analysis aligned with strategy and market, focused on portfolio profitability.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">Mix & Portfolio</p>
+      <p class="entrega-desc">Portfolio review so each product has a clear role and contributes to strategy.</p>
+    </div>
+    <div class="entrega">
+      <p class="entrega-title">100% Customized</p>
+      <p class="entrega-desc">Every deliverable built to fit the client's specific reality and context.</p>
+    </div>
+  </div>
+</section>
+
+<section id="frente">
+  <p class="section-label reveal">Who leads</p>
+  <h2 class="section-title reveal">Experience from someone<br>who <em>lives</em> the market.</h2>
+  <div class="frente-texto reveal">
+    <p><strong>Augusto Luiz</strong> leads VCZ — a commercial intelligence specialist with over 8 years of hands-on experience in retail, industry, and e-commerce.</p>
+    <p><strong>In retail</strong>, commercial intelligence specialist at <strong>Grupo Koch</strong>, Brazil's 8th largest supermarket chain — responsible for <strong>JBP</strong>, <strong>market analysis</strong>, <strong>commercial performance</strong>, <strong>profitability</strong>, <strong>pricing</strong>, assortment qualification, <strong>forecasting</strong>, and <strong>management dashboards</strong>. Also worked with <strong>Nielsen data</strong> and <strong>market research</strong> applied to strategy and competitive positioning.</p>
+    <p><strong>In industry</strong>, experience in <strong>market research</strong>, <strong>commercial performance</strong>, <strong>pricing</strong>, portfolio qualification, <strong>demand planning</strong>, out-of-stock analysis, and <strong>sales forecasting</strong>.</p>
+    <p class="frente-resumo">Over 8 years of experience in retail, industry, and e-commerce, specialized in commercial intelligence.</p>
+  </div>
+</section>
+
+<section id="contato">
+  <p class="section-label reveal">Contact</p>
+  <h2 class="section-title reveal">Let's <em>talk.</em></h2>
+  <div class="contato-grid">
+    <div class="contato-info reveal">
+      <p>Want to develop your business with more strategy and clarity? Tell us what's ahead. Every project starts with a good conversation.</p>
+      <div class="contato-item">
+        <p class="contato-label">Email</p>
+        <a href="mailto:vcz.grupo@gmail.com" class="contato-value contato-link">contato@vczconsultoria.com.br</a>
+      </div>
+      <div class="contato-item">
+        <p class="contato-label">Location</p>
+        <p class="contato-value">Brazil — remote and on-site</p>
+      </div>
+      <div class="contato-sociais">
+        <a href="tel:+5541996242909" class="contato-social">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.81 19.79 19.79 0 01.07 2.18 2 2 0 012.03 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <span class="contato-social-text">+55 41 99624-2909</span>
+        </a>
+        <a href="https://www.instagram.com/vcz.consultoria" target="_blank" rel="noopener" class="contato-social">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          <span class="contato-social-text">@vcz.consultoria</span>
+        </a>
+        <a href="https://www.linkedin.com/company/vcz-consultoria" target="_blank" rel="noopener" class="contato-social">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          <span class="contato-social-text">@vcz.consultoria</span>
+        </a>
+      </div>
+    </div>
+    <form class="contato-form reveal" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nome">Name</label>
+          <input type="text" id="nome" name="nome" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label for="empresa">Company</label>
+          <input type="text" id="empresa" name="empresa" placeholder="Your company">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label for="assunto">Area of interest</label>
+        <select id="assunto" name="assunto">
+          <option value="" disabled selected>Select</option>
+          <option>Commercial Intelligence</option>
+          <option>Market Research</option>
+          <option>JBP — Joint Business Plan</option>
+          <option>Dashboard Development</option>
+          <option>Both areas</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mensagem">Context</label>
+        <textarea id="mensagem" name="mensagem" placeholder="Briefly describe the challenge or decision at hand..." required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Send message</button>
+      <p class="form-lgpd">By submitting, you agree to the use of your data to respond to this contact, as per our <a href="/privacidade.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+    </form>
+  </div>
+</section>
 
 <footer>
-  <img src="/logo-ouro.svg" alt="VCZ Consultoria" style="height:36px;">
-  <p class="footer-copy">© 2026 VCZ Consultoria<br>Applied Commercial Intelligence</p>
+  <div class="footer-brand"><img src="../logo-ouro.svg" alt="VCZ Consultoria"></div>
+  <p class="footer-copy">© 2026 VCZ Consultoria<br>Applied Commercial Intelligence<br><a href="/privacidade.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Privacy Policy</a> &nbsp;·&nbsp; <a href="/termos.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Terms of Use</a></p>
 </footer>
 
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    fetch('https://formspree.io/f/mojzjllq', {
+      method: 'POST',
+      body: new FormData(e.target),
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(res => {
+      if (res.ok) {
+        btn.textContent = 'Message sent';
+        btn.style.background = '#2a6040';
+        btn.style.color = '#d4edda';
+        e.target.reset();
+        setTimeout(() => { btn.textContent = 'Send message'; btn.style.background = ''; btn.style.color = ''; btn.disabled = false; }, 4000);
+      } else {
+        btn.textContent = 'Error — please try again';
+        btn.style.background = '#6b2020';
+        btn.style.color = '#f5c6c6';
+        setTimeout(() => { btn.textContent = 'Send message'; btn.style.background = ''; btn.style.color = ''; btn.disabled = false; }, 4000);
+      }
+    })
+    .catch(() => {
+      btn.textContent = 'Error — please try again';
+      btn.style.background = '#6b2020';
+      btn.style.color = '#f5c6c6';
+      setTimeout(() => { btn.textContent = 'Send message'; btn.style.background = ''; btn.style.color = ''; btn.disabled = false; }, 4000);
+    });
+  }
+</script>
 </body>
 </html>
