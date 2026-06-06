@@ -34,6 +34,8 @@
   .nav-logo img { height: 46px; width: auto; }
   .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--steel); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
   .nav-back:hover { color: var(--gold); }
+  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+  .nav-cta:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
 
   .content {
     max-width: 680px;
@@ -119,7 +121,10 @@
   <a href="/" class="nav-logo">
     <img src="../logo-ouro.svg" alt="VCZ Consultoria">
   </a>
-  <a href="/insights/" class="nav-back">← Insights</a>
+  <div style="display:flex;align-items:center;gap:1.5rem;">
+    <a href="/insights/" class="nav-back">← Insights</a>
+    <a href="/#contato" class="nav-cta">Fale conosco</a>
+  </div>
 </nav>
 
 <div class="content">
