@@ -712,6 +712,27 @@
     margin-top: 0.5rem;
   }
 
+  .frente-portfolio { margin-top: 2.5rem; }
+
+  .btn-portfolio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    border: 1px solid var(--gold);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-portfolio::after { content: '↓'; font-size: 14px; }
+  .btn-portfolio:hover { background: var(--gold); color: var(--navy); }
+
   .frente-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1255,6 +1276,7 @@
     <li><a href="#sobre" onclick="closeMenu()">Sobre</a></li>
     <li><a href="#frente" onclick="closeMenu()">Experiência</a></li>
     <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
     <li><a href="#contato" onclick="closeMenu()">Contato</a></li>
   </ul>
   <div class="nav-right">
@@ -1381,6 +1403,11 @@
     <p><strong>No varejo</strong>, especialista em inteligência comercial no <strong>Grupo Koch</strong>, 8ª maior rede supermercadista do Brasil — responsável pelo <strong>JBP</strong>, <strong>análises de mercado</strong>, <strong>performance comercial</strong>, <strong>rentabilidade</strong>, <strong>precificação</strong>, qualificação de sortimento, <strong>forecast</strong> e <strong>dashboards gerenciais</strong>. Trabalhou ainda com <strong>dados Nielsen</strong> e <strong>pesquisa de mercado</strong> aplicada à estratégia e ao posicionamento competitivo.</p>
     <p><strong>Na indústria</strong>, experiência em <strong>pesquisa de mercado</strong>, <strong>performance comercial</strong>, <strong>precificação</strong>, qualificação de portfólio, <strong>planejamento de demanda</strong>, análise de ruptura e <strong>forecast de vendas</strong>.</p>
     <p class="frente-resumo">Mais de 8 anos de experiência em varejo, indústria e e-commerce, com especialização em inteligência comercial.</p>
+  </div>
+  <div class="frente-portfolio reveal">
+    <a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" class="btn-portfolio">
+      Baixar Portfolio
+    </a>
   </div>
 </section>
 
