@@ -1,0 +1,108 @@
+<!--
+  LANGUAGE POLICY
+  ───────────────
+  This is the ENGLISH version of the VCZ Consultoria website.
+  The PARENT PAGE is the Portuguese version at /index.html.
+
+  Any new feature, section, or content change must be
+  VALIDATED ON THE PT PAGE FIRST, then replicated here.
+
+  Structure:
+    PT (parent)  → /index.html       (vczconsultoria.com.br/)
+    EN (english) → /en/index.html    (vczconsultoria.com.br/en/)
+    ES (spanish) → /es/index.html    (vczconsultoria.com.br/es/)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCZ Consultoria — Applied Commercial Intelligence</title>
+<meta name="description" content="VCZ Consultoria: applied commercial intelligence, market research and JBP (Joint Business Plan) for retail, industry and e-commerce in Brazil.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vczconsultoria.com.br/en/">
+<link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/">
+<link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/">
+<link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/">
+<link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A; --navy2: #162B40; --gold: #C8922A;
+    --gold-light: #E2AC4C; --warm-white: #F0EDED;
+    --fog: #D4DDED; --steel: #9AAABB;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--fog); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 72px;
+    border-bottom: 1px solid rgba(183,160,115,0.15);
+    background: rgba(13,27,42,0.92); backdrop-filter: blur(12px);
+  }
+  .nav-logo img { height: 46px; width: auto; }
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+  .lang-switcher { display: flex; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; }
+  .lang-active { color: var(--gold); }
+  .lang-option { color: var(--steel); text-decoration: none; transition: color 0.2s; }
+  .lang-option:hover { color: var(--fog); }
+  .lang-switcher .lang-option + .lang-option::before,
+  .lang-active + .lang-option::before { content: '·'; margin-right: 0.5rem; color: rgba(183,160,115,0.3); }
+  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s; }
+  .nav-cta:hover { background: rgba(200,146,42,0.08); }
+
+  .coming-soon {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 5vw;
+  }
+  .eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 2rem;
+  }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; color: var(--warm-white); line-height: 1.2; margin-bottom: 1.5rem; }
+  h1 em { font-style: italic; color: var(--gold); }
+  p { font-size: 16px; font-weight: 300; color: var(--steel); max-width: 420px; line-height: 1.8; margin-bottom: 2.5rem; }
+  .btn { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--navy); background: var(--gold); padding: 14px 32px; text-decoration: none; transition: background 0.2s; }
+  .btn:hover { background: var(--gold-light); }
+
+  footer { padding: 2rem 5vw; border-top: 1px solid rgba(183,160,115,0.1); display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--steel); text-align: right; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/en/" class="nav-logo">
+    <img src="/logo-ouro.svg" alt="VCZ Consultoria">
+  </a>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <a href="/" class="lang-option">PT</a>
+      <span class="lang-active">EN</span>
+      <a href="/es/" class="lang-option">ES</a>
+    </div>
+    <a href="#" class="nav-cta">Contact us</a>
+  </div>
+</nav>
+
+<div class="coming-soon">
+  <p class="eyebrow">English version</p>
+  <h1>Coming <em>soon.</em></h1>
+  <p>We are preparing the English version of our website. In the meantime, visit our Portuguese page to learn more about VCZ Consultoria.</p>
+  <a href="/" class="btn">Visit PT version</a>
+</div>
+
+<footer>
+  <img src="/logo-ouro.svg" alt="VCZ Consultoria" style="height:36px;">
+  <p class="footer-copy">© 2026 VCZ Consultoria<br>Applied Commercial Intelligence</p>
+</footer>
+
+</body>
+</html>

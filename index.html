@@ -1,3 +1,15 @@
+<!--
+  POLÍTICA DE IDIOMAS
+  ───────────────────
+  Esta é a PÁGINA-MÃE em Português (PT-BR).
+  Qualquer nova funcionalidade, seção ou alteração de conteúdo
+  deve ser VALIDADA AQUI PRIMEIRO antes de ser replicada para EN e ES.
+
+  Estrutura:
+    PT (principal) → /index.html          (vczconsultoria.com.br/)
+    EN (inglês)    → /en/index.html       (vczconsultoria.com.br/en/)
+    ES (espanhol)  → /es/index.html       (vczconsultoria.com.br/es/)
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -19,7 +31,11 @@
 <meta name="geo.region" content="BR">
 <meta name="robots" content="index, follow">
 <meta name="google-site-verification" content="nHUFLIz2n74qZW-XwU84bP7hlSYp_w0NH8px7BOjKIw">
-<link rel="canonical" href="https://vczconsultoria.com.br">
+<link rel="canonical" href="https://vczconsultoria.com.br/">
+<link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/">
+<link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/">
+<link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/">
+<link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -151,6 +167,41 @@
   .nav-cta:hover {
     background: rgba(200,146,42,0.08);
     border-color: var(--gold);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+  }
+
+  .lang-active {
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .lang-option {
+    color: var(--steel);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .lang-option:hover { color: var(--fog); }
+
+  .lang-switcher .lang-active + .lang-option::before,
+  .lang-option + .lang-option::before {
+    content: '·';
+    margin-right: 0.5rem;
+    color: rgba(183,160,115,0.3);
   }
 
   /* ── HERO ─────────────────────────────────────── */
@@ -1003,7 +1054,14 @@
     <li><a href="#frente">Experiência</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
-  <a href="#contato" class="nav-cta">Fale conosco</a>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <span class="lang-active">PT</span>
+      <a href="/en/" class="lang-option">EN</a>
+      <a href="/es/" class="lang-option">ES</a>
+    </div>
+    <a href="#contato" class="nav-cta">Fale conosco</a>
+  </div>
 </nav>
 
 <!-- HERO -->
