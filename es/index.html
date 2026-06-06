@@ -150,8 +150,18 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+  .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--steel); transition: all 0.3s ease; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
   @media (max-width: 768px) {
-    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .nav-links { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(13,27,42,0.98); backdrop-filter: blur(12px); flex-direction: column; gap: 0; padding: 1rem 0; border-bottom: 1px solid rgba(183,160,115,0.15); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 1rem 5vw; font-size: 13px; letter-spacing: 0.2em; border-bottom: 1px solid rgba(183,160,115,0.08); }
+    .nav-links li:last-child a { border-bottom: none; }
     .sobre-grid, .contato-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
     .hero-actions { flex-direction: column; align-items: flex-start; }
@@ -169,10 +179,10 @@
   <a href="/es/" class="nav-logo">
     <img src="../logo-ouro.svg" alt="VCZ Consultoria" class="nav-logo-img">
   </a>
-  <ul class="nav-links">
-    <li><a href="#sobre">Sobre nosotros</a></li>
-    <li><a href="#frente">Experiencia</a></li>
-    <li><a href="#contato">Contacto</a></li>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#sobre" onclick="closeMenu()">Sobre nosotros</a></li>
+    <li><a href="#frente" onclick="closeMenu()">Experiencia</a></li>
+    <li><a href="#contato" onclick="closeMenu()">Contacto</a></li>
   </ul>
   <div class="nav-right">
     <div class="lang-switcher">
@@ -181,6 +191,9 @@
       <span class="lang-active">ES</span>
     </div>
     <a href="#contato" class="nav-cta">Contáctenos</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -355,17 +368,26 @@
         <textarea id="mensagem" name="mensagem" placeholder="Describa brevemente el desafío o la decisión en juego..." required></textarea>
       </div>
       <button type="submit" class="btn-submit">Enviar mensaje</button>
-      <p class="form-lgpd">Al enviar, usted acepta el uso de sus datos para responder a este contacto, según nuestra <a href="/privacidade.html" target="_blank" rel="noopener">Política de Privacidad</a>.</p>
+      <p class="form-lgpd">Al enviar, usted acepta el uso de sus datos para responder a este contacto, según nuestra <a href="/es/privacidad.html" target="_blank" rel="noopener">Política de Privacidad</a>.</p>
     </form>
   </div>
 </section>
 
 <footer>
   <div class="footer-brand"><img src="../logo-ouro.svg" alt="VCZ Consultoria"></div>
-  <p class="footer-copy">© 2026 VCZ Consultoria<br>Inteligencia Comercial Aplicada<br><a href="/privacidade.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Política de Privacidad</a> &nbsp;·&nbsp; <a href="/termos.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Términos de Uso</a></p>
+  <p class="footer-copy">© 2026 VCZ Consultoria<br>Inteligencia Comercial Aplicada<br><a href="/es/privacidad.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Política de Privacidad</a> &nbsp;·&nbsp; <a href="/termos.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Términos de Uso</a></p>
 </footer>
 
 <script>
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+    document.getElementById('nav-hamburger').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('nav-links').classList.remove('open');
+    document.getElementById('nav-hamburger').classList.remove('open');
+  }
+
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {

@@ -1,31 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Página principal PT -->
   <url>
     <loc>https://vczconsultoria.com.br/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
     <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
   </url>
+
+  <!-- Versão EN -->
   <url>
     <loc>https://vczconsultoria.com.br/en/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
     <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
   </url>
+
+  <!-- Versão ES -->
   <url>
     <loc>https://vczconsultoria.com.br/es/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
     <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
   </url>
+
+  <!-- Conteúdos e Estudos -->
+  <url>
+    <loc>https://vczconsultoria.com.br/insights/</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artigo: Apresentação -->
+  <url>
+    <loc>https://vczconsultoria.com.br/insights/apresentacao.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Política de Privacidade -->
+  <url>
+    <loc>https://vczconsultoria.com.br/privacidade.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Termos de Uso -->
+  <url>
+    <loc>https://vczconsultoria.com.br/termos.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>
