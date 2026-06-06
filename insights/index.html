@@ -96,6 +96,12 @@
   .insight-card:hover { border-top-color: var(--gold); background: rgba(22,43,64,0.95); }
   .insight-card.oculto { display: none; }
 
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 1.2rem;
+  }
   .card-tag {
     display: inline-block;
     font-family: 'DM Mono', monospace;
@@ -105,7 +111,6 @@
     color: var(--navy);
     background: var(--gold);
     padding: 3px 10px;
-    margin-bottom: 1.2rem;
   }
   .card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--warm-white); line-height: 1.3; margin-bottom: 0.8rem; }
   .card-desc { font-size: 14px; font-weight: 300; color: var(--steel); line-height: 1.7; margin-bottom: 1.5rem; }
@@ -168,8 +173,10 @@
 <div class="insights-grid" id="grid">
   <!-- ORDENAÇÃO: mais recente primeiro. Adicionar novos cards ACIMA dos anteriores. -->
 
-  <a href="/insights/apresentacao.html" class="insight-card" data-categoria="institucional">
-    <p class="card-tag">Institucional</p>
+  <a href="/insights/apresentacao.html" class="insight-card" data-categorias="institucional">
+    <div class="card-tags">
+      <span class="card-tag">Institucional</span>
+    </div>
     <p class="card-title">Quem está à frente da VCZ</p>
     <p class="card-desc">8 anos de mercado, do varejo à indústria — a história por trás da consultoria e o que nos move.</p>
     <p class="card-meta">Junho de 2026</p>
@@ -199,7 +206,8 @@
       let visiveis = 0;
 
       cards.forEach(card => {
-        const match = filtro === 'todos' || card.dataset.categoria === filtro;
+        const categorias = (card.dataset.categorias || '').split(' ');
+        const match = filtro === 'todos' || categorias.includes(filtro);
         card.classList.toggle('oculto', !match);
         if (match) visiveis++;
       });
