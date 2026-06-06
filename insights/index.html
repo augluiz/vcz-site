@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insights — VCZ Consultoria</title>
-<meta name="description" content="Inteligência comercial aplicada na prática. Artigos, análises e perspectivas da VCZ Consultoria sobre varejo, indústria e e-commerce.">
+<title>Conteúdos e Estudos — VCZ Consultoria</title>
+<meta name="description" content="Inteligência comercial aplicada na prática. Artigos, estudos de caso e tendências da VCZ Consultoria sobre varejo, indústria e e-commerce.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://vczconsultoria.com.br/insights/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,20 +35,53 @@
   .nav-cta:hover { background: rgba(200,146,42,0.08); }
 
   .page-header {
-    padding: 120px 5vw 60px;
+    padding: 120px 5vw 48px;
     border-bottom: 1px solid rgba(183,160,115,0.1);
   }
   .page-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 12px; }
   .page-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
   h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; color: var(--warm-white); line-height: 1.2; margin-bottom: 0.8rem; }
   h1 em { font-style: italic; color: var(--gold); }
-  .page-sub { font-size: 15px; font-weight: 300; color: var(--steel); max-width: 480px; }
+  .page-sub { font-size: 15px; font-weight: 300; color: var(--steel); max-width: 480px; margin-bottom: 2.5rem; }
 
+  /* ── FILTROS ─────────────────────────────────── */
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .filtro-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid rgba(183,160,115,0.25);
+    color: var(--steel);
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filtro-btn:hover {
+    border-color: rgba(200,146,42,0.5);
+    color: var(--fog);
+  }
+
+  .filtro-btn.ativo {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  /* ── GRID ────────────────────────────────────── */
   .insights-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 2px;
-    padding: 4rem 5vw;
+    padding: 3rem 5vw 4rem;
   }
 
   .insight-card {
@@ -57,10 +90,11 @@
     text-decoration: none;
     display: block;
     border-top: 2px solid transparent;
-    transition: border-color 0.3s, background 0.3s;
+    transition: border-color 0.3s, background 0.3s, opacity 0.3s, transform 0.3s;
     position: relative;
   }
   .insight-card:hover { border-top-color: var(--gold); background: rgba(22,43,64,0.95); }
+  .insight-card.oculto { display: none; }
 
   .card-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
   .card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--warm-white); line-height: 1.3; margin-bottom: 0.8rem; }
@@ -69,12 +103,26 @@
   .card-arrow { position: absolute; bottom: 2.5rem; right: 2.5rem; color: var(--gold); font-size: 18px; opacity: 0; transition: opacity 0.2s; }
   .insight-card:hover .card-arrow { opacity: 1; }
 
+  .vazio {
+    display: none;
+    grid-column: 1 / -1;
+    padding: 4rem 0;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--steel);
+    opacity: 0.5;
+  }
+
   footer { padding: 2rem 5vw; border-top: 1px solid rgba(183,160,115,0.1); display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
   .footer-copy { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--steel); text-align: right; }
 
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .insights-grid { grid-template-columns: 1fr; }
+    .filtros { gap: 0.4rem; }
   }
 </style>
 </head>
@@ -97,22 +145,57 @@
   <p class="page-label">Conteúdo</p>
   <h1>Conteúdos e <em>Estudos.</em></h1>
   <p class="page-sub">Inteligência comercial aplicada na prática — perspectivas sobre varejo, indústria e e-commerce.</p>
+
+  <div class="filtros">
+    <button class="filtro-btn ativo" data-filtro="todos">Todos</button>
+    <button class="filtro-btn" data-filtro="institucional">Institucional</button>
+    <button class="filtro-btn" data-filtro="estudos-de-caso">Estudos de Caso</button>
+    <button class="filtro-btn" data-filtro="tendencias">Tendências</button>
+  </div>
 </div>
 
-<div class="insights-grid">
-  <a href="/insights/apresentacao.html" class="insight-card">
-    <p class="card-tag">Apresentação</p>
+<div class="insights-grid" id="grid">
+
+  <a href="/insights/apresentacao.html" class="insight-card" data-categoria="institucional">
+    <p class="card-tag">Institucional</p>
     <p class="card-title">Quem está à frente da VCZ</p>
     <p class="card-desc">8 anos de mercado, do varejo à indústria — a história por trás da consultoria e o que nos move.</p>
     <p class="card-meta">Junho de 2026</p>
     <span class="card-arrow">→</span>
   </a>
+
+  <p class="vazio" id="vazio">Nenhum conteúdo nesta categoria ainda.</p>
+
 </div>
 
 <footer>
   <img src="../logo-ouro.svg" alt="VCZ Consultoria" style="height:36px;">
   <p class="footer-copy">© 2026 VCZ Consultoria<br>Inteligência Comercial Aplicada</p>
 </footer>
+
+<script>
+  const botoes = document.querySelectorAll('.filtro-btn');
+  const cards  = document.querySelectorAll('.insight-card');
+  const vazio  = document.getElementById('vazio');
+
+  botoes.forEach(btn => {
+    btn.addEventListener('click', () => {
+      botoes.forEach(b => b.classList.remove('ativo'));
+      btn.classList.add('ativo');
+
+      const filtro = btn.dataset.filtro;
+      let visiveis = 0;
+
+      cards.forEach(card => {
+        const match = filtro === 'todos' || card.dataset.categoria === filtro;
+        card.classList.toggle('oculto', !match);
+        if (match) visiveis++;
+      });
+
+      vazio.style.display = visiveis === 0 ? 'block' : 'none';
+    });
+  });
+</script>
 
 </body>
 </html>
