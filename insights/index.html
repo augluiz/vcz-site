@@ -33,8 +33,26 @@
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); text-decoration: none; transition: color 0.2s; }
   .nav-links a:hover, .nav-links a.active { color: var(--gold); }
-  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s; }
-  .nav-cta:hover { background: rgba(200,146,42,0.08); }
+  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+  .nav-cta:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+  .lang-select { position: relative; }
+  .lang-select-btn { display: flex; align-items: center; gap: 5px; background: rgba(183,160,115,0.08); border: 1px solid rgba(183,160,115,0.2); border-radius: 4px; padding: 5px 8px 5px 7px; cursor: pointer; transition: border-color 0.2s, background 0.2s; color: var(--steel); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .lang-select-btn:hover { border-color: rgba(200,146,42,0.45); background: rgba(183,160,115,0.12); }
+  .lang-select-btn .flag { height: 16px; width: auto; border-radius: 2px; display: block; }
+  .lang-select-btn .chevron { width: 8px; height: 8px; border-right: 1px solid var(--steel); border-bottom: 1px solid var(--steel); transform: rotate(45deg) translateY(-2px); transition: transform 0.2s; margin-left: 1px; }
+  .lang-select.open .lang-select-btn .chevron { transform: rotate(-135deg) translateY(-2px); }
+  .lang-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: rgba(13,27,42,0.97); border: 1px solid rgba(183,160,115,0.2); border-radius: 4px; overflow: hidden; min-width: 110px; backdrop-filter: blur(12px); z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .lang-select.open .lang-dropdown { display: block; }
+  .lang-dropdown a, .lang-dropdown span { display: flex; align-items: center; gap: 8px; padding: 7px 10px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--steel); transition: background 0.15s, color 0.15s; cursor: pointer; }
+  .lang-dropdown a:hover { background: rgba(183,160,115,0.08); color: var(--fog); }
+  .lang-dropdown .lang-item-active { color: var(--gold); cursor: default; background: rgba(200,146,42,0.05); }
+  .lang-dropdown .flag { height: 13px; width: auto; border-radius: 2px; display: block; }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+  .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--steel); transition: all 0.3s ease; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
   .page-header {
     padding: 120px 5vw 48px;
@@ -168,7 +186,12 @@
   .footer-copy { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--steel); text-align: right; }
 
   @media (max-width: 768px) {
-    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .nav-links { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(13,27,42,0.98); backdrop-filter: blur(12px); flex-direction: column; gap: 0; padding: 1rem 0; border-bottom: 1px solid rgba(183,160,115,0.15); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 1rem 5vw; font-size: 13px; letter-spacing: 0.2em; border-bottom: 1px solid rgba(183,160,115,0.08); }
+    .nav-links li:last-child a { border-bottom: none; }
+    .nav-cta { display: none; }
     .insights-grid { grid-template-columns: 1fr; }
     .filtros { gap: 0.4rem; }
   }
@@ -180,13 +203,32 @@
   <a href="/" class="nav-logo">
     <img src="../logo-ouro.svg" alt="VCZ Consultoria">
   </a>
-  <ul class="nav-links">
-    <li><a href="/">Início</a></li>
-    <li><a href="/#sobre">Sobre</a></li>
-    <li><a href="/#contato">Contato</a></li>
-    <li><a href="/insights/" class="active">Conteúdos e Estudos</a></li>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" class="active" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
   </ul>
-  <a href="/#contato" class="nav-cta">Fale conosco</a>
+  <div class="nav-right">
+    <div class="lang-select" id="lang-select">
+      <button class="lang-select-btn" onclick="toggleLang()" aria-label="Selecionar idioma">
+        <img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil">
+        <span>PT</span>
+        <span class="chevron"></span>
+      </button>
+      <div class="lang-dropdown">
+        <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil"> PT</span>
+        <a href="/en/"><img class="flag" src="https://flagcdn.com/w20/gb.png" alt="English"> EN</a>
+        <a href="/es/"><img class="flag" src="https://flagcdn.com/w20/es.png" alt="Español"> ES</a>
+      </div>
+    </div>
+    <a href="/#contato" class="nav-cta">Fale conosco</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 <div class="page-header">
@@ -231,6 +273,22 @@
 </footer>
 
 <script>
+  function toggleLang() {
+    document.getElementById('lang-select').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const sel = document.getElementById('lang-select');
+    if (sel && !sel.contains(e.target)) sel.classList.remove('open');
+  });
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+    document.getElementById('nav-hamburger').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('nav-links').classList.remove('open');
+    document.getElementById('nav-hamburger').classList.remove('open');
+  }
+
   const botoes = document.querySelectorAll('.filtro-btn');
   const cards  = document.querySelectorAll('.insight-card');
   const vazio  = document.getElementById('vazio');
