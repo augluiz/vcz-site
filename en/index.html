@@ -58,11 +58,18 @@
   .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
   .nav-cta:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
   .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-  .lang-switcher { display: flex; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; }
-  .lang-active { color: var(--gold); font-weight: 400; }
-  .lang-option { color: var(--steel); text-decoration: none; transition: color 0.2s; }
-  .lang-option:hover { color: var(--fog); }
-  .lang-switcher .lang-active + .lang-option::before, .lang-option + .lang-option::before { content: '·'; margin-right: 0.5rem; color: rgba(183,160,115,0.3); }
+  .lang-select { position: relative; }
+  .lang-select-btn { display: flex; align-items: center; gap: 5px; background: rgba(183,160,115,0.08); border: 1px solid rgba(183,160,115,0.2); border-radius: 4px; padding: 5px 8px 5px 7px; cursor: pointer; transition: border-color 0.2s, background 0.2s; color: var(--steel); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .lang-select-btn:hover { border-color: rgba(200,146,42,0.45); background: rgba(183,160,115,0.12); }
+  .lang-select-btn .flag { font-size: 16px; line-height: 1; }
+  .lang-select-btn .chevron { width: 8px; height: 8px; border-right: 1px solid var(--steel); border-bottom: 1px solid var(--steel); transform: rotate(45deg) translateY(-2px); transition: transform 0.2s; margin-left: 1px; }
+  .lang-select.open .lang-select-btn .chevron { transform: rotate(-135deg) translateY(-2px); }
+  .lang-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: rgba(13,27,42,0.97); border: 1px solid rgba(183,160,115,0.2); border-radius: 4px; overflow: hidden; min-width: 110px; backdrop-filter: blur(12px); z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .lang-select.open .lang-dropdown { display: block; }
+  .lang-dropdown a, .lang-dropdown span { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--steel); transition: background 0.15s, color 0.15s; cursor: pointer; }
+  .lang-dropdown a:hover { background: rgba(183,160,115,0.08); color: var(--fog); }
+  .lang-dropdown .lang-item-active { color: var(--gold); cursor: default; background: rgba(200,146,42,0.05); }
+  .lang-dropdown .flag { font-size: 16px; }
   #hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 90px 5vw 56px; position: relative; overflow: hidden; }
   .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(183,160,115,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(183,160,115,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
   .hero-glow { position: absolute; top: -200px; right: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,146,42,0.06) 0%, transparent 70%); pointer-events: none; }
@@ -172,6 +179,7 @@
     .contato-form { order: -1; }
     .entregas-grid { grid-template-columns: 1fr 1fr; }
     .sobre-servicos { grid-template-columns: 1fr; }
+    .nav-cta { display: none; }
   }
 </style>
 </head>
@@ -187,10 +195,17 @@
     <li><a href="#contato" onclick="closeMenu()">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <div class="lang-switcher">
-      <a href="/" class="lang-option">PT</a>
-      <span class="lang-active">EN</span>
-      <a href="/es/" class="lang-option">ES</a>
+    <div class="lang-select" id="lang-select">
+      <button class="lang-select-btn" onclick="toggleLang()" aria-label="Select language">
+        <span class="flag">🇬🇧</span>
+        <span>EN</span>
+        <span class="chevron"></span>
+      </button>
+      <div class="lang-dropdown">
+        <a href="/"><span class="flag">🇧🇷</span> PT</a>
+        <span class="lang-item-active"><span class="flag">🇬🇧</span> EN</span>
+        <a href="/es/"><span class="flag">🇪🇸</span> ES</a>
+      </div>
     </div>
     <a href="#contato" class="nav-cta">Get in touch</a>
     <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -381,6 +396,14 @@
 </footer>
 
 <script>
+  function toggleLang() {
+    document.getElementById('lang-select').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const sel = document.getElementById('lang-select');
+    if (!sel.contains(e.target)) sel.classList.remove('open');
+  });
+
   function toggleMenu() {
     document.getElementById('nav-links').classList.toggle('open');
     document.getElementById('nav-hamburger').classList.toggle('open');

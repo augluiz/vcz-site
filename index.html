@@ -42,9 +42,10 @@
   2. HERO       → Banner principal com título e CTAs
   3. SOBRE      → Apresentação da consultoria e cards de serviços
   4. ENTREGAS   → Grid de 5 entregáveis analíticos
-  5. FRENTE     → Biografia do Augusto Luiz
-  6. CONTATO    → Formulário + informações de contato
-  7. FOOTER     → Rodapé com links legais
+  5. SERVIÇOS   → 3 cards: Inteligência Comercial · Pesquisa de Mercado · JBP
+  6. FRENTE     → Biografia do Augusto Luiz
+  7. CONTATO    → Formulário + informações de contato
+  8. FOOTER     → Rodapé com links legais
 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -324,34 +325,90 @@
     gap: 1.5rem;
   }
 
-  .lang-switcher {
+  .lang-select {
+    position: relative;
+  }
+
+  .lang-select-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 5px;
+    background: rgba(183,160,115,0.08);
+    border: 1px solid rgba(183,160,115,0.2);
+    border-radius: 4px;
+    padding: 5px 8px 5px 7px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--steel);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lang-select-btn:hover {
+    border-color: rgba(200,146,42,0.45);
+    background: rgba(183,160,115,0.12);
+  }
+
+  .lang-select-btn .flag { font-size: 16px; line-height: 1; }
+
+  .lang-select-btn .chevron {
+    width: 8px;
+    height: 8px;
+    border-right: 1px solid var(--steel);
+    border-bottom: 1px solid var(--steel);
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.2s;
+    margin-left: 1px;
+  }
+
+  .lang-select.open .lang-select-btn .chevron {
+    transform: rotate(-135deg) translateY(-2px);
+  }
+
+  .lang-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: rgba(13,27,42,0.97);
+    border: 1px solid rgba(183,160,115,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 110px;
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .lang-select.open .lang-dropdown { display: block; }
+
+  .lang-dropdown a,
+  .lang-dropdown span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
     font-family: 'DM Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.15em;
-  }
-
-  .lang-active {
-    color: var(--gold);
-    font-weight: 400;
-  }
-
-  .lang-option {
-    color: var(--steel);
+    text-transform: uppercase;
     text-decoration: none;
-    transition: color 0.2s;
+    color: var(--steel);
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
   }
 
-  .lang-option:hover { color: var(--fog); }
+  .lang-dropdown a:hover { background: rgba(183,160,115,0.08); color: var(--fog); }
 
-  .lang-switcher .lang-active + .lang-option::before,
-  .lang-option + .lang-option::before {
-    content: '·';
-    margin-right: 0.5rem;
-    color: rgba(183,160,115,0.3);
+  .lang-dropdown .lang-item-active {
+    color: var(--gold);
+    cursor: default;
+    background: rgba(200,146,42,0.05);
   }
+
+  .lang-dropdown .flag { font-size: 16px; }
 
   /* ── HERO ─────────────────────────────────────── */
   #hero {
@@ -772,14 +829,14 @@
 
   .servicos-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2px;
     margin-top: 4rem;
   }
 
   .servico-card {
     background: var(--navy2);
-    padding: 3rem 3rem 3.5rem;
+    padding: 2.5rem 2rem 3rem;
     position: relative;
     overflow: hidden;
     transition: background 0.3s;
@@ -1250,6 +1307,7 @@
     .sobre-grid,
     .servicos-grid,
     .contato-grid { grid-template-columns: 1fr; }
+    .servico-card { padding: 2rem 1.5rem 2.5rem; }
     .metodo-steps { grid-template-columns: 1fr 1fr; }
     .diferenciais-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
@@ -1261,6 +1319,7 @@
     .contato-form { order: -1; }
     .entregas-grid { grid-template-columns: 1fr 1fr; }
     .sobre-servicos { grid-template-columns: 1fr; }
+    .nav-cta { display: none; }
   }
 </style>
 </head>
@@ -1273,16 +1332,24 @@
   </a>
   <ul class="nav-links" id="nav-links">
     <li><a href="#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="#servicos" onclick="closeMenu()">Serviços</a></li>
     <li><a href="#frente" onclick="closeMenu()">Experiência</a></li>
     <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
     <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
     <li><a href="#contato" onclick="closeMenu()">Contato</a></li>
   </ul>
   <div class="nav-right">
-    <div class="lang-switcher">
-      <span class="lang-active">PT</span>
-      <a href="/en/" class="lang-option">EN</a>
-      <a href="/es/" class="lang-option">ES</a>
+    <div class="lang-select" id="lang-select">
+      <button class="lang-select-btn" onclick="toggleLang()" aria-label="Selecionar idioma">
+        <span class="flag">🇧🇷</span>
+        <span>PT</span>
+        <span class="chevron"></span>
+      </button>
+      <div class="lang-dropdown">
+        <span class="lang-item-active"><span class="flag">🇧🇷</span> PT</span>
+        <a href="/en/"><span class="flag">🇬🇧</span> EN</a>
+        <a href="/es/"><span class="flag">🇪🇸</span> ES</a>
+      </div>
     </div>
     <a href="#contato" class="nav-cta">Fale conosco</a>
     <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -1302,7 +1369,7 @@
       <div class="hero-line"></div>
       <p class="hero-sub">A VCZ transforma dados de mercado em direção estratégica — para que cada decisão comercial seja tomada com método, evidência e critério. Atuamos em varejo, indústria e e-commerce, em todo o Brasil.</p>
       <div class="hero-actions">
-        <a href="#sobre" class="btn-primary">Conheça os serviços</a>
+        <a href="#servicos" class="btn-primary">Conheça os serviços</a>
         <a href="#sobre" class="btn-ghost">Sobre a VCZ</a>
       </div>
     </div>
@@ -1390,6 +1457,57 @@
       <p class="entrega-title">100% Personalizado</p>
       <p class="entrega-desc">Cada entregável construído sob medida para a realidade e o contexto do cliente.</p>
     </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <p class="section-label reveal">O que fazemos</p>
+  <h2 class="section-title reveal">As <em>frentes</em> da inteligência<br>comercial aplicada.</h2>
+  <div class="servicos-grid">
+
+    <div class="servico-card reveal">
+      <p class="servico-icon">01 · IC</p>
+      <h3 class="servico-title">Inteligência Comercial</h3>
+      <p class="servico-desc">Análise estruturada da operação comercial para identificar onde o negócio pode crescer — com mais margem, mais consistência e menos ruído.</p>
+      <ul class="servico-items">
+        <li>Análise de resultado e rentabilidade</li>
+        <li>Estratégia e análise de precificação</li>
+        <li>Mix e qualificação de portfólio</li>
+        <li>Dashboards e visualizações gerenciais</li>
+        <li>Forecast e diarização de vendas</li>
+        <li>Monitoramento de metas e KPIs</li>
+        <li>Análise de projetos piloto</li>
+      </ul>
+    </div>
+
+    <div class="servico-card reveal">
+      <p class="servico-icon">02 · PM</p>
+      <h3 class="servico-title">Pesquisa de Mercado</h3>
+      <p class="servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades antes de agir.</p>
+      <ul class="servico-items">
+        <li>Comportamento e jornada do consumidor</li>
+        <li>Percepção de marca e produtos</li>
+        <li>Análise da dinâmica competitiva</li>
+        <li>Inteligência estratégica e cenários</li>
+        <li>Benchmarks setoriais</li>
+        <li>Análises recorrentes de mercado</li>
+      </ul>
+    </div>
+
+    <div class="servico-card reveal">
+      <p class="servico-icon">03 · JBP</p>
+      <h3 class="servico-title">Joint Business Plan</h3>
+      <p class="servico-desc">Planejamento conjunto entre indústria e varejo — alinhamento de metas, estratégias e ações para crescimento sustentável e parceiro.</p>
+      <ul class="servico-items">
+        <li>Diagnóstico da relação comercial</li>
+        <li>Construção do plano conjunto</li>
+        <li>Alinhamento de metas e indicadores</li>
+        <li>Definição de estratégias e ações</li>
+        <li>Acompanhamento e revisão periódica</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
@@ -1495,6 +1613,15 @@
      closeMenu  → fecha o menu ao clicar em qualquer link
      A classe "open" é controlada pelo CSS para mostrar/esconder
   ──────────────────────────────────────────────────────────────── */
+  function toggleLang() {
+    document.getElementById('lang-select').classList.toggle('open');
+  }
+
+  document.addEventListener('click', function(e) {
+    const sel = document.getElementById('lang-select');
+    if (!sel.contains(e.target)) sel.classList.remove('open');
+  });
+
   function toggleMenu() {
     document.getElementById('nav-links').classList.toggle('open');
     document.getElementById('nav-hamburger').classList.toggle('open');
