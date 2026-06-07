@@ -77,37 +77,38 @@
   .page-header-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(183,160,115,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(183,160,115,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
   .page-header-glow { position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(200,146,42,0.06) 0%, transparent 70%); pointer-events: none; }
 
+  .page-header-layout { display: grid; grid-template-columns: 54% 46%; gap: 3vw; align-items: center; width: 100%; }
+  .page-header-right { display: flex; justify-content: flex-end; align-items: center; }
+  .page-header-mark { width: 132%; max-width: 636px; opacity: 0.14; transform: translateX(2%); pointer-events: none; }
+
   .page-header-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 14px; }
   .page-header-eyebrow::before { content: ''; display: block; width: 36px; height: 1px; background: var(--gold); flex-shrink: 0; }
 
-  .page-header-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 4.6vw, 5rem); font-weight: 300; line-height: 1.1; color: var(--warm-white); max-width: 700px; margin-bottom: 1.5rem; }
+  .page-header-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 4.6vw, 5rem); font-weight: 300; line-height: 1.1; color: var(--warm-white); margin-bottom: 1.5rem; }
   .page-header-title em { font-style: italic; color: var(--gold); }
 
-  .page-header-sub { font-size: 17px; font-weight: 300; color: var(--fog); max-width: 560px; line-height: 1.8; }
+  .page-header-sub { font-size: 17px; font-weight: 300; color: var(--fog); max-width: 520px; line-height: 1.8; }
 
   /* ── SERVIÇOS ── */
-  #servicos { background: var(--navy2); padding: 0 5vw 72px; }
+  #servicos { background: var(--navy2); padding: 56px 5vw 80px; }
 
-  .servicos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .servicos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-  .servico-card { background: var(--navy2); padding: 2.5rem 2rem 3rem; position: relative; overflow: hidden; transition: background 0.3s; }
-  .servico-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--gold); transition: height 0.4s ease; }
-  .servico-card:hover::before { height: 100%; }
-  .servico-card:hover { background: rgba(22,43,64,0.95); }
+  .servico-card { background: var(--cream); border-top: 3px solid var(--gold); padding: 2.5rem 2.2rem 3rem; transition: box-shadow 0.3s; }
+  .servico-card:hover { box-shadow: 0 6px 24px rgba(200,146,42,0.1); }
 
-  .servico-icon { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 1.5rem; text-transform: uppercase; }
-  .servico-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: var(--warm-white); line-height: 1.2; margin-bottom: 1.2rem; }
-  .servico-desc { font-size: 15px; font-weight: 300; color: var(--fog); line-height: 1.8; }
+  .servico-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--graphite); line-height: 1.2; margin-bottom: 0.9rem; }
+  .servico-desc { font-size: 14px; font-weight: 300; color: #555; line-height: 1.85; }
 
-  .areas-list { list-style: none; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(183,160,115,0.12); display: flex; flex-direction: column; }
-  .area-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(183,160,115,0.07); transition: padding-left 0.15s; cursor: default; }
+  .areas-list { list-style: none; margin-top: 1.8rem; padding-top: 1.5rem; border-top: 1px solid rgba(46,46,46,0.1); display: flex; flex-direction: column; }
+  .area-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(46,46,46,0.07); transition: padding-left 0.15s; cursor: default; }
   .area-item:last-child { border-bottom: none; }
-  .area-item::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold-aged); flex-shrink: 0; margin-top: 7px; transition: width 0.2s, background 0.2s; }
-  .area-item:hover { padding-left: 6px; }
-  .area-item:hover::before { width: 22px; background: var(--gold); }
-  .area-item:hover .area-item-name { color: var(--warm-white); }
-  .area-item-name { font-size: 14px; color: var(--fog); font-weight: 400; line-height: 1.3; margin-bottom: 3px; transition: color 0.15s; }
-  .area-item-desc { font-size: 12px; color: var(--steel); font-weight: 300; line-height: 1.55; }
+  .area-item:hover { padding-left: 4px; }
+  .area-item:hover .area-item-name { color: var(--gold); }
+  .area-icon { color: var(--gold); flex-shrink: 0; margin-top: 1px; opacity: 0.6; transition: opacity 0.15s; }
+  .area-item:hover .area-icon { opacity: 1; }
+  .area-item-name { font-size: 13.5px; font-weight: 600; color: var(--graphite); line-height: 1.3; margin-bottom: 4px; letter-spacing: 0.01em; transition: color 0.15s; }
+  .area-item-desc { font-size: 12.5px; color: #666; font-weight: 300; line-height: 1.65; }
 
   /* ── CTA ── */
   #cta { background: var(--navy); text-align: center; padding: 100px 5vw; position: relative; overflow: hidden; }
@@ -181,75 +182,96 @@
 <section id="page-header">
   <div class="page-header-bg"></div>
   <div class="page-header-glow"></div>
-  <p class="page-header-eyebrow">VCZ Consultoria</p>
-  <h1 class="page-header-title">As <em>frentes</em> da inteligência<br>comercial aplicada.</h1>
-  <p class="page-header-sub">Combinamos inteligência comercial e pesquisa de mercado para transformar dados em estratégia real — com método, evidência e foco em resultado.</p>
+  <div class="page-header-layout">
+    <div class="page-header-left">
+      <p class="page-header-eyebrow">VCZ Consultoria</p>
+      <h1 class="page-header-title">As <em>frentes</em> da inteligência<br>comercial aplicada.</h1>
+      <p class="page-header-sub">Combinamos inteligência comercial e pesquisa de mercado para transformar dados em estratégia real — com método, evidência e foco em resultado.</p>
+    </div>
+    <div class="page-header-right">
+      <img src="/logo-mark.svg" alt="" aria-hidden="true" class="page-header-mark">
+    </div>
+  </div>
 </section>
 
 <!-- SERVIÇOS -->
 <section id="servicos">
   <div class="servicos-grid">
 
-    <div class="servico-card reveal">
-      <p class="servico-icon">01 · IC</p>
+    <div class="servico-card">
       <h2 class="servico-title">Inteligência Comercial</h2>
       <p class="servico-desc">Análise estruturada da operação para identificar onde o negócio pode crescer — com mais margem, mais consistência e menos ruído.</p>
       <ul class="areas-list">
         <li class="area-item">
-          <div><div class="area-item-name">Desempenho Comercial</div><div class="area-item-desc">Avalia evolução de vendas, atingimento de metas, gap de performance, sazonalidade e tendências por canal e cliente.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          <div><div class="area-item-name">Desempenho & Rentabilidade</div><div class="area-item-desc">Identifica onde o negócio cresce e onde realmente ganha. Variação de volume, tendência de preço, ticket médio, frequência e clientes ativos — conectados à margem de contribuição e às alavancas de resultado por produto, canal e cliente.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Gerenciamento de Categoria</div><div class="area-item-desc">Define sortimento ideal, espaço de gôndola, mix estratégico e oportunidades de crescimento por categoria.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <div><div class="area-item-name">Gerenciamento de Categoria</div><div class="area-item-desc">Otimização de sortimento, planograma e árvore mercadológica. Análise da função estratégica de cada item — primeiro preço, rentabilidade, fundo de sortimento, sazonal — e seu papel na construção do mix ideal. Participação de categoria, espaço de gôndola e perfil do consumidor.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Precificação & Competitividade</div><div class="area-item-desc">Analisa posicionamento de preço frente à concorrência, elasticidade e impacto de mudanças na rentabilidade.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          <div><div class="area-item-name">Precificação & Competitividade</div><div class="area-item-desc">Elasticidade-preço, faixas de preço, índice de competitividade e impacto na margem de contribuição por variação de tabela.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Trade Marketing</div><div class="area-item-desc">Avalia execução no ponto de venda, ativações, ROI de ações comerciais e share de gôndola.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <div><div class="area-item-name">Trade Marketing</div><div class="area-item-desc">Avaliação de execução no ponto de venda, participação em gôndola, retorno sobre investimento em ativações, calendário promocional e planejamento de verba cooperada.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Logística Comercial</div><div class="area-item-desc">Analisa indicadores de ruptura, valor de estoque, dias de estoque e giro de venda.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <div><div class="area-item-name">Logística Comercial</div><div class="area-item-desc">Índice de ruptura, cobertura de estoque, giro por produto, taxa de atendimento de pedidos e nível de serviço logístico na cadeia de abastecimento.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Prazo & Ciclo de Pagamento</div><div class="area-item-desc">Monitora prazo médio de recebimento, ciclo financeiro operacional e impacto no fluxo de caixa comercial.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div><div class="area-item-name">Prazo & Ciclo de Pagamento</div><div class="area-item-desc">Prazo médio de recebimento, ciclo financeiro operacional, capital de giro comercial e impacto das condições de pagamento sobre a rentabilidade.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Rentabilidade</div><div class="area-item-desc">Calcula margem de contribuição por produto, cliente e canal, identificando o que realmente gera resultado.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <div><div class="area-item-name">Desenvolvimento de BI</div><div class="area-item-desc">Estruturação de indicadores de desempenho, painéis gerenciais e narrativa de dados para suporte à tomada de decisão na operação.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Desenvolvimento de BI</div><div class="area-item-desc">Estrutura dashboards, KPIs e visualizações gerenciais para acompanhamento contínuo da operação.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <div><div class="area-item-name">Estudos de Mercado & Tendências</div><div class="area-item-desc">Análise com dados Nielsen: participação de mercado, índice de penetração e mapeamento de tendências de consumo por categoria.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Estudos de Mercado & Tendências</div><div class="area-item-desc">Mapeia movimentos do setor, dados Nielsen, crescimento de categorias e oportunidades emergentes.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <div><div class="area-item-name">CRM & Fidelização</div><div class="area-item-desc">Segmentação de base de clientes por recência, frequência e valor, com identificação de oportunidades de retenção e reativação.</div></div>
         </li>
       </ul>
     </div>
 
-    <div class="servico-card reveal">
-      <p class="servico-icon">02 · PM</p>
+    <div class="servico-card">
       <h2 class="servico-title">Pesquisa de Mercado</h2>
       <p class="servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades antes de agir.</p>
       <ul class="areas-list">
         <li class="area-item">
-          <div><div class="area-item-name">Posicionamento de Marca</div><div class="area-item-desc">Identifica como a marca é percebida pelo consumidor frente aos concorrentes e onde há lacunas estratégicas.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <div><div class="area-item-name">Posicionamento de Marca</div><div class="area-item-desc">Análise de valor de marca, atributos percebidos pelo consumidor, posicionamento competitivo e identificação de lacunas estratégicas frente ao mercado.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Pesquisa Qualitativa</div><div class="area-item-desc">Aprofunda motivações, percepções e comportamentos por meio de entrevistas, grupos focais e análise de discurso.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <div><div class="area-item-name">Pesquisa Qualitativa</div><div class="area-item-desc">Entrevistas em profundidade, grupos focais e etnografia para compreender motivações latentes, determinantes de comportamento e barreiras de adoção.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Pesquisa Quantitativa</div><div class="area-item-desc">Mede padrões de comportamento e preferências com amostras representativas e análise estatística.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+          <div><div class="area-item-name">Pesquisa Quantitativa</div><div class="area-item-desc">Levantamentos com amostras representativas, segmentação por agrupamento e análise conjunta para mensuração de preferências e intenção de compra.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Benchmark Setorial</div><div class="area-item-desc">Compara práticas, preços e performance com referências do setor para identificar gaps e oportunidades.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+          <div><div class="area-item-name">Referencial Setorial <span style="font-weight:300;color:#999;font-size:11px;">/ Benchmark</span></div><div class="area-item-desc">Comparação de indicadores, práticas comerciais e desempenho com as referências de excelência do setor, identificando lacunas e oportunidades competitivas.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Comportamento do Consumidor</div><div class="area-item-desc">Mapeia jornada de compra, hábitos de consumo, drivers de decisão e barreiras de compra.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <div><div class="area-item-name">Comportamento do Consumidor</div><div class="area-item-desc">Análise da jornada de compra, comportamento do comprador, momento de decisão, frequência, tempo desde a última compra e determinantes de lealdade à marca.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Análise Competitiva</div><div class="area-item-desc">Monitora estratégias, movimentos e posicionamento dos concorrentes diretos e indiretos no mercado.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <div><div class="area-item-name">Análise Competitiva</div><div class="area-item-desc">Monitoramento de participação de mercado, análise de forças competitivas, posicionamento dos concorrentes e detecção de movimentos estratégicos relevantes.</div></div>
         </li>
         <li class="area-item">
-          <div><div class="area-item-name">Inteligência Estratégica & Cenários</div><div class="area-item-desc">Combina dados de mercado para projetar cenários futuros e embasar decisões estratégicas com mais segurança.</div></div>
+          <svg class="area-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+          <div><div class="area-item-name">Inteligência Estratégica & Cenários</div><div class="area-item-desc">Construção de cenários prospectivos, análise de macroambiente, mapeamento de sinais fracos e elaboração de plano estratégico baseado em evidências de mercado.</div></div>
         </li>
       </ul>
     </div>
