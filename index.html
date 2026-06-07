@@ -351,7 +351,7 @@
     background: rgba(183,160,115,0.12);
   }
 
-  .lang-select-btn .flag { font-size: 16px; line-height: 1; }
+  .lang-select-btn .flag { height: 18px; width: auto; border-radius: 2px; display: block; }
 
   .lang-select-btn .chevron {
     width: 8px;
@@ -408,7 +408,7 @@
     background: rgba(200,146,42,0.05);
   }
 
-  .lang-dropdown .flag { font-size: 16px; }
+  .lang-dropdown .flag { height: 16px; width: auto; border-radius: 2px; display: block; }
 
   /* ── HERO ─────────────────────────────────────── */
   #hero {
@@ -829,7 +829,7 @@
 
   .servicos-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 2px;
     margin-top: 4rem;
   }
@@ -920,6 +920,91 @@
     text-transform: uppercase;
     color: var(--gold-light);
     margin-bottom: 1rem;
+  }
+
+  .areas-list {
+    list-style: none;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(183,160,115,0.12);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .area-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(183,160,115,0.07);
+    font-size: 14px;
+    color: var(--fog);
+    font-weight: 300;
+    transition: color 0.15s, padding-left 0.15s;
+    cursor: default;
+  }
+
+  .area-item:last-child { border-bottom: none; }
+
+  .area-item::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 1px;
+    background: var(--gold-aged);
+    flex-shrink: 0;
+    transition: width 0.2s, background 0.2s;
+  }
+
+  .area-item:hover { color: var(--warm-white); padding-left: 6px; }
+  .area-item:hover::before { width: 22px; background: var(--gold); }
+
+  .servicos-jbp {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: 2rem 2.5rem;
+    background: rgba(200,146,42,0.03);
+    border-top: 2px solid rgba(200,146,42,0.3);
+  }
+
+  .jbp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--warm-white);
+    margin-bottom: 0.5rem;
+    margin-top: 0.4rem;
+  }
+
+  .jbp-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--steel);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .btn-jbp {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(200,146,42,0.4);
+    padding: 10px 22px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-jbp:hover {
+    background: rgba(200,146,42,0.08);
+    border-color: var(--gold);
   }
 
   /* ── MÉTODO ───────────────────────────────────── */
@@ -1308,6 +1393,7 @@
     .servicos-grid,
     .contato-grid { grid-template-columns: 1fr; }
     .servico-card { padding: 2rem 1.5rem 2.5rem; }
+    .servicos-jbp { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
     .metodo-steps { grid-template-columns: 1fr 1fr; }
     .diferenciais-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
@@ -1341,14 +1427,14 @@
   <div class="nav-right">
     <div class="lang-select" id="lang-select">
       <button class="lang-select-btn" onclick="toggleLang()" aria-label="Selecionar idioma">
-        <span class="flag">🇧🇷</span>
+        <img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil">
         <span>PT</span>
         <span class="chevron"></span>
       </button>
       <div class="lang-dropdown">
-        <span class="lang-item-active"><span class="flag">🇧🇷</span> PT</span>
-        <a href="/en/"><span class="flag">🇬🇧</span> EN</a>
-        <a href="/es/"><span class="flag">🇪🇸</span> ES</a>
+        <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil"> PT</span>
+        <a href="/en/"><img class="flag" src="https://flagcdn.com/w20/gb.png" alt="English"> EN</a>
+        <a href="/es/"><img class="flag" src="https://flagcdn.com/w20/es.png" alt="Español"> ES</a>
       </div>
     </div>
     <a href="#contato" class="nav-cta">Fale conosco</a>
@@ -1466,46 +1552,48 @@
   <h2 class="section-title reveal">As <em>frentes</em> da inteligência<br>comercial aplicada.</h2>
   <div class="servicos-grid">
 
+    <!-- INTELIGÊNCIA COMERCIAL -->
     <div class="servico-card reveal">
       <p class="servico-icon">01 · IC</p>
       <h3 class="servico-title">Inteligência Comercial</h3>
-      <p class="servico-desc">Análise estruturada da operação comercial para identificar onde o negócio pode crescer — com mais margem, mais consistência e menos ruído.</p>
-      <ul class="servico-items">
-        <li>Análise de resultado e rentabilidade</li>
-        <li>Estratégia e análise de precificação</li>
-        <li>Mix e qualificação de portfólio</li>
-        <li>Dashboards e visualizações gerenciais</li>
-        <li>Forecast e diarização de vendas</li>
-        <li>Monitoramento de metas e KPIs</li>
-        <li>Análise de projetos piloto</li>
+      <p class="servico-desc">Análise estruturada da operação para identificar onde o negócio pode crescer — com mais margem, mais consistência e menos ruído.</p>
+      <ul class="areas-list">
+        <li class="area-item">Desempenho Comercial</li>
+        <li class="area-item">Gerenciamento de Categoria</li>
+        <li class="area-item">Precificação & Competitividade</li>
+        <li class="area-item">Trade Marketing</li>
+        <li class="area-item">Logística Comercial</li>
+        <li class="area-item">Prazo & Ciclo de Pagamento</li>
+        <li class="area-item">Rentabilidade</li>
+        <li class="area-item">Desenvolvimento de BI</li>
+        <li class="area-item">Estudos de Mercado & Tendências</li>
       </ul>
     </div>
 
+    <!-- PESQUISA DE MERCADO -->
     <div class="servico-card reveal">
       <p class="servico-icon">02 · PM</p>
       <h3 class="servico-title">Pesquisa de Mercado</h3>
       <p class="servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades antes de agir.</p>
-      <ul class="servico-items">
-        <li>Comportamento e jornada do consumidor</li>
-        <li>Percepção de marca e produtos</li>
-        <li>Análise da dinâmica competitiva</li>
-        <li>Inteligência estratégica e cenários</li>
-        <li>Benchmarks setoriais</li>
-        <li>Análises recorrentes de mercado</li>
+      <ul class="areas-list">
+        <li class="area-item">Posicionamento de Marca</li>
+        <li class="area-item">Pesquisa Qualitativa</li>
+        <li class="area-item">Pesquisa Quantitativa</li>
+        <li class="area-item">Benchmark Setorial</li>
+        <li class="area-item">Comportamento do Consumidor</li>
+        <li class="area-item">Análise Competitiva</li>
+        <li class="area-item">Inteligência Estratégica & Cenários</li>
       </ul>
     </div>
 
-    <div class="servico-card reveal">
-      <p class="servico-icon">03 · JBP</p>
-      <h3 class="servico-title">Joint Business Plan</h3>
-      <p class="servico-desc">Planejamento conjunto entre indústria e varejo — alinhamento de metas, estratégias e ações para crescimento sustentável e parceiro.</p>
-      <ul class="servico-items">
-        <li>Diagnóstico da relação comercial</li>
-        <li>Construção do plano conjunto</li>
-        <li>Alinhamento de metas e indicadores</li>
-        <li>Definição de estratégias e ações</li>
-        <li>Acompanhamento e revisão periódica</li>
-      </ul>
+    <!-- JBP -->
+    <div class="servicos-jbp">
+      <div>
+        <p class="servico-icon">03 · JBP</p>
+        <h3 class="jbp-title">Joint Business Plan</h3>
+        <p class="jbp-desc">Planejamento conjunto entre indústria e varejo — alinhamento de metas, estratégias e ações para crescimento sustentável e parceiro.</p>
+      </div>
+      <a href="#contato" class="btn-jbp">Fale conosco →</a>
     </div>
 
   </div>
