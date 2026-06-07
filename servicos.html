@@ -45,7 +45,7 @@
   .lang-select { position: relative; }
   .lang-select-btn { display: flex; align-items: center; gap: 5px; background: rgba(183,160,115,0.08); border: 1px solid rgba(183,160,115,0.2); border-radius: 4px; padding: 5px 8px 5px 7px; cursor: pointer; transition: border-color 0.2s, background 0.2s; color: var(--steel); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
   .lang-select-btn:hover { border-color: rgba(200,146,42,0.45); background: rgba(183,160,115,0.12); }
-  .lang-select-btn .flag { height: 16px; width: auto; border-radius: 2px; display: block; }
+  .lang-select-btn .flag { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; display: block; }
   .lang-select-btn .chevron { width: 8px; height: 8px; border-right: 1px solid var(--steel); border-bottom: 1px solid var(--steel); transform: rotate(45deg) translateY(-2px); transition: transform 0.2s; margin-left: 1px; }
   .lang-select.open .lang-select-btn .chevron { transform: rotate(-135deg) translateY(-2px); }
   .lang-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: rgba(13,27,42,0.97); border: 1px solid rgba(183,160,115,0.2); border-radius: 4px; overflow: hidden; min-width: 110px; backdrop-filter: blur(12px); z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
@@ -53,7 +53,7 @@
   .lang-dropdown a, .lang-dropdown span { display: flex; align-items: center; gap: 8px; padding: 7px 10px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--steel); transition: background 0.15s, color 0.15s; cursor: pointer; }
   .lang-dropdown a:hover { background: rgba(183,160,115,0.08); color: var(--fog); }
   .lang-dropdown .lang-item-active { color: var(--gold); cursor: default; background: rgba(200,146,42,0.05); }
-  .lang-dropdown .flag { height: 13px; width: auto; border-radius: 2px; display: block; }
+  .lang-dropdown .flag { width: 20px; height: 13px; object-fit: cover; border-radius: 2px; display: block; }
 
   /* ── HAMBURGER ── */
   .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
