@@ -100,18 +100,14 @@
   .servico-desc { font-size: 15px; font-weight: 300; color: var(--fog); line-height: 1.8; }
 
   .areas-list { list-style: none; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(183,160,115,0.12); display: flex; flex-direction: column; }
-  .area-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(183,160,115,0.07); font-size: 14px; color: var(--fog); font-weight: 300; transition: color 0.15s, padding-left 0.15s; cursor: default; }
+  .area-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(183,160,115,0.07); transition: padding-left 0.15s; cursor: default; }
   .area-item:last-child { border-bottom: none; }
-  .area-item::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold-aged); flex-shrink: 0; transition: width 0.2s, background 0.2s; }
-  .area-item:hover { color: var(--warm-white); padding-left: 6px; }
+  .area-item::before { content: ''; display: block; width: 16px; height: 1px; background: var(--gold-aged); flex-shrink: 0; margin-top: 7px; transition: width 0.2s, background 0.2s; }
+  .area-item:hover { padding-left: 6px; }
   .area-item:hover::before { width: 22px; background: var(--gold); }
-
-  .servicos-jbp { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 2rem 2.5rem; background: rgba(200,146,42,0.03); border-top: 2px solid rgba(200,146,42,0.3); }
-  .jbp-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: var(--warm-white); margin-bottom: 0.5rem; margin-top: 0.4rem; }
-  .jbp-desc { font-size: 14px; font-weight: 300; color: var(--steel); line-height: 1.7; max-width: 560px; }
-
-  .btn-jbp { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 10px 22px; text-decoration: none; white-space: nowrap; flex-shrink: 0; transition: background 0.2s, border-color 0.2s; display: inline-block; }
-  .btn-jbp:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
+  .area-item:hover .area-item-name { color: var(--warm-white); }
+  .area-item-name { font-size: 14px; color: var(--fog); font-weight: 400; line-height: 1.3; margin-bottom: 3px; transition: color 0.15s; }
+  .area-item-desc { font-size: 12px; color: var(--steel); font-weight: 300; line-height: 1.55; }
 
   /* ── CTA ── */
   #cta { background: var(--navy); text-align: center; padding: 100px 5vw; position: relative; overflow: hidden; }
@@ -142,7 +138,6 @@
     .nav-links li:last-child a { border-bottom: none; }
     .nav-cta { display: none; }
     .servicos-grid { grid-template-columns: 1fr; }
-    .servicos-jbp { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
     .page-header-title { font-size: clamp(2rem, 7vw, 3rem); }
   }
 </style>
@@ -200,15 +195,33 @@
       <h2 class="servico-title">Inteligência Comercial</h2>
       <p class="servico-desc">Análise estruturada da operação para identificar onde o negócio pode crescer — com mais margem, mais consistência e menos ruído.</p>
       <ul class="areas-list">
-        <li class="area-item">Desempenho Comercial</li>
-        <li class="area-item">Gerenciamento de Categoria</li>
-        <li class="area-item">Precificação & Competitividade</li>
-        <li class="area-item">Trade Marketing</li>
-        <li class="area-item">Logística Comercial</li>
-        <li class="area-item">Prazo & Ciclo de Pagamento</li>
-        <li class="area-item">Rentabilidade</li>
-        <li class="area-item">Desenvolvimento de BI</li>
-        <li class="area-item">Estudos de Mercado & Tendências</li>
+        <li class="area-item">
+          <div><div class="area-item-name">Desempenho Comercial</div><div class="area-item-desc">Avalia evolução de vendas, atingimento de metas, gap de performance, sazonalidade e tendências por canal e cliente.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Gerenciamento de Categoria</div><div class="area-item-desc">Define sortimento ideal, espaço de gôndola, mix estratégico e oportunidades de crescimento por categoria.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Precificação & Competitividade</div><div class="area-item-desc">Analisa posicionamento de preço frente à concorrência, elasticidade e impacto de mudanças na rentabilidade.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Trade Marketing</div><div class="area-item-desc">Avalia execução no ponto de venda, ativações, ROI de ações comerciais e share de gôndola.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Logística Comercial</div><div class="area-item-desc">Analisa indicadores de ruptura, valor de estoque, dias de estoque e giro de venda.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Prazo & Ciclo de Pagamento</div><div class="area-item-desc">Monitora prazo médio de recebimento, ciclo financeiro operacional e impacto no fluxo de caixa comercial.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Rentabilidade</div><div class="area-item-desc">Calcula margem de contribuição por produto, cliente e canal, identificando o que realmente gera resultado.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Desenvolvimento de BI</div><div class="area-item-desc">Estrutura dashboards, KPIs e visualizações gerenciais para acompanhamento contínuo da operação.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Estudos de Mercado & Tendências</div><div class="area-item-desc">Mapeia movimentos do setor, dados Nielsen, crescimento de categorias e oportunidades emergentes.</div></div>
+        </li>
       </ul>
     </div>
 
@@ -217,23 +230,28 @@
       <h2 class="servico-title">Pesquisa de Mercado</h2>
       <p class="servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades antes de agir.</p>
       <ul class="areas-list">
-        <li class="area-item">Posicionamento de Marca</li>
-        <li class="area-item">Pesquisa Qualitativa</li>
-        <li class="area-item">Pesquisa Quantitativa</li>
-        <li class="area-item">Benchmark Setorial</li>
-        <li class="area-item">Comportamento do Consumidor</li>
-        <li class="area-item">Análise Competitiva</li>
-        <li class="area-item">Inteligência Estratégica & Cenários</li>
+        <li class="area-item">
+          <div><div class="area-item-name">Posicionamento de Marca</div><div class="area-item-desc">Identifica como a marca é percebida pelo consumidor frente aos concorrentes e onde há lacunas estratégicas.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Pesquisa Qualitativa</div><div class="area-item-desc">Aprofunda motivações, percepções e comportamentos por meio de entrevistas, grupos focais e análise de discurso.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Pesquisa Quantitativa</div><div class="area-item-desc">Mede padrões de comportamento e preferências com amostras representativas e análise estatística.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Benchmark Setorial</div><div class="area-item-desc">Compara práticas, preços e performance com referências do setor para identificar gaps e oportunidades.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Comportamento do Consumidor</div><div class="area-item-desc">Mapeia jornada de compra, hábitos de consumo, drivers de decisão e barreiras de compra.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Análise Competitiva</div><div class="area-item-desc">Monitora estratégias, movimentos e posicionamento dos concorrentes diretos e indiretos no mercado.</div></div>
+        </li>
+        <li class="area-item">
+          <div><div class="area-item-name">Inteligência Estratégica & Cenários</div><div class="area-item-desc">Combina dados de mercado para projetar cenários futuros e embasar decisões estratégicas com mais segurança.</div></div>
+        </li>
       </ul>
-    </div>
-
-    <div class="servicos-jbp">
-      <div>
-        <p class="servico-icon">03 · JBP</p>
-        <h2 class="jbp-title">Joint Business Plan</h2>
-        <p class="jbp-desc">Planejamento conjunto entre indústria e varejo — alinhamento de metas, estratégias e ações para crescimento sustentável e parceiro.</p>
-      </div>
-      <a href="/#contato" class="btn-jbp">Fale conosco →</a>
     </div>
 
   </div>
