@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel CEASA SC — Preços e Clima | VCZ Consultoria</title>
+<meta name="description" content="Painel interativo com cotações diárias do CEASA Santa Catarina cruzadas com histórico climático de 10 cidades. Tendências de preços, variação anual e previsão de 16 dias.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vczconsultoria.com.br/ceasa_dashboard/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Painel CEASA SC — Preços e Clima | VCZ Consultoria">
+<meta property="og:description" content="Cotações diárias do CEASA SC cruzadas com clima. Tendências, variação anual e previsão de 16 dias para hortifruti de Santa Catarina.">
+<meta property="og:url" content="https://vczconsultoria.com.br/ceasa_dashboard/">
+<meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F0E8; --panel:#FFFFFF; --panel2:#EDE7DC; --panel3:#E0D8CC;
+  --navy:#0D1B2A; --navy2:#162B40;
+  --gold:#C8922A; --gold-light:#E2AC4C; --gold-aged:#B7A073;
+  --text:#1A2433; --text2:#3E5068; --text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
+  --th-bg:#1A2F45; --th-text:#E8D8C0;
+  --tr-even:#F4F6FA; --tr-odd:#FFFFFF;
+  --tc-up-bg:rgba(192,50,50,.09);    --tc-up-text:#B83030;
+  --tc-dn-bg:rgba(180,140,0,.11);   --tc-dn-text:#8C6A00;
+  --tc-flat-bg:rgba(40,100,180,.08); --tc-flat-text:#2B68A8;
+  --pos:#B83030; --neg:#8C6A00;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.06);border-radius:4px}
+::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#B7A073}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:rgba(26,36,51,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:1rem;backdrop-filter:blur(4px)}
+#loading.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,0.15)}
+.nav-logo img{height:46px;width:auto}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,0.4);padding:9px 20px;text-decoration:none;transition:background .2s,border-color .2s;white-space:nowrap}
+.nav-cta:hover{background:rgba(200,146,42,.08);border-color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.lang-select{position:relative}
+.lang-select-btn{display:flex;align-items:center;gap:5px;background:rgba(183,160,115,.08);border:1px solid rgba(183,160,115,.2);border-radius:4px;padding:5px 8px 5px 7px;cursor:pointer;color:#9AAABB;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.lang-select-btn .flag{width:22px;height:15px;object-fit:cover;border-radius:2px;display:block}
+.lang-select-btn .chevron{width:8px;height:8px;border-right:1px solid #9AAABB;border-bottom:1px solid #9AAABB;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.lang-select.open .lang-select-btn .chevron{transform:rotate(-135deg) translateY(-2px)}
+.lang-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:rgba(13,27,42,.97);border:1px solid rgba(183,160,115,.2);border-radius:4px;overflow:hidden;min-width:110px;backdrop-filter:blur(12px);z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.lang-select.open .lang-dropdown{display:block}
+.lang-dropdown a,.lang-dropdown span{display:flex;align-items:center;gap:8px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;color:#9AAABB}
+.lang-dropdown a:hover{background:rgba(183,160,115,.08);color:#D4DDED}
+.lang-dropdown .lang-item-active{color:var(--gold);cursor:default;background:rgba(200,146,42,.05)}
+.lang-dropdown .flag{width:20px;height:13px;object-fit:cover;border-radius:2px;display:block}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:#9AAABB;transition:all .3s ease}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(max-width:768px){
+  .nav-hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(13,27,42,.98);backdrop-filter:blur(12px);flex-direction:column;gap:0;padding:1rem 0;z-index:99}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:1rem 5vw;font-size:13px;border-bottom:1px solid rgba(183,160,115,.08)}
+  .nav-cta{display:none}
+}
+
+/* HEADER */
+.dash-header{padding:.8rem 2rem .65rem;background:var(--navy2);border-bottom:1px solid rgba(255,255,255,.05);margin-top:72px}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.22rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:#F0E8D8;line-height:1}
+.dash-header h1 em{color:var(--gold-light);font-style:italic}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:#5A7A90;margin-top:.15rem}
+
+/* ─── FILTER PANEL ──────────────────────────────────────────── */
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-inner{padding:.65rem 1.5rem;display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap}
+.tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
+.tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
+.tf-vsep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:.05rem 0;flex-shrink:0}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
+.tf-input:focus{border-color:var(--gold)}
+.tf-input option{background:var(--navy2);color:#EDE7DC}
+.radio-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.radio-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer;white-space:nowrap}
+.radio-row label:hover{color:#C8D8E8}
+.radio-row input[type=radio]{accent-color:var(--gold)}
+.check-row{display:flex;gap:.7rem}
+.check-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer}
+.check-row label:hover{color:#C8D8E8}
+.check-row input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px}
+.date-row{display:flex;align-items:center;gap:.4rem}
+.date-row input[type=date]{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.72rem;outline:none;color-scheme:dark;transition:border-color .2s}
+.date-row input[type=date]:focus{border-color:var(--gold)}
+.date-row .sep{font-family:'DM Mono',monospace;font-size:.6rem;color:#4A6A80}
+.n-row{display:flex;align-items:center;gap:.35rem}
+.n-row input[type=number]{width:62px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .4rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.8rem;outline:none;text-align:center;transition:border-color .2s}
+.n-row input[type=number]:focus{border-color:var(--gold)}
+.n-row span{font-family:'DM Mono',monospace;font-size:.62rem;color:#4A6A80}
+
+/* COMBOBOX */
+.combo-wrap{position:relative}
+.combo-input{width:210px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem .3rem 1.65rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B7A073' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.42rem center}
+.combo-input::placeholder{color:rgba(183,160,115,.45)}
+.combo-input:focus{border-color:var(--gold)}
+.combo-drop{position:absolute;top:calc(100% + 2px);left:0;width:310px;max-height:240px;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;display:none}
+.combo-drop.open{display:block}
+.combo-drop .ci{padding:.34rem .55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer;border-bottom:1px solid rgba(26,36,51,.05);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .1s}
+.combo-drop .ci:last-child{border-bottom:none}
+.combo-drop .ci:hover{background:#FBF7F2}
+.combo-drop .ci.active{background:#FDF5E8;color:var(--navy);font-weight:500}
+.combo-drop .ci-empty{padding:.7rem .55rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
+
+/* DROPDOWN MULTI */
+.ddm-wrap{position:relative}
+.ddm-btn{min-width:130px;max-width:170px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .55rem;color:#8AAABB;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:.3rem;transition:border-color .2s;white-space:nowrap}
+.ddm-btn:hover,.ddm-btn.open{border-color:var(--gold);color:#EDE7DC}
+.ddm-btn .arr{font-size:.55rem;color:#4A6A80;transition:transform .15s;flex-shrink:0}
+.ddm-btn.open .arr{transform:rotate(180deg)}
+.ddm-panel{position:absolute;top:calc(100% + 2px);left:0;width:200px;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;display:none}
+.ddm-panel.open{display:block}
+.ddm-search{width:100%;background:var(--bg);border:none;border-bottom:1px solid var(--border);padding:.35rem .5rem .35rem 1.65rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A8A9A' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.42rem center}
+.ddm-list{max-height:180px;overflow-y:auto}
+.ddm-list label{display:flex;align-items:center;gap:.38rem;padding:.34rem .5rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer;border-bottom:1px solid rgba(26,36,51,.05);transition:background .1s}
+.ddm-list label:last-child{border-bottom:none}
+.ddm-list label:hover{background:#FBF7F2}
+.ddm-list label.active{background:#FDF5E8;color:var(--navy);font-weight:500}
+.ddm-list input[type=checkbox]{accent-color:var(--gold);flex-shrink:0}
+.ddm-empty{padding:.65rem .5rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
+
+.btn-reset{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.3rem .7rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-reset:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,146,42,.08)}
+
+/* ─── MAIN 2-COL LAYOUT ─────────────────────────────────────── */
+.dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+.chart-col{display:flex;flex-direction:column;gap:0}
+.table-col{display:flex;flex-direction:column;gap:0}
+
+/* CHART CARD — container unificado para coluna esquerda */
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
+.chart-section{padding:1rem 1.1rem}
+.chart-divider{display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;background:var(--navy);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.18)}
+.chart-divider span{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+.chart-divider::before,.chart-divider::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.2)}
+.prev-section{background:rgba(26,36,51,.018)}
+/* FILTER BAR — barra de filtro dentro do card (produto + cidade) */
+.chart-filter-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12);padding:.45rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+.chart-filter-bar.inner{border-top:1px solid rgba(200,146,42,.12)}
+.chart-filter-bar .lbl{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;flex-shrink:0}
+.chart-filter-bar select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.26rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;min-width:150px;cursor:pointer;transition:border-color .2s;max-width:260px;flex:1}
+.chart-filter-bar select option{background:var(--navy2);color:#EDE7DC}
+.chart-filter-bar select:focus{border-color:var(--gold)}
+.chart-filter-bar .combo-input{flex:1;width:auto}
+
+.ct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem;font-weight:500}
+.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-bottom:.75rem}
+.no-data{text-align:center;padding:3rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+.cv-wrap canvas{display:block;width:100%!important;height:260px!important}
+/* margem inferior entre chart-col e table-col */
+.chart-col > .chart-group{margin-bottom:1rem}
+
+/* TABLES */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.tbox.green{border-top:3px solid #C04040}.tbox.red{border-top:3px solid #C89A00}
+.tbox-head{padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15)}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.tbox.green .tbox-head h3{color:#E06060}.tbox.red .tbox-head h3{color:#D4A830}
+.tbox-cnt{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--gold-aged);background:rgba(200,146,42,.1);padding:.1rem .45rem;border-radius:10px;border:1px solid rgba(200,146,42,.25)}
+.tscroll{overflow-x:auto}
+.tscroll.limited{max-height:340px;overflow-y:auto}
+.dt{width:100%;border-collapse:collapse;font-size:.74rem;table-layout:fixed;min-width:640px}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:normal;line-height:1.25;vertical-align:bottom;cursor:pointer;user-select:none;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
+.col-rh{position:absolute;top:0;right:0;width:5px;height:100%;cursor:col-resize;background:transparent;z-index:1}
+.col-rh:hover{background:rgba(255,255,255,.25)}
+.dt th:last-child{border-right:none}
+.dt th:hover{background:#0D1B2A}
+.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem;display:inline-block;min-width:.5rem;vertical-align:middle}
+.dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
+.dt tr:nth-child(even) td{background:var(--tr-even)}.dt tr:nth-child(odd) td{background:var(--tr-odd)}
+.dt tr:hover td{background:#EEF3FB!important}
+.dt tr:last-child td{border-bottom:none}
+.dt th.r,.dt td.r{text-align:right}
+.tc-up  {background:var(--tc-up-bg)!important;  color:var(--tc-up-text)!important;  font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600}
+.tc-dn  {background:var(--tc-dn-bg)!important;  color:var(--tc-dn-text)!important;  font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600}
+.tc-flat{background:var(--tc-flat-bg)!important;color:var(--tc-flat-text)!important;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:500}
+.pos{color:var(--pos)!important;font-weight:600}.neg{color:var(--neg)!important;font-weight:600}
+.dt .col-prod{width:auto;min-width:130px}.dt .col-tend{width:82px}.dt .col-val{width:82px}.dt .col-var{width:68px}
+.full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
+.full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600;white-space:nowrap}
+.full-tbox-head input{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.26rem .5rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;width:190px;transition:border-color .2s}
+.full-tbox-head input:focus{border-color:var(--gold)}
+
+.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
+.dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
+.dash-footer a:hover{color:var(--gold)}
+
+/* ABOUT STRIP */
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr) auto;gap:1rem 2.2rem;align-items:center}
+.about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65;max-width:580px}
+.about-what strong{color:#E8D8C0;font-weight:600}
+.about-steps{display:flex;flex-direction:column;gap:.42rem}
+.about-step{display:flex;align-items:flex-start;gap:.55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8AAABB;line-height:1.5}
+.about-step span{flex:1;min-width:0}
+.about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;white-space:nowrap;flex-shrink:0;margin-top:.12rem}
+
+/* CSS TOOLTIP ON FILTER LABELS */
+.lbl-tip{position:relative;display:inline-flex;align-items:center;gap:.25rem}
+.tip-icon{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.22);color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.45rem;cursor:help;flex-shrink:0;line-height:1}
+.lbl-tip .tip-box{position:absolute;top:calc(100% + 6px);left:0;background:var(--navy);color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:400;line-height:1.55;padding:.45rem .65rem;border-radius:4px;width:230px;white-space:normal;box-shadow:0 4px 14px rgba(0,0,0,.32);border:1px solid rgba(200,146,42,.2);opacity:0;pointer-events:none;transition:opacity .18s;z-index:600}
+.lbl-tip:hover .tip-box{opacity:1}
+
+/* TENDENCY LEGEND */
+.tend-legend{display:flex;gap:1rem;flex-wrap:wrap;padding:.38rem .85rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);border-radius:6px 6px 0 0}
+.tl-item{font-family:'DM Mono',monospace;font-size:.55rem;display:flex;align-items:center;gap:.3rem;letter-spacing:.03em}
+.tl-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.tl-up .tl-dot{background:var(--tc-up-text)}.tl-dn .tl-dot{background:var(--tc-dn-text)}.tl-flat .tl-dot{background:#5B8FC4}
+.tl-up{color:#E06060}.tl-dn{color:#D4A830}.tl-flat{color:#6EB0D8}
+.tl-sep{color:rgba(200,146,42,.25);font-size:.9rem;align-self:center}
+.tl-note{font-family:'DM Sans',sans-serif;font-size:.65rem;color:rgba(154,170,187,.55);margin-left:auto}
+
+/* PRODUCT MODAL */
+.prod-modal-bg{position:fixed;inset:0;background:rgba(13,27,42,.72);z-index:800;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s}
+.prod-modal-bg.open{opacity:1;pointer-events:all}
+.prod-modal{background:var(--panel);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.4);width:100%;max-width:1400px;max-height:calc(100vh - 4rem);display:flex;flex-direction:column;transform:translateY(16px);transition:transform .22s}
+.prod-modal-bg.open .prod-modal{transform:translateY(0)}
+.pm-modal-head{padding:.75rem 1.2rem;background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.3);display:flex;align-items:center;gap:1rem;flex-wrap:wrap;border-radius:8px 8px 0 0;flex-shrink:0}
+.pm-modal-head h2{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#F0E8D8;flex:1;min-width:0}
+.pm-modal-filters{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.pm-modal-filters select,.pm-modal-filters input{background:#1A2F45;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.28rem .55rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none}
+.pm-modal-filters select{min-width:130px;cursor:pointer;color-scheme:dark}
+.pm-modal-filters select option{background:#1A2F45;color:#EDE7DC}
+.pm-modal-filters input{width:180px}
+.pm-modal-filters select:focus,.pm-modal-filters input:focus{border-color:var(--gold)}
+.pm-modal-cnt{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold-aged);white-space:nowrap}
+.btn-close-modal{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:.28rem .65rem;color:#9AAABB;font-family:'DM Mono',monospace;font-size:.6rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-close-modal:hover{border-color:var(--gold);color:var(--gold)}
+.pm-modal-body{overflow:auto;flex:1}
+.pm-dt{width:100%;border-collapse:collapse;font-size:.73rem;min-width:1100px}
+.pm-dt thead{position:sticky;top:0;z-index:3}
+.pm-dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.52rem;text-transform:uppercase;letter-spacing:.04em;text-align:left;white-space:nowrap;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.1);cursor:pointer;user-select:none}
+.pm-dt th:last-child{border-right:none;min-width:260px;white-space:normal}
+.pm-dt th .si{font-size:.5rem;color:rgba(255,255,255,.6);margin-left:.12rem}
+.pm-dt th:hover{background:#0D1B2A}
+.pm-dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.07);color:var(--text);vertical-align:top;line-height:1.4}
+.pm-dt td:last-child{font-family:'DM Sans',sans-serif;font-size:.69rem;color:var(--text2);white-space:normal;min-width:220px}
+.pm-dt tr:nth-child(even) td{background:var(--tr-even)}.pm-dt tr:nth-child(odd) td{background:var(--tr-odd)}
+.pm-dt tr:hover td{background:#EEF3FB!important}
+.pm-dt .tag{display:inline-block;font-family:'DM Mono',monospace;font-size:.58rem;padding:.05rem .32rem;border-radius:3px;font-weight:600;white-space:nowrap}
+.pm-dt .tag-up{background:rgba(192,50,50,.12);color:#B83030}
+.pm-dt .tag-dn{background:rgba(180,140,0,.13);color:#8C6A00}
+.pm-dt .tag-nt{background:rgba(40,100,180,.09);color:#2B68A8}
+.pm-dt .tag-cat{background:rgba(200,146,42,.13);color:var(--gold)}
+.btn-ficha{background:transparent;border:1px solid rgba(200,146,42,.4);border-radius:4px;padding:.32rem .8rem;color:var(--gold-aged);font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.btn-ficha:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,146,42,.08)}
+
+/* PRICE MATRIX */
+.pm-box{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--navy2);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.pm-head{padding:.5rem .85rem;display:flex;align-items:center;gap:.6rem;background:var(--navy2);border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;user-select:none}
+.pm-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--gold-light);white-space:nowrap;flex-shrink:0}
+.pm-product-lbl{font-family:'DM Sans',sans-serif;font-size:.72rem;color:#9AAABB;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.pm-arr{font-size:.55rem;color:var(--text3);transition:transform .18s;flex-shrink:0}
+.pm-box.collapsed .pm-arr{transform:rotate(-90deg)}
+.pm-body{max-height:180px;overflow:hidden;transition:max-height .22s ease}
+.pm-box.collapsed .pm-body{max-height:0}
+.pm-tbl{width:100%;border-collapse:collapse;font-size:.71rem;min-width:460px}
+.pm-scroll{overflow-x:auto}
+.pm-tbl thead{position:sticky;top:0;z-index:2}
+.pm-tbl th{padding:.38rem .55rem;font-family:'DM Mono',monospace;font-size:.52rem;text-transform:uppercase;letter-spacing:.04em;text-align:right;white-space:nowrap;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.pm-tbl th:first-child{text-align:left;min-width:100px}
+.pm-tbl th:last-child{border-right:none}
+.pm-tbl td{padding:.32rem .55rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);text-align:right;font-family:'DM Mono',monospace;font-size:.7rem;white-space:nowrap}
+.pm-tbl td:first-child{text-align:left;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:.71rem;font-weight:500}
+.pm-tbl tr:nth-child(even) td{background:var(--tr-even)}.pm-tbl tr:nth-child(odd) td{background:var(--tr-odd)}
+.pm-tbl tr:last-child td{border-bottom:none}
+.pm-no-data{padding:.9rem;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);text-align:center}
+
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}.about-cols{grid-template-columns:1fr}}
+@media(max-width:768px){.dash-main{padding:.85rem 1rem}.filter-inner{gap:1rem}}
+</style>
+</head>
+<body>
+
+<!-- PRODUCT MODAL -->
+<div class="prod-modal-bg" id="prod-modal-bg">
+  <div class="prod-modal">
+    <div class="pm-modal-head">
+      <h2>Ficha dos Produtos</h2>
+      <div class="pm-modal-filters">
+        <select id="pm-f-cat"><option value="">Todas as categorias</option></select>
+        <input type="text" id="pm-f-q" placeholder="Buscar produto…" autocomplete="off">
+        <span class="pm-modal-cnt" id="pm-cnt">0 produtos</span>
+      </div>
+      <button class="btn-close-modal" id="btn-close-modal">✕ Fechar</button>
+    </div>
+    <div class="pm-modal-body">
+      <table class="pm-dt">
+        <thead><tr>
+          <th data-col="produto">Produto <span class="si"></span></th>
+          <th data-col="categoria">Categoria <span class="si"></span></th>
+          <th data-col="origem_predominante">Origem <span class="si"></span></th>
+          <th data-col="disponibilidade_sc">Disponib. <span class="si"></span></th>
+          <th data-col="perecibilidade">Perecib. <span class="si"></span></th>
+          <th data-col="volatilidade_preco">Volatil. <span class="si"></span></th>
+          <th data-col="geada_sensibilidade">Sens. Geada <span class="si"></span></th>
+          <th data-col="impacto_geada">Imp. Geada <span class="si"></span></th>
+          <th data-col="impacto_chuva_excesso">Imp. Chuva <span class="si"></span></th>
+          <th data-col="impacto_seca">Imp. Seca <span class="si"></span></th>
+          <th data-col="caso_interessante">Caso de Atenção <span class="si"></span></th>
+        </tr></thead>
+        <tbody id="pm-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <p class="loading-text">Carregando dados CEASA…</p>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/logo-ouro.svg" alt="VCZ Consultoria">
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" class="active" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-select" id="lang-select">
+      <button class="lang-select-btn" onclick="toggleLang()" aria-label="Selecionar idioma">
+        <img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil">
+        <span>PT</span><span class="chevron"></span>
+      </button>
+      <div class="lang-dropdown">
+        <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil"> PT</span>
+        <a href="/en/"><img class="flag" src="https://flagcdn.com/w20/gb.png" alt="English"> EN</a>
+        <a href="/es/"><img class="flag" src="https://flagcdn.com/w20/es.png" alt="Español"> ES</a>
+      </div>
+    </div>
+    <a href="/#contato" class="nav-cta">Fale conosco</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="dash-header">
+  <p class="label">CEASA Santa Catarina</p>
+  <h1>Painel de <em>Preços</em> e Clima</h1>
+  <p class="sub" id="last-update">Carregando…</p>
+</div>
+
+<!-- ABOUT STRIP -->
+<div class="about-strip">
+  <div class="about-cols">
+    <p class="about-what">
+      Acompanhe os <strong>preços diários do CEASA Santa Catarina</strong> — o principal mercado atacadista de hortifruti do estado — cruzados com dados climáticos de <strong>10 cidades de SC</strong>. Ideal para identificar tendências de alta e queda antes de comprar ou vender.
+    </p>
+    <div class="about-steps">
+      <div class="about-step"><b>1</b><span>Use os filtros no topo para segmentar por ano, categoria, origem, tipo ou embalagem — as tabelas e o combo de produto atualizam em tempo real.</span></div>
+      <div class="about-step"><b>2</b><span>Escolha um produto no campo <strong style="color:#E8D8C0">Produto</strong> (coluna esquerda) para ver a evolução histórica do preço.</span></div>
+      <div class="about-step"><b>3</b><span>As tabelas à direita mostram os produtos com tendência de <strong style="color:#E06060">alta</strong> e <strong style="color:#D4A830">queda</strong> e a variação em relação ao ano anterior.</span></div>
+    </div>
+    <div style="display:flex;align-items:center;align-self:center">
+      <button class="btn-ficha" id="btn-open-ficha">📋 Ficha dos Produtos</button>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER PANEL -->
+<div class="filter-panel">
+  <div class="filter-inner">
+
+    <div class="tf-grp">
+      <span class="lbl">Ano</span>
+      <div class="check-row" id="f-anos"></div>
+    </div>
+
+    <div class="tf-grp">
+      <span class="lbl">Período</span>
+      <div class="date-row">
+        <input type="date" id="f-inicio">
+        <span class="sep">–</span>
+        <input type="date" id="f-fim">
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl"><span class="lbl-tip">Categoria <span class="tip-icon">?</span><span class="tip-box">Classificação botânica ou de uso: Fruta, Legume, Verdura, Bulbo, Raiz, Tempero, Grão, Animal, Processado. Filtra tabelas e lista de produtos.</span></span></span>
+      <select class="tf-input" id="f-categoria" style="min-width:120px"><option value="">Todas</option></select>
+    </div>
+
+    <div class="tf-grp">
+      <span class="lbl"><span class="lbl-tip">Cesta <span class="tip-icon">?</span><span class="tip-box">Família de produto — agrupa todas as variedades do mesmo nome. Ex: "Abacate" inclui Avocado, Liso, Redondo. Filtra tabelas e lista de produtos.</span></span></span>
+      <div class="ddm-wrap" id="ddm-cesta">
+        <button class="ddm-btn" id="ddm-cesta-btn" type="button">
+          <span id="ddm-cesta-lbl">Todas</span><span class="arr">▾</span>
+        </button>
+        <div class="ddm-panel" id="ddm-cesta-panel">
+          <input class="ddm-search" type="text" id="f-cesta-search" placeholder="Pesquisar…" autocomplete="off">
+          <div class="ddm-list" id="cesta-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl">Tipo</span>
+      <div class="radio-row">
+        <label><input type="radio" name="tipo" value="" checked> Todos</label>
+        <label><input type="radio" name="tipo" value="Convenci"> Convencional</label>
+        <label><input type="radio" name="tipo" value="Organico"> Orgânico</label>
+      </div>
+    </div>
+
+    <div class="tf-grp">
+      <span class="lbl">Origem</span>
+      <div class="radio-row">
+        <label><input type="radio" name="origem" value="" checked> Todos</label>
+        <label><input type="radio" name="origem" value="Nacional"> Nacional</label>
+        <label><input type="radio" name="origem" value="Importado"> Importado</label>
+      </div>
+    </div>
+
+    <div class="tf-grp">
+      <span class="lbl"><span class="lbl-tip">Classificação <span class="tip-icon">?</span><span class="tip-box">Grau de qualidade ou padronização do produto (ex: Extra, Tipo 1, Especial, Comum). Definido pelo CEASA no momento do registro.</span></span></span>
+      <select class="tf-input" id="f-classif" style="min-width:145px"><option value="">Todas</option></select>
+    </div>
+
+    <div class="tf-grp">
+      <span class="lbl">Embalagem</span>
+      <div class="ddm-wrap" id="ddm-embal">
+        <button class="ddm-btn" id="ddm-embal-btn" type="button">
+          <span id="ddm-embal-lbl">Todas</span><span class="arr">▾</span>
+        </button>
+        <div class="ddm-panel" id="ddm-embal-panel">
+          <div class="ddm-list" id="embal-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl"><span class="lbl-tip">Média Móvel <span class="tip-icon">?</span><span class="tip-box">Janela em dias para a média móvel do preço. A Tendência compara o preço do último dia com essa média: acima = Subindo, abaixo = Baixando.</span></span></span>
+      <div class="n-row">
+        <input type="number" id="f-n" min="1" max="365" value="7">
+        <span>dias</span>
+      </div>
+    </div>
+
+    <div class="tf-grp" style="margin-left:auto;justify-content:flex-end">
+      <span class="lbl">&nbsp;</span>
+      <button class="btn-reset" id="btn-reset">↺ Limpar</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN — 2 colunas -->
+<div class="dash-main">
+  <div class="dash-grid">
+
+    <!-- COLUNA ESQUERDA: gráficos -->
+    <div class="chart-col">
+      <div class="chart-card">
+
+        <!-- Filtro de produto -->
+        <div class="chart-filter-bar">
+          <span class="lbl">Produto</span>
+          <div class="combo-wrap" id="combo-produto" style="flex:1">
+            <input class="combo-input" type="text" id="f-produto-input" placeholder="Pesquisar produto…" autocomplete="off">
+            <div class="combo-drop" id="combo-drop"></div>
+          </div>
+        </div>
+
+        <!-- Gráfico de preço -->
+        <div class="chart-section">
+          <p class="ct">Preço ao Longo do Tempo</p>
+          <p class="cs" id="chart-produto-label">Selecione um produto acima</p>
+          <div class="cv-wrap" id="preco-wrap"><p class="no-data">Selecione um produto no filtro acima.</p></div>
+        </div>
+
+        <!-- Filtro de cidade -->
+        <div class="chart-filter-bar inner">
+          <span class="lbl">Cidade (Clima)</span>
+          <select id="f-cidade"></select>
+        </div>
+
+        <!-- Gráfico de clima histórico -->
+        <div class="chart-section">
+          <p class="ct" id="clima-title">Histórico Climático — Itajaí (SC)</p>
+          <p class="cs">Chuva (mm) · Temp Máx · Temp Média · Temp Mín · <span style="color:rgba(100,160,210,.9)">❄ Geada (temp ≤ 3°C)</span></p>
+          <div class="cv-wrap" id="clima-wrap"><p class="no-data">Carregando dados climáticos…</p></div>
+        </div>
+
+        <!-- Separador -->
+        <div class="chart-divider"><span>Previsão do Tempo</span></div>
+
+        <!-- Gráfico de previsão -->
+        <div class="chart-section prev-section">
+          <p class="ct" id="prev-title">Previsão 16 Dias — Itajaí (SC)</p>
+          <p class="cs">Fonte: Open-Meteo · Chuva (mm) · Temp Máx · Temp Média · Temp Mín · <span style="color:rgba(100,160,210,.9)">❄ Geada prevista (temp ≤ 3°C)</span></p>
+          <div class="cv-wrap" id="prev-wrap"><p class="no-data">Carregando previsão…</p></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA: tabelas -->
+    <div class="table-col">
+
+      <!-- PRICE MATRIX -->
+      <div class="pm-box" id="pm-box">
+        <div class="pm-head" id="pm-head">
+          <h3>Cotações — Últimas 7 Datas</h3>
+          <span class="pm-product-lbl" id="pm-product-lbl">—</span>
+          <span class="pm-arr">▾</span>
+        </div>
+        <div class="pm-body">
+          <div class="pm-scroll" id="pm-content"><p class="pm-no-data">Selecione um produto.</p></div>
+        </div>
+      </div>
+
+      <div class="tend-legend">
+        <span class="tl-item tl-up"><span class="tl-dot"></span> Subindo — preço atual acima da média</span>
+        <span class="tl-sep">·</span>
+        <span class="tl-item tl-dn"><span class="tl-dot"></span> Baixando — preço atual abaixo da média</span>
+        <span class="tl-sep">·</span>
+        <span class="tl-item tl-flat"><span class="tl-dot"></span> Estagnado — preço estável</span>
+        <span class="tl-note">Tendência = último dia vs. média N dias</span>
+      </div>
+
+      <div class="tbox green">
+        <div class="tbox-head">
+          <h3>↑ Tendências de aumento</h3>
+          <span class="tbox-cnt" id="cnt-alta">0</span>
+        </div>
+        <div class="tscroll">
+          <table class="dt"><thead id="th-alta"><tr>
+            <th class="col-prod" data-col="produto" title="Identificação completa: produto · origem · tipo · classificação · embalagem · conversão em kg">Produto <span class="si"></span></th>
+            <th class="col-tend" data-col="tend" title="Tendência calculada comparando o preço do último dia com a média dos N dias anteriores. Subindo = acima da média; Baixando = abaixo; Estagnado = igual">Tendência <span class="si"></span></th>
+            <th class="col-val r" data-col="pUlt" title="Preço comum (R$/unidade) registrado no último dia com dados disponíveis">Preço Atual <span class="si"></span></th>
+            <th class="col-val r" data-col="pMax" title="Maior preço praticado no último dia com dados disponíveis">Máximo do Dia <span class="si"></span></th>
+            <th class="col-val r" data-col="pMin" title="Menor preço praticado no último dia com dados disponíveis">Mínimo do Dia <span class="si"></span></th>
+            <th class="col-val r" data-col="pMed" title="Média móvel do preço comum nos últimos N dias — configurável no filtro Média Móvel">Preço Médio (N dias) <span class="si"></span></th>
+            <th class="col-val r" data-col="pLY" title="Preço médio no mesmo período do ano passado (janela de ±20 dias ao redor da data correspondente)">Preço Ano Anterior <span class="si"></span></th>
+            <th class="col-var r" data-col="varAno" title="Variação percentual entre o Preço Atual e o Preço Ano Anterior. Positivo = produto mais caro que no ano passado">Var. Preço Atual Vs Ano Ant. <span class="si"></span></th>
+          </tr></thead><tbody id="tb-alta"></tbody></table>
+        </div>
+      </div>
+
+      <div class="tbox red">
+        <div class="tbox-head">
+          <h3>↓ Tendências de queda</h3>
+          <span class="tbox-cnt" id="cnt-queda">0</span>
+        </div>
+        <div class="tscroll">
+          <table class="dt"><thead id="th-queda"><tr>
+            <th class="col-prod" data-col="produto" title="Identificação completa: produto · origem · tipo · classificação · embalagem · conversão em kg">Produto <span class="si"></span></th>
+            <th class="col-tend" data-col="tend" title="Tendência calculada comparando o preço do último dia com a média dos N dias anteriores. Subindo = acima da média; Baixando = abaixo; Estagnado = igual">Tendência <span class="si"></span></th>
+            <th class="col-val r" data-col="pUlt" title="Preço comum (R$/unidade) registrado no último dia com dados disponíveis">Preço Atual <span class="si"></span></th>
+            <th class="col-val r" data-col="pMax" title="Maior preço praticado no último dia com dados disponíveis">Máximo do Dia <span class="si"></span></th>
+            <th class="col-val r" data-col="pMin" title="Menor preço praticado no último dia com dados disponíveis">Mínimo do Dia <span class="si"></span></th>
+            <th class="col-val r" data-col="pMed" title="Média móvel do preço comum nos últimos N dias — configurável no filtro Média Móvel">Preço Médio (N dias) <span class="si"></span></th>
+            <th class="col-val r" data-col="pLY" title="Preço médio no mesmo período do ano passado (janela de ±20 dias ao redor da data correspondente)">Preço Ano Anterior <span class="si"></span></th>
+            <th class="col-var r" data-col="varAno" title="Variação percentual entre o Preço Atual e o Preço Ano Anterior. Positivo = produto mais caro que no ano passado">Var. Preço Atual Vs Ano Ant. <span class="si"></span></th>
+          </tr></thead><tbody id="tb-queda"></tbody></table>
+        </div>
+      </div>
+
+      <div class="full-tbox">
+        <div class="full-tbox-head">
+          <h3>Tabela Geral</h3>
+          <span class="tbox-cnt" id="cnt-geral" style="color:var(--gold);border-color:rgba(200,146,42,.3)">0</span>
+          <input type="text" id="tbl-search" placeholder="Filtrar…">
+        </div>
+        <div class="tscroll limited">
+          <table class="dt"><thead id="th-geral"><tr>
+            <th class="col-prod" data-col="produto" title="Identificação completa: produto · origem · tipo · classificação · embalagem · conversão em kg">Produto <span class="si"></span></th>
+            <th class="col-tend" data-col="tend" title="Tendência calculada comparando o preço do último dia com a média dos N dias anteriores. Subindo = acima da média; Baixando = abaixo; Estagnado = igual">Tendência <span class="si"></span></th>
+            <th class="col-val r" data-col="pUlt" title="Preço comum (R$/unidade) registrado no último dia com dados disponíveis">Preço Atual <span class="si"></span></th>
+            <th class="col-val r" data-col="pMax" title="Maior preço praticado no último dia com dados disponíveis">Máximo do Dia <span class="si"></span></th>
+            <th class="col-val r" data-col="pMin" title="Menor preço praticado no último dia com dados disponíveis">Mínimo do Dia <span class="si"></span></th>
+            <th class="col-val r" data-col="pMed" title="Média móvel do preço comum nos últimos N dias — configurável no filtro Média Móvel">Preço Médio (N dias) <span class="si"></span></th>
+            <th class="col-val r" data-col="pLY" title="Preço médio no mesmo período do ano passado (janela de ±20 dias ao redor da data correspondente)">Preço Ano Anterior <span class="si"></span></th>
+            <th class="col-var r" data-col="varAno" title="Variação percentual entre o Preço Atual e o Preço Ano Anterior. Positivo = produto mais caro que no ano passado">Var. Preço Atual Vs Ano Ant. <span class="si"></span></th>
+          </tr></thead><tbody id="tb-geral"></tbody></table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CTA STRIP -->
+<div style="background:var(--navy);border-top:2px solid rgba(200,146,42,.35);padding:2rem 2rem">
+  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
+    <div>
+      <p style="font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:.45rem">VCZ Consultoria · Inteligência Comercial</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:#F0E8D8;line-height:1.2;margin-bottom:.5rem">
+        Gostou do painel? <em style="color:var(--gold-light);font-style:italic">Posso aplicar no seu negócio.</em>
+      </h2>
+      <p style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:#5A8AA0;line-height:1.65;max-width:560px">
+        Criamos dashboards de inteligência de preços, clima e mercado — sob medida para cooperativas, atacadistas e produtores rurais de Santa Catarina e do Brasil.
+      </p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.65rem;align-items:stretch;min-width:200px">
+      <a href="https://wa.me/5541996242909?text=Ol%C3%A1%2C+vi+o+painel+CEASA+SC+e+quero+saber+mais+sobre+intelig%C3%AAncia+comercial+para+o+meu+neg%C3%B3cio." target="_blank" rel="noopener"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.45);color:#5DD88A;font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px;font-weight:600;transition:all .18s"
+         onmouseover="this.style.background='rgba(37,211,102,.25)';this.style.borderColor='rgba(37,211,102,.7)'" onmouseout="this.style.background='rgba(37,211,102,.15)';this.style.borderColor='rgba(37,211,102,.45)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.558 4.14 1.535 5.878L0 24l6.302-1.512A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.002-1.368l-.36-.214-3.733.895.934-3.617-.235-.373A9.785 9.785 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
+        Falar no WhatsApp
+      </a>
+      <a href="mailto:vcz.grupo@gmail.com?subject=Painel%20CEASA%20SC%20%E2%80%94%20Quero%20saber%20mais"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:transparent;border:1px solid rgba(200,146,42,.4);color:var(--gold-aged);font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px;font-weight:500;transition:all .18s"
+         onmouseover="this.style.borderColor='#C8922A';this.style.color='#E2AC4C'" onmouseout="this.style.borderColor='rgba(200,146,42,.4)';this.style.color='#B7A073'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        Enviar e-mail
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="dash-footer">
+  <span>Fonte: CEASA/SC · Clima: Open-Meteo · Atualizado automaticamente</span>
+  <a href="/">© VCZ Consultoria</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+Chart.register({
+  id:'crosshair',
+  afterDraw(chart){
+    const act=chart.tooltip?._active;
+    if(!act?.length) return;
+    const ctx=chart.ctx, x=act[0].element.x, {top,bottom}=chart.chartArea;
+    ctx.save(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,bottom);
+    ctx.lineWidth=1; ctx.strokeStyle='rgba(200,146,42,.55)';
+    ctx.setLineDash([4,3]); ctx.stroke(); ctx.restore();
+  }
+});
+
+const _cv=new Date().toISOString().slice(0,10);
+const URLS={c25:'dados/ceasa_2025.csv',c26:`dados/ceasa_2026.csv?v=${_cv}`,clima:`dados/clima_sc_historico.csv?v=${_cv}`,tabprod:'dados/tabela_produtos.csv'};
+
+let ceasa=[], climaData=[], charts={preco:null,clima:null,prev:null}, fullRows=[], categoriaMap={}, cityCoords={}, tpData=[];
+let _trendAlta=[], _trendQueda=[], _allCesta=[], _allClassif=[], _allEmbal=[], _produtoOptions=[];
+const _sort={alta:{col:null,dir:1},queda:{col:null,dir:1},geral:{col:null,dir:1}};
+const F={anos:new Set(),cesta:new Set(),chartProduto:'',tipo:'',origem:'',classif:'',categoria:'',embal:new Set(),cidade:'',inicio:null,fim:null,n:7};
+
+const pf    = s=>parseFloat(String(s).replace(',','.'));
+const avg   = a=>{const v=a.filter(x=>x!=null&&!isNaN(x));return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
+const fmt   = (v,d=2)=>v==null||isNaN(v)?'—':v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtR  = v=>v==null||isNaN(v)?'—':'R$ '+fmt(v,2);
+const fmtD  = s=>{if(!s)return'—';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;};
+const addD  = (s,n)=>{const d=new Date(s);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);};
+const movAvg= (v,n)=>v.map((_,i)=>{const sl=v.slice(Math.max(0,i-n+1),i+1).filter(x=>x!=null&&!isNaN(x));return sl.length?sl.reduce((a,b)=>a+b,0)/sl.length:null;});
+const makeProduto=r=>`${r.pv} - ${r.origem} - ${r.tipo} - ${r.cl||''} - ${r.embal} - ${isNaN(r.convKg)?String(r._raw):r.convKg}kg`;
+const makeCesta  =pv=>pv.split(' ')[0];
+const trunc      =(s,n)=>s.length>n?s.slice(0,n)+'…':s;
+const CIDADE_NOME={'ARARANGUA':'Araranguá','BLUMENAU':'Blumenau','CHAPECO':'Chapecó','ITAJAI':'Itajaí','JOINVILLE':'Joinville','LAGES':'Lages','RIO DO SUL':'Rio do Sul','SAO JOAQUIM':'São Joaquim','SAO JOSE':'São José','TIJUCAS':'Tijucas'};
+const nomeCidade =c=>CIDADE_NOME[c.toUpperCase()]||c;
+
+function sortRows(rows,col,dir){
+  if(!col) return rows;
+  return [...rows].sort((a,b)=>{
+    const va=a[col],vb=b[col];
+    if(va==null&&vb==null)return 0; if(va==null)return dir; if(vb==null)return -dir;
+    return typeof va==='string'?va.localeCompare(vb,'pt')*dir:(va-vb)*dir;
+  });
+}
+
+const loadCSV=url=>new Promise((res,rej)=>
+  Papa.parse(url,{download:true,header:true,delimiter:';',skipEmptyLines:true,complete:r=>res(r.data),error:rej}));
+
+async function boot(){
+  try{
+    const[c25,c26,cl,tp]=await Promise.all([loadCSV(URLS.c25),loadCSV(URLS.c26),loadCSV(URLS.clima),loadCSV(URLS.tabprod)]);
+    ceasa=[...c25,...c26].map(r=>{
+      const pv=r.produto_variedade?.trim()||'',convKg=pf(r.conv_kg);
+      return{data:r.data?.trim(),pv,cesta:makeCesta(pv),cl:r.classificacao?.trim()||'',
+             tipo:r.tipo?.trim(),origem:r.origem?.trim(),embal:r.embalagem?.trim(),
+             convKg,_raw:r.conv_kg?.trim(),
+             pmin:pf(r.preco_minimo),pcom:pf(r.preco_comum),pmax:pf(r.preco_maximo)};
+    }).filter(r=>r.data&&r.pv).sort((a,b)=>a.data.localeCompare(b.data));
+    ceasa.forEach(r=>{r.produto=makeProduto(r);});
+
+    cl.forEach(r=>{const c=r.cidade?.trim();if(c&&!cityCoords[c]){const lat=pf(r.lat),lon=pf(r.lon);if(!isNaN(lat)&&!isNaN(lon))cityCoords[c]={lat,lon};}});
+    climaData=cl.map(r=>({
+      data:r.data?.trim(), cidade:r.cidade?.trim()||'',
+      tmin:pf(r.temp_min),tmax:pf(r.temp_max),tmed:pf(r.temp_media),chuva:pf(r.chuva_mm),
+      geada:pf(r.geada)>0||pf(r.temp_min)<=3
+    })).filter(r=>r.data).sort((a,b)=>a.data.localeCompare(b.data));
+
+    tpData=tp.filter(r=>(r.produto||'').trim());
+    tp.forEach(r=>{const k=(r.produto||'').trim().toUpperCase();if(k)categoriaMap[k]=(r.categoria||'').trim();});
+
+    init();
+  }catch(e){
+    document.getElementById('loading').innerHTML=
+      `<p style="color:#E57373;font-family:'DM Mono',monospace;font-size:.8rem;padding:2rem;text-align:center;line-height:1.8">Erro ao carregar dados:<br>${e.message}</p>`;
+  }
+}
+
+function init(){
+  const last=[...new Set(ceasa.map(r=>r.data))].sort().pop();
+  const curYear=last.slice(0,4);
+  F.anos=new Set([curYear]);
+  F.inicio=`${curYear}-01-01`; F.fim=last;
+  document.getElementById('f-inicio').value=F.inicio;
+  document.getElementById('f-fim').value=F.fim;
+  document.getElementById('last-update').textContent=`Última coleta: ${fmtD(last)} · Santa Catarina`;
+
+  // Anos — checkboxes, só atual marcado
+  const anosDisp=[...new Set(ceasa.map(r=>r.data.slice(0,4)))].sort();
+  const anosEl=document.getElementById('f-anos');
+  anosDisp.forEach(y=>{
+    const l=document.createElement('label');
+    l.innerHTML=`<input type="checkbox" name="ano" value="${y}" ${y===curYear?'checked':''}> ${y}`;
+    anosEl.appendChild(l);
+  });
+
+  // Classificação
+  _allClassif=[...new Set(ceasa.map(r=>r.cl).filter(Boolean))].sort();
+  const fc=document.getElementById('f-classif');
+  _allClassif.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fc.appendChild(o);});
+
+  // Categoria
+  const cats=[...new Set(Object.values(categoriaMap).filter(Boolean))].sort();
+  const fcat=document.getElementById('f-categoria');
+  cats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fcat.appendChild(o);});
+
+  // Cidade — default Itajaí
+  const cidades=[...new Set(climaData.map(r=>r.cidade).filter(Boolean))].sort();
+  const fcid=document.getElementById('f-cidade');
+  cidades.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=nomeCidade(c);fcid.appendChild(o);});
+  const def=cidades.find(c=>/itaja[ií]/i.test(c))||cidades.find(c=>/s[aã]o\s*jos[eé]/i.test(c))||cidades[0]||'';
+  if(def){fcid.value=def;F.cidade=def;}
+  updateClimaTitle();
+  drawPrevisao();
+
+  // Cesta + Embalagem
+  _allCesta=[...new Set(ceasa.map(r=>r.cesta))].sort();
+  renderCestaList('');
+  _allEmbal=[...new Set(ceasa.map(r=>r.embal).filter(Boolean))].sort();
+  renderEmbalList();
+
+  setupListeners();
+  updateMedHeader();
+  applyFilters();
+  if(_produtoOptions.length&&!F.chartProduto){
+    F.chartProduto=_produtoOptions.find(p=>/banana\s+branco/i.test(p))||_produtoOptions[0];
+    document.getElementById('f-produto-input').value=F.chartProduto;
+    renderComboOptions('');
+    drawPreco(F.chartProduto);
+    renderPriceMatrix();
+  }
+  document.getElementById('loading').classList.add('hidden');
+}
+
+// ── COMBOBOX ──────────────────────────────────────────────────
+function renderComboOptions(q){
+  const drop=document.getElementById('combo-drop');
+  const visible=q?_produtoOptions.filter(p=>p.toLowerCase().includes(q)):_produtoOptions;
+  if(!visible.length){drop.innerHTML='<div class="ci-empty">Nenhum produto</div>';return;}
+  drop.innerHTML=visible.map(p=>
+    `<div class="ci${p===F.chartProduto?' active':''}" data-val="${p.replace(/"/g,'&quot;')}" title="${p}">${trunc(p,52)}</div>`
+  ).join('');
+  drop.querySelectorAll('.ci').forEach(el=>{
+    el.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      F.chartProduto=el.dataset.val;
+      document.getElementById('f-produto-input').value=F.chartProduto;
+      closeCombo(); drawPreco(F.chartProduto); renderPriceMatrix();
+    });
+  });
+}
+function openCombo(q=''){renderComboOptions(q);document.getElementById('combo-drop').classList.add('open');}
+function closeCombo(){document.getElementById('combo-drop').classList.remove('open');if(F.chartProduto)document.getElementById('f-produto-input').value=F.chartProduto;}
+
+// ── DROPDOWN MULTI ────────────────────────────────────────────
+function renderCestaList(q){
+  const list=document.getElementById('cesta-list');
+  const visible=q?_allCesta.filter(c=>c.toLowerCase().includes(q)):_allCesta;
+  if(!visible.length){list.innerHTML='<div class="ddm-empty">Nenhuma cesta</div>';return;}
+  list.innerHTML=visible.map(c=>{
+    const chk=F.cesta.has(c)?'checked':'', act=F.cesta.has(c)?' active':'';
+    return `<label class="${act}"><input type="checkbox" name="cesta-cb" value="${c}" ${chk}> ${c}</label>`;
+  }).join('');
+  list.querySelectorAll('input').forEach(cb=>{
+    cb.addEventListener('change',e=>{
+      e.target.checked?F.cesta.add(e.target.value):F.cesta.delete(e.target.value);
+      e.target.closest('label').classList.toggle('active',e.target.checked);
+      updateDdmLabel('cesta',F.cesta); applyFilters();
+    });
+  });
+}
+function renderEmbalList(){
+  const list=document.getElementById('embal-list');
+  list.innerHTML=_allEmbal.map(e=>{
+    const chk=F.embal.has(e)?'checked':'', act=F.embal.has(e)?' active':'';
+    return `<label class="${act}"><input type="checkbox" name="emb-cb" value="${e}" ${chk}> ${e}</label>`;
+  }).join('');
+  list.querySelectorAll('input').forEach(cb=>{
+    cb.addEventListener('change',e=>{
+      e.target.checked?F.embal.add(e.target.value):F.embal.delete(e.target.value);
+      e.target.closest('label').classList.toggle('active',e.target.checked);
+      updateDdmLabel('embal',F.embal); applyFilters();
+    });
+  });
+}
+function updateDdmLabel(key,set){document.getElementById(`ddm-${key}-lbl`).textContent=set.size?`${set.size} sel.`:'Todas';}
+function setupDdm(key){
+  const btn=document.getElementById(`ddm-${key}-btn`);
+  const panel=document.getElementById(`ddm-${key}-panel`);
+  btn.addEventListener('click',e=>{e.stopPropagation();btn.classList.toggle('open');panel.classList.toggle('open');});
+}
+
+// ── LISTENERS ─────────────────────────────────────────────────
+function setupListeners(){
+  document.querySelectorAll('input[name=ano]').forEach(cb=>cb.addEventListener('change',e=>{
+    e.target.checked?F.anos.add(e.target.value):F.anos.delete(e.target.value); applyFilters();
+  }));
+  document.getElementById('f-inicio').addEventListener('change',e=>{F.inicio=e.target.value;applyFilters();});
+  document.getElementById('f-fim').addEventListener('change',e=>{F.fim=e.target.value;applyFilters();});
+  const ci=document.getElementById('f-produto-input');
+  ci.addEventListener('focus',()=>{ci.value='';openCombo('');});
+  ci.addEventListener('input',e=>{openCombo(e.target.value.toLowerCase());});
+  ci.addEventListener('blur',()=>setTimeout(closeCombo,150));
+  document.querySelectorAll('input[name=tipo]').forEach(r=>r.addEventListener('change',e=>{F.tipo=e.target.value;applyFilters();}));
+  document.querySelectorAll('input[name=origem]').forEach(r=>r.addEventListener('change',e=>{F.origem=e.target.value;applyFilters();}));
+  document.getElementById('f-classif').addEventListener('change',e=>{F.classif=e.target.value;applyFilters();});
+  document.getElementById('f-categoria').addEventListener('change',e=>{F.categoria=e.target.value;applyFilters();});
+  document.getElementById('f-cidade').addEventListener('change',e=>{F.cidade=e.target.value;updateClimaTitle();drawClima();drawPrevisao();});
+  const nEl=document.getElementById('f-n');
+  const onN=e=>{const v=parseInt(e.target.value);if(v&&v>0){F.n=v;updateMedHeader();applyFilters();}};
+  nEl.addEventListener('change',onN); nEl.addEventListener('input',onN);
+  document.getElementById('f-cesta-search').addEventListener('input',e=>renderCestaList(e.target.value.toLowerCase()));
+  setupDdm('cesta'); setupDdm('embal');
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('#ddm-cesta')){document.getElementById('ddm-cesta-btn').classList.remove('open');document.getElementById('ddm-cesta-panel').classList.remove('open');}
+    if(!e.target.closest('#ddm-embal')){document.getElementById('ddm-embal-btn').classList.remove('open');document.getElementById('ddm-embal-panel').classList.remove('open');}
+  });
+  document.getElementById('btn-reset').addEventListener('click',resetFilters);
+  document.getElementById('tbl-search').addEventListener('input',e=>filterFull(e.target.value.toLowerCase()));
+  setupSortHeaders();
+  setupColResize();
+  setupPmToggle();
+  setupProdModal();
+}
+
+function setupSortHeaders(){
+  const rerender={alta:()=>renderAltaTable(),queda:()=>renderQuedaTable(),geral:()=>filterFull(document.getElementById('tbl-search').value.toLowerCase())};
+  ['alta','queda','geral'].forEach(key=>{
+    const th=document.getElementById('th-'+key); if(!th)return;
+    th.querySelectorAll('th[data-col]').forEach(t=>{
+      t.addEventListener('click',()=>{
+        const col=t.dataset.col,s=_sort[key];
+        s.dir=s.col===col?-s.dir:1; s.col=col;
+        th.querySelectorAll('.si').forEach(si=>si.textContent='');
+        t.querySelector('.si').textContent=s.dir===1?' ▲':' ▼';
+        rerender[key]();
+      });
+    });
+  });
+}
+
+function resetFilters(){
+  const last=[...new Set(ceasa.map(r=>r.data))].sort().pop(), curYear=last.slice(0,4);
+  F.anos=new Set([curYear]);
+  document.querySelectorAll('input[name=ano]').forEach(cb=>{cb.checked=cb.value===curYear;});
+  F.cesta.clear(); updateDdmLabel('cesta',F.cesta);
+  F.embal.clear(); updateDdmLabel('embal',F.embal);
+  F.tipo=''; F.origem=''; F.classif=''; F.categoria=''; F.n=7;
+  document.querySelectorAll('input[name=tipo]')[0].checked=true;
+  document.querySelectorAll('input[name=origem]')[0].checked=true;
+  document.getElementById('f-classif').value='';
+  document.getElementById('f-categoria').value='';
+  document.getElementById('f-n').value=7;
+  F.inicio=`${curYear}-01-01`; F.fim=last;
+  document.getElementById('f-inicio').value=F.inicio;
+  document.getElementById('f-fim').value=F.fim;
+  document.querySelectorAll('.si').forEach(si=>si.textContent='');
+  _sort.alta={col:null,dir:1}; _sort.queda={col:null,dir:1}; _sort.geral={col:null,dir:1};
+  renderCestaList(''); renderEmbalList();
+  updateMedHeader();
+  applyFilters();
+}
+
+// ── FILTER + APPLY ────────────────────────────────────────────
+function tableFiltered(){
+  let d=ceasa;
+  if(F.anos.size) d=d.filter(r=>F.anos.has(r.data.slice(0,4)));
+  if(F.cesta.size)  d=d.filter(r=>F.cesta.has(r.cesta));
+  if(F.tipo)        d=d.filter(r=>r.tipo===F.tipo);
+  if(F.origem)      d=d.filter(r=>r.origem===F.origem);
+  if(F.classif)     d=d.filter(r=>r.cl===F.classif);
+  if(F.categoria)   d=d.filter(r=>categoriaMap[r.cesta.toUpperCase()]===F.categoria);
+  if(F.embal.size)  d=d.filter(r=>F.embal.has(r.embal));
+  if(F.inicio)      d=d.filter(r=>r.data>=F.inicio);
+  if(F.fim)         d=d.filter(r=>r.data<=F.fim);
+  return d;
+}
+function applyFilters(skipClima=false){
+  const data=tableFiltered();
+  const trends=computeTrends(data);
+  buildProdutoOptions(data);
+  renderComboOptions('');
+  if(!skipClima) drawClima();
+  renderTrends(trends);
+  fullRows=[...trends].sort((a,b)=>(b.varAnoAbs||0)-(a.varAnoAbs||0)||a.produto.localeCompare(b.produto,'pt'));
+  filterFull(document.getElementById('tbl-search').value.toLowerCase());
+  drawPreco(F.chartProduto);
+  renderPriceMatrix();
+}
+function buildProdutoOptions(data){
+  _produtoOptions=[...new Set(data.map(r=>r.produto))].sort((a,b)=>a.localeCompare(b,'pt'));
+}
+
+// ── TRENDS ────────────────────────────────────────────────────
+function computeTrends(data){
+  if(!data.length) return [];
+  const last=data[data.length-1].data, startN=addD(last,-F.n+1);
+  const lyStart=addD(last,-385), lyEnd=addD(last,-345);
+  const map=new Map();
+  data.forEach(r=>{if(!map.has(r.produto))map.set(r.produto,{produto:r.produto,rows:[]});map.get(r.produto).rows.push(r);});
+  let baseAll=ceasa;
+  if(F.cesta.size)  baseAll=baseAll.filter(r=>F.cesta.has(r.cesta));
+  if(F.tipo)        baseAll=baseAll.filter(r=>r.tipo===F.tipo);
+  if(F.origem)      baseAll=baseAll.filter(r=>r.origem===F.origem);
+  if(F.classif)     baseAll=baseAll.filter(r=>r.cl===F.classif);
+  if(F.categoria)   baseAll=baseAll.filter(r=>categoriaMap[r.cesta.toUpperCase()]===F.categoria);
+  if(F.embal.size)  baseAll=baseAll.filter(r=>F.embal.has(r.embal));
+  const lyMap=new Map();
+  baseAll.filter(r=>r.data>=lyStart&&r.data<=lyEnd).forEach(r=>{
+    if(!lyMap.has(r.produto))lyMap.set(r.produto,[]);lyMap.get(r.produto).push(r);
+  });
+  const out=[];
+  map.forEach(p=>{
+    const rows=p.rows, lastRows=rows.filter(r=>r.data===last);
+    if(!lastRows.length) return;
+    const pUlt=avg(lastRows.map(r=>r.pcom));
+    const pMax=Math.max(...lastRows.map(r=>r.pmax));
+    const pMin=Math.min(...lastRows.map(r=>r.pmin));
+    const pMed=avg(rows.filter(r=>r.data>=startN&&r.data<=last).map(r=>r.pcom));
+    const lyRows=lyMap.get(p.produto)||[];
+    const pLY=lyRows.length?avg(lyRows.map(r=>r.pcom)):null;
+    const varAno=pLY!=null?(pUlt-pLY)/pLY*100:null;
+    const varAnoAbs=varAno!=null?Math.abs(varAno):0;
+    if(pUlt==null||pMed==null) return;
+    const variacao=(pUlt-pMed)/pMed;
+    const tend=variacao>0?'Subindo':variacao<0?'Baixando':'Estagnado';
+    out.push({produto:p.produto,pUlt,pMax,pMin,pMed,pLY,varAno,varAnoAbs,tend});
+  });
+  return out;
+}
+
+// ── CHARTS ────────────────────────────────────────────────────
+function drawPreco(key){
+  const wrap=document.getElementById('preco-wrap'), lbl=document.getElementById('chart-produto-label');
+  if(!key){if(charts.preco){charts.preco.destroy();charts.preco=null;}lbl.textContent='Selecione um produto no filtro acima';wrap.innerHTML='<p class="no-data">Selecione um produto no filtro acima.</p>';return;}
+  const data=ceasa.filter(r=>r.produto===key);
+  if(!data.length){wrap.innerHTML='<p class="no-data">Sem dados para o produto.</p>';lbl.textContent=key;return;}
+  const byDate=new Map();
+  data.forEach(r=>{if(!byDate.has(r.data))byDate.set(r.data,[]);byDate.get(r.data).push(r);});
+  const dates=[...byDate.keys()].sort();
+  const pCom=dates.map(d=>avg(byDate.get(d).map(r=>r.pcom)));
+  const pMax=dates.map(d=>Math.max(...byDate.get(d).map(r=>r.pmax)));
+  const pMin=dates.map(d=>Math.min(...byDate.get(d).map(r=>r.pmin)));
+  const pMov=movAvg(pCom,F.n);
+  lbl.textContent=key;
+  if(charts.preco) charts.preco.destroy();
+  wrap.innerHTML='<canvas id="cv-preco"></canvas>';
+  charts.preco=new Chart(document.getElementById('cv-preco').getContext('2d'),{
+    type:'line',
+    data:{labels:dates.map(fmtD),datasets:[
+      {label:'Preço Máximo',             data:pMax,borderColor:'rgba(200,80,100,.45)',borderWidth:1,pointRadius:0,fill:false,tension:.3},
+      {label:'Preço Mínimo',             data:pMin,borderColor:'rgba(46,125,82,.45)', borderWidth:1,pointRadius:0,fill:false,tension:.3},
+      {label:`Média Móvel ${F.n}d`,      data:pMov,borderColor:'#8B78D8',borderWidth:1.8,pointRadius:0,fill:false,tension:.3},
+      {label:'Cotação',data:pCom,borderWidth:2.5,pointRadius:0,fill:false,tension:.3,
+        segment:{
+          borderColor:ctx=>{const v0=ctx.p0.parsed.y,v1=ctx.p1.parsed.y;return v1>v0?'#2E7D52':v1<v0?'#C0392B':'#9AAABB';},
+          backgroundColor:ctx=>{const v0=ctx.p0.parsed.y,v1=ctx.p1.parsed.y;return v1>v0?'rgba(46,125,82,.07)':v1<v0?'rgba(192,57,43,.07)':'rgba(0,0,0,.03)';}
+        }
+      }
+    ]},options:chartOpts('R$')});
+  attachSync();
+}
+
+function updateMedHeader(){
+  document.querySelectorAll('th[data-col="pMed"]').forEach(th=>{
+    const si=th.querySelector('.si');
+    th.childNodes[0].textContent=`Média Móvel ${F.n}d `;
+    if(si) th.appendChild(si);
+  });
+}
+function updateClimaTitle(){
+  document.getElementById('clima-title').textContent=`Histórico Climático — ${F.cidade?nomeCidade(F.cidade):'Santa Catarina'} (SC)`;
+}
+function drawClima(){
+  const wrap=document.getElementById('clima-wrap');
+  let data=climaData;
+  if(F.cidade)    data=data.filter(r=>r.cidade===F.cidade);
+  if(F.anos.size) data=data.filter(r=>F.anos.has(r.data.slice(0,4)));
+  if(F.inicio)    data=data.filter(r=>r.data>=F.inicio);
+  if(F.fim)       data=data.filter(r=>r.data<=F.fim);
+  updateClimaTitle();
+  if(!data.length){wrap.innerHTML='<p class="no-data">Sem dados climáticos.</p>';return;}
+  if(charts.clima) charts.clima.destroy();
+  wrap.innerHTML='<canvas id="cv-clima"></canvas>';
+  const labels=data.map(r=>fmtD(r.data));
+  charts.clima=new Chart(document.getElementById('cv-clima').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Chuva (mm)',    type:'bar', data:data.map(r=>r.chuva),backgroundColor:'rgba(100,149,237,.4)',borderColor:'rgba(100,149,237,.55)',borderWidth:1,yAxisID:'yC',order:2},
+      {label:'Temp Máx °C',  type:'line',data:data.map(r=>r.tmax), borderColor:'#F4A460',borderWidth:1.5,pointRadius:0,fill:false,tension:.3,yAxisID:'yT',order:1},
+      {label:'Temp Média °C',type:'line',data:data.map(r=>r.tmed), borderColor:'#E07B54',borderWidth:1.5,pointRadius:0,fill:false,tension:.3,yAxisID:'yT',order:1},
+      {label:'Temp Mín °C',  type:'line',data:data.map(r=>r.tmin), borderColor:'#87CEEB',borderWidth:1.5,pointRadius:0,fill:false,tension:.3,yAxisID:'yT',order:1},
+      geadaDataset(data.map(r=>r.tmin),data.map(r=>r.geada))
+    ]},options:{...baseOpts(),scales:{
+      x:xScale(),
+      yT:{type:'linear',position:'left', grid:{color:'rgba(0,0,0,.06)'},ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:10},callback:v=>v+'°C'}},
+      yC:{type:'linear',position:'right',grid:{drawOnChartArea:false},  ticks:{color:'#5A7AB0',font:{family:'DM Mono',size:10},callback:v=>v+'mm'}}
+    }}});
+}
+
+async function drawPrevisao(){
+  const wrap=document.getElementById('prev-wrap');
+  const titleEl=document.getElementById('prev-title');
+  if(!F.cidade||!cityCoords[F.cidade]){
+    wrap.innerHTML='<p class="no-data">Selecione uma cidade acima para ver a previsão.</p>';
+    return;
+  }
+  wrap.innerHTML='<p class="no-data">Carregando previsão…</p>';
+  try{
+    const{lat,lon}=cityCoords[F.cidade];
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean,precipitation_sum&timezone=America%2FSao_Paulo&forecast_days=16`;
+    const res=await fetch(url);
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const json=await res.json();
+    const d=json.daily;
+    if(!d?.time?.length){wrap.innerHTML='<p class="no-data">Sem dados de previsão.</p>';return;}
+    titleEl.textContent=`Próximos 16 Dias — ${nomeCidade(F.cidade)} (SC)`;
+    if(charts.prev){charts.prev.destroy();charts.prev=null;}
+    wrap.innerHTML='<canvas id="cv-prev"></canvas>';
+    const prevLabels=d.time.map(fmtD);
+    const prevGeada=d.temperature_2m_min.map(t=>t<=3);
+    charts.prev=new Chart(document.getElementById('cv-prev').getContext('2d'),{
+      type:'bar',
+      data:{labels:prevLabels,datasets:[
+        {label:'Chuva (mm)',    type:'bar', data:d.precipitation_sum,   backgroundColor:'rgba(100,149,237,.4)',borderColor:'rgba(100,149,237,.55)',borderWidth:1,yAxisID:'yC',order:2},
+        {label:'Temp Máx °C',  type:'line',data:d.temperature_2m_max,  borderColor:'#F4A460',borderWidth:1.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.3,yAxisID:'yT',order:1},
+        {label:'Temp Média °C',type:'line',data:d.temperature_2m_mean, borderColor:'#E07B54',borderWidth:1.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.3,yAxisID:'yT',order:1},
+        {label:'Temp Mín °C',  type:'line',data:d.temperature_2m_min,  borderColor:'#87CEEB',borderWidth:1.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.3,yAxisID:'yT',order:1},
+        geadaDataset(d.temperature_2m_min,prevGeada)
+      ]},options:{...baseOpts(),scales:{
+        x:xScale(),
+        yT:{type:'linear',position:'left', grid:{color:'rgba(0,0,0,.06)'},ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:10},callback:v=>v+'°C'}},
+        yC:{type:'linear',position:'right',grid:{drawOnChartArea:false}, ticks:{color:'#5A7AB0',font:{family:'DM Mono',size:10},callback:v=>v+'mm'}}
+      }}
+    });
+  }catch(e){
+    wrap.innerHTML=`<p class="no-data">Não foi possível carregar a previsão.<br><span style="font-size:.6rem">${e.message}</span></p>`;
+  }
+}
+
+function attachSync(){
+  if(!charts.preco||!charts.clima) return;
+  const cv1=document.getElementById('cv-preco'), cv2=document.getElementById('cv-clima');
+  if(!cv1||!cv2) return;
+  const syncMove=(sk,tk)=>e=>{
+    const src=charts[sk],tgt=charts[tk]; if(!src||!tgt)return;
+    const pts=src.getElementsAtEventForMode(e,'index',{intersect:false},false);
+    if(!pts.length){tgt.tooltip.setActiveElements([],{x:0,y:0});tgt.update('none');return;}
+    const lbl=src.data.labels[pts[0].index], ti=tgt.data.labels.indexOf(lbl);
+    ti>=0?tgt.tooltip.setActiveElements(tgt.data.datasets.map((_,i)=>({datasetIndex:i,index:ti})),{x:0,y:0})
+         :tgt.tooltip.setActiveElements([],{x:0,y:0});
+    tgt.update('none');
+  };
+  const syncLeave=tk=>()=>{const t=charts[tk];if(t){t.tooltip.setActiveElements([],{x:0,y:0});t.update('none');}};
+  cv1.addEventListener('mousemove',syncMove('preco','clima'));
+  cv2.addEventListener('mousemove',syncMove('clima','preco'));
+  cv1.addEventListener('mouseleave',syncLeave('clima'));
+  cv2.addEventListener('mouseleave',syncLeave('preco'));
+}
+
+function geadaDataset(tminValues,geadaFlags,axisID='yT'){
+  return{
+    label:'❄ Geada',type:'line',showLine:false,fill:false,
+    data:tminValues.map((v,i)=>geadaFlags[i]?v:null),
+    backgroundColor:'rgba(100,170,230,.9)',borderColor:'transparent',
+    pointRadius:7,pointHoverRadius:9,pointStyle:'star',pointRotation:0,
+    yAxisID:axisID,order:0,spanGaps:false
+  };
+}
+
+function baseOpts(){
+  return{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{labels:{color:'#3E5068',font:{family:'DM Mono',size:10},boxWidth:14,padding:10}},
+      tooltip:{backgroundColor:'rgba(26,36,51,.93)',titleColor:'#E2AC4C',bodyColor:'#EDE7DC',
+               borderColor:'rgba(200,146,42,.4)',borderWidth:1,padding:10,
+               titleFont:{family:'DM Mono',size:11},bodyFont:{family:'DM Sans',size:12}}
+    }};
+}
+function xScale(){return{grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#9AAABB',font:{family:'DM Mono',size:9},maxTicksLimit:12,maxRotation:0}};}
+function chartOpts(pre){return{...baseOpts(),scales:{x:xScale(),y:{grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:10},callback:v=>pre+' '+fmt(v,0)}}}};}
+
+// ── TABLES ────────────────────────────────────────────────────
+const tendCls=t=>t==='Subindo'?'tc-up':t==='Baixando'?'tc-dn':'tc-flat';
+function renderTrends(trends){
+  _trendAlta=trends.filter(t=>t.tend==='Subindo');
+  _trendQueda=trends.filter(t=>t.tend==='Baixando');
+  document.getElementById('cnt-alta').textContent=_trendAlta.length;
+  document.getElementById('cnt-queda').textContent=_trendQueda.length;
+  renderAltaTable(); renderQuedaTable();
+}
+function renderAltaTable(){
+  const s=_sort.alta;
+  fillTrend('tb-alta',s.col?sortRows(_trendAlta,s.col,s.dir):[..._trendAlta].sort((a,b)=>(b.varAno||0)-(a.varAno||0)));
+}
+function renderQuedaTable(){
+  const s=_sort.queda;
+  fillTrend('tb-queda',s.col?sortRows(_trendQueda,s.col,s.dir):[..._trendQueda].sort((a,b)=>(a.varAno||0)-(b.varAno||0)));
+}
+function tRow(t){
+  const vc=t.varAno==null?'':t.varAno>0?'pos':'neg', vs=t.varAno!=null&&t.varAno>0?'+':'';
+  return `<tr>
+    <td class="col-prod" title="${t.produto}">${t.produto}</td>
+    <td class="col-tend ${tendCls(t.tend)}">${t.tend}</td>
+    <td class="col-val r">${fmtR(t.pUlt)}</td><td class="col-val r">${fmtR(t.pMax)}</td>
+    <td class="col-val r">${fmtR(t.pMin)}</td><td class="col-val r">${fmtR(t.pMed)}</td>
+    <td class="col-val r">${fmtR(t.pLY)}</td>
+    <td class="col-var r ${vc}">${t.varAno!=null?vs+fmt(t.varAno,2)+'%':'—'}</td>
+  </tr>`;
+}
+const EMPTY=`<tr><td colspan="8" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum produto</td></tr>`;
+function fillTrend(id,rows){document.getElementById(id).innerHTML=rows.length?rows.map(tRow).join(''):EMPTY;}
+function filterFull(q){
+  const filtered=q?fullRows.filter(t=>t.produto.toLowerCase().includes(q)):fullRows;
+  const s=_sort.geral, rows=s.col?sortRows(filtered,s.col,s.dir):filtered;
+  document.getElementById('tb-geral').innerHTML=rows.length?rows.map(tRow).join(''):EMPTY;
+  document.getElementById('cnt-geral').textContent=rows.length;
+}
+
+// ── PRODUCT MODAL ────────────────────────────────────────────
+const _impactTag=v=>{
+  const u=String(v||'').trim().toUpperCase();
+  if(!u||u==='NEUTRO'||u==='NÃO IMPACTA'||u==='0'||u==='NAO IMPACTA')
+    return `<span class="tag tag-nt">${v||'—'}</span>`;
+  if(u==='SOBE'||u==='ALTA')  return `<span class="tag tag-up">${v}</span>`;
+  if(u==='CAIR'||u==='BAIXA') return `<span class="tag tag-dn">${v}</span>`;
+  return `<span class="tag tag-nt">${v}</span>`;
+};
+const _catTag=v=>v?`<span class="tag tag-cat">${v}</span>`:'—';
+
+let _pmSort={col:'produto',dir:1};
+
+function setupProdModal(){
+  // populate category filter
+  const cats=[...new Set(tpData.map(r=>(r.categoria||'').trim()).filter(Boolean))].sort();
+  const sel=document.getElementById('pm-f-cat');
+  cats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
+
+  // sort headers
+  document.querySelectorAll('.pm-dt th[data-col]').forEach(th=>{
+    th.addEventListener('click',()=>{
+      const col=th.dataset.col;
+      _pmSort.dir=_pmSort.col===col?-_pmSort.dir:1;
+      _pmSort.col=col;
+      document.querySelectorAll('.pm-dt th .si').forEach(si=>si.textContent='');
+      th.querySelector('.si').textContent=_pmSort.dir===1?' ▲':' ▼';
+      renderProdTable();
+    });
+  });
+
+  sel.addEventListener('input',renderProdTable);
+  document.getElementById('pm-f-q').addEventListener('input',renderProdTable);
+  document.getElementById('btn-open-ficha').addEventListener('click',openProdModal);
+  document.getElementById('btn-close-modal').addEventListener('click',closeProdModal);
+  document.getElementById('prod-modal-bg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeProdModal();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProdModal();});
+}
+function openProdModal(){
+  document.getElementById('prod-modal-bg').classList.add('open');
+  renderProdTable();
+}
+function closeProdModal(){
+  document.getElementById('prod-modal-bg').classList.remove('open');
+}
+function renderProdTable(){
+  const cat=document.getElementById('pm-f-cat').value;
+  const q=document.getElementById('pm-f-q').value.toLowerCase();
+  let rows=tpData;
+  if(cat) rows=rows.filter(r=>(r.categoria||'').trim()===cat);
+  if(q)   rows=rows.filter(r=>(r.produto||'').toLowerCase().includes(q));
+  // sort
+  rows=[...rows].sort((a,b)=>{
+    const va=(a[_pmSort.col]||'').toString(), vb=(b[_pmSort.col]||'').toString();
+    return va.localeCompare(vb,'pt')*_pmSort.dir;
+  });
+  document.getElementById('pm-cnt').textContent=`${rows.length} produto${rows.length!==1?'s':''}`;
+  const cols=['produto','categoria','origem_predominante','disponibilidade_sc','perecibilidade',
+              'volatilidade_preco','geada_sensibilidade','impacto_geada','impacto_chuva_excesso','impacto_seca','caso_interessante'];
+  const impCols=new Set(['impacto_geada','impacto_chuva_excesso','impacto_seca','volatilidade_preco','geada_sensibilidade']);
+  document.getElementById('pm-tbody').innerHTML=rows.map(r=>`<tr>${cols.map((c,i)=>{
+    const v=(r[c]||'').trim();
+    if(c==='categoria') return `<td>${_catTag(v)}</td>`;
+    if(impCols.has(c))  return `<td>${_impactTag(v)}</td>`;
+    if(c==='caso_interessante') return `<td>${v||'—'}</td>`;
+    return `<td>${v||'—'}</td>`;
+  }).join('')}</tr>`).join('')||`<tr><td colspan="11" style="text-align:center;padding:2rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum produto encontrado</td></tr>`;
+}
+
+// ── PRICE MATRIX ─────────────────────────────────────────────
+function renderPriceMatrix(){
+  const lbl=document.getElementById('pm-product-lbl');
+  const content=document.getElementById('pm-content');
+  const key=F.chartProduto;
+  if(!key){lbl.textContent='—';content.innerHTML='<p class="pm-no-data">Selecione um produto.</p>';return;}
+  lbl.textContent=trunc(key,44);
+  const data=ceasa.filter(r=>r.produto===key);
+  if(!data.length){content.innerHTML='<p class="pm-no-data">Sem dados para o produto.</p>';return;}
+  const byDate=new Map();
+  data.forEach(r=>{if(!byDate.has(r.data))byDate.set(r.data,[]);byDate.get(r.data).push(r);});
+  const allDates=[...byDate.keys()].sort();
+  const allPCom=allDates.map(d=>avg(byDate.get(d).map(r=>r.pcom)));
+  const allMovAvg=movAvg(allPCom,F.n);
+  const dates=allDates.slice(-7);
+  const rows=[
+    {lbl:'Cotação',          vals:dates.map(d=>fmtR(avg(byDate.get(d).map(r=>r.pcom))))},
+    {lbl:'Máxima',           vals:dates.map(d=>fmtR(Math.max(...byDate.get(d).map(r=>r.pmax))))},
+    {lbl:`Média Móvel ${F.n}d`,vals:dates.map(d=>{const i=allDates.indexOf(d);return fmtR(allMovAvg[i]);})},
+    {lbl:'Mínima',           vals:dates.map(d=>fmtR(Math.min(...byDate.get(d).map(r=>r.pmin))))},
+  ];
+  const head=`<tr><th>Métrica</th>${dates.map(d=>`<th>${fmtD(d)}</th>`).join('')}</tr>`;
+  const body=rows.map(r=>`<tr><td>${r.lbl}</td>${r.vals.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('');
+  content.innerHTML=`<table class="pm-tbl"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+}
+function setupPmToggle(){
+  document.getElementById('pm-head').addEventListener('click',()=>document.getElementById('pm-box').classList.toggle('collapsed'));
+}
+
+// ── COLUMN RESIZE ────────────────────────────────────────────
+function setupColResize(){
+  document.querySelectorAll('.dt thead').forEach(thead=>{
+    thead.querySelectorAll('th').forEach(th=>{
+      const h=document.createElement('div');
+      h.className='col-rh';
+      th.appendChild(h);
+      // prevent click on handle from triggering sort
+      h.addEventListener('click',e=>e.stopPropagation());
+      h.addEventListener('mousedown',e=>{
+        e.stopPropagation(); e.preventDefault();
+        const startX=e.clientX, startW=th.offsetWidth;
+        const move=e=>{th.style.width=Math.max(40,startW+(e.clientX-startX))+'px';};
+        const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+        document.addEventListener('mousemove',move);
+        document.addEventListener('mouseup',up);
+      });
+    });
+  });
+}
+
+boot();
+
+function toggleLang(){ document.getElementById('lang-select').classList.toggle('open'); }
+function toggleMenu(){
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  const sel=document.getElementById('lang-select');
+  if(sel&&!sel.contains(e.target))sel.classList.remove('open');
+});
+</script>
+</body>
+</html>

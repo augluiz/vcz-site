@@ -35,6 +35,14 @@
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
   </url>
 
+  <!-- Serviços -->
+  <url>
+    <loc>https://vczconsultoria.com.br/servicos.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Conteúdos e Estudos -->
   <url>
     <loc>https://vczconsultoria.com.br/insights/</loc>
@@ -49,6 +57,22 @@
     <lastmod>2026-06-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+  </url>
+
+  <!-- Dashboards de Inteligência -->
+  <url>
+    <loc>https://vczconsultoria.com.br/dashboards/</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Dashboard CEASA SC -->
+  <url>
+    <loc>https://vczconsultoria.com.br/ceasa_dashboard/</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- Política de Privacidade -->

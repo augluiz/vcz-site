@@ -7,6 +7,12 @@
 <meta name="description" content="Inteligência comercial aplicada na prática. Artigos, estudos de caso e tendências da VCZ Consultoria sobre varejo, indústria e e-commerce.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://vczconsultoria.com.br/insights/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Conteúdos e Estudos — VCZ Consultoria">
+<meta property="og:description" content="Inteligência comercial aplicada na prática. Artigos, estudos de caso e tendências sobre varejo, indústria e e-commerce.">
+<meta property="og:url" content="https://vczconsultoria.com.br/insights/">
+<meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -138,6 +144,50 @@
   .card-arrow { position: absolute; bottom: 2.5rem; right: 2.5rem; color: var(--gold); font-size: 18px; opacity: 0; transition: opacity 0.2s; }
   .insight-card:hover .card-arrow { opacity: 1; }
 
+  /* ── DASHBOARD CARD ──────────────────────────── */
+  .dashboard-card {
+    border-top: 2px solid rgba(200,146,42,.5);
+    background: linear-gradient(160deg, rgba(22,43,64,.95) 0%, rgba(13,27,42,.95) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .dashboard-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(200,146,42,.025) 20px, rgba(200,146,42,.025) 21px
+    );
+    pointer-events: none;
+  }
+  .dashboard-card:hover {
+    border-top-color: var(--gold);
+    background: linear-gradient(160deg, rgba(30,55,82,.98) 0%, rgba(18,35,52,.98) 100%);
+  }
+  .dash-tag-beta {
+    background: rgba(46,125,82,.75);
+  }
+  .dash-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.4rem;
+    padding-top: .85rem;
+    border-top: 1px solid rgba(200,146,42,.18);
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  .dash-open-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    transition: letter-spacing .2s;
+  }
+  .dashboard-card:hover .dash-open-btn { letter-spacing: .2em; }
+
   .vazio {
     display: none;
     grid-column: 1 / -1;
@@ -238,6 +288,7 @@
     <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
     <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
     <li><a href="/insights/" class="active" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
     <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
     <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
   </ul>
@@ -277,6 +328,18 @@
 
 <div class="insights-grid" id="grid">
   <!-- ORDENAÇÃO: mais recente primeiro. Adicionar novos cards ACIMA dos anteriores. -->
+
+  <a href="/ceasa_dashboard/" class="insight-card dashboard-card" data-categorias="dashboard">
+    <div class="card-tags">
+      <span class="card-tag">Dashboard</span>
+    </div>
+    <p class="card-title">CEASA SC — Preços e Clima</p>
+    <p class="card-desc">Cotações diárias do CEASA SC cruzadas com histórico climático de 10 cidades. Tendências de alta e queda, variação anual e previsão de 16 dias.</p>
+    <div class="dash-card-footer">
+      <span class="dash-open-btn">Abrir painel →</span>
+      <span class="card-meta" style="margin:0">Atualizado diariamente · SC</span>
+    </div>
+  </a>
 
   <a href="/insights/apresentacao.html" class="insight-card" data-categorias="institucional">
     <div class="card-tags">

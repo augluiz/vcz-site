@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+# Backup/archive subdirectory (duplicate of dados/*.csv)
+ceasa_dashboard/dados/ceasa/
+# Generated social media assets (not needed in repo)
+vcz_story.png
+vcz_linkedin.png
+vcz_instagram.png
+# Generated JPGs from screenshots
+*.jpg
+gerar_story.py
+gerar_linkedin.py
+gerar_instagram.py
