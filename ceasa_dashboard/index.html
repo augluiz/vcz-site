@@ -334,8 +334,61 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .pm-tbl tr:last-child td{border-bottom:none}
 .pm-no-data{padding:.9rem;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);text-align:center}
 
-@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}.about-cols{grid-template-columns:1fr}}
-@media(max-width:768px){.dash-main{padding:.85rem 1rem}.filter-inner{gap:1rem}}
+@media(max-width:1100px){
+  .dash-grid{grid-template-columns:1fr}
+  .about-cols{grid-template-columns:1fr}
+  .cta-inner{grid-template-columns:1fr!important}
+}
+@media(max-width:768px){
+  /* Header */
+  .dash-header h1{font-size:1.75rem}
+  .dash-header{padding:.85rem 1.2rem .65rem}
+  /* Filtros */
+  .filter-inner{gap:.65rem;padding:.5rem .9rem;flex-wrap:wrap}
+  .filter-charts{padding:.32rem .9rem;gap:.65rem;flex-wrap:wrap}
+  .tf-vsep{display:none}
+  /* About */
+  .about-strip{padding:.75rem 1.2rem}
+  .about-cols{gap:.7rem}
+  .about-what{font-size:.78rem}
+  .about-step{font-size:.72rem}
+  /* Tend legend */
+  .tend-legend{overflow-x:auto;gap:.6rem}
+  .tl-note{display:none}
+  /* Layout principal */
+  .dash-main{padding:.7rem .75rem}
+  /* Charts */
+  .chart-section{padding:.7rem .85rem}
+  .chart-filter-bar{padding:.4rem .85rem}
+  .chart-section-bar{padding:.45rem .85rem .4rem}
+  .cv-wrap canvas{height:210px!important}
+  #preco-wrap canvas{height:240px!important}
+  /* Tables */
+  .full-tbox-head{flex-wrap:wrap;gap:.45rem}
+  .full-tbox-head input{width:140px}
+  .tbox-head{flex-wrap:wrap;gap:.4rem}
+  /* CTA */
+  .cta-inner{gap:1.2rem!important;padding:0 0 .5rem}
+}
+@media(max-width:480px){
+  .dash-header h1{font-size:1.45rem}
+  .dash-header{padding:.7rem 1rem .55rem}
+  .filter-inner{gap:.5rem;padding:.45rem .75rem}
+  .filter-charts{padding:.28rem .75rem;gap:.5rem}
+  .tf-grp .lbl{font-size:.5rem}
+  .radio-row label,.check-row label{font-size:.72rem}
+  .radio-row{flex-wrap:wrap;gap:.4rem}
+  .about-what{font-size:.74rem}
+  .about-step{font-size:.69rem}
+  .about-step b{margin-top:.08rem}
+  .tl-item{font-size:.5rem}
+  .cv-wrap canvas{height:185px!important}
+  #preco-wrap canvas{height:210px!important}
+  .full-tbox-head input{width:110px;font-size:.72rem}
+  .geral-date-sel{font-size:.6rem}
+  .geral-expand-btn{font-size:.55rem;padding:.22rem .45rem}
+  .chart-card,.full-tbox,.tbox{border-radius:4px}
+}
 </style>
 </head>
 <body>
@@ -677,7 +730,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
 <!-- CTA STRIP -->
 <div style="background:var(--navy);border-top:2px solid rgba(200,146,42,.35);padding:2rem 2rem">
-  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
+  <div class="cta-inner" style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
     <div>
       <p style="font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:.45rem">VCZ Consultoria · Inteligência Comercial</p>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:#F0E8D8;line-height:1.2;margin-bottom:.5rem">
