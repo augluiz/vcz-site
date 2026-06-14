@@ -1,0 +1,38 @@
+name: Atualizar dados ComexStat (MDIC)
+
+# Roda todo dia 26 de cada mês às 09:00 BRT
+# O MDIC publica os dados do mês anterior por volta do dia 20-25
+# Atualiza apenas o ano corrente (e anterior por segurança)
+# Requer secret: SUPABASE_DB_URL no repositório (Settings → Secrets → Actions)
+
+on:
+  schedule:
+    - cron: '0 12 26 * *'   # 09:00 BRT (UTC-3) todo dia 26
+  workflow_dispatch:          # botão "Run workflow" manual na aba Actions
+
+jobs:
+  atualizar-comex:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Instalar dependências
+        run: pip install httpx pandas psycopg2-binary
+
+      - name: Atualizar dados do ano corrente e anterior
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          ANO_ATUAL=$(date +%Y)
+          ANO_ANTERIOR=$((ANO_ATUAL - 1))
+          echo "Atualizando anos: $ANO_ANTERIOR e $ANO_ATUAL"
+          python scripts/carregar_comex.py --anos $ANO_ANTERIOR $ANO_ATUAL

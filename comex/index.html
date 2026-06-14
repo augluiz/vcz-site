@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balança Comercial Brasileira | VCZ Consultoria</title>
+<meta name="description" content="Dashboard interativo de comércio exterior do Brasil — exportações, importações e saldo comercial por país, produto (NCM) e estado. Dados MDIC/ComexStat.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vczconsultoria.com.br/comex/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Balança Comercial Brasileira | VCZ Consultoria">
+<meta property="og:description" content="Exportações, importações e saldo comercial por país, produto e estado. Dados oficiais MDIC atualizados mensalmente.">
+<meta property="og:url" content="https://vczconsultoria.com.br/comex/">
+<meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F0E8;--panel:#FFFFFF;--panel2:#EDE7DC;--panel3:#E0D8CC;
+  --navy:#0D1B2A;--navy2:#162B40;
+  --gold:#C8922A;--gold-light:#E2AC4C;--gold-aged:#B7A073;
+  --exp:#C8922A;--imp:#2B68A8;--saldo-pos:#2E7D52;--saldo-neg:#B83030;
+  --text:#1A2433;--text2:#3E5068;--text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
+  --th-bg:#1A2F45;--th-text:#E8D8C0;
+  --tr-even:#F4F6FA;--tr-odd:#FFFFFF;
+  --pos:#2E7D52;--neg:#B83030;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.06);border-radius:4px}
+::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#B7A073}
+.tscroll::-webkit-scrollbar{width:9px;height:9px}
+.tscroll::-webkit-scrollbar-track{background:#DDE3EC;border-radius:6px}
+.tscroll::-webkit-scrollbar-thumb{background:#8A9EAF;border-radius:6px;border:2px solid #DDE3EC}
+
+#loading{position:fixed;inset:0;background:rgba(13,27,42,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:1rem;backdrop-filter:blur(4px)}
+#loading.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,.15)}
+.nav-logo img{height:46px;width:auto}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,.4);padding:9px 20px;text-decoration:none;transition:background .2s,border-color .2s;white-space:nowrap}
+.nav-cta:hover{background:rgba(200,146,42,.08);border-color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:#9AAABB;transition:all .3s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(max-width:768px){
+  .nav-hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(13,27,42,.98);backdrop-filter:blur(12px);flex-direction:column;gap:0;padding:1rem 0;z-index:99}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:1rem 5vw;font-size:13px;border-bottom:1px solid rgba(183,160,115,.08)}
+  .nav-cta{display:none}
+}
+
+.dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2)}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:#F2EAD8;line-height:1.1;letter-spacing:.01em}
+.dash-header h1 em{color:var(--gold-light);font-style:italic;font-weight:600}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:.28rem;letter-spacing:.04em}
+
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr) auto;gap:1rem 2.2rem;align-items:center}
+.about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65}
+.about-what strong{color:#E8D8C0;font-weight:600}
+.about-steps{display:flex;flex-direction:column;gap:.42rem}
+.about-step{display:flex;align-items:flex-start;gap:.55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8AAABB;line-height:1.5}
+.about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;white-space:nowrap;flex-shrink:0;margin-top:.12rem}
+.badge-mdic{display:inline-flex;align-items:center;gap:.35rem;background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.3);border-radius:4px;padding:.18rem .5rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-aged);white-space:nowrap}
+
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-inner{padding:.65rem 1.5rem;display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap}
+.tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
+.tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
+.tf-vsep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:.05rem 0;flex-shrink:0}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
+.tf-input:focus{border-color:var(--gold)}
+.tf-input option{background:var(--navy2);color:#EDE7DC}
+.radio-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.radio-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer;white-space:nowrap}
+.radio-row label:hover{color:#C8D8E8}
+.radio-row input[type=radio]{accent-color:var(--gold)}
+.btn-apply{background:rgba(200,146,42,.15);border:1px solid rgba(200,146,42,.4);border-radius:4px;padding:.3rem .85rem;color:var(--gold);font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-apply:hover{background:rgba(200,146,42,.28);border-color:var(--gold)}
+.btn-reset{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.3rem .7rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-reset:hover{border-color:var(--gold);color:var(--gold)}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;padding:.85rem 1.5rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.18)}
+.kpi-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.65rem .9rem;display:flex;flex-direction:column;gap:.22rem}
+.kpi-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em}
+.kpi-value{font-family:'DM Mono',monospace;font-size:1.22rem;font-weight:500;color:#F2EAD8;line-height:1}
+.kpi-value.exp{color:var(--gold-light)}
+.kpi-value.imp{color:#7AABDC}
+.kpi-value.pos{color:#5AC882}
+.kpi-value.neg{color:#E06060}
+.kpi-sub{font-family:'DM Sans',sans-serif;font-size:.65rem;color:#5A7A8A}
+
+/* Main grid */
+.dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
+.dash-grid{display:grid;grid-template-columns:2fr 3fr;gap:1rem;align-items:start}
+
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
+.chart-section{padding:1rem 1.1rem}
+.chart-section-bar{background:var(--navy2);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.12);padding:.5rem 1.2rem .45rem}
+.ct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem;font-weight:500}
+.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-bottom:.75rem}
+.chart-divider{display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;background:var(--navy);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.18)}
+.chart-divider span{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+.chart-divider::before,.chart-divider::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.2)}
+.chart-filter-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12);padding:.45rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.chart-filter-bar .lbl{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;flex-shrink:0}
+.chart-filter-bar select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.26rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer}
+.chart-filter-bar select option{background:var(--navy2);color:#EDE7DC}
+.cv-wrap canvas{display:block;width:100%!important}
+#evo-wrap canvas{height:290px!important}
+#pais-wrap canvas{height:280px!important}
+#ncm-wrap canvas{height:280px!important}
+#uf-wrap canvas{height:220px!important}
+.chart-hint{padding:.25rem 1.1rem .45rem;font-family:'DM Sans',sans-serif;font-size:.67rem;color:var(--text3);line-height:1.45}
+.no-data{text-align:center;padding:3rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+
+/* Legend */
+.leg{display:flex;gap:1rem;align-items:center;padding:.28rem 1.1rem .6rem;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:.32rem;font-family:'DM Mono',monospace;font-size:.55rem}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Table */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm);border-top:3px solid var(--gold)}
+.tbox-head{padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);gap:.5rem;flex-wrap:wrap}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--gold)}
+.tbox-cnt{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--gold-aged);background:rgba(200,146,42,.1);padding:.1rem .45rem;border-radius:10px;border:1px solid rgba(200,146,42,.25)}
+.tscroll{overflow-x:auto}
+.tscroll.limited{max-height:380px;overflow-y:auto}
+.dt{width:100%;border-collapse:collapse;font-size:.74rem;table-layout:fixed}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:normal;line-height:1.25;vertical-align:bottom;cursor:pointer;user-select:none;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.dt th:last-child{border-right:none}
+.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem;display:inline-block;min-width:.5rem}
+.dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
+.dt tr:nth-child(even) td{background:var(--tr-even)}
+.dt tr:nth-child(odd)  td{background:var(--tr-odd)}
+.dt tr:hover td{background:rgba(200,146,42,.07)!important}
+.dt tr:last-child td{border-bottom:none}
+.dt th.r,.dt td.r{text-align:right}
+.tag-exp{display:inline-block;background:rgba(200,146,42,.12);color:#A07020;border-radius:3px;padding:.05rem .3rem;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600}
+.tag-imp{display:inline-block;background:rgba(43,104,168,.12);color:#2B68A8;border-radius:3px;padding:.05rem .3rem;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600}
+
+.tab-switch{display:flex;gap:.5rem;padding:.4rem .85rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12)}
+.tab-btn{background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:3px;padding:.22rem .6rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .18s}
+.tab-btn.active{background:rgba(200,146,42,.15);border-color:rgba(200,146,42,.4);color:var(--gold)}
+
+.disc{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;padding:.5rem 1.5rem .7rem}
+
+.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
+.dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
+.dash-footer a:hover{color:var(--gold)}
+
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}.about-cols{grid-template-columns:1fr}.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  .dash-header h1{font-size:1.75rem}
+  .dash-header{padding:.85rem 1.2rem .65rem}
+  .filter-inner{gap:.65rem;padding:.5rem .9rem}
+  .tf-vsep{display:none}
+  .about-strip{padding:.75rem 1.2rem}
+  .dash-main{padding:.7rem .75rem}
+  .kpi-strip{padding:.6rem .9rem;gap:.5rem}
+  .kpi-value{font-size:1rem}
+  #evo-wrap canvas{height:230px!important}
+  #pais-wrap canvas{height:230px!important}
+  #ncm-wrap canvas{height:230px!important}
+}
+@media(max-width:480px){
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .dash-header h1{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <p class="loading-text" id="loading-text">Carregando dados ComexStat…</p>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/logo-ouro.svg" alt="VCZ Consultoria">
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" class="active" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="/#contato" class="nav-cta">Fale conosco</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="dash-header" style="margin-top:72px">
+  <p class="label">MDIC · ComexStat — Ministério do Desenvolvimento, Indústria, Comércio e Serviços</p>
+  <h1>Balança Comercial <em>Brasil</em></h1>
+  <p class="sub" id="last-update">Carregando…</p>
+</div>
+
+<div class="about-strip">
+  <div class="about-cols">
+    <p class="about-what">
+      Acompanhe as <strong>exportações e importações brasileiras</strong> por país de destino/origem, produto (NCM) e unidade federativa — dados oficiais do <strong>MDIC/ComexStat</strong>, em valor FOB (US$) e peso líquido (kg). Atualizado mensalmente com carga automática via GitHub Actions.
+    </p>
+    <div class="about-steps">
+      <div class="about-step"><b>FONTE</b><span>MDIC — Ministério do Desenvolvimento, Indústria, Comércio e Serviços. Dados públicos disponíveis em balanca.economia.gov.br</span></div>
+      <div class="about-step"><b>NCM</b><span>Nomenclatura Comum do Mercosul — classifica produtos em ~10.000 categorias de 8 dígitos</span></div>
+      <div class="about-step"><b>FOB</b><span>Free On Board — valor da mercadoria no porto de embarque, sem frete e seguro internacionais</span></div>
+    </div>
+    <span class="badge-mdic">&#9679; MDIC · ComexStat</span>
+  </div>
+</div>
+
+<!-- Filtros -->
+<div class="filter-panel">
+  <div class="filter-inner">
+    <div class="tf-grp">
+      <span class="lbl">Fluxo</span>
+      <div class="radio-row">
+        <label><input type="radio" name="fluxo" value="" checked onchange="onFluxoChange()"> Ambos</label>
+        <label><input type="radio" name="fluxo" value="E" onchange="onFluxoChange()"> Exportações</label>
+        <label><input type="radio" name="fluxo" value="I" onchange="onFluxoChange()"> Importações</label>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <span class="lbl">Período</span>
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <select class="tf-input" id="sel-ano-ini" onchange="onFilterChange()">
+          <option value="2020">2020</option><option value="2021">2021</option>
+          <option value="2022">2022</option><option value="2023">2023</option>
+          <option value="2024" selected>2024</option><option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:#4A6A80">→</span>
+        <select class="tf-input" id="sel-ano-fim" onchange="onFilterChange()">
+          <option value="2020">2020</option><option value="2021">2021</option>
+          <option value="2022">2022</option><option value="2023">2023</option>
+          <option value="2024">2024</option><option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+        </select>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <span class="lbl">Métrica</span>
+      <div class="radio-row">
+        <label><input type="radio" name="metrica" value="valor" checked onchange="onMetricaChange()"> Valor FOB (US$)</label>
+        <label><input type="radio" name="metrica" value="kg" onchange="onMetricaChange()"> Peso (kg)</label>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <span class="lbl">Top N</span>
+      <select class="tf-input" id="sel-top" onchange="onFilterChange()">
+        <option value="10">10</option><option value="15" selected>15</option>
+        <option value="20">20</option><option value="30">30</option>
+      </select>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <span class="lbl">&nbsp;</span>
+      <button class="btn-reset" onclick="resetFiltros()">Resetar</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI strip -->
+<div class="kpi-strip" id="kpi-strip">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Exportações</div>
+    <div class="kpi-value exp" id="kpi-exp">—</div>
+    <div class="kpi-sub" id="kpi-exp-sub">—</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Total Importações</div>
+    <div class="kpi-value imp" id="kpi-imp">—</div>
+    <div class="kpi-sub" id="kpi-imp-sub">—</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Saldo Comercial</div>
+    <div class="kpi-value" id="kpi-saldo">—</div>
+    <div class="kpi-sub" id="kpi-saldo-sub">Exportações − Importações</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Principal Parceiro</div>
+    <div class="kpi-value" id="kpi-parceiro" style="font-size:.9rem;color:#F2EAD8">—</div>
+    <div class="kpi-sub" id="kpi-parceiro-sub">—</div>
+  </div>
+</div>
+
+<p class="disc">&#9432; Valores em US$ FOB. Dados do período selecionado acima. Fonte: MDIC/ComexStat — atualizado mensalmente.</p>
+
+<div class="dash-main">
+  <div class="dash-grid">
+    <!-- Coluna esquerda: países + NCMs -->
+    <div class="chart-col">
+
+      <!-- Top Países -->
+      <div class="chart-card">
+        <div class="chart-filter-bar">
+          <span class="lbl">Top países por</span>
+          <div class="radio-row">
+            <label><input type="radio" name="pais-fluxo" value="" checked onchange="renderPais()"> Ambos</label>
+            <label><input type="radio" name="pais-fluxo" value="E" onchange="renderPais()"> Exp</label>
+            <label><input type="radio" name="pais-fluxo" value="I" onchange="renderPais()"> Imp</label>
+          </div>
+        </div>
+        <div class="chart-section">
+          <div class="ct">Parceiros Comerciais</div>
+          <div class="cs">Ranking por valor FOB acumulado no período</div>
+          <div class="cv-wrap" id="pais-wrap"><canvas id="chart-pais"></canvas></div>
+        </div>
+        <div class="chart-hint" id="pais-hint"></div>
+      </div>
+
+      <!-- Top NCMs -->
+      <div class="chart-card">
+        <div class="chart-filter-bar">
+          <span class="lbl">Top produtos por</span>
+          <div class="radio-row">
+            <label><input type="radio" name="ncm-fluxo" value="" checked onchange="renderNcm()"> Ambos</label>
+            <label><input type="radio" name="ncm-fluxo" value="E" onchange="renderNcm()"> Exp</label>
+            <label><input type="radio" name="ncm-fluxo" value="I" onchange="renderNcm()"> Imp</label>
+          </div>
+        </div>
+        <div class="chart-section">
+          <div class="ct">Produtos (NCM)</div>
+          <div class="cs">Ranking por valor FOB acumulado no período</div>
+          <div class="cv-wrap" id="ncm-wrap"><canvas id="chart-ncm"></canvas></div>
+        </div>
+        <div class="chart-hint" id="ncm-hint"></div>
+      </div>
+
+    </div>
+
+    <!-- Coluna direita: evolução + UF + tabela -->
+    <div class="table-col">
+
+      <!-- Evolução mensal -->
+      <div class="chart-card">
+        <div class="chart-section-bar">
+          <div class="ct">Evolução Mensal</div>
+        </div>
+        <div class="leg" id="leg-evo"></div>
+        <div class="chart-section">
+          <div class="cv-wrap" id="evo-wrap"><canvas id="chart-evo"></canvas></div>
+        </div>
+        <div class="chart-hint">Exportações e importações mensais em US$ FOB. Passe o mouse para ver valores.</div>
+      </div>
+
+      <!-- Por UF -->
+      <div class="chart-card">
+        <div class="chart-filter-bar">
+          <span class="lbl">UF por</span>
+          <div class="radio-row">
+            <label><input type="radio" name="uf-fluxo" value="" checked onchange="renderUf()"> Ambos</label>
+            <label><input type="radio" name="uf-fluxo" value="E" onchange="renderUf()"> Exp</label>
+            <label><input type="radio" name="uf-fluxo" value="I" onchange="renderUf()"> Imp</label>
+          </div>
+        </div>
+        <div class="chart-section">
+          <div class="ct">Por Unidade Federativa</div>
+          <div class="cv-wrap" id="uf-wrap"><canvas id="chart-uf"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Tabela detalhada -->
+      <div class="tbox">
+        <div class="tbox-head">
+          <h3 id="tbl-title">Detalhamento</h3>
+          <span class="tbox-cnt" id="tbl-cnt">—</span>
+        </div>
+        <div class="tab-switch">
+          <button class="tab-btn active" onclick="setTab('pais')" id="tab-pais">Países</button>
+          <button class="tab-btn" onclick="setTab('ncm')" id="tab-ncm">Produtos (NCM)</button>
+          <button class="tab-btn" onclick="setTab('uf')" id="tab-uf">Por Estado</button>
+        </div>
+        <div class="tscroll limited">
+          <table class="dt" id="main-table">
+            <thead><tr id="tbl-head"></tr></thead>
+            <tbody id="tbl-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="dash-footer">
+  <span>VCZ Consultoria · Dashboard Balança Comercial · Dados: MDIC/ComexStat</span>
+  <a href="https://balanca.economia.gov.br" target="_blank" rel="noopener">Fonte oficial MDIC</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+// ── Configuração ─────────────────────────────────────────────────────────────
+// Altere esta URL quando o servidor estiver no ar no Fly.io
+const API_BASE = 'https://vcz-api.onrender.com/api/v1/comex/publico';
+// Para teste local: const API_BASE = 'http://localhost:8000/api/v1/comex/publico';
+
+// ── Estado ───────────────────────────────────────────────────────────────────
+let _mensal = [], _paises = [], _ncms = [], _ufs = [];
+let _chartEvo = null, _chartPais = null, _chartNcm = null, _chartUf = null;
+let _tabAtual = 'pais';
+let _metrica = 'valor';
+
+const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function getFluxo() { return document.querySelector('input[name="fluxo"]:checked').value; }
+function getPaisFluxo() { return document.querySelector('input[name="pais-fluxo"]:checked').value; }
+function getNcmFluxo() { return document.querySelector('input[name="ncm-fluxo"]:checked').value; }
+function getUfFluxo() { return document.querySelector('input[name="uf-fluxo"]:checked').value; }
+function getAnoIni() { return +document.getElementById('sel-ano-ini').value; }
+function getAnoFim() { return +document.getElementById('sel-ano-fim').value; }
+function getTop() { return +document.getElementById('sel-top').value; }
+
+function fmtUSD(v) {
+  if (v >= 1e9) return 'US$ ' + (v/1e9).toFixed(2) + ' Bi';
+  if (v >= 1e6) return 'US$ ' + (v/1e6).toFixed(1) + ' Mi';
+  return 'US$ ' + v.toLocaleString('pt-BR');
+}
+function fmtKg(v) {
+  if (v >= 1e9) return (v/1e9).toFixed(2) + ' Gt';
+  if (v >= 1e6) return (v/1e6).toFixed(1) + ' Mt';
+  if (v >= 1e3) return (v/1e3).toFixed(1) + ' t';
+  return v.toLocaleString('pt-BR') + ' kg';
+}
+function fmtVal(v) { return _metrica === 'kg' ? fmtKg(v) : fmtUSD(v); }
+function valKey() { return _metrica === 'kg' ? 'kg_liquido' : 'valor_fob'; }
+
+function buildQs(extra = {}) {
+  const p = new URLSearchParams({
+    ano_ini: getAnoIni(),
+    ano_fim: getAnoFim(),
+    top: getTop(),
+    ...extra
+  });
+  const f = getFluxo();
+  if (f) p.set('fluxo', f);
+  return p.toString();
+}
+
+// ── Fetch ─────────────────────────────────────────────────────────────────────
+async function fetchAll() {
+  const qs_base = `ano_ini=${getAnoIni()}&ano_fim=${getAnoFim()}&top=${getTop()}`;
+  const f = getFluxo();
+  const qs = f ? qs_base + `&fluxo=${f}` : qs_base;
+
+  const [mensal, paises, ncms, ufs] = await Promise.all([
+    fetch(`${API_BASE}/mensal?${qs}`).then(r => r.json()),
+    fetch(`${API_BASE}/por-pais?${qs}`).then(r => r.json()),
+    fetch(`${API_BASE}/por-ncm?${qs}`).then(r => r.json()),
+    fetch(`${API_BASE}/por-uf?${qs}`).then(r => r.json()),
+  ]);
+
+  _mensal = mensal;
+  _paises = paises;
+  _ncms   = ncms;
+  _ufs    = ufs;
+}
+
+// ── KPI ──────────────────────────────────────────────────────────────────────
+function renderKpi() {
+  const exp = _paises.filter(r => r.fluxo === 'E').reduce((s,r) => s + r[valKey()], 0);
+  const imp = _paises.filter(r => r.fluxo === 'I').reduce((s,r) => s + r[valKey()], 0);
+  const saldo = exp - imp;
+
+  document.getElementById('kpi-exp').textContent  = fmtUSD(_mensal.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0));
+  document.getElementById('kpi-imp').textContent  = fmtUSD(_mensal.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0));
+
+  const totalExp = _mensal.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0);
+  const totalImp = _mensal.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0);
+  const totalSaldo = totalExp - totalImp;
+
+  const kpiSaldo = document.getElementById('kpi-saldo');
+  kpiSaldo.textContent = fmtUSD(Math.abs(totalSaldo));
+  kpiSaldo.className = 'kpi-value ' + (totalSaldo >= 0 ? 'pos' : 'neg');
+  document.getElementById('kpi-saldo-sub').textContent = totalSaldo >= 0 ? 'Superávit comercial' : 'Déficit comercial';
+
+  const top1 = [..._paises].sort((a,b) => b[valKey()] - a[valKey()])[0];
+  if (top1) {
+    document.getElementById('kpi-parceiro').textContent = top1.pais_nome || top1.pais_cod;
+    document.getElementById('kpi-parceiro-sub').textContent = 'Maior parceiro · ' + fmtUSD(top1.valor_fob);
+  }
+
+  document.getElementById('kpi-exp-sub').textContent  = _mensal.filter(r=>r.fluxo==='E').length + ' meses de dados';
+  document.getElementById('kpi-imp-sub').textContent  = _mensal.filter(r=>r.fluxo==='I').length + ' meses de dados';
+}
+
+// ── Evolução mensal ───────────────────────────────────────────────────────────
+function renderEvo() {
+  const evoFluxo = getFluxo();
+
+  // Constrói eixo X com todos os anos-meses presentes
+  const keys = new Set(_mensal.map(r => `${r.ano}-${String(r.mes).padStart(2,'0')}`));
+  const labels = [...keys].sort();
+
+  const datasets = [];
+
+  if (!evoFluxo || evoFluxo === 'E') {
+    const mapE = {};
+    _mensal.filter(r=>r.fluxo==='E').forEach(r => { mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
+    datasets.push({
+      label: 'Exportações',
+      data: labels.map(k => mapE[k] || 0),
+      borderColor: '#C8922A',
+      backgroundColor: 'rgba(200,146,42,.12)',
+      fill: !evoFluxo || evoFluxo === 'E',
+      tension: .3, pointRadius: 2, pointHoverRadius: 5,
+    });
+  }
+  if (!evoFluxo || evoFluxo === 'I') {
+    const mapI = {};
+    _mensal.filter(r=>r.fluxo==='I').forEach(r => { mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
+    datasets.push({
+      label: 'Importações',
+      data: labels.map(k => mapI[k] || 0),
+      borderColor: '#2B68A8',
+      backgroundColor: 'rgba(43,104,168,.1)',
+      fill: false,
+      tension: .3, pointRadius: 2, pointHoverRadius: 5,
+    });
+  }
+
+  const niceLbls = labels.map(k => { const [a,m] = k.split('-'); return MESES_PT[+m-1]+'/'+a.slice(2); });
+
+  const leg = document.getElementById('leg-evo');
+  leg.innerHTML = datasets.map(d =>
+    `<div class="leg-item"><div class="leg-dot" style="background:${d.borderColor}"></div>${d.label}</div>`
+  ).join('');
+
+  if (_chartEvo) _chartEvo.destroy();
+  _chartEvo = new Chart(document.getElementById('chart-evo'), {
+    type: 'line',
+    data: { labels: niceLbls, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${fmtVal(ctx.raw)}`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(26,36,51,.07)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 45 } },
+        y: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } }
+      }
+    }
+  });
+}
+
+// ── Países ────────────────────────────────────────────────────────────────────
+function renderPais() {
+  const f = getPaisFluxo();
+  const top = getTop();
+  let data = _paises.filter(r => !f || r.fluxo === f);
+
+  // Agrega quando fluxo = ambos
+  if (!f) {
+    const map = {};
+    data.forEach(r => {
+      const k = r.pais_cod;
+      if (!map[k]) map[k] = { pais_nome: r.pais_nome, valor_fob: 0, kg_liquido: 0 };
+      map[k].valor_fob  += r.valor_fob;
+      map[k].kg_liquido += r.kg_liquido;
+    });
+    data = Object.values(map).sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
+  } else {
+    data = data.sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
+  }
+
+  const labels = data.map(r => r.pais_nome || String(r.pais_cod));
+  const values = data.map(r => r[valKey()]);
+  const cores  = f === 'I' ? 'rgba(43,104,168,.75)' : f === 'E' ? 'rgba(200,146,42,.75)' : 'rgba(100,140,180,.75)';
+
+  if (_chartPais) _chartPais.destroy();
+  _chartPais = new Chart(document.getElementById('chart-pais'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ label: 'Valor', data: values, backgroundColor: cores,
+        borderColor: f === 'I' ? '#2B68A8' : f === 'E' ? '#C8922A' : '#6490B8',
+        borderWidth: 1, borderRadius: 2 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtVal(ctx.raw) } } },
+      scales: {
+        x: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
+        y: { ticks: { font: { family: 'DM Sans', size: 10 }, color: '#3E5068' }, grid: { display: false } }
+      }
+    }
+  });
+
+  const top1 = data[0];
+  document.getElementById('pais-hint').textContent =
+    top1 ? `Maior parceiro: ${top1.pais_nome || top1.pais_cod} com ${fmtVal(top1[valKey()])}` : '';
+}
+
+// ── NCMs ──────────────────────────────────────────────────────────────────────
+function renderNcm() {
+  const f = getNcmFluxo();
+  const top = getTop();
+  let data = _ncms.filter(r => !f || r.fluxo === f);
+
+  if (!f) {
+    const map = {};
+    data.forEach(r => {
+      if (!map[r.ncm]) map[r.ncm] = { descricao: r.descricao, valor_fob: 0, kg_liquido: 0 };
+      map[r.ncm].valor_fob  += r.valor_fob;
+      map[r.ncm].kg_liquido += r.kg_liquido;
+    });
+    data = Object.values(map).sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
+  } else {
+    data = data.sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
+  }
+
+  const labels = data.map(r => (r.descricao || r.ncm || '').slice(0, 45));
+  const values = data.map(r => r[valKey()]);
+
+  if (_chartNcm) _chartNcm.destroy();
+  _chartNcm = new Chart(document.getElementById('chart-ncm'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ label: 'Valor', data: values,
+        backgroundColor: 'rgba(46,125,82,.65)', borderColor: '#2E7D52',
+        borderWidth: 1, borderRadius: 2 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtVal(ctx.raw) } } },
+      scales: {
+        x: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
+        y: { ticks: { font: { family: 'DM Sans', size: 10 }, color: '#3E5068' }, grid: { display: false } }
+      }
+    }
+  });
+
+  const top1 = data[0];
+  document.getElementById('ncm-hint').textContent =
+    top1 ? `Produto líder: ${(top1.descricao || top1.ncm || '').slice(0,60)} — ${fmtVal(top1[valKey()])}` : '';
+}
+
+// ── UF ───────────────────────────────────────────────────────────────────────
+function renderUf() {
+  const f = getUfFluxo();
+  let data = _ufs.filter(r => !f || r.fluxo === f);
+
+  if (!f) {
+    const map = {};
+    data.forEach(r => {
+      const k = r.uf || '--';
+      if (!map[k]) map[k] = { uf_nome: r.uf_nome || r.uf, valor_fob: 0, kg_liquido: 0 };
+      map[k].valor_fob  += r.valor_fob;
+      map[k].kg_liquido += r.kg_liquido;
+    });
+    data = Object.values(map).sort((a,b) => b[valKey()] - a[valKey()]).slice(0, 15);
+  } else {
+    data = data.sort((a,b) => b[valKey()] - a[valKey()]).slice(0, 15);
+  }
+
+  const paleta = ['rgba(200,146,42,.75)','rgba(43,104,168,.65)','rgba(46,125,82,.65)',
+    'rgba(168,68,43,.65)','rgba(100,80,160,.65)','rgba(43,140,140,.65)'];
+  const cores = data.map((_,i) => paleta[i % paleta.length]);
+
+  if (_chartUf) _chartUf.destroy();
+  _chartUf = new Chart(document.getElementById('chart-uf'), {
+    type: 'bar',
+    data: {
+      labels: data.map(r => r.uf_nome || r.uf || '--'),
+      datasets: [{ label: 'Valor', data: data.map(r => r[valKey()]),
+        backgroundColor: cores, borderWidth: 0, borderRadius: 2 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtVal(ctx.raw) } } },
+      scales: {
+        x: { ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 35 }, grid: { display: false } },
+        y: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } }
+      }
+    }
+  });
+}
+
+// ── Tabela ───────────────────────────────────────────────────────────────────
+function setTab(tab) {
+  _tabAtual = tab;
+  ['pais','ncm','uf'].forEach(t => {
+    document.getElementById('tab-'+t).className = 'tab-btn' + (t === tab ? ' active' : '');
+  });
+  renderTabela();
+}
+
+function renderTabela() {
+  const head = document.getElementById('tbl-head');
+  const body = document.getElementById('tbl-body');
+  const title = document.getElementById('tbl-title');
+  const cnt   = document.getElementById('tbl-cnt');
+
+  let cols, rows;
+
+  if (_tabAtual === 'pais') {
+    title.textContent = 'Top Parceiros Comerciais';
+    cols = ['Fluxo','País','Valor FOB (US$)','Peso (kg)'];
+    rows = [..._paises].sort((a,b) => b.valor_fob - a.valor_fob).slice(0, getTop() * 2);
+  } else if (_tabAtual === 'ncm') {
+    title.textContent = 'Top Produtos (NCM)';
+    cols = ['Fluxo','Produto (NCM)','Cod. NCM','Valor FOB (US$)','Peso (kg)'];
+    rows = [..._ncms].sort((a,b) => b.valor_fob - a.valor_fob).slice(0, getTop() * 2);
+  } else {
+    title.textContent = 'Por Estado (UF)';
+    cols = ['Fluxo','Estado','Região','Valor FOB (US$)','Peso (kg)'];
+    rows = [..._ufs].sort((a,b) => b.valor_fob - a.valor_fob);
+  }
+
+  head.innerHTML = cols.map((c,i) =>
+    `<th class="${i >= cols.length - 2 ? 'r' : ''}">${c}</th>`
+  ).join('');
+
+  body.innerHTML = rows.map(r => {
+    const tag = r.fluxo === 'E'
+      ? '<span class="tag-exp">EXP</span>'
+      : r.fluxo === 'I' ? '<span class="tag-imp">IMP</span>' : '—';
+
+    if (_tabAtual === 'pais') {
+      return `<tr>
+        <td style="width:60px">${tag}</td>
+        <td>${r.pais_nome || r.pais_cod}</td>
+        <td class="r" style="font-family:'DM Mono',monospace">${fmtUSD(r.valor_fob)}</td>
+        <td class="r" style="font-family:'DM Mono',monospace">${fmtKg(r.kg_liquido)}</td>
+      </tr>`;
+    } else if (_tabAtual === 'ncm') {
+      return `<tr>
+        <td style="width:60px">${tag}</td>
+        <td title="${r.descricao || ''}">${(r.descricao || r.ncm || '').slice(0,55)}</td>
+        <td style="font-family:'DM Mono',monospace;width:90px;font-size:.68rem">${r.ncm}</td>
+        <td class="r" style="font-family:'DM Mono',monospace">${fmtUSD(r.valor_fob)}</td>
+        <td class="r" style="font-family:'DM Mono',monospace">${fmtKg(r.kg_liquido)}</td>
+      </tr>`;
+    } else {
+      return `<tr>
+        <td style="width:60px">${tag}</td>
+        <td>${r.uf_nome || r.uf || '—'}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:.68rem">${r.regiao || '—'}</td>
+        <td class="r" style="font-family:'DM Mono',monospace">${fmtUSD(r.valor_fob)}</td>
+        <td class="r" style="font-family:'DM Mono',monospace">${fmtKg(r.kg_liquido)}</td>
+      </tr>`;
+    }
+  }).join('');
+
+  cnt.textContent = rows.length + ' registros';
+}
+
+// ── Render all ───────────────────────────────────────────────────────────────
+function renderAll() {
+  renderKpi();
+  renderEvo();
+  renderPais();
+  renderNcm();
+  renderUf();
+  renderTabela();
+
+  const anos = [...new Set(_mensal.map(r => r.ano))].sort();
+  const meses = _mensal.length;
+  document.getElementById('last-update').textContent =
+    `${meses} meses de dados · ${anos[0] || '—'}–${anos[anos.length-1] || '—'} · Fonte: MDIC/ComexStat`;
+}
+
+// ── Filtros ──────────────────────────────────────────────────────────────────
+let _debounce = null;
+function onFilterChange() {
+  clearTimeout(_debounce);
+  _debounce = setTimeout(loadData, 350);
+}
+function onFluxoChange() { onFilterChange(); }
+function onMetricaChange() {
+  _metrica = document.querySelector('input[name="metrica"]:checked').value;
+  renderAll();
+}
+
+function resetFiltros() {
+  document.querySelector('input[name="fluxo"][value=""]').checked = true;
+  document.getElementById('sel-ano-ini').value = '2024';
+  document.getElementById('sel-ano-fim').value = '2026';
+  document.getElementById('sel-top').value = '15';
+  document.querySelector('input[name="metrica"][value="valor"]').checked = true;
+  _metrica = 'valor';
+  loadData();
+}
+
+// ── Carregamento ─────────────────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('loading-text').textContent = 'Consultando banco de dados…';
+  try {
+    await fetchAll();
+    renderAll();
+  } catch(e) {
+    console.error(e);
+    document.getElementById('loading-text').textContent = 'Erro ao carregar dados. Verifique a conexão.';
+    setTimeout(() => document.getElementById('loading').classList.add('hidden'), 3000);
+    return;
+  }
+  document.getElementById('loading').classList.add('hidden');
+}
+
+// ── Nav helpers ──────────────────────────────────────────────────────────────
+function toggleMenu() {
+  const links = document.getElementById('nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
