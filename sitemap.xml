@@ -51,6 +51,14 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Artigo: O que é Inteligência Comercial -->
+  <url>
+    <loc>https://vczconsultoria.com.br/insights/o-que-e-inteligencia-comercial.html</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Artigo: Apresentação -->
   <url>
     <loc>https://vczconsultoria.com.br/insights/apresentacao.html</loc>
