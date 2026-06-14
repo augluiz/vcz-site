@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel PMC — Comércio Varejista | VCZ Consultoria</title>
+<meta name="description" content="Painel interativo da Pesquisa Mensal de Comércio (PMC/IBGE): índice de volume de vendas no varejo por setor, variação mensal e acumulada em 12 meses.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vczconsultoria.com.br/ibge_sidra/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Painel PMC — Comércio Varejista | VCZ Consultoria">
+<meta property="og:description" content="Índice de volume de vendas no varejo por setor — variação mensal e em 12 meses. Dados PMC/IBGE atualizados mensalmente.">
+<meta property="og:url" content="https://vczconsultoria.com.br/ibge_sidra/">
+<meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F0E8; --panel:#FFFFFF; --panel2:#EDE7DC; --panel3:#E0D8CC;
+  --navy:#0D1B2A; --navy2:#162B40;
+  --gold:#C8922A; --gold-light:#E2AC4C; --gold-aged:#B7A073;
+  --text:#1A2433; --text2:#3E5068; --text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
+  --th-bg:#1A2F45; --th-text:#E8D8C0;
+  --tr-even:#F4F6FA; --tr-odd:#FFFFFF;
+  --tc-up-bg:rgba(46,125,82,.09);    --tc-up-text:#2E7D52;
+  --tc-dn-bg:rgba(184,48,48,.09);    --tc-dn-text:#B83030;
+  --tc-flat-bg:rgba(40,100,180,.08); --tc-flat-text:#2B68A8;
+  --pos:#2E7D52; --neg:#B83030;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.06);border-radius:4px}
+::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#B7A073}
+.tscroll::-webkit-scrollbar{width:9px;height:9px}
+.tscroll::-webkit-scrollbar-track{background:#DDE3EC;border-radius:6px}
+.tscroll::-webkit-scrollbar-thumb{background:#8A9EAF;border-radius:6px;border:2px solid #DDE3EC}
+.tscroll::-webkit-scrollbar-thumb:hover{background:#6A8A9F}
+.tscroll::-webkit-scrollbar-corner{background:#DDE3EC}
+
+#loading{position:fixed;inset:0;background:rgba(13,27,42,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:1rem;backdrop-filter:blur(4px)}
+#loading.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,0.15)}
+.nav-logo img{height:46px;width:auto}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,0.4);padding:9px 20px;text-decoration:none;transition:background .2s,border-color .2s;white-space:nowrap}
+.nav-cta:hover{background:rgba(200,146,42,.08);border-color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.lang-select{position:relative}
+.lang-select-btn{display:flex;align-items:center;gap:5px;background:rgba(183,160,115,.08);border:1px solid rgba(183,160,115,.2);border-radius:4px;padding:5px 8px 5px 7px;cursor:pointer;color:#9AAABB;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.lang-select-btn .flag{width:22px;height:15px;object-fit:cover;border-radius:2px;display:block}
+.lang-select-btn .chevron{width:8px;height:8px;border-right:1px solid #9AAABB;border-bottom:1px solid #9AAABB;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.lang-select.open .lang-select-btn .chevron{transform:rotate(-135deg) translateY(-2px)}
+.lang-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:rgba(13,27,42,.97);border:1px solid rgba(183,160,115,.2);border-radius:4px;overflow:hidden;min-width:110px;backdrop-filter:blur(12px);z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.lang-select.open .lang-dropdown{display:block}
+.lang-dropdown a,.lang-dropdown span{display:flex;align-items:center;gap:8px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;color:#9AAABB}
+.lang-dropdown a:hover{background:rgba(183,160,115,.08);color:#D4DDED}
+.lang-dropdown .lang-item-active{color:var(--gold);cursor:default;background:rgba(200,146,42,.05)}
+.lang-dropdown .flag{width:20px;height:13px;object-fit:cover;border-radius:2px;display:block}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:#9AAABB;transition:all .3s ease}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(max-width:768px){
+  .nav-hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(13,27,42,.98);backdrop-filter:blur(12px);flex-direction:column;gap:0;padding:1rem 0;z-index:99}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:1rem 5vw;font-size:13px;border-bottom:1px solid rgba(183,160,115,.08)}
+  .nav-cta{display:none}
+}
+
+.disclaimer-note{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;max-width:900px}
+.dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2)}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:#F2EAD8;line-height:1.1;letter-spacing:.01em}
+.dash-header h1 em{color:var(--gold-light);font-style:italic;font-weight:600}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:.28rem;letter-spacing:.04em}
+
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-inner{padding:.65rem 1.5rem;display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap}
+.tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
+.tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
+.tf-vsep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:.05rem 0;flex-shrink:0}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
+.tf-input:focus{border-color:var(--gold)}
+.tf-input option{background:var(--navy2);color:#EDE7DC}
+.radio-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.radio-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer;white-space:nowrap}
+.radio-row label:hover{color:#C8D8E8}
+.radio-row input[type=radio]{accent-color:var(--gold)}
+.check-row{display:flex;gap:.7rem}
+.check-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer}
+.check-row input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px}
+.date-row{display:flex;align-items:center;gap:.4rem}
+.date-row input[type=month]{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.72rem;outline:none;color-scheme:dark;transition:border-color .2s;min-width:115px}
+.date-row input[type=month]:focus{border-color:var(--gold)}
+.date-row .sep{font-family:'DM Mono',monospace;font-size:.6rem;color:#4A6A80}
+.btn-reset{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.3rem .7rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-reset:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,146,42,.08)}
+.filter-main{border-bottom:1px solid rgba(255,255,255,.06)}
+.filter-charts{padding:.38rem 1.5rem;background:rgba(0,0,0,.18);display:flex;align-items:flex-end;gap:1.2rem;flex-wrap:wrap}
+.filter-charts-tag{font-family:'DM Mono',monospace;font-size:.5rem;color:#4A7888;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;align-self:center;padding-right:.4rem;border-right:1px solid rgba(255,255,255,.09);margin-right:.2rem}
+
+.ddm-wrap{position:relative}
+.ddm-btn{min-width:130px;max-width:180px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .55rem;color:#8AAABB;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:.3rem;transition:border-color .2s;white-space:nowrap}
+.ddm-btn:hover,.ddm-btn.open{border-color:var(--gold);color:#EDE7DC}
+.ddm-btn .arr{font-size:.55rem;color:#4A6A80;transition:transform .15s;flex-shrink:0}
+.ddm-btn.open .arr{transform:rotate(180deg)}
+.ddm-panel{position:absolute;top:calc(100% + 2px);left:0;width:320px;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;display:none}
+.ddm-panel.open{display:block}
+.ddm-search{width:100%;background:var(--bg);border:none;border-bottom:1px solid var(--border);padding:.35rem .5rem .35rem 1.65rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A8A9A' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.42rem center}
+.ddm-list{max-height:200px;overflow-y:auto}
+.ddm-list label{display:flex;align-items:center;gap:.38rem;padding:.34rem .5rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer;border-bottom:1px solid rgba(26,36,51,.05);transition:background .1s}
+.ddm-list label:last-child{border-bottom:none}
+.ddm-list label:hover{background:#FBF7F2}
+.ddm-list label.active{background:#F0FAF5;color:var(--navy);font-weight:500}
+.ddm-list input[type=checkbox]{accent-color:var(--gold);flex-shrink:0}
+.ddm-empty{padding:.65rem .5rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
+
+.combo-wrap{position:relative}
+.combo-input{width:230px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem .3rem 1.65rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B7A073' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.42rem center}
+.combo-input::placeholder{color:rgba(183,160,115,.45)}
+.combo-input:focus{border-color:var(--gold)}
+.combo-drop{position:absolute;top:calc(100% + 2px);left:0;width:340px;max-height:240px;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;display:none}
+.combo-drop.open{display:block}
+.combo-drop .ci{padding:.36rem .55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer;border-bottom:1px solid rgba(26,36,51,.05);transition:background .1s}
+.combo-drop .ci:last-child{border-bottom:none}
+.combo-drop .ci:hover{background:#FBF7F2}
+.combo-drop .ci.active{background:#F0FAF5;color:var(--navy);font-weight:500}
+.combo-drop .ci-empty{padding:.7rem .55rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
+
+.dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
+.dash-grid{display:grid;grid-template-columns:2fr 3fr;gap:1rem;align-items:start}
+.chart-col{display:flex;flex-direction:column;gap:0}
+.table-col{display:flex;flex-direction:column;gap:0}
+
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
+.chart-section{padding:1rem 1.1rem}
+.chart-divider{display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;background:var(--navy);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.18)}
+.chart-divider span{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+.chart-divider::before,.chart-divider::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.2)}
+.chart-filter-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12);padding:.45rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.chart-filter-bar .lbl{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;flex-shrink:0}
+.chart-filter-bar select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.26rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer;transition:border-color .2s}
+.chart-filter-bar select option{background:var(--navy2);color:#EDE7DC}
+.chart-filter-bar select:focus{border-color:var(--gold)}
+.chart-filter-bar .radio-row{gap:.6rem}
+.chart-filter-bar .radio-row label{font-size:.74rem}
+.chart-section-bar{background:var(--navy2);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.12);padding:.5rem 1.2rem .45rem}
+.ct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem;font-weight:500}
+.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-bottom:.75rem}
+.no-data{text-align:center;padding:3rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+.cv-wrap canvas{display:block;width:100%!important;height:260px!important}
+#evo-wrap canvas{height:300px!important}
+#comp-wrap canvas{height:280px!important}
+
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.tbox.alta{border-top:3px solid #2E7D52}.tbox.queda{border-top:3px solid #B83030}
+.tbox-head{padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);gap:.5rem;flex-wrap:wrap}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.tbox.alta .tbox-head h3{color:#5AC882}.tbox.queda .tbox-head h3{color:#E06060}
+.tbox-cnt{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--gold-aged);background:rgba(200,146,42,.1);padding:.1rem .45rem;border-radius:10px;border:1px solid rgba(200,146,42,.25)}
+.tscroll{overflow-x:auto}
+.tscroll.limited{max-height:360px;overflow-y:auto}
+.dt{width:100%;border-collapse:collapse;font-size:.74rem;table-layout:fixed;min-width:580px}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:normal;line-height:1.25;vertical-align:bottom;cursor:pointer;user-select:none;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.dt th:last-child{border-right:none}
+.dt th:hover{background:#0D1B2A}
+.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem;display:inline-block;min-width:.5rem;vertical-align:middle}
+.dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
+.dt tr:nth-child(even) td{background:var(--tr-even)}.dt tr:nth-child(odd) td{background:var(--tr-odd)}
+.dt tr:hover td{background:#EEF3FB!important}
+.dt tr:last-child td{border-bottom:none}
+.dt th.r,.dt td.r{text-align:right}
+.tc-up  {background:var(--tc-up-bg)!important;  color:var(--tc-up-text)!important;  font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600}
+.tc-dn  {background:var(--tc-dn-bg)!important;  color:var(--tc-dn-text)!important;  font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600}
+.tc-flat{background:var(--tc-flat-bg)!important;color:var(--tc-flat-text)!important;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:500}
+.dt tbody tr{cursor:pointer;transition:background .1s}
+.dt tbody tr:hover td{background:rgba(200,146,42,.07)!important}
+.dt tbody tr.row-sel td{background:rgba(200,146,42,.15)!important;color:var(--navy)!important}
+.dt tbody tr.row-sel td.tc-up  {color:var(--tc-up-text)!important}
+.dt tbody tr.row-sel td.tc-dn  {color:var(--tc-dn-text)!important}
+.dt tbody tr.row-sel td.tc-flat{color:var(--tc-flat-text)!important}
+.pos{color:var(--pos)!important;font-weight:600}.neg{color:var(--neg)!important;font-weight:600}
+
+.full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
+.full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600;white-space:nowrap}
+.full-tbox-head input{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.26rem .5rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;width:190px;transition:border-color .2s}
+.full-tbox-head input:focus{border-color:var(--gold)}
+.geral-period-sel{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.26rem .5rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.65rem;outline:none;cursor:pointer;transition:border-color .2s;color-scheme:dark}
+.geral-period-sel option{background:var(--navy2);color:#EDE7DC}
+.geral-period-sel:focus{border-color:var(--gold)}
+
+.tend-legend{display:flex;gap:.8rem;align-items:center;padding:.22rem .85rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);border-radius:6px 6px 0 0;white-space:nowrap;overflow:hidden}
+.tl-item{font-family:'DM Mono',monospace;font-size:.55rem;display:flex;align-items:center;gap:.3rem;letter-spacing:.03em}
+.tl-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.tl-up .tl-dot{background:var(--tc-up-text)}.tl-dn .tl-dot{background:var(--tc-dn-text)}.tl-flat .tl-dot{background:#5B8FC4}
+.tl-up{color:#3DAA64}.tl-dn{color:#E06060}.tl-flat{color:#6EB0D8}
+.tl-sep{color:rgba(200,146,42,.25);font-size:.9rem;align-self:center}
+.tl-note{font-family:'DM Sans',sans-serif;font-size:.65rem;color:rgba(154,170,187,.55);margin-left:auto}
+
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr) auto;gap:1rem 2.2rem;align-items:center}
+.about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65;max-width:580px}
+.about-what strong{color:#E8D8C0;font-weight:600}
+.about-steps{display:flex;flex-direction:column;gap:.42rem}
+.about-step{display:flex;align-items:flex-start;gap:.55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8AAABB;line-height:1.5}
+.about-step span{flex:1;min-width:0}
+.about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;white-space:nowrap;flex-shrink:0;margin-top:.12rem}
+
+.badge-ibge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.3);border-radius:4px;padding:.18rem .5rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-aged);white-space:nowrap}
+
+.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
+.dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
+.dash-footer a:hover{color:var(--gold)}
+.tbox-desc{padding:.28rem .85rem .42rem;font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);background:var(--panel);border-bottom:1px solid rgba(26,36,51,.05);line-height:1.45}
+.chart-hint{padding:.25rem 1.1rem .45rem;font-family:'DM Sans',sans-serif;font-size:.67rem;color:var(--text3);line-height:1.45;background:var(--panel)}
+
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}.about-cols{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .dash-header h1{font-size:1.75rem}
+  .dash-header{padding:.85rem 1.2rem .65rem}
+  .filter-inner{gap:.65rem;padding:.5rem .9rem}
+  .filter-charts{padding:.32rem .9rem;gap:.65rem}
+  .tf-vsep{display:none}
+  .about-strip{padding:.75rem 1.2rem}
+  .about-cols{gap:.7rem}
+  .dash-main{padding:.7rem .75rem}
+  .chart-section{padding:.7rem .85rem}
+  .cv-wrap canvas{height:210px!important}
+  #evo-wrap canvas{height:240px!important}
+  #comp-wrap canvas{height:220px!important}
+}
+@media(max-width:480px){
+  .dash-header h1{font-size:1.45rem}
+  .filter-inner{gap:.5rem;padding:.45rem .75rem}
+  .full-tbox-head input{width:110px;font-size:.72rem}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <p class="loading-text" id="loading-text">Consultando API IBGE SIDRA…</p>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/logo-ouro.svg" alt="VCZ Consultoria">
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" class="active" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-select" id="lang-select">
+      <button class="lang-select-btn" onclick="toggleLang()" aria-label="Selecionar idioma">
+        <img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil">
+        <span>PT</span><span class="chevron"></span>
+      </button>
+      <div class="lang-dropdown">
+        <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil"> PT</span>
+        <a href="/en/"><img class="flag" src="https://flagcdn.com/w20/gb.png" alt="English"> EN</a>
+        <a href="/es/"><img class="flag" src="https://flagcdn.com/w20/es.png" alt="Español"> ES</a>
+      </div>
+    </div>
+    <a href="/#contato" class="nav-cta">Fale conosco</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="dash-header" style="margin-top:72px">
+  <p class="label">IBGE · Pesquisa Mensal de Comércio — PMC</p>
+  <h1>Varejo <em>Brasil</em> — Painel PMC</h1>
+  <p class="sub" id="last-update">Carregando dados…</p>
+</div>
+
+<div class="about-strip">
+  <div class="about-cols">
+    <p class="about-what">
+      Acompanhe o <strong>índice de volume de vendas do comércio varejista</strong> por setor de atividade — dados da Pesquisa Mensal de Comércio (PMC) do IBGE, base 2022 = 100. Ideal para identificar tendências de consumo e setores em expansão ou retração no Brasil.
+    </p>
+    <div class="about-steps">
+      <div class="about-step"><b>1</b><span>Escolha a <strong style="color:#E8D8C0">Tabela</strong> (PMC Restrito ou Ampliado com veículos/construção) e o <strong style="color:#E8D8C0">Tipo de Índice</strong> que desejar analisar.</span></div>
+      <div class="about-step"><b>2</b><span>Selecione uma <strong style="color:#E8D8C0">Atividade</strong> (coluna esquerda) para visualizar a evolução histórica do setor e comparar com o total do varejo.</span></div>
+      <div class="about-step"><b>3</b><span>Nas tabelas à direita, veja os setores com <strong style="color:#5AC882">maior expansão</strong> e <strong style="color:#E06060">maior retração</strong> com base na variação acumulada em 12 meses.</span></div>
+    </div>
+    <div style="display:flex;align-items:center;align-self:center">
+      <span class="badge-ibge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Fonte: IBGE/SIDRA · Mensal
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER PANEL -->
+<div class="filter-panel">
+  <div class="filter-inner filter-main">
+
+    <div class="tf-grp">
+      <span class="lbl">Tabela PMC</span>
+      <div class="radio-row">
+        <label><input type="radio" name="tabela" value="8882" checked> Restrito</label>
+        <label><input type="radio" name="tabela" value="8883"> Ampliado</label>
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl">Tipo de Índice</span>
+      <div class="radio-row" id="f-tipo-row">
+        <label><input type="radio" name="tipo" value="vm" checked> Var. M/M-12</label>
+        <label><input type="radio" name="tipo" value="v12"> Var. Acum. 12m</label>
+        <label><input type="radio" name="tipo" value="idx"> Número-índice</label>
+        <label><input type="radio" name="tipo" value="va"> Var. Acum. Ano</label>
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl">Atividade</span>
+      <div class="ddm-wrap" id="ddm-atv">
+        <button class="ddm-btn" id="ddm-atv-btn" type="button">
+          <span id="ddm-atv-lbl">Todas</span><span class="arr">▾</span>
+        </button>
+        <div class="ddm-panel" id="ddm-atv-panel">
+          <input class="ddm-search" type="text" id="f-atv-search" placeholder="Pesquisar atividade…" autocomplete="off">
+          <div class="ddm-list" id="atv-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tf-grp" style="margin-left:auto">
+      <span class="lbl">&nbsp;</span>
+      <button class="btn-reset" id="btn-reset">↺ Limpar</button>
+    </div>
+
+  </div>
+
+  <div class="filter-charts">
+    <span class="filter-charts-tag">Gráficos</span>
+    <div class="tf-grp">
+      <span class="lbl">Período</span>
+      <div class="date-row">
+        <input type="month" id="f-inicio">
+        <span class="sep">–</span>
+        <input type="month" id="f-fim">
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Indicador (gráfico superior)</span>
+      <div class="radio-row">
+        <label><input type="radio" name="tipo-chart" value="idx" checked> Número-índice</label>
+        <label><input type="radio" name="tipo-chart" value="vm"> Var. M/M-12</label>
+        <label><input type="radio" name="tipo-chart" value="v12"> Var. Acum. 12m</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="dash-main">
+  <div class="dash-grid">
+
+    <!-- COLUNA ESQUERDA: gráficos -->
+    <div class="chart-col">
+      <div class="chart-card">
+
+        <div class="chart-filter-bar">
+          <span class="lbl">Atividade</span>
+          <div class="combo-wrap" id="combo-atv" style="flex:1">
+            <input class="combo-input" type="text" id="f-atv-input" placeholder="Selecione uma atividade:" autocomplete="off">
+            <div class="combo-drop" id="combo-drop"></div>
+          </div>
+        </div>
+
+        <div class="chart-section-bar">
+          <p class="ct" id="evo-title">Evolução do Índice</p>
+          <p class="cs" id="evo-sub">Selecione uma atividade acima · Base 2022 = 100</p>
+        </div>
+        <div class="chart-section">
+          <div class="cv-wrap" id="evo-wrap"><p class="no-data">Selecione uma atividade no filtro acima.</p></div>
+        </div>
+        <div class="chart-hint" id="evo-hint" style="display:none"></div>
+
+        <div class="chart-divider"><span>Comparativo Setorial</span></div>
+
+        <div class="chart-filter-bar" style="border-top:none">
+          <span class="lbl">Indicador</span>
+          <div class="radio-row">
+            <label><input type="radio" name="comp-tipo" value="v12" checked> Var. 12m (%)</label>
+            <label><input type="radio" name="comp-tipo" value="vm"> Var. M/M-12 (%)</label>
+            <label><input type="radio" name="comp-tipo" value="idx"> Número-índice</label>
+          </div>
+        </div>
+        <div class="chart-section-bar">
+          <p class="ct" id="comp-title">Comparativo — Todos os Setores</p>
+          <p class="cs" id="comp-sub">Último período disponível · Variação em 12 meses (%)</p>
+        </div>
+        <div class="chart-section">
+          <div class="cv-wrap" id="comp-wrap"><p class="no-data">Aguardando dados…</p></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA: tabelas -->
+    <div class="table-col">
+
+      <div class="full-tbox">
+        <div class="full-tbox-head">
+          <h3>Painel Setorial</h3>
+          <span class="tbox-cnt" id="cnt-geral" style="color:var(--gold);border-color:rgba(200,146,42,.3)">0</span>
+          <select id="geral-period" class="geral-period-sel"></select>
+          <input type="text" id="tbl-search" placeholder="Filtrar setor…">
+        </div>
+        <div class="tscroll limited">
+          <table class="dt" style="min-width:600px">
+            <thead id="th-geral"><tr>
+              <th style="width:auto;min-width:170px" data-col="atividade">Atividade <span class="si"></span></th>
+              <th style="width:80px" data-col="tend">Tend. <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="idx" title="Número-índice (base 2022=100)">Índice <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="vm" title="Variação em relação ao mesmo mês do ano anterior (M/M-12)">Var. M/M-12 <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="va" title="Variação acumulada no ano">Var. Ano <span class="si"></span></th>
+              <th style="width:100px" class="r" data-col="v12" title="Variação acumulada nos últimos 12 meses">Var. 12m <span class="si"></span></th>
+            </tr></thead>
+            <tbody id="tb-geral"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tend-legend">
+        <span class="tl-item tl-up"><span class="tl-dot"></span> Expansão</span>
+        <span class="tl-sep">·</span>
+        <span class="tl-item tl-dn"><span class="tl-dot"></span> Retração</span>
+        <span class="tl-sep">·</span>
+        <span class="tl-item tl-flat"><span class="tl-dot"></span> Estagnado</span>
+        <span class="tl-note">Tendência = Var. Acum. 12m positiva ou negativa</span>
+      </div>
+
+      <div class="tbox alta">
+        <div class="tbox-head">
+          <h3>↑ Setores em Expansão</h3>
+          <span class="tbox-cnt" id="cnt-alta">0</span>
+        </div>
+        <div class="tbox-desc">Setores com variação positiva em 12 meses — ordenados por maior crescimento.</div>
+        <div class="tscroll">
+          <table class="dt" style="min-width:500px">
+            <thead><tr>
+              <th style="width:auto;min-width:160px" data-col="atividade" data-tbl="alta">Atividade <span class="si"></span></th>
+              <th style="width:80px" data-col="tend" data-tbl="alta">Tend. <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="idx" data-tbl="alta">Índice <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="vm" data-tbl="alta">Var. M/M-12 <span class="si"></span></th>
+              <th style="width:100px" class="r" data-col="v12" data-tbl="alta">Var. 12m <span class="si"></span></th>
+            </tr></thead>
+            <tbody id="tb-alta"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tbox queda">
+        <div class="tbox-head">
+          <h3>↓ Setores em Retração</h3>
+          <span class="tbox-cnt" id="cnt-queda">0</span>
+        </div>
+        <div class="tbox-desc">Setores com variação negativa em 12 meses — ordenados por maior queda.</div>
+        <div class="tscroll">
+          <table class="dt" style="min-width:500px">
+            <thead><tr>
+              <th style="width:auto;min-width:160px" data-col="atividade" data-tbl="queda">Atividade <span class="si"></span></th>
+              <th style="width:80px" data-col="tend" data-tbl="queda">Tend. <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="idx" data-tbl="queda">Índice <span class="si"></span></th>
+              <th style="width:90px" class="r" data-col="vm" data-tbl="queda">Var. M/M-12 <span class="si"></span></th>
+              <th style="width:100px" class="r" data-col="v12" data-tbl="queda">Var. 12m <span class="si"></span></th>
+            </tr></thead>
+            <tbody id="tb-queda"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div style="background:var(--navy);border-top:2px solid rgba(200,146,42,.35);padding:2rem 2rem">
+  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
+    <div>
+      <p style="font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:.45rem">VCZ Consultoria · Inteligência Comercial</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:#F0E8D8;line-height:1.2;margin-bottom:.5rem">
+        Precisa cruzar PMC com dados do <em style="color:var(--gold-light);font-style:italic">seu negócio?</em>
+      </h2>
+      <p style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:#5A8AA0;line-height:1.65;max-width:560px">
+        Criamos painéis de inteligência comercial com dados públicos (IBGE, CEASA, BCB) integrados à realidade da sua empresa — para distribuidores, varejistas e cooperativas.
+      </p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.65rem;align-items:stretch;min-width:200px">
+      <a href="https://wa.me/5541996242909?text=Ol%C3%A1%2C+vi+o+painel+PMC+e+quero+saber+mais+sobre+intelig%C3%AAncia+comercial+para+o+meu+neg%C3%B3cio." target="_blank" rel="noopener"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.45);color:#5DD88A;font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px;font-weight:600;transition:all .18s"
+         onmouseover="this.style.background='rgba(37,211,102,.25)';this.style.borderColor='rgba(37,211,102,.7)'" onmouseout="this.style.background='rgba(37,211,102,.15)';this.style.borderColor='rgba(37,211,102,.45)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.558 4.14 1.535 5.878L0 24l6.302-1.512A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.002-1.368l-.36-.214-3.733.895.934-3.617-.235-.373A9.785 9.785 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
+        Falar no WhatsApp
+      </a>
+      <a href="mailto:vcz.grupo@gmail.com?subject=Painel%20PMC%20%E2%80%94%20Quero%20saber%20mais"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:transparent;border:1px solid rgba(200,146,42,.4);color:var(--gold-aged);font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px;font-weight:500;transition:all .18s"
+         onmouseover="this.style.borderColor='#C8922A';this.style.color='#E2AC4C'" onmouseout="this.style.borderColor='rgba(200,146,42,.4)';this.style.color='#B7A073'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        Enviar e-mail
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="dash-footer">
+  <span>Fonte: IBGE · Pesquisa Mensal de Comércio (PMC) via SIDRA API · Atualizado mensalmente</span>
+  <a href="/">© VCZ Consultoria</a>
+  <p class="disclaimer-note">As informações exibidas têm caráter meramente informativo e são obtidas de fontes públicas (IBGE/SIDRA). O VCZ Consultoria não se responsabiliza por decisões comerciais tomadas com base nestes dados. O painel pode ser descontinuado a qualquer momento sem aviso prévio.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+Chart.register({
+  id:'crosshair',
+  afterDraw(chart){
+    const act=chart.tooltip?._active;
+    if(!act?.length)return;
+    const ctx=chart.ctx,x=act[0].element.x,{top,bottom}=chart.chartArea;
+    ctx.save();ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottom);
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(200,146,42,.55)';
+    ctx.setLineDash([4,3]);ctx.stroke();ctx.restore();
+  }
+});
+Chart.register({
+  id:'zeroline',
+  afterDraw(chart){
+    if(!chart.options?.plugins?.zeroline)return;
+    const yScale=chart.scales.y;
+    if(!yScale)return;
+    const y=yScale.getPixelForValue(0);
+    if(y<yScale.top||y>yScale.bottom)return;
+    const ctx=chart.ctx,{left,right}=chart.chartArea;
+    ctx.save();ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);
+    ctx.lineWidth=1.5;ctx.strokeStyle='rgba(200,146,42,.5)';
+    ctx.setLineDash([]);ctx.stroke();ctx.restore();
+  }
+});
+
+// ── CONSTANTS ────────────────────────────────────────────────────
+const SIDRA_BASE = 'https://servicodados.ibge.gov.br/api/v3/agregados';
+
+// Tabela 8882 = PMC Restrito por atividades (classif 11046 cat 56734 = volume restrito)
+// Tabela 8883 = PMC Ampliado por atividades (classif 11046 cat 56736 = volume ampliado)
+// Atividade classificação: 85
+// Variáveis: 7169=índice, 11709=M/M-12, 11710=var.ano, 11711=var.12m
+const TABELA_CONFIG = {
+  '8882': { nome: 'PMC Restrito',  tipoCat: '56734' },
+  '8883': { nome: 'PMC Ampliado',  tipoCat: '56736' },
+};
+const VAR_TO_TIPO = {
+  '7169':  'idx',   // Número-índice (2022=100)
+  '11709': 'vm',    // Variação M/M-12 (mesmo mês do ano anterior)
+  '11710': 'va',    // Variação acumulada no ano
+  '11711': 'v12',   // Variação acumulada em 12 meses
+};
+const TIPO_LABEL = {
+  idx: 'Número-índice (base 2022=100)',
+  vm:  'Var. M/M-12 (mesmo mês ano anterior, %)',
+  va:  'Var. Acum. Ano (%)',
+  v12: 'Var. Acum. 12 Meses (%)',
+};
+
+// Short names for long activity labels
+const ATV_SHORT = {
+  'Comércio varejista': 'Varejo total',
+  'Combustíveis e lubrificantes': 'Combustíveis',
+  'Hipermercados, supermercados, produtos alimentícios, bebidas e fumo': 'Supermercados/Alimentos',
+  'Tecidos, vestuário e calçados': 'Vestuário',
+  'Móveis e eletrodomésticos': 'Móveis/Eletrodom.',
+  'Artigos farmacêuticos, médicos, ortopédicos, de perfumaria e cosméticos': 'Farmácias/Cosméticos',
+  'Equipamentos e materiais para escritórios, informática e comunicação': 'Informática/Comunicação',
+  'Livros, jornais, revistas e papelaria': 'Livros/Papelaria',
+  'Outros artigos de uso pessoal e doméstico': 'Uso pessoal e doméstico',
+  'Veículos, motos, partes e peças': 'Veículos/Motos',
+  'Material de construção': 'Material de Construção',
+  'Hipermercados e supermercados': 'Hipermercados/Supermercados',
+  'Comércio varejista ampliado': 'Varejo ampliado (total)',
+};
+function shortAtv(nome) { return ATV_SHORT[nome] || (nome.length > 30 ? nome.slice(0,30)+'…' : nome); }
+
+const MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+function fmtP(p){ if(!p||p.length<6)return p; return MESES[parseInt(p.slice(4,6))-1]+'/'+p.slice(0,4); }
+function fmtPFull(p){ if(!p||p.length<6)return p; return MESES_FULL[parseInt(p.slice(4,6))-1]+' de '+p.slice(0,4); }
+function fmtN(v,d=1){ if(v==null||isNaN(v))return'—'; return v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function fmtPct(v){ if(v==null||isNaN(v))return'—'; const s=v>0?'+':''; return s+fmtN(v,1)+'%'; }
+
+// ── STATE ─────────────────────────────────────────────────────────
+let allRows = [];   // flat array: {periodo, atvId, atvNome, tipoId, tipoNome, tipoKey, valor}
+let _atvList = [];  // [{id, nome}] all activities
+let _periodos = []; // sorted unique YYYYMM strings
+let _geralPeriod = '';
+let _chartAtvId = '';
+const F = {
+  tabela: '8882',
+  filtroAtvIds: new Set(),  // empty = all
+  inicio: '',
+  fim: '',
+  tipoTable: 'vm',     // tipo shown in tables
+  tipoChart: 'idx',    // tipo shown in evo chart
+  tipoComp: 'v12',     // tipo shown in comp chart
+};
+const _sort = {
+  geral: {col:null, dir:1},
+  alta:  {col:null, dir:1},
+  queda: {col:null, dir:1},
+};
+let charts = { evo: null, comp: null };
+const cache = {}; // cache[tabelaId] = rows
+
+// ── FETCH + PARSE ────────────────────────────────────────────────
+function getPeriodRange() {
+  const now = new Date();
+  const endY = now.getFullYear(), endM = now.getMonth() + 1;
+  const startY = endY - 5;
+  return `${startY}01-${endY}${String(endM).padStart(2,'0')}`;
+}
+
+async function fetchSIDRA(tabela) {
+  if (cache[tabela]) return cache[tabela];
+  const cfg = TABELA_CONFIG[tabela];
+  if (!cfg) throw new Error(`Tabela ${tabela} não configurada.`);
+  const period = getPeriodRange();
+  // Variáveis: 7169=índice, 11709=M/M-12, 11710=var.ano, 11711=var.12m
+  // Classif 11046[tipoCat] filtra para volume de vendas; classif 85[all] = todas as atividades
+  const url = `${SIDRA_BASE}/${tabela}/periodos/${period}/variaveis/7169,11709,11710,11711?localidades=N1[all]&classificacao=11046[${cfg.tipoCat}]|85[all]`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status} ao buscar tabela ${tabela} (${cfg.nome}).`);
+  const json = await res.json();
+  const rows = parseSIDRA(json);
+  if (!rows.length) throw new Error(`Tabela ${tabela} não retornou dados. Verifique sua conexão com a API IBGE.`);
+  cache[tabela] = rows;
+  return rows;
+}
+
+function parseSIDRA(json) {
+  const rows = [];
+  if (!Array.isArray(json)) return rows;
+  for (const varObj of json) {
+    const tipoKey = VAR_TO_TIPO[String(varObj.id)];
+    if (!tipoKey) continue; // ignora variáveis não mapeadas
+    for (const res of (varObj.resultados || [])) {
+      let atvId = '', atvNome = '';
+      for (const cl of (res.classificacoes || [])) {
+        if (cl.id === '85') {
+          const cats = cl.categoria || {};
+          atvId = Object.keys(cats)[0] || '';
+          atvNome = Object.values(cats)[0] || '';
+        }
+      }
+      if (!atvId) continue;
+      for (const s of (res.series || [])) {
+        for (const [periodo, valStr] of Object.entries(s.serie || {})) {
+          const v = (valStr==='...'||valStr==='-'||valStr===''||valStr==null)
+            ? null : parseFloat(String(valStr).replace(',','.'));
+          rows.push({ periodo, atvId, atvNome, tipoKey, valor: isNaN(v)?null:v });
+        }
+      }
+    }
+  }
+  return rows.sort((a,b) => a.periodo.localeCompare(b.periodo));
+}
+
+// ── PIVOT ────────────────────────────────────────────────────────
+// Returns Map<atvId, {atvId, atvNome, idx, vm, va, v12, tend}>
+function buildPivot(rows, periodo) {
+  const map = new Map();
+  for (const r of rows) {
+    if (r.periodo !== periodo) continue;
+    if (!map.has(r.atvId)) map.set(r.atvId, { atvId: r.atvId, atvNome: r.atvNome, idx:null, vm:null, va:null, v12:null });
+    const entry = map.get(r.atvId);
+    if (['idx','vm','va','v12'].includes(r.tipoKey)) entry[r.tipoKey] = r.valor;
+  }
+  // compute tendency from v12
+  for (const [,e] of map) {
+    const v = e.v12;
+    e.tend = v==null ? 'Estagnado' : v > 0.3 ? 'Expansão' : v < -0.3 ? 'Retração' : 'Estagnado';
+  }
+  return map;
+}
+
+function getTimeSeries(rows, atvId, tipoKey, inicio, fim) {
+  return rows
+    .filter(r => r.atvId === atvId && r.tipoKey === tipoKey && (!inicio || r.periodo >= inicio) && (!fim || r.periodo <= fim))
+    .map(r => ({ periodo: r.periodo, valor: r.valor }));
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+async function boot() {
+  try {
+    document.getElementById('loading-text').textContent = 'Consultando API IBGE SIDRA…';
+    allRows = await fetchSIDRA(F.tabela);
+
+    _periodos = [...new Set(allRows.map(r => r.periodo))].sort();
+    _geralPeriod = _periodos[_periodos.length - 1] || '';
+
+    // build activity list
+    const atvMap = new Map();
+    for (const r of allRows) {
+      if (!atvMap.has(r.atvId)) atvMap.set(r.atvId, r.atvNome);
+    }
+    _atvList = [...atvMap.entries()].map(([id, nome]) => ({id, nome})).sort((a,b) => a.nome.localeCompare(b.nome, 'pt'));
+
+    // set default chart activity = total comércio varejista
+    const total = _atvList.find(a => /varejo\s*total|comércio varejista$/i.test(a.nome)) || _atvList[0];
+    if (total) _chartAtvId = total.id;
+
+    // set date range defaults
+    const firstP = _periodos[0], lastP = _periodos[_periodos.length - 1];
+    if (firstP) {
+      F.inicio = firstP;
+      document.getElementById('f-inicio').value = `${firstP.slice(0,4)}-${firstP.slice(4,6)}`;
+    }
+    if (lastP) {
+      F.fim = lastP;
+      document.getElementById('f-fim').value = `${lastP.slice(0,4)}-${lastP.slice(4,6)}`;
+    }
+
+    // update header
+    document.getElementById('last-update').textContent =
+      `Último período disponível: ${fmtPFull(_geralPeriod)} · ${TABELA_CONFIG[F.tabela].nome} · IBGE/SIDRA`;
+
+    populatePeriodSelect();
+    renderAtvList('');
+    setupCombo();
+    setupListeners();
+    applyFilters();
+
+    document.getElementById('loading').classList.add('hidden');
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      `<p style="color:#E57373;font-family:'DM Mono',monospace;font-size:.82rem;padding:2rem;text-align:center;line-height:1.9;max-width:480px">
+        Erro ao carregar dados:<br><br>${e.message}<br><br>
+        <span style="font-size:.7rem;color:#8AACBC">Tente recarregar a página. Se o problema persistir, a API do IBGE pode estar indisponível.</span>
+      </p>`;
+  }
+}
+
+// ── DROPDOWNS ───────────────────────────────────────────────────
+function renderAtvList(q) {
+  const list = document.getElementById('atv-list');
+  const visible = q ? _atvList.filter(a => a.nome.toLowerCase().includes(q)) : _atvList;
+  if (!visible.length) { list.innerHTML = '<div class="ddm-empty">Nenhuma atividade</div>'; return; }
+  list.innerHTML = visible.map(a => {
+    const chk = F.filtroAtvIds.has(a.id) ? 'checked' : '';
+    const act = F.filtroAtvIds.has(a.id) ? ' active' : '';
+    return `<label class="${act}" title="${a.nome}">
+      <input type="checkbox" name="atv-cb" value="${a.id}" ${chk}> ${shortAtv(a.nome)}
+    </label>`;
+  }).join('');
+  list.querySelectorAll('input').forEach(cb => {
+    cb.addEventListener('change', e => {
+      e.target.checked ? F.filtroAtvIds.add(e.target.value) : F.filtroAtvIds.delete(e.target.value);
+      e.target.closest('label').classList.toggle('active', e.target.checked);
+      updateDdmAtvLabel();
+      applyFilters();
+    });
+  });
+}
+function updateDdmAtvLabel() {
+  document.getElementById('ddm-atv-lbl').textContent = F.filtroAtvIds.size ? `${F.filtroAtvIds.size} sel.` : 'Todas';
+}
+function populatePeriodSelect() {
+  const sel = document.getElementById('geral-period');
+  sel.innerHTML = '';
+  [..._periodos].reverse().forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = fmtPFull(p);
+    sel.appendChild(o);
+  });
+  sel.value = _geralPeriod;
+}
+
+// ── COMBO (atividade chart) ──────────────────────────────────────
+function setupCombo() {
+  const inp = document.getElementById('f-atv-input');
+  const drop = document.getElementById('combo-drop');
+  if (_chartAtvId) {
+    const a = _atvList.find(x => x.id === _chartAtvId);
+    if (a) inp.value = a.nome;
+  }
+  inp.addEventListener('focus', () => { inp.value=''; renderComboOptions(''); drop.classList.add('open'); });
+  inp.addEventListener('input', e => renderComboOptions(e.target.value.toLowerCase()));
+  inp.addEventListener('blur', () => setTimeout(() => {
+    drop.classList.remove('open');
+    const a = _atvList.find(x => x.id === _chartAtvId);
+    if (a) inp.value = a.nome;
+  }, 180));
+  renderComboOptions('');
+}
+function renderComboOptions(q) {
+  const drop = document.getElementById('combo-drop');
+  const visible = q ? _atvList.filter(a => a.nome.toLowerCase().includes(q)) : _atvList;
+  if (!visible.length) { drop.innerHTML = '<div class="ci-empty">Nenhuma atividade</div>'; return; }
+  drop.innerHTML = visible.map(a =>
+    `<div class="ci${a.id===_chartAtvId?' active':''}" data-id="${a.id}" title="${a.nome}">${a.nome}</div>`
+  ).join('');
+  drop.querySelectorAll('.ci').forEach(el => {
+    el.addEventListener('mousedown', e => {
+      e.preventDefault();
+      _chartAtvId = el.dataset.id;
+      document.getElementById('f-atv-input').value = el.title;
+      drop.classList.remove('open');
+      drawEvo();
+      highlightRow(_chartAtvId);
+    });
+  });
+}
+
+// ── LISTENERS ───────────────────────────────────────────────────
+function setupListeners() {
+  document.querySelectorAll('input[name=tabela]').forEach(r => r.addEventListener('change', async e => {
+    if (e.target.value === F.tabela) return;
+    F.tabela = e.target.value;
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('loading-text').textContent = 'Carregando ' + (TABELA_CONFIG[F.tabela]?.nome || 'PMC') + '…';
+    try {
+      allRows = await fetchSIDRA(F.tabela);
+      _periodos = [...new Set(allRows.map(r => r.periodo))].sort();
+      _geralPeriod = _periodos[_periodos.length-1]||'';
+      const atvMap = new Map();
+      for (const r of allRows) { if(!atvMap.has(r.atvId)) atvMap.set(r.atvId,r.atvNome); }
+      _atvList = [...atvMap.entries()].map(([id,nome])=>({id,nome})).sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
+      const total = _atvList.find(a=>/varejo\s*(total|ampliado)|comércio varejista/i.test(a.nome))||_atvList[0];
+      if(total) { _chartAtvId=total.id; document.getElementById('f-atv-input').value=total.nome; }
+      F.filtroAtvIds.clear(); updateDdmAtvLabel();
+      renderAtvList('');
+      populatePeriodSelect();
+      document.getElementById('last-update').textContent =
+        `Último período: ${fmtPFull(_geralPeriod)} · ${TABELA_CONFIG[F.tabela].nome} · IBGE/SIDRA`;
+      applyFilters();
+    } catch(err) { alert('Erro ao carregar: '+err.message); }
+    finally { document.getElementById('loading').classList.add('hidden'); }
+  }));
+
+  document.querySelectorAll('input[name=tipo]').forEach(r => r.addEventListener('change', e => {
+    F.tipoTable = e.target.value; applyFilters();
+  }));
+  document.querySelectorAll('input[name=tipo-chart]').forEach(r => r.addEventListener('change', e => {
+    F.tipoChart = e.target.value; drawEvo();
+  }));
+  document.querySelectorAll('input[name=comp-tipo]').forEach(r => r.addEventListener('change', e => {
+    F.tipoComp = e.target.value; drawComp();
+  }));
+
+  const fiEl = document.getElementById('f-inicio');
+  const ffEl = document.getElementById('f-fim');
+  fiEl.addEventListener('change', e => {
+    const v = e.target.value; // "2021-01"
+    F.inicio = v ? v.replace('-','') : '';
+    drawEvo(); drawComp();
+  });
+  ffEl.addEventListener('change', e => {
+    const v = e.target.value;
+    F.fim = v ? v.replace('-','') : '';
+    drawEvo(); drawComp();
+  });
+
+  document.getElementById('f-atv-search').addEventListener('input', e => renderAtvList(e.target.value.toLowerCase()));
+  const ddmBtn = document.getElementById('ddm-atv-btn');
+  const ddmPanel = document.getElementById('ddm-atv-panel');
+  ddmBtn.addEventListener('click', e => { e.stopPropagation(); ddmBtn.classList.toggle('open'); ddmPanel.classList.toggle('open'); });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#ddm-atv')) { ddmBtn.classList.remove('open'); ddmPanel.classList.remove('open'); }
+    const langSel = document.getElementById('lang-select');
+    if (langSel && !langSel.contains(e.target)) langSel.classList.remove('open');
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', resetFilters);
+  document.getElementById('geral-period').addEventListener('change', e => { _geralPeriod = e.target.value; renderGeralTable(); });
+  document.getElementById('tbl-search').addEventListener('input', e => renderGeralTable(e.target.value.toLowerCase()));
+
+  // sort headers
+  setupSortHeaders();
+
+  // row click → select activity for chart
+  ['tb-geral','tb-alta','tb-queda'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      const tr = e.target.closest('tr[data-atvid]');
+      if (!tr) return;
+      _chartAtvId = tr.dataset.atvid;
+      const a = _atvList.find(x => x.id === _chartAtvId);
+      if (a) document.getElementById('f-atv-input').value = a.nome;
+      renderComboOptions('');
+      drawEvo();
+      highlightRow(_chartAtvId);
+    });
+  });
+}
+
+function setupSortHeaders() {
+  document.querySelectorAll('.dt th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col, tbl = th.dataset.tbl || 'geral';
+      const s = _sort[tbl] || _sort.geral;
+      s.dir = s.col === col ? -s.dir : 1;
+      s.col = col;
+      document.querySelectorAll(`.dt th[data-tbl="${tbl}"] .si, #th-geral .si`).forEach(si => si.textContent='');
+      th.querySelector('.si').textContent = s.dir===1?' ▲':' ▼';
+      if (tbl==='geral') renderGeralTable();
+      else if (tbl==='alta') renderAltaTable();
+      else if (tbl==='queda') renderQuedaTable();
+    });
+  });
+}
+
+function resetFilters() {
+  F.filtroAtvIds.clear(); updateDdmAtvLabel(); renderAtvList('');
+  F.tipoTable = 'vm';
+  document.querySelectorAll('input[name=tipo]')[0].checked = true;
+  const lastP = _periodos[_periodos.length-1]||'', firstP = _periodos[0]||'';
+  F.inicio = firstP; F.fim = lastP;
+  if (firstP) document.getElementById('f-inicio').value = `${firstP.slice(0,4)}-${firstP.slice(4,6)}`;
+  if (lastP)  document.getElementById('f-fim').value   = `${lastP.slice(0,4)}-${lastP.slice(4,6)}`;
+  document.querySelector('input[name=tipo-chart][value=idx]').checked = true; F.tipoChart='idx';
+  document.querySelector('input[name=comp-tipo][value=v12]').checked = true;  F.tipoComp='v12';
+  _sort.geral={col:null,dir:1}; _sort.alta={col:null,dir:1}; _sort.queda={col:null,dir:1};
+  document.querySelectorAll('.dt th .si').forEach(si=>si.textContent='');
+  applyFilters();
+}
+
+// ── APPLY FILTERS ────────────────────────────────────────────────
+function filteredAtvIds() {
+  if (!F.filtroAtvIds.size) return null; // null = all
+  return F.filtroAtvIds;
+}
+
+function applyFilters() {
+  renderGeralTable();
+  renderAltaTable();
+  renderQuedaTable();
+  drawEvo();
+  drawComp();
+}
+
+// ── TABLES ───────────────────────────────────────────────────────
+const tendCls = t => t==='Expansão'?'tc-up': t==='Retração'?'tc-dn':'tc-flat';
+const fmtVal = (v, tipoKey) => {
+  if (v==null||isNaN(v)) return '—';
+  if (tipoKey==='idx') return fmtN(v,1);
+  return fmtPct(v);
+};
+
+function buildTableRows(periodo) {
+  const pivot = buildPivot(allRows, periodo);
+  const atvFilter = filteredAtvIds();
+  let rows = [];
+  for (const [id, e] of pivot) {
+    if (atvFilter && !atvFilter.has(id)) continue;
+    rows.push(e);
+  }
+  return rows;
+}
+
+function tRowGeral(e) {
+  const vc12 = e.v12==null?'': e.v12>0?'pos':'neg';
+  const s12  = e.v12!=null&&e.v12>0?'+':'';
+  const vvm  = e.vm==null?'': e.vm>0?'pos':'neg';
+  const svm  = e.vm!=null&&e.vm>0?'+':'';
+  return `<tr data-atvid="${e.atvId}" title="${e.atvNome}">
+    <td style="min-width:170px;overflow:hidden;text-overflow:ellipsis" title="${e.atvNome}">${shortAtv(e.atvNome)}</td>
+    <td class="${tendCls(e.tend)}">${e.tend}</td>
+    <td class="r">${e.idx!=null?fmtN(e.idx,1):'—'}</td>
+    <td class="r ${vvm}">${e.vm!=null?svm+fmtN(e.vm,1)+'%':'—'}</td>
+    <td class="r">${e.va!=null?(e.va>0?'+':'')+fmtN(e.va,1)+'%':'—'}</td>
+    <td class="r ${vc12}">${e.v12!=null?s12+fmtN(e.v12,1)+'%':'—'}</td>
+  </tr>`;
+}
+function tRowMover(e, cols) {
+  const vc12 = e.v12==null?'': e.v12>0?'pos':'neg';
+  const s12  = e.v12!=null&&e.v12>0?'+':'';
+  const vvm  = e.vm==null?'': e.vm>0?'pos':'neg';
+  const svm  = e.vm!=null&&e.vm>0?'+':'';
+  return `<tr data-atvid="${e.atvId}" title="${e.atvNome}">
+    <td style="min-width:160px;overflow:hidden;text-overflow:ellipsis" title="${e.atvNome}">${shortAtv(e.atvNome)}</td>
+    <td class="${tendCls(e.tend)}">${e.tend}</td>
+    <td class="r">${e.idx!=null?fmtN(e.idx,1):'—'}</td>
+    <td class="r ${vvm}">${e.vm!=null?svm+fmtN(e.vm,1)+'%':'—'}</td>
+    <td class="r ${vc12}">${e.v12!=null?s12+fmtN(e.v12,1)+'%':'—'}</td>
+  </tr>`;
+}
+
+function sortRows(rows, col, dir) {
+  if (!col) return rows;
+  return [...rows].sort((a,b) => {
+    const va=a[col], vb=b[col];
+    if(va==null&&vb==null)return 0; if(va==null)return dir; if(vb==null)return -dir;
+    return typeof va==='string' ? va.localeCompare(vb,'pt')*dir : (va-vb)*dir;
+  });
+}
+
+function renderGeralTable(q='') {
+  const rows = buildTableRows(_geralPeriod);
+  const s = _sort.geral;
+  const sorted = s.col ? sortRows(rows,s.col,s.dir) : rows.sort((a,b)=>(b[F.tipoTable]||0)-(a[F.tipoTable]||0)||a.atvNome.localeCompare(b.atvNome,'pt'));
+  const filtered = q ? sorted.filter(r => r.atvNome.toLowerCase().includes(q)||shortAtv(r.atvNome).toLowerCase().includes(q)) : sorted;
+  const empty = `<tr><td colspan="6" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum setor</td></tr>`;
+  document.getElementById('tb-geral').innerHTML = filtered.length ? filtered.map(tRowGeral).join('') : empty;
+  document.getElementById('cnt-geral').textContent = filtered.length + ' setor' + (filtered.length!==1?'es':'');
+}
+
+let _altaRows = [], _quedaRows = [];
+function renderAltaTable() {
+  const rows = buildTableRows(_geralPeriod);
+  _altaRows = rows.filter(r=>r.tend==='Expansão').sort((a,b)=>(b.v12||0)-(a.v12||0));
+  const s = _sort.alta;
+  const sorted = s.col ? sortRows(_altaRows,s.col,s.dir) : _altaRows;
+  const empty = `<tr><td colspan="5" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum setor em expansão</td></tr>`;
+  document.getElementById('tb-alta').innerHTML = sorted.length ? sorted.map(e=>tRowMover(e)).join('') : empty;
+  document.getElementById('cnt-alta').textContent = sorted.length + (sorted.length!==1?' setores':' setor');
+}
+function renderQuedaTable() {
+  const rows = buildTableRows(_geralPeriod);
+  _quedaRows = rows.filter(r=>r.tend==='Retração').sort((a,b)=>(a.v12||0)-(b.v12||0));
+  const s = _sort.queda;
+  const sorted = s.col ? sortRows(_quedaRows,s.col,s.dir) : _quedaRows;
+  const empty = `<tr><td colspan="5" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum setor em retração</td></tr>`;
+  document.getElementById('tb-queda').innerHTML = sorted.length ? sorted.map(e=>tRowMover(e)).join('') : empty;
+  document.getElementById('cnt-queda').textContent = sorted.length + (sorted.length!==1?' setores':' setor');
+}
+
+function highlightRow(atvId) {
+  document.querySelectorAll('.dt tbody tr.row-sel').forEach(r=>r.classList.remove('row-sel'));
+  document.querySelectorAll(`.dt tbody tr[data-atvid="${atvId}"]`).forEach(r=>r.classList.add('row-sel'));
+}
+
+// ── CHART HELPERS ────────────────────────────────────────────────
+function baseOpts() {
+  return {
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{labels:{color:'#3E5068',font:{family:'DM Mono',size:10},boxWidth:14,padding:10}},
+      tooltip:{backgroundColor:'rgba(26,36,51,.93)',titleColor:'#E2AC4C',bodyColor:'#EDE7DC',
+               borderColor:'rgba(200,146,42,.4)',borderWidth:1,padding:10,
+               titleFont:{family:'DM Mono',size:11},bodyFont:{family:'DM Sans',size:12}}
+    }
+  };
+}
+function xScale(maxTicks=16) {
+  return {grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#9AAABB',font:{family:'DM Mono',size:9},maxTicksLimit:maxTicks,maxRotation:30}};
+}
+function yScaleOpts(suffix) {
+  return {grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:10},callback:v=>fmtN(v,1)+(suffix||'')}};
+}
+
+// ── EVO CHART ────────────────────────────────────────────────────
+function drawEvo() {
+  const wrap = document.getElementById('evo-wrap');
+  const titleEl = document.getElementById('evo-title');
+  const subEl = document.getElementById('evo-sub');
+  const hintEl = document.getElementById('evo-hint');
+  if (!_chartAtvId) {
+    wrap.innerHTML='<p class="no-data">Selecione uma atividade acima.</p>';
+    return;
+  }
+  const a = _atvList.find(x=>x.id===_chartAtvId);
+  const atvNome = a ? a.nome : _chartAtvId;
+
+  const series = getTimeSeries(allRows, _chartAtvId, F.tipoChart, F.inicio, F.fim);
+  if (!series.length) { wrap.innerHTML='<p class="no-data">Sem dados para o período.</p>'; return; }
+
+  // Also get total comércio varejista for comparison
+  const totalAtv = _atvList.find(x=>/varejo\s*(total|ampliado)?$|comércio varejista$/i.test(x.nome));
+  const seriesTotal = totalAtv && totalAtv.id !== _chartAtvId
+    ? getTimeSeries(allRows, totalAtv.id, F.tipoChart, F.inicio, F.fim)
+    : [];
+
+  titleEl.textContent = `Evolução — ${shortAtv(atvNome)}`;
+  const suffix = F.tipoChart==='idx' ? '' : '%';
+  subEl.textContent = TIPO_LABEL[F.tipoChart];
+
+  if (charts.evo) charts.evo.destroy();
+  wrap.innerHTML = '<canvas id="cv-evo"></canvas>';
+
+  const labels = series.map(r => fmtP(r.periodo));
+  const datasets = [
+    {label: shortAtv(atvNome), data: series.map(r=>r.valor), borderColor:'#C8922A', borderWidth:2.5, pointRadius:2, pointHoverRadius:5, fill:false, tension:.3, order:1},
+  ];
+  if (seriesTotal.length) {
+    datasets.push({label:'Varejo total', data:seriesTotal.map(r=>r.valor), borderColor:'rgba(100,149,237,.65)', borderWidth:1.5, borderDash:[4,3], pointRadius:0, fill:false, tension:.3, order:2});
+  }
+
+  charts.evo = new Chart(document.getElementById('cv-evo').getContext('2d'), {
+    type:'line',
+    data:{labels, datasets},
+    options:{
+      ...baseOpts(),
+      scales:{
+        x: xScale(),
+        y: {
+          ...yScaleOpts(suffix),
+          ...(F.tipoChart!=='idx' ? {
+            afterDataLimits: axis => {
+              const abs = Math.max(Math.abs(axis.min),Math.abs(axis.max));
+              axis.min = -abs; axis.max = abs;
+            }
+          } : {})
+        }
+      },
+      plugins:{
+        ...baseOpts().plugins,
+        zeroline: F.tipoChart !== 'idx',
+      }
+    }
+  });
+
+  // Hint text
+  const lastSeries = series[series.length-1];
+  if (lastSeries && lastSeries.valor != null) {
+    const val = lastSeries.valor;
+    const label = F.tipoChart==='idx' ? `Índice ${fmtN(val,1)} (base 2022=100)` : `${val>0?'+':''}${fmtN(val,1)}%`;
+    const context = F.tipoChart==='v12' ? (val>0?'crescimento em 12 meses':'queda em 12 meses') : '';
+    hintEl.style.display = 'block';
+    hintEl.textContent = `Último período (${fmtP(lastSeries.periodo)}): ${label}${context?' — '+context:''}.`;
+  } else {
+    hintEl.style.display = 'none';
+  }
+
+  highlightRow(_chartAtvId);
+}
+
+// ── COMP CHART ───────────────────────────────────────────────────
+function drawComp() {
+  const wrap = document.getElementById('comp-wrap');
+  const titleEl = document.getElementById('comp-title');
+  const subEl = document.getElementById('comp-sub');
+
+  const pivot = buildPivot(allRows, _geralPeriod);
+  const atvFilter = filteredAtvIds();
+
+  let entries = [];
+  for (const [id, e] of pivot) {
+    if (atvFilter && !atvFilter.has(id)) continue;
+    const val = e[F.tipoComp];
+    if (val==null) continue;
+    entries.push({ atvId:id, nome:e.atvNome, val });
+  }
+  if (!entries.length) { wrap.innerHTML='<p class="no-data">Sem dados para o comparativo.</p>'; return; }
+
+  entries.sort((a,b) => a.val - b.val);
+
+  const labels = entries.map(e => shortAtv(e.nome));
+  const values = entries.map(e => e.val);
+  const colors = values.map(v => v>=0 ? 'rgba(46,125,82,.75)' : 'rgba(184,48,48,.72)');
+  const borderColors = values.map(v => v>=0 ? '#2E7D52' : '#B83030');
+
+  const suffix = F.tipoComp==='idx' ? '' : '%';
+  titleEl.textContent = 'Comparativo Setorial — ' + fmtPFull(_geralPeriod);
+  subEl.textContent = TIPO_LABEL[F.tipoComp] + (F.tipoComp==='idx' ? ' · Base 2022 = 100' : '');
+
+  if (charts.comp) charts.comp.destroy();
+  wrap.innerHTML = '<canvas id="cv-comp"></canvas>';
+
+  charts.comp = new Chart(document.getElementById('cv-comp').getContext('2d'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{
+        label: TIPO_LABEL[F.tipoComp],
+        data: values,
+        backgroundColor: colors,
+        borderColor: borderColors,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options:{
+      ...baseOpts(),
+      indexAxis:'y',
+      scales:{
+        x:{
+          grid:{color:'rgba(26,36,51,.07)'},
+          ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:9},callback:v=>fmtN(v,1)+suffix}
+        },
+        y:{
+          grid:{display:false},
+          ticks:{color:'#3E5068',font:{family:'DM Sans',size:11}}
+        }
+      },
+      plugins:{
+        ...baseOpts().plugins,
+        legend:{display:false},
+        tooltip:{
+          ...baseOpts().plugins.tooltip,
+          callbacks:{
+            label: ctx => ` ${ctx.dataset.label}: ${fmtN(ctx.raw,1)}${suffix}`
+          }
+        }
+      }
+    }
+  });
+}
+
+// ── BOOT ────────────────────────────────────────────────────────
+boot();
+
+function toggleLang(){ document.getElementById('lang-select').classList.toggle('open'); }
+function toggleMenu(){
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+</script>
+</body>
+</html>

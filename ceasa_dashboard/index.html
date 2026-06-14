@@ -942,7 +942,6 @@ function selectProduto(produto){
   renderPriceMatrix();
   document.querySelectorAll('.dt tbody tr.row-sel').forEach(r=>r.classList.remove('row-sel'));
   document.querySelectorAll(`.dt tbody tr[data-produto="${produto.replace(/"/g,'\\"')}"]`).forEach(r=>r.classList.add('row-sel'));
-  document.querySelector('.chart-card').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 // ── DROPDOWN MULTI ────────────────────────────────────────────
