@@ -73,7 +73,9 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://vczconsultoria.com.br">
 <meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
-<meta property="og:image:alt" content="VCZ Consultoria — Inteligência Comercial Aplicada">
+<meta property="og:image:alt" content="VCZ Consultoria — JBP e Varejo | Inteligência Comercial">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="pt_BR">
 
 <!-- ── TWITTER / X CARD ──────────────────────────────────────────
@@ -1464,7 +1466,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
+  <a href="/" class="nav-logo">
     <img src="logo-ouro.svg" alt="VCZ Consultoria" class="nav-logo-img">
   </a>
   <ul class="nav-links" id="nav-links">
@@ -1699,7 +1701,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-brand"><img src="logo-ouro.svg" alt="VCZ Consultoria"></div>
-  <p class="footer-copy">© 2026 VCZ Consultoria<br>Inteligência Comercial Aplicada<br><a href="/privacidade.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Política de Privacidade</a> &nbsp;·&nbsp; <a href="/termos.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Termos de Uso</a></p>
+  <p class="footer-copy">© <span id="footer-year">2026</span> VCZ Consultoria<br>Inteligência Comercial Aplicada<br><a href="/privacidade.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Política de Privacidade</a> &nbsp;·&nbsp; <a href="/termos.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Termos de Uso</a></p>
 </footer>
 
 <script>
@@ -1716,6 +1718,8 @@
     const sel = document.getElementById('lang-select');
     if (!sel.contains(e.target)) sel.classList.remove('open');
   });
+
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
 
   function toggleMenu() {
     document.getElementById('nav-links').classList.toggle('open');

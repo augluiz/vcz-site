@@ -19,6 +19,10 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://vczconsultoria.com.br/en/">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
+<meta property="og:image:alt" content="VCZ Consultoria — Applied Commercial Intelligence">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VCZ Consultoria — Applied Commercial Intelligence">
 <meta name="twitter:description" content="Commercial intelligence, market research and JBP for retail, industry and e-commerce. Dashboards, forecast and performance consulting.">
@@ -221,7 +225,11 @@
   </a>
   <ul class="nav-links" id="nav-links">
     <li><a href="#sobre" onclick="closeMenu()">About</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Services</a></li>
     <li><a href="#frente" onclick="closeMenu()">Experience</a></li>
+    <li><a href="/insights/" onclick="closeMenu()">Content</a></li>
+    <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
     <li><a href="#contato" onclick="closeMenu()">Contact</a></li>
   </ul>
   <div class="nav-right">
@@ -429,7 +437,7 @@
 
 <footer>
   <div class="footer-brand"><img src="../logo-ouro.svg" alt="VCZ Consultoria"></div>
-  <p class="footer-copy">© 2026 VCZ Consultoria<br>Applied Commercial Intelligence<br><a href="/en/privacy.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Privacy Policy</a> &nbsp;·&nbsp; <a href="/termos.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Terms of Use</a></p>
+  <p class="footer-copy">© <span id="footer-year">2026</span> VCZ Consultoria<br>Applied Commercial Intelligence<br><a href="/en/privacy.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Privacy Policy</a></p>
 </footer>
 
 <script>
@@ -440,6 +448,8 @@
     const sel = document.getElementById('lang-select');
     if (!sel.contains(e.target)) sel.classList.remove('open');
   });
+
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
 
   function toggleMenu() {
     document.getElementById('nav-links').classList.toggle('open');
