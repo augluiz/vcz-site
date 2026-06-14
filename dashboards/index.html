@@ -236,6 +236,12 @@ nav {
   color: var(--gold);
   text-decoration: none;
   transition: color .18s, gap .18s;
+  position: static;
+}
+.card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
 }
 .card-link:hover { color: var(--gold-light); gap: .6rem; }
 .card-link svg { flex-shrink: 0; }
