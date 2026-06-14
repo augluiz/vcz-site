@@ -789,6 +789,9 @@ Chart.register({
 });
 
 const _cv=new Date().toISOString().slice(0,10);
+// MANUTENÇÃO ANUAL (Janeiro de cada ano): adicionar o CSV do novo ano aqui e em extrair_ceasa.py.
+// Em Janeiro/2027: acrescentar c27:'dados/ceasa_2027.csv' e trocar c26 para fixo (sem ?v=).
+// O script extrair_ceasa.py já gera ceasa_AAAA.csv automaticamente ao virar o ano.
 const URLS={c25:'dados/ceasa_2025.csv',c26:`dados/ceasa_2026.csv?v=${_cv}`,clima:`dados/clima_sc_historico.csv?v=${_cv}`,tabprod:'dados/tabela_produtos.csv'};
 
 let ceasa=[], climaData=[], charts={preco:null,clima:null,prev:null}, fullRows=[], categoriaMap={}, cityCoords={}, tpData=[], geralDate=null;

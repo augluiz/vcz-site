@@ -45,6 +45,9 @@ jobs:
         run: python ceasa_dashboard/clima_sc.py
         continue-on-error: true   # nao cancela se a API do Open-Meteo estiver fora
 
+      # MANUTENÇÃO ANUAL (Janeiro de cada ano): o script já cria ceasa_AAAA.csv sozinho,
+      # mas o dashboard (index.html) precisa ser atualizado para incluir o novo arquivo.
+      # Ver comentário em ceasa_dashboard/index.html perto da constante URLS.
       - name: Commitar e publicar dados atualizados
         run: |
           git config user.name  "github-actions[bot]"
