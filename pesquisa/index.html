@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quando Seguir Vira Ocultar — VCZ Consultoria</title>
+  <link rel="icon" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #F5F1EA;
+      --bg2:        #EDE8DF;
+      --navy:       #0D1B2A;
+      --navy-soft:  rgba(13,27,42,0.65);
+      --navy-muted: rgba(13,27,42,0.38);
+      --gold:       #C8922A;
+      --gold-dark:  #A87520;
+      --white:      #FFFFFF;
+      --border:     rgba(13,27,42,0.12);
+      --border-gold:rgba(200,146,42,0.4);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Progress ── */
+    #progress-track {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--border); z-index: 200;
+    }
+    #progress-fill {
+      height: 100%; background: var(--gold);
+      transition: width 0.5s cubic-bezier(.4,0,.2,1); width: 0;
+    }
+
+    /* ── Topbar ── */
+    #topbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 1.1rem 1.8rem 0;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 100;
+      background: linear-gradient(to bottom, var(--bg) 70%, transparent);
+    }
+    #topbar img { height: 24px; display: block; }
+    #q-counter {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      color: var(--navy-muted);
+    }
+    #q-counter b { color: var(--navy); }
+    #btn-back-top {
+      background: none; border: none; cursor: pointer;
+      color: var(--navy-muted); font-size: 1.1rem;
+      padding: 0.3rem 0.5rem; border-radius: 4px;
+      transition: color 0.15s;
+    }
+    #btn-back-top:hover { color: var(--navy); }
+
+    /* ── Viewport & screens ── */
+    #viewport {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow-y: auto;
+    }
+
+    .screen {
+      display: none;
+      width: 100%; max-width: 600px;
+      padding: 5.5rem 2rem 3rem;
+      flex-direction: column;
+      animation: fadeUp 0.38s cubic-bezier(.4,0,.2,1) both;
+      min-height: 100vh;
+      justify-content: center;
+    }
+    .screen.active { display: flex; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Intro ── */
+    .intro-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.22em;
+      color: var(--gold); margin-bottom: 1.2rem;
+    }
+    #screen-intro h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 7vw, 4.2rem);
+      font-weight: 500; line-height: 1.05;
+      color: var(--navy); margin-bottom: 1.2rem;
+    }
+    #screen-intro h1 em { font-style: italic; color: var(--gold); }
+    #screen-intro p.lead {
+      font-size: 0.95rem; line-height: 1.7;
+      color: var(--navy-soft); max-width: 420px; margin-bottom: 2rem;
+    }
+    .divider { width: 36px; height: 2px; background: var(--gold); margin-bottom: 1.8rem; opacity: 0.6; }
+
+    .promise-box {
+      background: var(--white);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px; padding: 1.1rem 1.4rem;
+      margin-bottom: 1.8rem; max-width: 440px;
+    }
+    .promise-box p { font-size: 0.85rem; line-height: 1.65; color: var(--navy-soft); }
+    .promise-box strong { color: var(--gold-dark); }
+
+    .meta-row { display: flex; gap: 1.8rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .meta-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.08em;
+      color: var(--navy-muted); line-height: 1.6;
+    }
+    .meta-item b { display: block; font-size: 0.88rem; color: var(--navy); margin-bottom: 0.1rem; font-family: 'DM Sans', sans-serif; }
+
+    .btn-start {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--navy); color: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 500;
+      padding: 0.9rem 2rem; border-radius: 2rem;
+      border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-start:hover { background: var(--gold); transform: translateY(-1px); }
+    .btn-start svg { width: 14px; height: 14px; }
+
+    /* ── Consent ── */
+    #screen-consent h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+      font-weight: 500; line-height: 1.2; color: var(--navy);
+      margin-bottom: 0.6rem;
+    }
+    #screen-consent .sub {
+      font-size: 0.86rem; color: var(--navy-soft); line-height: 1.65; margin-bottom: 1.6rem;
+    }
+    .consent-items { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.3rem; }
+    .ci {
+      display: flex; gap: 0.9rem; align-items: flex-start;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.85rem 1rem;
+    }
+    .ci-icon { font-size: 0.95rem; flex-shrink: 0; margin-top: 0.05rem; width: 18px; }
+    .ci-body strong { display: block; font-size: 0.8rem; font-weight: 500; color: var(--navy); margin-bottom: 0.15rem; }
+    .ci-body p { font-size: 0.76rem; color: var(--navy-soft); line-height: 1.55; }
+    .ci-body p b { color: var(--gold-dark); font-weight: 500; }
+
+    details.legal {
+      border: 1px solid var(--border); border-radius: 8px;
+      margin-bottom: 1.3rem; overflow: hidden; background: var(--white);
+    }
+    details.legal summary {
+      padding: 0.7rem 1rem;
+      font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em;
+      color: var(--navy-muted); cursor: pointer; list-style: none; user-select: none;
+      transition: color 0.15s;
+    }
+    details.legal summary:hover { color: var(--navy); }
+    details.legal summary::after { content: ' ↓'; }
+    details.legal[open] summary::after { content: ' ↑'; }
+    .legal-body {
+      padding: 0.8rem 1rem 1rem; font-size: 0.74rem; color: var(--navy-soft);
+      line-height: 1.7; border-top: 1px solid var(--border);
+    }
+    .legal-body p { margin-bottom: 0.6rem; }
+    .legal-body strong { color: var(--navy); font-weight: 500; }
+
+    .consent-check {
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      margin-bottom: 1.4rem; cursor: pointer;
+    }
+    .consent-check input[type="checkbox"] {
+      width: 17px; height: 17px; flex-shrink: 0; margin-top: 0.1rem;
+      accent-color: var(--gold); cursor: pointer;
+    }
+    .consent-check span { font-size: 0.82rem; color: var(--navy-soft); line-height: 1.55; }
+    .consent-check span b { color: var(--gold-dark); font-weight: 500; }
+
+    #btn-consent {
+      opacity: 0.3; pointer-events: none; transition: opacity 0.2s;
+    }
+    #btn-consent.enabled { opacity: 1; pointer-events: auto; }
+
+    /* ── Question ── */
+    .q-section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.22em;
+      color: var(--gold); margin-bottom: 1.6rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .q-section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border-gold); opacity: 0.5;
+    }
+    .q-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+      font-weight: 500; line-height: 1.2; color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+    .q-hint { font-size: 0.78rem; color: var(--navy-muted); margin-bottom: 1.4rem; }
+
+    /* ── Pills ── */
+    .pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.6rem; }
+    .pill {
+      padding: 0.5rem 1.1rem;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 2rem;
+      color: var(--navy-soft);
+      font-size: 0.87rem;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      user-select: none;
+    }
+    .pill:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+      background: var(--white);
+    }
+    .pill.selected {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* ── Continue ── */
+    .btn-continue {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--navy); color: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.1em; font-weight: 500;
+      padding: 0.7rem 1.6rem; border-radius: 2rem;
+      border: none; cursor: pointer; transition: all 0.18s;
+      opacity: 0; pointer-events: none;
+    }
+    .btn-continue.visible { opacity: 1; pointer-events: auto; }
+    .btn-continue:hover { background: var(--gold); }
+
+    .enter-hint {
+      font-size: 0.7rem; color: var(--navy-muted); margin-top: 0.7rem; display: none;
+    }
+    .enter-hint.show { display: block; }
+    kbd {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 3px; padding: 1px 5px;
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    }
+
+    /* ── Thanks ── */
+    #screen-thanks .check {
+      width: 48px; height: 48px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: var(--gold); margin-bottom: 1.6rem;
+    }
+    #screen-thanks h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 500; line-height: 1.15; color: var(--navy); margin-bottom: 0.7rem;
+    }
+    #screen-thanks p.sub {
+      font-size: 0.9rem; color: var(--navy-soft); line-height: 1.7;
+      max-width: 420px; margin-bottom: 2rem;
+    }
+
+    .results-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.4rem;
+      max-width: 460px; margin-bottom: 1.8rem;
+    }
+    .results-card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.2em;
+      color: var(--gold); margin-bottom: 1.2rem;
+    }
+    .stat { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.85rem; }
+    .stat:last-child { margin-bottom: 0; }
+    .stat-label { font-size: 0.78rem; color: var(--navy-soft); min-width: 185px; }
+    .stat-bar-bg { flex: 1; height: 4px; background: var(--bg2); border-radius: 2px; overflow: hidden; }
+    .stat-bar { height: 100%; background: var(--gold); border-radius: 2px; animation: barGrow 1s cubic-bezier(.4,0,.2,1) both; animation-delay: var(--d,0s); }
+    @keyframes barGrow { from { width: 0 !important; } }
+    .stat-pct { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--gold-dark); min-width: 32px; text-align: right; }
+    .results-card .note { font-size: 0.7rem; color: var(--navy-muted); margin-top: 0.9rem; font-style: italic; }
+
+    .email-label { font-size: 0.82rem; color: var(--navy-soft); margin-bottom: 0.55rem; }
+    .email-row { display: flex; gap: 0.5rem; max-width: 400px; }
+    .email-input {
+      flex: 1; background: var(--white);
+      border: 1.5px solid var(--border); border-radius: 2rem;
+      padding: 0.65rem 1.1rem; color: var(--navy);
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .email-input:focus { border-color: var(--gold); }
+    .email-input::placeholder { color: var(--navy-muted); }
+    .btn-notify {
+      background: transparent; border: 1.5px solid var(--navy); color: var(--navy);
+      border-radius: 2rem; padding: 0.65rem 1.2rem;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.18s; white-space: nowrap;
+    }
+    .btn-notify:hover { background: var(--navy); color: var(--white); }
+    .btn-notify:disabled { opacity: 0.4; cursor: default; }
+
+    .back-site {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em;
+      color: var(--navy-muted); text-decoration: none; margin-top: 1.5rem;
+      transition: color 0.18s;
+    }
+    .back-site:hover { color: var(--gold-dark); }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .screen { padding: 5rem 1.3rem 2rem; }
+      .q-text { font-size: 1.55rem; }
+      .stat-label { min-width: 130px; font-size: 0.73rem; }
+      .meta-row { gap: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-track"><div id="progress-fill"></div></div>
+
+<div id="topbar">
+  <a href="../index.html"><img src="../logo-ouro.svg" alt="VCZ"></a>
+  <span id="q-counter"></span>
+  <button id="btn-back-top" onclick="goBack()" style="display:none">←</button>
+</div>
+
+<div id="viewport">
+
+  <!-- ══ INTRO ══ -->
+  <div class="screen active" id="screen-intro">
+    <p class="intro-tag">PESQUISA · VCZ CONSULTORIA · 2026</p>
+    <h1>Quando seguir<br>vira <em>ocultar</em></h1>
+    <p class="lead">O que nos faz seguir, silenciar e abandonar empresas, influencers, amigos e páginas nas redes sociais.</p>
+    <div class="divider"></div>
+    <div class="promise-box">
+      <p><strong>Por que responder?</strong> Ao concluir você vê os resultados parciais em tempo real. O relatório completo é enviado para o seu email assim que publicarmos.</p>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item"><b>~8 min</b>para responder</div>
+      <div class="meta-item"><b>22 perguntas</b>6 seções</div>
+      <div class="meta-item"><b>Dados</b>agregados</div>
+    </div>
+    <button class="btn-start" onclick="start()">
+      COMEÇAR
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+  </div>
+
+  <!-- ══ CONSENTIMENTO LGPD ══ -->
+  <div class="screen" id="screen-consent">
+    <p class="intro-tag">TERMOS DE USO DOS DADOS · LGPD</p>
+    <h2>Antes de começar,<br>leia como seus dados<br>serão usados.</h2>
+    <p class="sub">Esta pesquisa é produzida pela VCZ Consultoria. Os resultados são utilizados para <b style="color:var(--gold-dark)">produção e comercialização de relatórios de mercado</b>.</p>
+
+    <div class="consent-items">
+      <div class="ci">
+        <span class="ci-icon">📋</span>
+        <div class="ci-body">
+          <strong>O que coletamos</strong>
+          <p>Suas respostas ao questionário. E-mail é opcional, coletado ao final e não vinculado às suas respostas.</p>
+        </div>
+      </div>
+      <div class="ci">
+        <span class="ci-icon">💼</span>
+        <div class="ci-body">
+          <strong>Uso comercial</strong>
+          <p>Seus dados alimentam relatórios que a VCZ <b>produz e vende</b> para empresas e agências. Apenas <b>dados agregados e anonimizados</b> são compartilhados.</p>
+        </div>
+      </div>
+      <div class="ci">
+        <span class="ci-icon">🔒</span>
+        <div class="ci-body">
+          <strong>Anonimização</strong>
+          <p>Suas respostas são tratadas estatisticamente. Nenhum dado é associado à sua identidade ou IP.</p>
+        </div>
+      </div>
+      <div class="ci">
+        <span class="ci-icon">⚖️</span>
+        <div class="ci-body">
+          <strong>Seus direitos (LGPD, Art. 18)</strong>
+          <p>Acesso, correção, exclusão e revogação via <b>lgpd@vczconsultoria.com.br</b>. Prazo de guarda: 24 meses.</p>
+        </div>
+      </div>
+    </div>
+
+    <details class="legal">
+      <summary>VER TERMOS COMPLETOS</summary>
+      <div class="legal-body">
+        <p><strong>Controlador:</strong> VCZ Consultoria — lgpd@vczconsultoria.com.br</p>
+        <p><strong>Base legal:</strong> Consentimento do titular (Art. 7°, I, Lei 13.709/2018 — LGPD).</p>
+        <p><strong>Finalidade:</strong> Produção e comercialização de relatórios de inteligência de mercado sobre comportamento do consumidor em redes sociais, destinados a empresas, agências e consultorias.</p>
+        <p><strong>Dados coletados:</strong> Respostas ao questionário (dados comportamentais não sensíveis). E-mail, quando fornecido voluntariamente, é armazenado separadamente e usado apenas para envio do relatório.</p>
+        <p><strong>Forma de tratamento:</strong> Todos os dados são agregados e anonimizados antes de qualquer uso comercial (Art. 5°, III, LGPD). Dados anonimizados não são considerados dados pessoais pela Lei. Nenhuma resposta individual é comercializada.</p>
+        <p><strong>Prazo de retenção:</strong> 24 meses ou até revogação do consentimento.</p>
+        <p><strong>Revogação:</strong> A qualquer momento via lgpd@vczconsultoria.com.br. Não invalida dados já anonimizados (Art. 8°, §5°, LGPD).</p>
+        <p><strong>Direitos do titular:</strong> Acesso, correção, anonimização, portabilidade, eliminação e oposição. Prazo de resposta: 15 dias úteis.</p>
+      </div>
+    </details>
+
+    <label class="consent-check">
+      <input type="checkbox" id="consent-cb" onchange="toggleConsent(this)">
+      <span>Li e concordo que a VCZ Consultoria trate meus dados para produção e <b>comercialização de relatórios de mercado</b>, conforme a LGPD.</span>
+    </label>
+
+    <button class="btn-start" id="btn-consent" onclick="startSurvey()">
+      ACEITAR E INICIAR
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+  </div>
+
+  <!-- ══ PERGUNTA (dinâmico) ══ -->
+  <div class="screen" id="screen-q">
+    <p class="q-section-label" id="q-section-label"></p>
+    <p class="q-text" id="q-text"></p>
+    <p class="q-hint" id="q-hint"></p>
+    <div class="pills" id="q-pills"></div>
+    <button class="btn-continue" id="btn-continue" onclick="advanceFromContinue()">
+      CONTINUAR
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+    <p class="enter-hint" id="enter-hint">pressione <kbd>Enter</kbd> para continuar</p>
+  </div>
+
+  <!-- ══ OBRIGADO ══ -->
+  <div class="screen" id="screen-thanks">
+    <div class="check">✓</div>
+    <h2>Obrigado pela<br>sua resposta.</h2>
+    <p class="sub">Você faz parte da pesquisa <em>Quando Seguir Vira Ocultar</em>. Os resultados completos serão publicados ao atingirmos 300 respostas.</p>
+
+    <div class="results-card">
+      <p class="results-card-label">PRÉVIA DOS DADOS PARCIAIS</p>
+      <div class="stat">
+        <span class="stat-label">Já ocultaram stories de alguém</span>
+        <div class="stat-bar-bg"><div class="stat-bar" style="width:78%;--d:.1s"></div></div>
+        <span class="stat-pct">78%</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Ocultaram por excesso de publi</span>
+        <div class="stat-bar-bg"><div class="stat-bar" style="width:64%;--d:.2s"></div></div>
+        <span class="stat-pct">64%</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Pararam de seguir por frequência</span>
+        <div class="stat-bar-bg"><div class="stat-bar" style="width:51%;--d:.3s"></div></div>
+        <span class="stat-pct">51%</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Toleram máx. 2–3 stories/dia</span>
+        <div class="stat-bar-bg"><div class="stat-bar" style="width:67%;--d:.4s"></div></div>
+        <span class="stat-pct">67%</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Nunca clicam em anúncios</span>
+        <div class="stat-bar-bg"><div class="stat-bar" style="width:39%;--d:.5s"></div></div>
+        <span class="stat-pct">39%</span>
+      </div>
+      <p class="note">* Dados ilustrativos — relatório publicado ao atingir 300 respostas.</p>
+    </div>
+
+    <p class="email-label">Receba o relatório quando for publicado:</p>
+    <div class="email-row">
+      <input class="email-input" type="email" id="email-field" placeholder="seu@email.com">
+      <button class="btn-notify" id="btn-notify" onclick="submitEmail()">AVISAR →</button>
+    </div>
+    <a href="../insights/index.html" class="back-site">← outros insights da VCZ</a>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  { section:'PERFIL DIGITAL', text:'Quais redes sociais você usa?', hint:'Selecione todas que usa ao menos uma vez por semana.', type:'multi', options:['Instagram','TikTok','YouTube','LinkedIn','X / Twitter','Facebook','Kwai','Pinterest'] },
+  { section:'PERFIL DIGITAL', text:'Qual você usa com mais frequência?', type:'single', options:['Instagram','TikTok','YouTube','LinkedIn','X / Twitter','Facebook','Kwai'] },
+  { section:'PERFIL DIGITAL', text:'Quantas horas por dia você passa nas redes em média?', type:'single', options:['Menos de 1h','1 a 2h','2 a 4h','Mais de 4h'] },
+  { section:'PERFIL DIGITAL', text:'Como você usa as redes principalmente?', type:'single', options:['Consumir conteúdo','Interagir com pessoas','Seguir marcas e páginas','Tudo em igual proporção'] },
+  { section:'CONTEÚDO PATROCINADO', text:'Quando vê um anúncio no feed, o que normalmente faz?', type:'single', options:['Ignoro e sigo rolando','Clico se o produto me interessa','Oculto o anúncio','Denuncio como irrelevante'] },
+  { section:'CONTEÚDO PATROCINADO', text:'O que te motivaria a clicar em um anúncio?', hint:'Pode selecionar mais de um.', type:'multi', options:['Já procurei o produto antes','Desconto ou promoção','Curiosidade pelo produto','Indicação de influencer','Visual atrativo','Nunca clico em anúncios'] },
+  { section:'CONTEÚDO PATROCINADO', text:'Com que frequência você compra algo após ver um anúncio nas redes?', type:'single', options:['Nunca','Raramente','Às vezes','Frequentemente'] },
+  { section:'OCULTAR E SILENCIAR', text:'Você já ocultou os stories de alguém?', type:'single', options:['Sim','Não'] },
+  { section:'OCULTAR E SILENCIAR', text:'De quem você já ocultou stories?', hint:'Pode selecionar mais de um.', type:'multi', options:['Empresa ou marca','Influencer ou criador','Amigo ou familiar','Figura pública','Página ou comunidade','Nunca ocultei'] },
+  { section:'OCULTAR E SILENCIAR', text:'O que te leva a ocultar stories de uma empresa?', hint:'Pode selecionar mais de um.', type:'multi', options:['Frequência excessiva de posts','Conteúdo era só venda','Conteúdo irrelevante para mim','Stories longos ou repetitivos','Qualidade visual ruim','Foi automático, nem pensei','Nunca ocultei empresa'] },
+  { section:'OCULTAR E SILENCIAR', text:'O que te leva a ocultar stories de um influencer?', hint:'Pode selecionar mais de um.', type:'multi', options:['Frequência excessiva','Excesso de publi / conteúdo pago','Conteúdo mudou e não me interessa','Ficou repetitivo','Polêmica ou atitude que me decepcionou','Foi automático, nem pensei','Nunca ocultei influencer'] },
+  { section:'SEGUIR E PARAR', text:'Por que você segue empresas nas redes?', hint:'Pode selecionar mais de um.', type:'multi', options:['Promoções e descontos','Conteúdo relevante ou educativo','Gosto da marca','Fui cliente e quis acompanhar','Participei de sorteio ou promoção','Por indicação','Não sigo empresas'] },
+  { section:'SEGUIR E PARAR', text:'O que te faz parar de seguir uma empresa?', hint:'Pode selecionar mais de um.', type:'multi', options:['Excesso de posts','Só posta promoção','Conteúdo de baixa qualidade','Experiência ruim com a marca','Nunca foi relevante para mim'] },
+  { section:'SEGUIR E PARAR', text:'Por que você segue influencers?', hint:'Pode selecionar mais de um.', type:'multi', options:['Conteúdo educativo ou informativo','Entretenimento ou humor','Estilo de vida e inspiração','Confio nas recomendações','Todo mundo fala — sigo por FOMO','Não sigo influencers'] },
+  { section:'SEGUIR E PARAR', text:'O que te faz parar de seguir um influencer?', hint:'Pode selecionar mais de um.', type:'multi', options:['Excesso de publi paga','Mudou o tipo de conteúdo','Polêmica ou escândalo','Ficou repetitivo','Ficou fora da minha realidade','Postou algo que considerei errado'] },
+  { section:'LIMIAR DE SATURAÇÃO', text:'A partir de quantos stories por dia uma empresa começa a te incomodar?', type:'single', options:['1 já incomoda','2 a 3','4 a 5','6 ou mais','Não me incomoda'] },
+  { section:'LIMIAR DE SATURAÇÃO', text:'E para um influencer?', type:'single', options:['1 já incomoda','2 a 3','4 a 5','6 ou mais','Não me incomoda'] },
+  { section:'LIMIAR DE SATURAÇÃO', text:'Quantos posts no feed por semana você considera razoável para uma empresa?', type:'single', options:['1 a 2','3 a 5','6 a 10','Sem limite','Prefiro que não poste nada'] },
+  { section:'LIMIAR DE SATURAÇÃO', text:'Você já parou de seguir alguém só pela frequência, mesmo gostando do conteúdo?', type:'single', options:['Sim','Não','Talvez, não tenho certeza'] },
+  { section:'QUALIDADE', text:'Para você, o que define um conteúdo de qualidade?', hint:'Pode selecionar mais de um.', type:'multi', options:['Ensina algo útil','Me entretém','É visualmente bem feito','É autêntico e verdadeiro','Me faz sentir algo','É curto e direto'] },
+  { section:'QUALIDADE', text:'O que pesa mais na sua decisão de ocultar ou parar de seguir?', type:'single', options:['Qualidade ruim do conteúdo','Frequência excessiva de posts','Os dois pesam igual','Depende de quem é'] },
+  { section:'QUALIDADE', text:'Qual tipo de conta você tem mais paciência antes de ocultar?', type:'single', options:['Empresa ou marca','Influencer','Amigo ou familiar','Figura pública','Página ou comunidade','Igual para todos'] }
+];
+
+let currentQ = -1;
+const answers = {};
+let advancing = false;
+
+function start() { showConsent(); }
+
+function showConsent() {
+  currentQ = -1;
+  ['screen-intro','screen-q','screen-thanks'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const c = document.getElementById('screen-consent');
+  c.classList.remove('active'); void c.offsetWidth; c.classList.add('active');
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('q-counter').textContent = '';
+  document.getElementById('btn-back-top').style.display = 'block';
+  document.getElementById('btn-back-top').onclick = showIntro;
+}
+
+function toggleConsent(cb) {
+  const btn = document.getElementById('btn-consent');
+  btn.classList.toggle('enabled', cb.checked);
+  btn.style.opacity = cb.checked ? '1' : '0.3';
+  btn.style.pointerEvents = cb.checked ? 'auto' : 'none';
+}
+
+function startSurvey() {
+  document.getElementById('screen-consent').classList.remove('active');
+  document.getElementById('btn-back-top').onclick = goBack;
+  moveToQ(0);
+}
+
+function goBack() {
+  if (currentQ <= 0) { showConsent(); return; }
+  moveToQ(currentQ - 1, true);
+}
+
+function showIntro() {
+  currentQ = -1;
+  ['screen-consent','screen-q','screen-thanks'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const intro = document.getElementById('screen-intro');
+  intro.classList.remove('active'); void intro.offsetWidth; intro.classList.add('active');
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('q-counter').textContent = '';
+  document.getElementById('btn-back-top').style.display = 'none';
+}
+
+function moveToQ(idx) {
+  currentQ = idx;
+  if (idx >= QUESTIONS.length) { showThanks(); return; }
+
+  const q = QUESTIONS[idx];
+  const screenQ = document.getElementById('screen-q');
+  ['screen-intro','screen-consent','screen-thanks'].forEach(id => document.getElementById(id).classList.remove('active'));
+  screenQ.classList.remove('active'); void screenQ.offsetWidth; screenQ.classList.add('active');
+
+  document.getElementById('q-section-label').textContent = q.section;
+  document.getElementById('q-text').textContent = q.text;
+  const hint = document.getElementById('q-hint');
+  hint.textContent = q.hint || (q.type === 'multi' ? 'Pode selecionar mais de um.' : '');
+  hint.style.display = (q.hint || q.type === 'multi') ? 'block' : 'none';
+
+  const pillsEl = document.getElementById('q-pills');
+  pillsEl.innerHTML = '';
+  q.options.forEach(opt => {
+    const pill = document.createElement('span');
+    pill.className = 'pill';
+    pill.textContent = opt;
+    pill.dataset.val = opt;
+    const prior = answers[idx];
+    if (q.type === 'single' && prior === opt) pill.classList.add('selected');
+    if (q.type === 'multi' && Array.isArray(prior) && prior.includes(opt)) pill.classList.add('selected');
+    pill.addEventListener('click', () => selectPill(pill, idx, q));
+    pillsEl.appendChild(pill);
+  });
+
+  const cont = document.getElementById('btn-continue');
+  cont.classList.remove('visible');
+  if (q.type === 'multi' && Array.isArray(answers[idx]) && answers[idx].length > 0) cont.classList.add('visible');
+  document.getElementById('enter-hint').classList.remove('show');
+
+  document.getElementById('q-counter').innerHTML = `<b>${idx + 1}</b> / ${QUESTIONS.length}`;
+  document.getElementById('progress-fill').style.width = ((idx / QUESTIONS.length) * 100) + '%';
+  document.getElementById('btn-back-top').style.display = 'block';
+}
+
+function selectPill(pill, idx, q) {
+  if (advancing) return;
+  const pillsEl = document.getElementById('q-pills');
+  const cont = document.getElementById('btn-continue');
+
+  if (q.type === 'single') {
+    pillsEl.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+    answers[idx] = pill.dataset.val;
+    advancing = true;
+    setTimeout(() => { advancing = false; moveToQ(idx + 1); }, 380);
+  } else {
+    pill.classList.toggle('selected');
+    if (!answers[idx]) answers[idx] = [];
+    const val = pill.dataset.val;
+    if (pill.classList.contains('selected')) { if (!answers[idx].includes(val)) answers[idx].push(val); }
+    else { answers[idx] = answers[idx].filter(v => v !== val); }
+    const has = answers[idx].length > 0;
+    cont.classList.toggle('visible', has);
+    document.getElementById('enter-hint').classList.toggle('show', has);
+  }
+}
+
+function advanceFromContinue() { moveToQ(currentQ + 1); }
+
+function showThanks() {
+  document.getElementById('screen-q').classList.remove('active');
+  document.getElementById('screen-thanks').classList.remove('active');
+  void document.getElementById('screen-thanks').offsetWidth;
+  document.getElementById('screen-thanks').classList.add('active');
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('q-counter').textContent = '';
+  document.getElementById('btn-back-top').style.display = 'none';
+}
+
+function submitEmail() {
+  const input = document.getElementById('email-field');
+  const btn = document.getElementById('btn-notify');
+  if (input.value && input.value.includes('@')) {
+    btn.textContent = 'REGISTRADO ✓'; btn.disabled = true; input.disabled = true;
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && currentQ >= 0 && currentQ < QUESTIONS.length) {
+    const q = QUESTIONS[currentQ];
+    if (q.type === 'multi' && document.getElementById('btn-continue').classList.contains('visible')) advanceFromContinue();
+  }
+});
+</script>
+</body>
+</html>

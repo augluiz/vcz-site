@@ -31,10 +31,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'   # cacheia dependencias para nao reinstalar a cada run
+          cache: 'pip'
+          cache-dependency-path: 'ceasa_dashboard/requirements.txt'
 
       - name: Instalar dependencias Python
-        run: pip install requests pdfplumber pandas beautifulsoup4
+        run: pip install -r ceasa_dashboard/requirements.txt
 
       - name: Extrair cotacoes CEASA
         run: python ceasa_dashboard/extrair_ceasa.py
