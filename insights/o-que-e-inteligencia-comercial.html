@@ -50,13 +50,20 @@
     background: rgba(13,27,42,0.92); backdrop-filter: blur(12px);
   }
   .nav-logo img { height: 46px; width: auto; }
-  .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--steel); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
-  .nav-back:hover { color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
   .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(200,146,42,0.4); padding: 9px 20px; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
   .nav-cta:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+  .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--steel); transition: all 0.3s ease; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
   .content {
-    max-width: 720px;
+    max-width: 1040px;
     margin: 0 auto;
     padding: 120px 5vw 80px;
   }
@@ -297,7 +304,13 @@
   footer { padding: 2rem 5vw; border-top: 1px solid rgba(183,160,115,0.1); display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; }
   .footer-copy { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--steel); text-align: right; }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
+    .nav-hamburger { display: flex; }
+    .nav-links { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(13,27,42,0.98); backdrop-filter: blur(12px); flex-direction: column; gap: 0; padding: 1rem 0; border-bottom: 1px solid rgba(183,160,115,0.15); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 1rem 5vw; font-size: 13px; letter-spacing: 0.2em; border-bottom: 1px solid rgba(183,160,115,0.08); }
+    .nav-links li:last-child a { border-bottom: none; }
+    .nav-cta { display: none; }
     .enxerga-grid { grid-template-columns: 1fr; }
     .atua-grid { grid-template-columns: 1fr 1fr; }
     .nivel { grid-template-columns: 1fr; gap: 0.4rem; }
@@ -313,9 +326,20 @@
   <a href="/" class="nav-logo">
     <img src="../logo-ouro.svg" alt="VCZ Consultoria">
   </a>
-  <div style="display:flex;align-items:center;gap:1.5rem;">
-    <a href="/insights/" class="nav-back">← Conteúdos e Estudos</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" class="active" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
+  </ul>
+  <div class="nav-right">
     <a href="/#contato" class="nav-cta">Fale conosco</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -480,5 +504,15 @@
 </footer>
 
 <script async src="https://www.instagram.com/embed.js"></script>
+<script>
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+    document.getElementById('nav-hamburger').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('nav-links').classList.remove('open');
+    document.getElementById('nav-hamburger').classList.remove('open');
+  }
+</script>
 </body>
 </html>
