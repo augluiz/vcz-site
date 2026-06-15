@@ -257,15 +257,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <select class="tf-input" id="sel-ano-ini" onchange="onFilterChange()">
           <option value="2020">2020</option><option value="2021">2021</option>
           <option value="2022">2022</option><option value="2023">2023</option>
-          <option value="2024" selected>2024</option><option value="2025">2025</option>
+          <option value="2024">2024</option><option value="2025" selected>2025</option>
           <option value="2026">2026</option>
         </select>
         <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:#4A6A80">→</span>
         <select class="tf-input" id="sel-ano-fim" onchange="onFilterChange()">
           <option value="2020">2020</option><option value="2021">2021</option>
           <option value="2022">2022</option><option value="2023">2023</option>
-          <option value="2024">2024</option><option value="2025">2025</option>
-          <option value="2026" selected>2026</option>
+          <option value="2024">2024</option><option value="2025" selected>2025</option>
+          <option value="2026">2026</option>
         </select>
       </div>
     </div>
@@ -424,7 +424,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
 // ── Configuração ─────────────────────────────────────────────────────────────
-// Altere esta URL quando o servidor estiver no ar no Fly.io
 const API_BASE = 'https://vcz-api.onrender.com/api/v1/comex/publico';
 // Para teste local: const API_BASE = 'http://localhost:8000/api/v1/comex/publico';
 
@@ -433,6 +432,7 @@ let _mensal = [], _paises = [], _ncms = [], _ufs = [];
 let _chartEvo = null, _chartPais = null, _chartNcm = null, _chartUf = null;
 let _tabAtual = 'pais';
 let _metrica = 'valor';
+let _lastAvailableYear = 2025;
 
 const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
@@ -815,8 +815,8 @@ function onMetricaChange() {
 
 function resetFiltros() {
   document.querySelector('input[name="fluxo"][value=""]').checked = true;
-  document.getElementById('sel-ano-ini').value = '2024';
-  document.getElementById('sel-ano-fim').value = '2026';
+  document.getElementById('sel-ano-ini').value = String(_lastAvailableYear);
+  document.getElementById('sel-ano-fim').value = String(_lastAvailableYear);
   document.getElementById('sel-top').value = '15';
   document.querySelector('input[name="metrica"][value="valor"]').checked = true;
   _metrica = 'valor';
@@ -852,7 +852,19 @@ function closeMenu() {
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────
-loadData();
+async function init() {
+  try {
+    const refs = await fetch(`${API_BASE}/refs`).then(r => r.json());
+    const anos = (refs.anos || []).map(Number).sort();
+    if (anos.length) {
+      _lastAvailableYear = anos[anos.length - 1];
+      document.getElementById('sel-ano-ini').value = String(_lastAvailableYear);
+      document.getElementById('sel-ano-fim').value = String(_lastAvailableYear);
+    }
+  } catch(e) { /* usa padrão do HTML */ }
+  loadData();
+}
+init();
 </script>
 </body>
 </html>

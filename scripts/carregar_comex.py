@@ -1,5 +1,5 @@
 """
-Baixa CSVs do MDIC e carrega no Supabase PostgreSQL.
+Baixa CSVs do MDIC e carrega no banco PostgreSQL (CockroachDB).
 Usado pelo GitHub Actions (atualizar_comex.yml) e pode ser rodado localmente.
 
 Uso local:
@@ -10,7 +10,7 @@ Uso local:
   python scripts/carregar_comex.py --force           # força re-download
 
 .env (crie na raiz do vcz-site):
-  SUPABASE_DB_URL=postgresql://postgres:SENHA@db.wtfgvfizrxxxmidiodib.supabase.co:5432/postgres
+  SUPABASE_DB_URL=postgresql://usuario:senha@host:26257/defaultdb?sslmode=require
 """
 
 import argparse
@@ -114,12 +114,13 @@ def carregar_referencias(conn, force: bool = False):
             if col not in df.columns:
                 df[col] = None
         rows = df[["cod", "descricao", "sh4", "sh2", "secao"]].values.tolist()
-        with conn.cursor() as cur:
-            execute_values(cur,
-                "INSERT INTO comex_ncm (cod, descricao, sh4, sh2, secao) VALUES %s "
-                "ON CONFLICT (cod) DO UPDATE SET descricao=EXCLUDED.descricao",
-                rows, page_size=2000)
-        conn.commit()
+        SQL_NCM = ("INSERT INTO comex_ncm (cod, descricao, sh4, sh2, secao) VALUES %s "
+                   "ON CONFLICT (cod) DO UPDATE SET descricao=EXCLUDED.descricao")
+        BATCH = 400
+        for i in range(0, len(rows), BATCH):
+            with conn.cursor() as cur:
+                execute_values(cur, SQL_NCM, rows[i:i+BATCH], page_size=BATCH)
+            conn.commit()
         print(f"    comex_ncm: {len(rows)} NCMs")
 
     # UF
@@ -187,21 +188,23 @@ def carregar_ano(conn, fluxo: str, ano: int, force: bool = False):
     rows = df[["fluxo", "ano", "mes", "ncm", "pais_cod", "uf",
                "kg_liquido", "valor_fob"]].values.tolist()
 
-    with conn.cursor() as cur:
-        execute_values(
-            cur,
-            """INSERT INTO comex_fato
+    SQL = """INSERT INTO comex_fato
                  (fluxo, ano, mes, ncm, pais_cod, uf, kg_liquido, valor_fob)
                VALUES %s
                ON CONFLICT (fluxo, ano, mes, ncm, pais_cod, uf)
                DO UPDATE SET
                  kg_liquido = EXCLUDED.kg_liquido,
-                 valor_fob  = EXCLUDED.valor_fob""",
-            rows,
-            page_size=5000,
-        )
-    conn.commit()
-    print(f"{len(rows):,} registros inseridos/atualizados em {time.time()-t0:.1f}s")
+                 valor_fob  = EXCLUDED.valor_fob"""
+
+    BATCH = 400
+    total = len(rows)
+    for i in range(0, total, BATCH):
+        chunk = rows[i:i + BATCH]
+        with conn.cursor() as cur:
+            execute_values(cur, SQL, chunk, page_size=BATCH)
+        conn.commit()
+
+    print(f"{total:,} registros inseridos/atualizados em {time.time()-t0:.1f}s")
 
 
 def main():
@@ -213,7 +216,7 @@ def main():
 
     CACHE_DIR.mkdir(exist_ok=True)
 
-    print("Conectando ao Supabase...")
+    print("Conectando ao banco de dados...")
     conn = psycopg2.connect(DB_URL)
     print("Conectado.")
 
