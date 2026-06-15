@@ -354,8 +354,8 @@
       <p><strong>Por que responder?</strong> Ao concluir você vê os resultados parciais em tempo real. O relatório completo é enviado para o seu email assim que publicarmos.</p>
     </div>
     <div class="meta-row">
-      <div class="meta-item"><b>~8 min</b>para responder</div>
-      <div class="meta-item"><b>22 perguntas</b>6 seções</div>
+      <div class="meta-item"><b>~9 min</b>para responder</div>
+      <div class="meta-item"><b>até 24 perguntas</b>6 seções</div>
       <div class="meta-item"><b>Dados</b>agregados</div>
     </div>
     <button class="btn-start" onclick="start()">
@@ -437,6 +437,7 @@
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
     </button>
     <p class="enter-hint" id="enter-hint">pressione <kbd>Enter</kbd> para continuar</p>
+    <p class="enter-hint" id="key-hint" style="display:block;opacity:0.5;margin-top:0.3rem">use as teclas <kbd>1</kbd> – <kbd>9</kbd> para selecionar</p>
   </div>
 
   <!-- ══ OBRIGADO ══ -->
@@ -491,33 +492,61 @@ const QUESTIONS = [
   { section:'PERFIL DIGITAL', text:'Qual você usa com mais frequência?', type:'single', options:['Instagram','TikTok','YouTube','LinkedIn','X / Twitter','Facebook','Kwai'] },
   { section:'PERFIL DIGITAL', text:'Quantas horas por dia você passa nas redes em média?', type:'single', options:['Menos de 1h','1 a 2h','2 a 4h','Mais de 4h'] },
   { section:'PERFIL DIGITAL', text:'Como você usa as redes principalmente?', type:'single', options:['Consumir conteúdo','Interagir com pessoas','Seguir marcas e páginas','Tudo em igual proporção'] },
+  { section:'PERFIL DIGITAL', text:'Qual é a sua faixa etária?', type:'single', options:['Até 17 anos','18 a 24 anos','25 a 34 anos','35 a 44 anos','45 anos ou mais'] },
   { section:'CONTEÚDO PATROCINADO', text:'Quando vê um anúncio no feed, o que normalmente faz?', type:'single', options:['Ignoro e sigo rolando','Clico se o produto me interessa','Oculto o anúncio','Denuncio como irrelevante'] },
   { section:'CONTEÚDO PATROCINADO', text:'O que te motivaria a clicar em um anúncio?', hint:'Pode selecionar mais de um.', type:'multi', options:['Já procurei o produto antes','Desconto ou promoção','Curiosidade pelo produto','Indicação de influencer','Visual atrativo','Nunca clico em anúncios'] },
   { section:'CONTEÚDO PATROCINADO', text:'Com que frequência você compra algo após ver um anúncio nas redes?', type:'single', options:['Nunca','Raramente','Às vezes','Frequentemente'] },
   { section:'OCULTAR E SILENCIAR', text:'Você já ocultou os stories de alguém?', type:'single', options:['Sim','Não'] },
   { section:'OCULTAR E SILENCIAR', text:'De quem você já ocultou stories?', hint:'Pode selecionar mais de um.', type:'multi', options:['Empresa ou marca','Influencer ou criador','Amigo ou familiar','Figura pública','Página ou comunidade','Nunca ocultei'] },
   { section:'OCULTAR E SILENCIAR', text:'O que te leva a ocultar stories de uma empresa?', hint:'Pode selecionar mais de um.', type:'multi', options:['Frequência excessiva de posts','Conteúdo era só venda','Conteúdo irrelevante para mim','Stories longos ou repetitivos','Qualidade visual ruim','Foi automático, nem pensei','Nunca ocultei empresa'] },
-  { section:'OCULTAR E SILENCIAR', text:'O que te leva a ocultar stories de um influencer?', hint:'Pode selecionar mais de um.', type:'multi', options:['Frequência excessiva','Excesso de publi / conteúdo pago','Conteúdo mudou e não me interessa','Ficou repetitivo','Polêmica ou atitude que me decepcionou','Foi automático, nem pensei','Nunca ocultei influencer'] },
+  { section:'OCULTAR E SILENCIAR', text:'O que te leva a ocultar stories de um influencer?', hint:'Pode selecionar mais de um.', type:'multi', options:['Frequência excessiva','Excesso de publi / conteúdo pago','Conteúdo claramente gerado por IA','Conteúdo mudou e não me interessa','Ficou repetitivo','Polêmica ou atitude que me decepcionou','Foi automático, nem pensei','Nunca ocultei influencer'] },
   { section:'SEGUIR E PARAR', text:'Por que você segue empresas nas redes?', hint:'Pode selecionar mais de um.', type:'multi', options:['Promoções e descontos','Conteúdo relevante ou educativo','Gosto da marca','Fui cliente e quis acompanhar','Participei de sorteio ou promoção','Por indicação','Não sigo empresas'] },
   { section:'SEGUIR E PARAR', text:'O que te faz parar de seguir uma empresa?', hint:'Pode selecionar mais de um.', type:'multi', options:['Excesso de posts','Só posta promoção','Conteúdo de baixa qualidade','Experiência ruim com a marca','Nunca foi relevante para mim'] },
   { section:'SEGUIR E PARAR', text:'Por que você segue influencers?', hint:'Pode selecionar mais de um.', type:'multi', options:['Conteúdo educativo ou informativo','Entretenimento ou humor','Estilo de vida e inspiração','Confio nas recomendações','Todo mundo fala — sigo por FOMO','Não sigo influencers'] },
-  { section:'SEGUIR E PARAR', text:'O que te faz parar de seguir um influencer?', hint:'Pode selecionar mais de um.', type:'multi', options:['Excesso de publi paga','Mudou o tipo de conteúdo','Polêmica ou escândalo','Ficou repetitivo','Ficou fora da minha realidade','Postou algo que considerei errado'] },
+  { section:'SEGUIR E PARAR', text:'O que te faz parar de seguir um influencer?', hint:'Pode selecionar mais de um.', type:'multi', options:['Excesso de publi paga','Mudou o tipo de conteúdo','Conteúdo claramente gerado por IA','Polêmica ou escândalo','Ficou repetitivo','Ficou fora da minha realidade','Postou algo que considerei errado'] },
   { section:'LIMIAR DE SATURAÇÃO', text:'A partir de quantos stories por dia uma empresa começa a te incomodar?', type:'single', options:['1 já incomoda','2 a 3','4 a 5','6 ou mais','Não me incomoda'] },
-  { section:'LIMIAR DE SATURAÇÃO', text:'E para um influencer?', type:'single', options:['1 já incomoda','2 a 3','4 a 5','6 ou mais','Não me incomoda'] },
+  { section:'LIMIAR DE SATURAÇÃO', text:'E quantos stories por dia de um influencer já te incomodam?', type:'single', options:['1 já incomoda','2 a 3','4 a 5','6 ou mais','Não me incomoda'] },
   { section:'LIMIAR DE SATURAÇÃO', text:'Quantos posts no feed por semana você considera razoável para uma empresa?', type:'single', options:['1 a 2','3 a 5','6 a 10','Sem limite','Prefiro que não poste nada'] },
   { section:'LIMIAR DE SATURAÇÃO', text:'Você já parou de seguir alguém só pela frequência, mesmo gostando do conteúdo?', type:'single', options:['Sim','Não','Talvez, não tenho certeza'] },
   { section:'QUALIDADE', text:'Para você, o que define um conteúdo de qualidade?', hint:'Pode selecionar mais de um.', type:'multi', options:['Ensina algo útil','Me entretém','É visualmente bem feito','É autêntico e verdadeiro','Me faz sentir algo','É curto e direto'] },
   { section:'QUALIDADE', text:'O que pesa mais na sua decisão de ocultar ou parar de seguir?', type:'single', options:['Qualidade ruim do conteúdo','Frequência excessiva de posts','Os dois pesam igual','Depende de quem é'] },
-  { section:'QUALIDADE', text:'Qual tipo de conta você tem mais paciência antes de ocultar?', type:'single', options:['Empresa ou marca','Influencer','Amigo ou familiar','Figura pública','Página ou comunidade','Igual para todos'] }
+  { section:'QUALIDADE', text:'Qual tipo de conta você tem mais paciência antes de ocultar?', type:'single', options:['Empresa ou marca','Influencer','Amigo ou familiar','Figura pública','Página ou comunidade','Igual para todos'] },
+  { section:'QUALIDADE', text:'Você já deixou de seguir alguém porque o conteúdo parecia gerado por IA?', type:'single', options:['Sim, já deixei de seguir','Não, mas me incomoda','Não ligo para isso','Nunca percebi / não sei identificar'] }
 ];
 
 let currentQ = -1;
 const answers = {};
 let advancing = false;
 
-function start() { showConsent(); }
+const STORAGE_KEY = 'vcz-survey-2026';
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ q: currentQ, a: answers })); } catch(_) {}
+}
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (saved && saved.q >= 0) {
+      Object.assign(answers, saved.a);
+      return saved.q;
+    }
+  } catch(_) {}
+  return -1;
+}
+function clearProgress() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(_) {}
+}
 
-function showConsent() {
+function start() {
+  const savedQ = loadProgress();
+  if (savedQ > 0) {
+    const resume = confirm(`Você tem uma pesquisa em andamento (pergunta ${savedQ + 1} de ${QUESTIONS.length}). Deseja continuar de onde parou?`);
+    if (resume) { showConsent(true); return; }
+    clearProgress();
+  }
+  showConsent();
+}
+
+function showConsent(skipToSaved) {
   currentQ = -1;
   ['screen-intro','screen-q','screen-thanks'].forEach(id => document.getElementById(id).classList.remove('active'));
   const c = document.getElementById('screen-consent');
@@ -526,6 +555,10 @@ function showConsent() {
   document.getElementById('q-counter').textContent = '';
   document.getElementById('btn-back-top').style.display = 'block';
   document.getElementById('btn-back-top').onclick = showIntro;
+  if (skipToSaved) {
+    document.getElementById('consent-cb').checked = true;
+    toggleConsent(document.getElementById('consent-cb'));
+  }
 }
 
 function toggleConsent(cb) {
@@ -538,7 +571,8 @@ function toggleConsent(cb) {
 function startSurvey() {
   document.getElementById('screen-consent').classList.remove('active');
   document.getElementById('btn-back-top').onclick = goBack;
-  moveToQ(0);
+  const savedQ = loadProgress();
+  moveToQ(savedQ > 0 ? savedQ : 0);
 }
 
 function goBack() {
@@ -605,6 +639,7 @@ function selectPill(pill, idx, q) {
     pill.classList.add('selected');
     answers[idx] = pill.dataset.val;
     advancing = true;
+    saveProgress();
     setTimeout(() => { advancing = false; moveToQ(idx + 1); }, 380);
   } else {
     pill.classList.toggle('selected');
@@ -615,12 +650,14 @@ function selectPill(pill, idx, q) {
     const has = answers[idx].length > 0;
     cont.classList.toggle('visible', has);
     document.getElementById('enter-hint').classList.toggle('show', has);
+    saveProgress();
   }
 }
 
 function advanceFromContinue() { moveToQ(currentQ + 1); }
 
 function showThanks() {
+  clearProgress();
   document.getElementById('screen-q').classList.remove('active');
   document.getElementById('screen-thanks').classList.remove('active');
   void document.getElementById('screen-thanks').offsetWidth;
@@ -639,9 +676,20 @@ function submitEmail() {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && currentQ >= 0 && currentQ < QUESTIONS.length) {
-    const q = QUESTIONS[currentQ];
+  if (currentQ < 0 || currentQ >= QUESTIONS.length) return;
+  const q = QUESTIONS[currentQ];
+
+  if (e.key === 'Enter') {
     if (q.type === 'multi' && document.getElementById('btn-continue').classList.contains('visible')) advanceFromContinue();
+    return;
+  }
+
+  // Atalhos numéricos: 1-9 seleciona a opção correspondente
+  const num = parseInt(e.key);
+  if (!isNaN(num) && num >= 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    const pills = document.querySelectorAll('#q-pills .pill');
+    const target = pills[num - 1];
+    if (target && !advancing) target.click();
   }
 });
 </script>
