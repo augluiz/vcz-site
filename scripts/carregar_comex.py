@@ -207,6 +207,20 @@ def carregar_ano(conn, fluxo: str, ano: int, force: bool = False):
     print(f"{total:,} registros inseridos/atualizados em {time.time()-t0:.1f}s")
 
 
+def garantir_indices(conn):
+    """Cria índices secundários de performance se não existirem."""
+    indices = [
+        "CREATE INDEX IF NOT EXISTS idx_fato_ano_mes  ON comex_fato (ano, mes)",
+        "CREATE INDEX IF NOT EXISTS idx_fato_pais_cod ON comex_fato (pais_cod)",
+        "CREATE INDEX IF NOT EXISTS idx_fato_uf       ON comex_fato (uf)",
+        "CREATE INDEX IF NOT EXISTS idx_fato_ncm      ON comex_fato (ncm)",
+    ]
+    with conn.cursor() as cur:
+        for sql in indices:
+            cur.execute(sql)
+    conn.commit()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--anos", nargs="+", type=int, default=ANOS_DEFAULT)
@@ -220,6 +234,7 @@ def main():
     conn = psycopg2.connect(DB_URL)
     print("Conectado.")
 
+    garantir_indices(conn)
     carregar_referencias(conn, args.force)
 
     if not args.refs_only:
