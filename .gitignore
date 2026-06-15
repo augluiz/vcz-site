@@ -1,3 +1,5 @@
+.env
+.comex_cache/
 __pycache__/
 *.pyc
 # Backup/archive subdirectory (duplicate of dados/*.csv)
