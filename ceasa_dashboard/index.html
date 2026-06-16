@@ -399,6 +399,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .chart-card,.full-tbox,.tbox{border-radius:4px}
   .btn-ficha{font-size:.56rem;padding:.45rem .7rem}
 }
+/* MOBILE FILTER TOGGLE */
+.filter-toggle-row{display:none;align-items:center;justify-content:space-between;padding:.5rem 1.2rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.18);cursor:pointer;user-select:none}
+.filter-toggle-chev{font-size:.75rem;color:var(--gold-aged);transition:transform .2s}
+.filter-toggle-row.open .filter-toggle-chev{transform:rotate(180deg)}
+@media(max-width:768px){
+  .filter-toggle-row{display:flex}
+  .filter-collapsible{display:none}
+  .filter-collapsible.open{display:block}
+  .combo-drop{width:min(310px,calc(100vw - 16px))}
+  .ddm-panel{width:min(200px,calc(100vw - 24px))}
+}
 </style>
 </head>
 <body>
@@ -498,6 +509,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
 <!-- FILTER PANEL -->
 <div class="filter-panel">
+  <div class="filter-toggle-row" id="filter-toggle-row" onclick="toggleFilterPanel()">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em">Filtros</span>
+    <span class="filter-toggle-chev">▾</span>
+  </div>
+  <div class="filter-collapsible" id="filter-collapsible">
 
   <!-- Linha 1: filtros principais (afetam tabelas e gráficos) -->
   <div class="filter-inner filter-main">
@@ -597,6 +613,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
   </div>
 
+  </div><!-- /filter-collapsible -->
 </div>
 
 <!-- MAIN — 2 colunas -->
@@ -768,7 +785,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 </div>
 
 <footer class="dash-footer">
-  <span>Fonte: CEASA/SC · Clima: Open-Meteo · Atualizado automaticamente</span>
+  <span>Fonte: CEASA/SC · Clima: Open-Meteo · Atualizado diariamente às 12h15</span>
   <a href="/">© VCZ Consultoria</a>
   <p class="disclaimer-note">As informações exibidas têm caráter meramente informativo, são obtidas de fontes públicas e podem conter imprecisões ou atrasos. O VCZ Consultoria não se responsabiliza por decisões comerciais tomadas com base nestes dados. O painel pode ser descontinuado a qualquer momento sem aviso prévio.</p>
 </footer>
@@ -1521,6 +1538,10 @@ function toggleMenu(){
 function closeMenu(){
   document.getElementById('nav-links').classList.remove('open');
   document.getElementById('nav-hamburger').classList.remove('open');
+}
+function toggleFilterPanel(){
+  document.getElementById('filter-toggle-row').classList.toggle('open');
+  document.getElementById('filter-collapsible').classList.toggle('open');
 }
 document.addEventListener('click',function(e){
   const sel=document.getElementById('lang-select');

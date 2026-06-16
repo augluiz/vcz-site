@@ -253,6 +253,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .filter-inner{gap:.5rem;padding:.45rem .75rem}
   .full-tbox-head input{width:110px;font-size:.72rem}
 }
+/* MOBILE FILTER TOGGLE */
+.filter-toggle-row{display:none;align-items:center;justify-content:space-between;padding:.5rem 1.2rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.18);cursor:pointer;user-select:none}
+.filter-toggle-chev{font-size:.75rem;color:var(--gold-aged);transition:transform .2s}
+.filter-toggle-row.open .filter-toggle-chev{transform:rotate(180deg)}
+.cta-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center}
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}.about-cols{grid-template-columns:1fr}.cta-inner{grid-template-columns:1fr}}
+@media(max-width:768px){
+  html,body{overflow-x:hidden;max-width:100vw}
+  .filter-panel,.about-strip,.dash-main,.dash-header{max-width:100vw;box-sizing:border-box}
+  .filter-toggle-row{display:flex}
+  .filter-collapsible{display:none}
+  .filter-collapsible.open{display:block}
+  .combo-drop{width:min(310px,calc(100vw - 16px))}
+  .ddm-panel{width:min(320px,calc(100vw - 24px))}
+  .cta-inner{gap:1.2rem}
+}
 </style>
 </head>
 <body>
@@ -321,6 +337,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
 <!-- FILTER PANEL -->
 <div class="filter-panel">
+  <div class="filter-toggle-row" id="filter-toggle-row" onclick="toggleFilterPanel()">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em">Filtros</span>
+    <span class="filter-toggle-chev">▾</span>
+  </div>
+  <div class="filter-collapsible" id="filter-collapsible">
   <div class="filter-inner filter-main">
 
     <div class="tf-grp">
@@ -384,6 +405,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       </div>
     </div>
   </div>
+  </div><!-- /filter-collapsible -->
 </div>
 
 <!-- MAIN -->
@@ -512,7 +534,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
 <!-- CTA -->
 <div style="background:var(--navy);border-top:2px solid rgba(200,146,42,.35);padding:2rem 2rem">
-  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
+  <div class="cta-inner">
     <div>
       <p style="font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:.45rem">VCZ Consultoria · Inteligência Comercial</p>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:#F0E8D8;line-height:1.2;margin-bottom:.5rem">
@@ -1240,6 +1262,10 @@ function toggleMenu(){
 function closeMenu(){
   document.getElementById('nav-links').classList.remove('open');
   document.getElementById('nav-hamburger').classList.remove('open');
+}
+function toggleFilterPanel(){
+  document.getElementById('filter-toggle-row').classList.toggle('open');
+  document.getElementById('filter-collapsible').classList.toggle('open');
 }
 </script>
 </body>
