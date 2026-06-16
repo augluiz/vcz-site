@@ -26,10 +26,8 @@
   --text:#1A2433;--text2:#3E5068;--text3:#7A8A9A;
   --border:rgba(26,36,51,.1);
   --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
-  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
   --th-bg:#1A2F45;--th-text:#E8D8C0;
   --tr-even:#F4F6FA;--tr-odd:#FFFFFF;
-  --pos:#2E7D52;--neg:#B83030;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
@@ -37,16 +35,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 ::-webkit-scrollbar-track{background:rgba(26,36,51,.06);border-radius:4px}
 ::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:#B7A073}
-.tscroll::-webkit-scrollbar{width:9px;height:9px}
-.tscroll::-webkit-scrollbar-track{background:#DDE3EC;border-radius:6px}
-.tscroll::-webkit-scrollbar-thumb{background:#8A9EAF;border-radius:6px;border:2px solid #DDE3EC}
 
+/* ── Loading ───────────────────────────────────────────────── */
 #loading{position:fixed;inset:0;background:rgba(13,27,42,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:1rem;backdrop-filter:blur(4px)}
 #loading.hidden{display:none}
 .spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
 
+/* ── Nav ───────────────────────────────────────────────────── */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,.15)}
 .nav-logo img{height:46px;width:auto}
 .nav-links{display:flex;gap:2.5rem;list-style:none}
@@ -68,12 +65,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .nav-cta{display:none}
 }
 
+/* ── Dash header ────────────────────────────────────────────── */
 .dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2)}
 .dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
-.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:#F2EAD8;line-height:1.1;letter-spacing:.01em}
-.dash-header h1 em{color:var(--gold-light);font-style:italic;font-weight:600}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:#F2EAD8;line-height:1.1}
+.dash-header h1 em{color:var(--gold-light);font-style:italic}
 .dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:.28rem;letter-spacing:.04em}
 
+/* ── About strip ────────────────────────────────────────────── */
 .about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
 .about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr) auto;gap:1rem 2.2rem;align-items:center}
 .about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65}
@@ -83,15 +82,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;white-space:nowrap;flex-shrink:0;margin-top:.12rem}
 .badge-mdic{display:inline-flex;align-items:center;gap:.35rem;background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.3);border-radius:4px;padding:.18rem .5rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-aged);white-space:nowrap}
 
+/* ── Filter panel ───────────────────────────────────────────── */
 .filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
-.filter-inner{padding:.65rem 1.5rem;display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap}
+.filter-inner{padding:.55rem 1.5rem;display:flex;align-items:flex-end;gap:1.2rem;flex-wrap:wrap}
 .tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
 .tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
 .tf-vsep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:.05rem 0;flex-shrink:0}
-.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .45rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
 .tf-input:focus{border-color:var(--gold)}
 .tf-input option{background:var(--navy2);color:#EDE7DC}
-.radio-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.radio-row{display:flex;gap:.7rem;flex-wrap:wrap}
 .radio-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer;white-space:nowrap}
 .radio-row label:hover{color:#C8D8E8}
 .radio-row input[type=radio]{accent-color:var(--gold)}
@@ -100,8 +100,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .btn-reset{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.3rem .7rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-reset:hover{border-color:var(--gold);color:var(--gold)}
 
-/* KPI strip */
-.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;padding:.85rem 1.5rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.18)}
+/* ── Main tabs nav ──────────────────────────────────────────── */
+.main-tabs-nav{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);display:flex;align-items:stretch;padding:0 1.5rem;overflow-x:auto;gap:0}
+.main-tab{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#5A7A8A;background:none;border:none;border-bottom:3px solid transparent;padding:.7rem 1.2rem;cursor:pointer;transition:color .18s,border-color .18s;white-space:nowrap;margin-bottom:-2px;flex-shrink:0}
+.main-tab:hover{color:#9AAABB}
+.main-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* ── KPI cards ──────────────────────────────────────────────── */
+.exec-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;padding:.85rem 1.5rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15)}
 .kpi-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.65rem .9rem;display:flex;flex-direction:column;gap:.22rem}
 .kpi-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em}
 .kpi-value{font-family:'DM Mono',monospace;font-size:1.22rem;font-weight:500;color:#F2EAD8;line-height:1}
@@ -111,82 +119,104 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .kpi-value.neg{color:#E06060}
 .kpi-sub{font-family:'DM Sans',sans-serif;font-size:.65rem;color:#5A7A8A}
 
-/* Main grid */
-.dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
-.dash-grid{display:grid;grid-template-columns:2fr 3fr;gap:1rem;align-items:start}
+/* ── Insight row ────────────────────────────────────────────── */
+.exec-insight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;padding:.75rem 1.5rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.12)}
+.insight-card{background:rgba(200,146,42,.05);border:1px solid rgba(200,146,42,.18);border-radius:5px;padding:.65rem .9rem}
+.insight-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem}
+.insight-value{font-family:'DM Mono',monospace;font-size:1rem;color:#F2EAD8;line-height:1.1;margin-bottom:.18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.insight-sub{font-family:'DM Sans',sans-serif;font-size:.65rem;color:#5A7A8A}
 
+/* ── Exec bottom ────────────────────────────────────────────── */
+.exec-bottom{display:grid;grid-template-columns:2fr 1fr 1fr;gap:1rem;padding:.85rem 1.5rem}
+.mini-rank{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.mini-rank-head{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);padding:.45rem .85rem;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.mini-rank-item{display:flex;align-items:center;gap:.5rem;padding:.38rem .85rem;border-bottom:1px solid rgba(26,36,51,.06);font-family:'DM Sans',sans-serif;font-size:.75rem;color:var(--text)}
+.mini-rank-item:last-child{border-bottom:none}
+.mini-rank-item:hover{background:rgba(200,146,42,.05)}
+.mini-rank-pos{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);width:18px;flex-shrink:0}
+.mini-rank-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-rank-val{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text2)}
+
+/* ── Chart cards ────────────────────────────────────────────── */
 .chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
-.chart-section{padding:1rem 1.1rem}
+.chart-section{padding:.75rem 1rem}
 .chart-section-bar{background:var(--navy2);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.12);padding:.5rem 1.2rem .45rem}
 .ct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem;font-weight:500}
-.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-bottom:.75rem}
-.chart-divider{display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;background:var(--navy);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.18)}
-.chart-divider span{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
-.chart-divider::before,.chart-divider::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.2)}
+.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3)}
 .chart-filter-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12);padding:.45rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
 .chart-filter-bar .lbl{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;flex-shrink:0}
-.chart-filter-bar select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.26rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer}
-.chart-filter-bar select option{background:var(--navy2);color:#EDE7DC}
-.cv-wrap canvas{display:block;width:100%!important}
-#evo-wrap canvas{height:290px!important}
-#pais-wrap canvas{height:280px!important}
-#ncm-wrap canvas{height:280px!important}
-#uf-wrap canvas{height:220px!important}
-.chart-hint{padding:.25rem 1.1rem .45rem;font-family:'DM Sans',sans-serif;font-size:.67rem;color:var(--text3);line-height:1.45}
-.no-data{text-align:center;padding:3rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
-
-/* Legend */
-.leg{display:flex;gap:1rem;align-items:center;padding:.28rem 1.1rem .6rem;flex-wrap:wrap}
-.leg-item{display:flex;align-items:center;gap:.32rem;font-family:'DM Mono',monospace;font-size:.55rem}
+.chart-hint{padding:.2rem 1rem .45rem;font-family:'DM Sans',sans-serif;font-size:.67rem;color:var(--text3);line-height:1.45}
+.leg{display:flex;gap:1rem;align-items:center;padding:.3rem 1.1rem .2rem;flex-wrap:wrap;background:var(--navy2)}
+.leg-item{display:flex;align-items:center;gap:.32rem;font-family:'DM Mono',monospace;font-size:.55rem;color:#8AAABB}
 .leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
 
-/* Table */
-.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm);border-top:3px solid var(--gold)}
+/* Chart canvas heights */
+#chart-evo{height:260px!important}
+#chart-pais2{height:340px!important}
+#chart-ncm2{height:340px!important}
+#chart-uf2{height:460px!important}
+#chart-balanca{height:300px!important}
+
+/* ── Dual pane layout ───────────────────────────────────────── */
+.dual-pane{display:grid;grid-template-columns:1fr 1.6fr;gap:1rem;padding:.85rem 1.5rem;align-items:start}
+
+/* ── Comparison table ───────────────────────────────────────── */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:var(--shadow-sm);border-top:3px solid var(--gold)}
 .tbox-head{padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);gap:.5rem;flex-wrap:wrap}
 .tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--gold)}
 .tbox-cnt{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--gold-aged);background:rgba(200,146,42,.1);padding:.1rem .45rem;border-radius:10px;border:1px solid rgba(200,146,42,.25)}
-.tscroll{overflow-x:auto}
-.tscroll.limited{max-height:380px;overflow-y:auto}
-.dt{width:100%;border-collapse:collapse;font-size:.74rem;table-layout:fixed}
-.dt thead{position:sticky;top:0;z-index:3}
-.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:normal;line-height:1.25;vertical-align:bottom;cursor:pointer;user-select:none;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
-.dt th:last-child{border-right:none}
-.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem;display:inline-block;min-width:.5rem}
-.dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
-.dt tr:nth-child(even) td{background:var(--tr-even)}
-.dt tr:nth-child(odd)  td{background:var(--tr-odd)}
-.dt tr:hover td{background:rgba(200,146,42,.07)!important}
-.dt tr:last-child td{border-bottom:none}
-.dt th.r,.dt td.r{text-align:right}
-.tag-exp{display:inline-block;background:rgba(200,146,42,.12);color:#A07020;border-radius:3px;padding:.05rem .3rem;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600}
-.tag-imp{display:inline-block;background:rgba(43,104,168,.12);color:#2B68A8;border-radius:3px;padding:.05rem .3rem;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600}
+.cmp-wrap{overflow-x:auto;max-height:520px;overflow-y:auto}
+.cmp-wrap::-webkit-scrollbar{width:7px;height:7px}
+.cmp-wrap::-webkit-scrollbar-track{background:#DDE3EC;border-radius:4px}
+.cmp-wrap::-webkit-scrollbar-thumb{background:#8A9EAF;border-radius:4px}
+.cmp{width:100%;border-collapse:collapse;font-size:.73rem}
+.cmp thead{position:sticky;top:0;z-index:3}
+.cmp th{padding:.4rem .65rem;font-family:'DM Mono',monospace;font-size:.52rem;text-transform:uppercase;letter-spacing:.05em;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.1);text-align:left;cursor:pointer;user-select:none;white-space:nowrap}
+.cmp th:last-child{border-right:none}
+.cmp th.r,.cmp td.r{text-align:right}
+.cmp td{padding:.32rem .65rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.cmp tr.pos td{background:rgba(46,125,82,.04)}
+.cmp tr.neg td{background:rgba(184,48,48,.04)}
+.cmp tr.total-row td{background:var(--navy2)!important;color:#E8D8C0;font-family:'DM Mono',monospace;font-size:.72rem;font-weight:600;position:sticky;bottom:0;z-index:2}
+.cmp tr:hover:not(.total-row) td{background:rgba(200,146,42,.07)!important}
+.cmp .si{font-size:.48rem;color:rgba(255,255,255,.5);margin-left:.1rem}
 
-.tab-switch{display:flex;gap:.5rem;padding:.4rem .85rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12)}
-.tab-btn{background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:3px;padding:.22rem .6rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .18s}
-.tab-btn.active{background:rgba(200,146,42,.15);border-color:rgba(200,146,42,.4);color:var(--gold)}
+/* ── Balança layout ─────────────────────────────────────────── */
+.balanca-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:.85rem 1.5rem;align-items:start}
 
-.disc{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;padding:.5rem 1.5rem .7rem}
-
+/* ── Disc + footer ──────────────────────────────────────────── */
+.disc{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;padding:.4rem 1.5rem .5rem}
 .dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
 .dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
 .dash-footer a:hover{color:var(--gold)}
 
-@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}.about-cols{grid-template-columns:1fr}.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+/* ── Responsive ─────────────────────────────────────────────── */
+@media(max-width:1200px){.exec-bottom{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:1100px){
+  .exec-kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .exec-insight-row{grid-template-columns:1fr 1fr}
+  .exec-bottom{grid-template-columns:1fr}
+  .dual-pane{grid-template-columns:1fr}
+  .balanca-layout{grid-template-columns:1fr}
+  .about-cols{grid-template-columns:1fr}
+}
 @media(max-width:768px){
   .dash-header h1{font-size:1.75rem}
   .dash-header{padding:.85rem 1.2rem .65rem}
-  .filter-inner{gap:.65rem;padding:.5rem .9rem}
+  .filter-inner{gap:.65rem;padding:.45rem .9rem}
   .tf-vsep{display:none}
   .about-strip{padding:.75rem 1.2rem}
-  .dash-main{padding:.7rem .75rem}
-  .kpi-strip{padding:.6rem .9rem;gap:.5rem}
+  .exec-kpi-grid{padding:.6rem .9rem;gap:.5rem}
+  .exec-insight-row{grid-template-columns:1fr;padding:.6rem .9rem}
+  .exec-bottom{padding:.6rem .9rem;gap:.75rem}
+  .dual-pane{padding:.6rem .9rem}
+  .balanca-layout{padding:.6rem .9rem}
+  .main-tabs-nav{padding:0 .5rem}
   .kpi-value{font-size:1rem}
-  #evo-wrap canvas{height:230px!important}
-  #pais-wrap canvas{height:230px!important}
-  #ncm-wrap canvas{height:230px!important}
 }
 @media(max-width:480px){
-  .kpi-strip{grid-template-columns:1fr 1fr}
+  .exec-kpi-grid{grid-template-columns:1fr 1fr}
+  .exec-insight-row{grid-template-columns:1fr}
   .dash-header h1{font-size:1.4rem}
 }
 </style>
@@ -199,9 +229,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 </div>
 
 <nav>
-  <a href="/" class="nav-logo">
-    <img src="/logo-ouro.svg" alt="VCZ Consultoria">
-  </a>
+  <a href="/" class="nav-logo"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
   <ul class="nav-links" id="nav-links">
     <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
     <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
@@ -228,32 +256,32 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 <div class="about-strip">
   <div class="about-cols">
     <p class="about-what">
-      Acompanhe as <strong>exportações e importações brasileiras</strong> por país de destino/origem, produto (NCM) e unidade federativa — dados oficiais do <strong>MDIC/ComexStat</strong>, em valor FOB (US$) e peso líquido (kg). Atualizado mensalmente com carga automática via GitHub Actions.
+      Acompanhe as <strong>exportações e importações brasileiras</strong> por país de destino/origem, produto (NCM) e unidade federativa — dados oficiais do <strong>MDIC/ComexStat</strong>, em valor FOB (US$) e peso líquido (kg).
     </p>
     <div class="about-steps">
-      <div class="about-step"><b>FONTE</b><span>MDIC — Ministério do Desenvolvimento, Indústria, Comércio e Serviços. Dados públicos disponíveis em balanca.economia.gov.br</span></div>
+      <div class="about-step"><b>FONTE</b><span>MDIC — dados públicos disponíveis em balanca.economia.gov.br. Carga automática mensal.</span></div>
       <div class="about-step"><b>NCM</b><span>Nomenclatura Comum do Mercosul — classifica produtos em ~10.000 categorias de 8 dígitos</span></div>
-      <div class="about-step"><b>FOB</b><span>Free On Board — valor da mercadoria no porto de embarque, sem frete e seguro internacionais</span></div>
+      <div class="about-step"><b>FOB</b><span>Free On Board — valor no porto de embarque, sem frete e seguro internacionais</span></div>
     </div>
     <span class="badge-mdic">&#9679; MDIC · ComexStat</span>
   </div>
 </div>
 
-<!-- Filtros -->
+<!-- ── Filtros globais ──────────────────────────────────────────── -->
 <div class="filter-panel">
   <div class="filter-inner">
     <div class="tf-grp">
       <span class="lbl">Fluxo</span>
       <div class="radio-row">
-        <label><input type="radio" name="fluxo" value="" checked onchange="onFluxoChange()"> Ambos</label>
-        <label><input type="radio" name="fluxo" value="E" onchange="onFluxoChange()"> Exportações</label>
-        <label><input type="radio" name="fluxo" value="I" onchange="onFluxoChange()"> Importações</label>
+        <label><input type="radio" name="fluxo" value="" checked onchange="onFilterChange()"> Ambos</label>
+        <label><input type="radio" name="fluxo" value="E" onchange="onFilterChange()"> Exportações</label>
+        <label><input type="radio" name="fluxo" value="I" onchange="onFilterChange()"> Importações</label>
       </div>
     </div>
     <div class="tf-vsep"></div>
     <div class="tf-grp">
-      <span class="lbl">Período</span>
-      <div style="display:flex;align-items:center;gap:.4rem">
+      <span class="lbl">Ano</span>
+      <div style="display:flex;align-items:center;gap:.35rem">
         <select class="tf-input" id="sel-ano-ini" onchange="onFilterChange()">
           <option value="2020">2020</option><option value="2021">2021</option>
           <option value="2022">2022</option><option value="2023">2023</option>
@@ -271,9 +299,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
     </div>
     <div class="tf-vsep"></div>
     <div class="tf-grp">
+      <span class="lbl">Mês</span>
+      <div style="display:flex;align-items:center;gap:.35rem">
+        <select class="tf-input" id="sel-mes-ini" onchange="onFilterChange()">
+          <option value="1">Jan</option><option value="2">Fev</option><option value="3">Mar</option>
+          <option value="4">Abr</option><option value="5">Mai</option><option value="6">Jun</option>
+          <option value="7">Jul</option><option value="8">Ago</option><option value="9">Set</option>
+          <option value="10">Out</option><option value="11">Nov</option><option value="12">Dez</option>
+        </select>
+        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:#4A6A80">→</span>
+        <select class="tf-input" id="sel-mes-fim" onchange="onFilterChange()">
+          <option value="1">Jan</option><option value="2">Fev</option><option value="3">Mar</option>
+          <option value="4">Abr</option><option value="5">Mai</option><option value="6">Jun</option>
+          <option value="7">Jul</option><option value="8">Ago</option><option value="9">Set</option>
+          <option value="10">Out</option><option value="11">Nov</option><option value="12" selected>Dez</option>
+        </select>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
       <span class="lbl">Métrica</span>
       <div class="radio-row">
-        <label><input type="radio" name="metrica" value="valor" checked onchange="onMetricaChange()"> Valor FOB (US$)</label>
+        <label><input type="radio" name="metrica" value="valor" checked onchange="onMetricaChange()"> Valor FOB</label>
         <label><input type="radio" name="metrica" value="kg" onchange="onMetricaChange()"> Peso (kg)</label>
       </div>
     </div>
@@ -293,126 +340,290 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   </div>
 </div>
 
-<!-- KPI strip -->
-<div class="kpi-strip" id="kpi-strip">
-  <div class="kpi-card">
-    <div class="kpi-label">Total Exportações</div>
-    <div class="kpi-value exp" id="kpi-exp">—</div>
-    <div class="kpi-sub" id="kpi-exp-sub">—</div>
+<!-- ── Main tabs nav ───────────────────────────────────────────── -->
+<div class="main-tabs-nav">
+  <button class="main-tab active" data-tab="executivo" onclick="switchTab('executivo')">&#9660; Executivo</button>
+  <button class="main-tab" data-tab="parceiros" onclick="switchTab('parceiros')">Parceiros Comerciais</button>
+  <button class="main-tab" data-tab="produtos" onclick="switchTab('produtos')">Produtos (NCM)</button>
+  <button class="main-tab" data-tab="regioes" onclick="switchTab('regioes')">Regiões (UF)</button>
+  <button class="main-tab" data-tab="balanca" onclick="switchTab('balanca')">Balança Mensal</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: EXECUTIVO                                                -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="pane-executivo" class="tab-pane active">
+
+  <!-- KPI strip -->
+  <div class="exec-kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Exportações</div>
+      <div class="kpi-value exp" id="kpi-exp">—</div>
+      <div class="kpi-sub" id="kpi-exp-sub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Importações</div>
+      <div class="kpi-value imp" id="kpi-imp">—</div>
+      <div class="kpi-sub" id="kpi-imp-sub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Saldo Comercial</div>
+      <div class="kpi-value" id="kpi-saldo">—</div>
+      <div class="kpi-sub" id="kpi-saldo-sub">Exportações − Importações</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Cobertura (EXP/IMP)</div>
+      <div class="kpi-value" id="kpi-cob" style="font-size:1rem">—</div>
+      <div class="kpi-sub" id="kpi-cob-sub">—</div>
+    </div>
   </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Total Importações</div>
-    <div class="kpi-value imp" id="kpi-imp">—</div>
-    <div class="kpi-sub" id="kpi-imp-sub">—</div>
+
+  <!-- Insight cards -->
+  <div class="exec-insight-row">
+    <div class="insight-card">
+      <div class="insight-label">Melhor Mês — Exportações</div>
+      <div class="insight-value" id="ins-mes-exp-val">—</div>
+      <div class="insight-sub" id="ins-mes-exp-sub">—</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-label">Principal Parceiro (EXP)</div>
+      <div class="insight-value" id="ins-parceiro-val">—</div>
+      <div class="insight-sub" id="ins-parceiro-sub">—</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-label">Produto Líder (EXP)</div>
+      <div class="insight-value" id="ins-prod-val" style="font-size:.82rem">—</div>
+      <div class="insight-sub" id="ins-prod-sub">—</div>
+    </div>
   </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Saldo Comercial</div>
-    <div class="kpi-value" id="kpi-saldo">—</div>
-    <div class="kpi-sub" id="kpi-saldo-sub">Exportações − Importações</div>
+
+  <!-- Bottom: evo chart + mini-ranks -->
+  <div class="exec-bottom">
+
+    <div class="chart-card" style="margin-bottom:0">
+      <div class="chart-section-bar"><div class="ct">Evolução Mensal</div></div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-dot" style="background:#C8922A"></div>Exportações</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2B68A8"></div>Importações</div>
+      </div>
+      <div class="chart-section">
+        <canvas id="chart-evo"></canvas>
+      </div>
+      <div class="chart-hint">Passe o mouse sobre os pontos para ver valores detalhados por mês.</div>
+    </div>
+
+    <div class="mini-rank">
+      <div class="mini-rank-head">Top Parceiros</div>
+      <div id="mini-pais"></div>
+    </div>
+
+    <div class="mini-rank">
+      <div class="mini-rank-head">Top Produtos (NCM)</div>
+      <div id="mini-ncm"></div>
+    </div>
+
   </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Principal Parceiro</div>
-    <div class="kpi-value" id="kpi-parceiro" style="font-size:.9rem;color:#F2EAD8">—</div>
-    <div class="kpi-sub" id="kpi-parceiro-sub">—</div>
+  <p class="disc">&#9432; Valores em US$ FOB. Dados do período selecionado. Fonte: MDIC/ComexStat — atualizado mensalmente.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: PARCEIROS COMERCIAIS                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="pane-parceiros" class="tab-pane">
+  <div class="dual-pane">
+
+    <div>
+      <div class="chart-card">
+        <div class="chart-filter-bar">
+          <span class="lbl">Exibir ranking por</span>
+          <div class="radio-row">
+            <label><input type="radio" name="pais-sub" value="" checked onchange="_subPais='';renderParceiros()"> Ambos</label>
+            <label><input type="radio" name="pais-sub" value="E" onchange="_subPais='E';renderParceiros()"> Exportações</label>
+            <label><input type="radio" name="pais-sub" value="I" onchange="_subPais='I';renderParceiros()"> Importações</label>
+          </div>
+        </div>
+        <div class="chart-section">
+          <div class="ct">Top Parceiros Comerciais</div>
+          <div class="cs" style="margin-bottom:.65rem">Ranking por valor FOB acumulado no período</div>
+          <canvas id="chart-pais2"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbox">
+        <div class="tbox-head">
+          <h3>Comparativo por País</h3>
+          <span class="tbox-cnt" id="cnt-pais">—</span>
+        </div>
+        <div class="cmp-wrap">
+          <table class="cmp" id="tbl-pais">
+            <thead><tr>
+              <th data-col="pais_nome" onclick="sortCmp('pais','pais_nome')">País <span class="si">⇅</span></th>
+              <th class="r" data-col="exp" onclick="sortCmp('pais','exp')">Exportações <span class="si">⇅</span></th>
+              <th class="r" data-col="imp" onclick="sortCmp('pais','imp')">Importações <span class="si">⇅</span></th>
+              <th class="r" data-col="saldo" onclick="sortCmp('pais','saldo')">Saldo <span class="si">↓</span></th>
+              <th class="r" data-col="cobertura" onclick="sortCmp('pais','cobertura')">Cobertura <span class="si">⇅</span></th>
+              <th class="r" data-col="total" onclick="sortCmp('pais','total')">% Total <span class="si">⇅</span></th>
+            </tr></thead>
+            <tbody id="tbl-pais-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<p class="disc">&#9432; Valores em US$ FOB. Dados do período selecionado acima. Fonte: MDIC/ComexStat — atualizado mensalmente.</p>
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: PRODUTOS (NCM)                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="pane-produtos" class="tab-pane">
+  <div class="dual-pane">
 
-<div class="dash-main">
-  <div class="dash-grid">
-    <!-- Coluna esquerda: países + NCMs -->
-    <div class="chart-col">
-
-      <!-- Top Países -->
+    <div>
       <div class="chart-card">
         <div class="chart-filter-bar">
-          <span class="lbl">Top países por</span>
+          <span class="lbl">Exibir ranking por</span>
           <div class="radio-row">
-            <label><input type="radio" name="pais-fluxo" value="" checked onchange="renderPais()"> Ambos</label>
-            <label><input type="radio" name="pais-fluxo" value="E" onchange="renderPais()"> Exp</label>
-            <label><input type="radio" name="pais-fluxo" value="I" onchange="renderPais()"> Imp</label>
+            <label><input type="radio" name="ncm-sub" value="" checked onchange="_subNcm='';renderProdutos()"> Ambos</label>
+            <label><input type="radio" name="ncm-sub" value="E" onchange="_subNcm='E';renderProdutos()"> Exportações</label>
+            <label><input type="radio" name="ncm-sub" value="I" onchange="_subNcm='I';renderProdutos()"> Importações</label>
           </div>
         </div>
         <div class="chart-section">
-          <div class="ct">Parceiros Comerciais</div>
-          <div class="cs">Ranking por valor FOB acumulado no período</div>
-          <div class="cv-wrap" id="pais-wrap"><canvas id="chart-pais"></canvas></div>
+          <div class="ct">Top Produtos (NCM)</div>
+          <div class="cs" style="margin-bottom:.65rem">Ranking por valor FOB acumulado no período</div>
+          <canvas id="chart-ncm2"></canvas>
         </div>
-        <div class="chart-hint" id="pais-hint"></div>
       </div>
-
-      <!-- Top NCMs -->
-      <div class="chart-card">
-        <div class="chart-filter-bar">
-          <span class="lbl">Top produtos por</span>
-          <div class="radio-row">
-            <label><input type="radio" name="ncm-fluxo" value="" checked onchange="renderNcm()"> Ambos</label>
-            <label><input type="radio" name="ncm-fluxo" value="E" onchange="renderNcm()"> Exp</label>
-            <label><input type="radio" name="ncm-fluxo" value="I" onchange="renderNcm()"> Imp</label>
-          </div>
-        </div>
-        <div class="chart-section">
-          <div class="ct">Produtos (NCM)</div>
-          <div class="cs">Ranking por valor FOB acumulado no período</div>
-          <div class="cv-wrap" id="ncm-wrap"><canvas id="chart-ncm"></canvas></div>
-        </div>
-        <div class="chart-hint" id="ncm-hint"></div>
-      </div>
-
     </div>
 
-    <!-- Coluna direita: evolução + UF + tabela -->
-    <div class="table-col">
-
-      <!-- Evolução mensal -->
-      <div class="chart-card">
-        <div class="chart-section-bar">
-          <div class="ct">Evolução Mensal</div>
+    <div>
+      <div class="tbox">
+        <div class="tbox-head">
+          <h3>Comparativo por Produto (NCM)</h3>
+          <span class="tbox-cnt" id="cnt-ncm">—</span>
         </div>
-        <div class="leg" id="leg-evo"></div>
-        <div class="chart-section">
-          <div class="cv-wrap" id="evo-wrap"><canvas id="chart-evo"></canvas></div>
+        <div class="cmp-wrap">
+          <table class="cmp" id="tbl-ncm">
+            <thead><tr>
+              <th data-col="descricao" onclick="sortCmp('ncm','descricao')">Produto <span class="si">⇅</span></th>
+              <th data-col="ncm" onclick="sortCmp('ncm','ncm')">NCM <span class="si">⇅</span></th>
+              <th class="r" data-col="exp" onclick="sortCmp('ncm','exp')">Exportações <span class="si">⇅</span></th>
+              <th class="r" data-col="imp" onclick="sortCmp('ncm','imp')">Importações <span class="si">⇅</span></th>
+              <th class="r" data-col="saldo" onclick="sortCmp('ncm','saldo')">Saldo <span class="si">↓</span></th>
+              <th class="r" data-col="total" onclick="sortCmp('ncm','total')">% Total <span class="si">⇅</span></th>
+            </tr></thead>
+            <tbody id="tbl-ncm-body"></tbody>
+          </table>
         </div>
-        <div class="chart-hint">Exportações e importações mensais em US$ FOB. Passe o mouse para ver valores.</div>
       </div>
+    </div>
 
-      <!-- Por UF -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: REGIÕES (UF)                                            -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="pane-regioes" class="tab-pane">
+  <div class="dual-pane">
+
+    <div>
       <div class="chart-card">
         <div class="chart-filter-bar">
-          <span class="lbl">UF por</span>
+          <span class="lbl">Exibir por</span>
           <div class="radio-row">
-            <label><input type="radio" name="uf-fluxo" value="" checked onchange="renderUf()"> Ambos</label>
-            <label><input type="radio" name="uf-fluxo" value="E" onchange="renderUf()"> Exp</label>
-            <label><input type="radio" name="uf-fluxo" value="I" onchange="renderUf()"> Imp</label>
+            <label><input type="radio" name="uf-sub" value="" checked onchange="_subUf='';renderRegioes()"> Total</label>
+            <label><input type="radio" name="uf-sub" value="E" onchange="_subUf='E';renderRegioes()"> Exportações</label>
+            <label><input type="radio" name="uf-sub" value="I" onchange="_subUf='I';renderRegioes()"> Importações</label>
           </div>
         </div>
         <div class="chart-section">
           <div class="ct">Por Unidade Federativa</div>
-          <div class="cv-wrap" id="uf-wrap"><canvas id="chart-uf"></canvas></div>
+          <div class="cs" style="margin-bottom:.65rem">Colorido por região geográfica brasileira</div>
+          <canvas id="chart-uf2"></canvas>
+        </div>
+        <div class="leg" style="padding:.3rem 1rem .5rem">
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(43,140,140,.75)"></div>Norte</div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(200,146,42,.75)"></div>Nordeste</div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(100,80,160,.75)"></div>Centro-Oeste</div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(43,104,168,.75)"></div>Sudeste</div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(46,125,82,.75)"></div>Sul</div>
         </div>
       </div>
+    </div>
 
-      <!-- Tabela detalhada -->
+    <div>
       <div class="tbox">
         <div class="tbox-head">
-          <h3 id="tbl-title">Detalhamento</h3>
-          <span class="tbox-cnt" id="tbl-cnt">—</span>
+          <h3>Comparativo por Estado (UF)</h3>
+          <span class="tbox-cnt" id="cnt-uf">—</span>
         </div>
-        <div class="tab-switch">
-          <button class="tab-btn active" onclick="setTab('pais')" id="tab-pais">Países</button>
-          <button class="tab-btn" onclick="setTab('ncm')" id="tab-ncm">Produtos (NCM)</button>
-          <button class="tab-btn" onclick="setTab('uf')" id="tab-uf">Por Estado</button>
-        </div>
-        <div class="tscroll limited">
-          <table class="dt" id="main-table">
-            <thead><tr id="tbl-head"></tr></thead>
-            <tbody id="tbl-body"></tbody>
+        <div class="cmp-wrap">
+          <table class="cmp" id="tbl-uf">
+            <thead><tr>
+              <th data-col="uf_nome" onclick="sortCmp('uf','uf_nome')">Estado <span class="si">⇅</span></th>
+              <th data-col="uf" onclick="sortCmp('uf','uf')">UF <span class="si">⇅</span></th>
+              <th data-col="regiao" onclick="sortCmp('uf','regiao')">Região <span class="si">⇅</span></th>
+              <th class="r" data-col="exp" onclick="sortCmp('uf','exp')">Exportações <span class="si">⇅</span></th>
+              <th class="r" data-col="imp" onclick="sortCmp('uf','imp')">Importações <span class="si">⇅</span></th>
+              <th class="r" data-col="saldo" onclick="sortCmp('uf','saldo')">Saldo <span class="si">↓</span></th>
+              <th class="r" data-col="total" onclick="sortCmp('uf','total')">% Total <span class="si">⇅</span></th>
+            </tr></thead>
+            <tbody id="tbl-uf-body"></tbody>
           </table>
         </div>
       </div>
-
     </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB: BALANÇA MENSAL                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="pane-balanca" class="tab-pane">
+  <div class="balanca-layout">
+
+    <div>
+      <div class="chart-card" style="margin-bottom:0">
+        <div class="chart-section-bar"><div class="ct">Balança Comercial Mensal</div></div>
+        <div class="leg">
+          <div class="leg-item"><div class="leg-dot" style="background:#C8922A;border-radius:50%"></div>Exportações (linha)</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#2B68A8;border-radius:50%"></div>Importações (linha)</div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(46,125,82,.7)"></div>Saldo positivo</div>
+          <div class="leg-item"><div class="leg-dot" style="background:rgba(184,48,48,.6)"></div>Saldo negativo</div>
+        </div>
+        <div class="chart-section">
+          <canvas id="chart-balanca"></canvas>
+        </div>
+        <div class="chart-hint">Eixo esquerdo: exportações e importações · Eixo direito: saldo mensal (barras verdes = superávit, vermelhas = déficit)</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tbox">
+        <div class="tbox-head">
+          <h3>Evolução Mês a Mês</h3>
+          <span class="tbox-cnt" id="cnt-balanca">—</span>
+        </div>
+        <div class="cmp-wrap">
+          <table class="cmp">
+            <thead><tr>
+              <th>Período</th>
+              <th class="r">Exportações</th>
+              <th class="r">Importações</th>
+              <th class="r">Saldo</th>
+              <th class="r">Cobertura</th>
+            </tr></thead>
+            <tbody id="tbl-balanca-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -423,157 +634,187 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
-// ── Configuração ─────────────────────────────────────────────────────────────
 const API_BASE = 'https://vcz-api.onrender.com/api/v1/comex/publico';
-// Para teste local: const API_BASE = 'http://localhost:8000/api/v1/comex/publico';
 
-// ── Estado ───────────────────────────────────────────────────────────────────
+// Dispara ping imediatamente para acordar o Render (cold start)
+fetch(`${API_BASE}/ping`).catch(() => {});
+
+// ── Estado ────────────────────────────────────────────────────────
 let _mensal = [], _paises = [], _ncms = [], _ufs = [];
-let _chartEvo = null, _chartPais = null, _chartNcm = null, _chartUf = null;
-let _tabAtual = 'pais';
+let _tab = 'executivo';
 let _metrica = 'valor';
-let _lastAvailableYear = 2025;
+let _lastYear = 2025;
+let _charts = {};
+let _subPais = '', _subNcm = '', _subUf = '';
+let _sortPais = {col:'total', dir:-1};
+let _sortNcm  = {col:'total', dir:-1};
+let _sortUf   = {col:'total', dir:-1};
 
-const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MESES_PT   = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function getFluxo() { return document.querySelector('input[name="fluxo"]:checked').value; }
-function getPaisFluxo() { return document.querySelector('input[name="pais-fluxo"]:checked').value; }
-function getNcmFluxo() { return document.querySelector('input[name="ncm-fluxo"]:checked').value; }
-function getUfFluxo() { return document.querySelector('input[name="uf-fluxo"]:checked').value; }
-function getAnoIni() { return +document.getElementById('sel-ano-ini').value; }
-function getAnoFim() { return +document.getElementById('sel-ano-fim').value; }
-function getTop() { return +document.getElementById('sel-top').value; }
+const REGIAO_COR = {
+  'Norte':        'rgba(43,140,140,.75)',
+  'Nordeste':     'rgba(200,146,42,.75)',
+  'Centro-Oeste': 'rgba(100,80,160,.75)',
+  'Sudeste':      'rgba(43,104,168,.75)',
+  'Sul':          'rgba(46,125,82,.75)',
+};
+
+// ── Helpers ───────────────────────────────────────────────────────
+function el(id) { return document.getElementById(id); }
+function getFluxo()  { return document.querySelector('input[name="fluxo"]:checked').value; }
+function getAnoIni() { return +el('sel-ano-ini').value; }
+function getAnoFim() { return +el('sel-ano-fim').value; }
+function getMesIni() { return +el('sel-mes-ini').value; }
+function getMesFim() { return +el('sel-mes-fim').value; }
+function getTop()    { return +el('sel-top').value; }
+function valKey()    { return _metrica === 'kg' ? 'kg_liquido' : 'valor_fob'; }
 
 function fmtUSD(v) {
-  if (v >= 1e9) return 'US$ ' + (v/1e9).toFixed(2) + ' Bi';
-  if (v >= 1e6) return 'US$ ' + (v/1e6).toFixed(1) + ' Mi';
-  return 'US$ ' + v.toLocaleString('pt-BR');
+  if (Math.abs(v) >= 1e9) return 'US$ ' + (v/1e9).toFixed(2) + ' Bi';
+  if (Math.abs(v) >= 1e6) return 'US$ ' + (v/1e6).toFixed(1) + ' Mi';
+  return 'US$ ' + Math.round(v).toLocaleString('pt-BR');
 }
 function fmtKg(v) {
-  if (v >= 1e9) return (v/1e9).toFixed(2) + ' Gt';
-  if (v >= 1e6) return (v/1e6).toFixed(1) + ' Mt';
-  if (v >= 1e3) return (v/1e3).toFixed(1) + ' t';
-  return v.toLocaleString('pt-BR') + ' kg';
+  if (Math.abs(v) >= 1e9) return (v/1e9).toFixed(2) + ' Gt';
+  if (Math.abs(v) >= 1e6) return (v/1e6).toFixed(1) + ' Mt';
+  if (Math.abs(v) >= 1e3) return (v/1e3).toFixed(1) + ' t';
+  return Math.round(v).toLocaleString('pt-BR') + ' kg';
 }
-function fmtVal(v) { return _metrica === 'kg' ? fmtKg(v) : fmtUSD(v); }
-function valKey() { return _metrica === 'kg' ? 'kg_liquido' : 'valor_fob'; }
+function fmtVal(v)  { return _metrica === 'kg' ? fmtKg(v) : fmtUSD(v); }
+function fmtPct(v)  { return v.toFixed(1) + '%'; }
+function fmtSaldo(v){ const s = fmtUSD(Math.abs(v)); return v >= 0 ? s : '−' + s; }
 
-function buildQs(extra = {}) {
+// ── Tab navigation ────────────────────────────────────────────────
+function switchTab(tab) {
+  _tab = tab;
+  document.querySelectorAll('.main-tab').forEach(b =>
+    b.classList.toggle('active', b.dataset.tab === tab)
+  );
+  document.querySelectorAll('.tab-pane').forEach(p =>
+    p.classList.toggle('active', p.id === 'pane-' + tab)
+  );
+  history.replaceState(null, '', '#' + tab);
+  renderCurrentTab();
+}
+
+// ── Cache (sessionStorage, TTL 5 min) ────────────────────────────
+const CACHE_TTL = 5 * 60 * 1000;
+function _cacheKey() {
+  return `comex|${getAnoIni()}|${getAnoFim()}|${getMesIni()}|${getMesFim()}|${getFluxo()}`;
+}
+function _getCached() {
+  try {
+    const raw = sessionStorage.getItem(_cacheKey());
+    if (!raw) return null;
+    const { ts, d } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) { sessionStorage.removeItem(_cacheKey()); return null; }
+    return d;
+  } catch(e) { return null; }
+}
+function _setCache(d) {
+  try { sessionStorage.setItem(_cacheKey(), JSON.stringify({ ts: Date.now(), d })); } catch(e) {}
+}
+
+// ── Fetch ─────────────────────────────────────────────────────────
+function _buildQs() {
   const p = new URLSearchParams({
-    ano_ini: getAnoIni(),
-    ano_fim: getAnoFim(),
-    top: getTop(),
-    ...extra
+    ano_ini: getAnoIni(), ano_fim: getAnoFim(),
+    mes_ini: getMesIni(), mes_fim: getMesFim(),
+    top: 100,
   });
   const f = getFluxo();
   if (f) p.set('fluxo', f);
   return p.toString();
 }
 
-// ── Fetch ─────────────────────────────────────────────────────────────────────
 async function fetchAll() {
-  const qs_base = `ano_ini=${getAnoIni()}&ano_fim=${getAnoFim()}&top=${getTop()}`;
-  const f = getFluxo();
-  const qs = f ? qs_base + `&fluxo=${f}` : qs_base;
+  const qs = _buildQs();
 
-  const [mensal, paises, ncms, ufs] = await Promise.all([
-    fetch(`${API_BASE}/mensal?${qs}`).then(r => r.json()),
-    fetch(`${API_BASE}/por-pais?${qs}`).then(r => r.json()),
-    fetch(`${API_BASE}/por-ncm?${qs}`).then(r => r.json()),
-    fetch(`${API_BASE}/por-uf?${qs}`).then(r => r.json()),
-  ]);
+  // Lança todas as 4 requisições em paralelo imediatamente
+  const mensalP = fetch(`${API_BASE}/mensal?${qs}`).then(r => r.json());
+  const paisesP = fetch(`${API_BASE}/por-pais?${qs}`).then(r => r.json());
+  const ncmsP   = fetch(`${API_BASE}/por-ncm?${qs}`).then(r => r.json());
+  const ufsP    = fetch(`${API_BASE}/por-uf?${qs}`).then(r => r.json());
 
-  _mensal = mensal;
-  _paises = paises;
-  _ncms   = ncms;
-  _ufs    = ufs;
-}
-
-// ── KPI ──────────────────────────────────────────────────────────────────────
-function renderKpi() {
-  const exp = _paises.filter(r => r.fluxo === 'E').reduce((s,r) => s + r[valKey()], 0);
-  const imp = _paises.filter(r => r.fluxo === 'I').reduce((s,r) => s + r[valKey()], 0);
-  const saldo = exp - imp;
-
-  document.getElementById('kpi-exp').textContent  = fmtUSD(_mensal.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0));
-  document.getElementById('kpi-imp').textContent  = fmtUSD(_mensal.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0));
-
-  const totalExp = _mensal.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0);
-  const totalImp = _mensal.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0);
-  const totalSaldo = totalExp - totalImp;
-
-  const kpiSaldo = document.getElementById('kpi-saldo');
-  kpiSaldo.textContent = fmtUSD(Math.abs(totalSaldo));
-  kpiSaldo.className = 'kpi-value ' + (totalSaldo >= 0 ? 'pos' : 'neg');
-  document.getElementById('kpi-saldo-sub').textContent = totalSaldo >= 0 ? 'Superávit comercial' : 'Déficit comercial';
-
-  const top1 = [..._paises].sort((a,b) => b[valKey()] - a[valKey()])[0];
-  if (top1) {
-    document.getElementById('kpi-parceiro').textContent = top1.pais_nome || top1.pais_cod;
-    document.getElementById('kpi-parceiro-sub').textContent = 'Maior parceiro · ' + fmtUSD(top1.valor_fob);
+  // Renderiza parcialmente ao receber /mensal (mais rápido)
+  _mensal = await mensalP;
+  if (_tab === 'executivo' || _tab === 'balanca') {
+    _updateHeader();
+    el('loading').classList.add('hidden');
+    renderCurrentTab();
   }
 
-  document.getElementById('kpi-exp-sub').textContent  = _mensal.filter(r=>r.fluxo==='E').length + ' meses de dados';
-  document.getElementById('kpi-imp-sub').textContent  = _mensal.filter(r=>r.fluxo==='I').length + ' meses de dados';
+  // Aguarda o restante
+  [_paises, _ncms, _ufs] = await Promise.all([paisesP, ncmsP, ufsP]);
 }
 
-// ── Evolução mensal ───────────────────────────────────────────────────────────
-function renderEvo() {
-  const evoFluxo = getFluxo();
+// ── Chart helpers ─────────────────────────────────────────────────
+function destroyChart(id) {
+  if (_charts[id]) { _charts[id].destroy(); delete _charts[id]; }
+}
 
-  // Constrói eixo X com todos os anos-meses presentes
-  const keys = new Set(_mensal.map(r => `${r.ano}-${String(r.mes).padStart(2,'0')}`));
-  const labels = [...keys].sort();
+function drawBarH(canvasId, labels, values, opts) {
+  destroyChart(canvasId);
+  const ctx = el(canvasId);
+  if (!ctx) return;
+  const bg = opts.colors || opts.color || 'rgba(200,146,42,.7)';
+  _charts[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: bg,
+        borderWidth: 0, borderRadius: 2,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ' ' + fmtVal(c.raw) } }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(26,36,51,.06)' },
+          ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) }
+        },
+        y: {
+          ticks: { font: { family: 'DM Sans', size: 10 }, color: '#3E5068' },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
 
+function drawEvo(canvasId, labels, expData, impData) {
+  destroyChart(canvasId);
+  const ctx = el(canvasId);
+  if (!ctx) return;
   const datasets = [];
-
-  if (!evoFluxo || evoFluxo === 'E') {
-    const mapE = {};
-    _mensal.filter(r=>r.fluxo==='E').forEach(r => { mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
-    datasets.push({
-      label: 'Exportações',
-      data: labels.map(k => mapE[k] || 0),
-      borderColor: '#C8922A',
-      backgroundColor: 'rgba(200,146,42,.12)',
-      fill: !evoFluxo || evoFluxo === 'E',
-      tension: .3, pointRadius: 2, pointHoverRadius: 5,
-    });
-  }
-  if (!evoFluxo || evoFluxo === 'I') {
-    const mapI = {};
-    _mensal.filter(r=>r.fluxo==='I').forEach(r => { mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
-    datasets.push({
-      label: 'Importações',
-      data: labels.map(k => mapI[k] || 0),
-      borderColor: '#2B68A8',
-      backgroundColor: 'rgba(43,104,168,.1)',
-      fill: false,
-      tension: .3, pointRadius: 2, pointHoverRadius: 5,
-    });
-  }
-
-  const niceLbls = labels.map(k => { const [a,m] = k.split('-'); return MESES_PT[+m-1]+'/'+a.slice(2); });
-
-  const leg = document.getElementById('leg-evo');
-  leg.innerHTML = datasets.map(d =>
-    `<div class="leg-item"><div class="leg-dot" style="background:${d.borderColor}"></div>${d.label}</div>`
-  ).join('');
-
-  if (_chartEvo) _chartEvo.destroy();
-  _chartEvo = new Chart(document.getElementById('chart-evo'), {
+  if (expData) datasets.push({
+    label: 'Exportações', data: expData,
+    borderColor: '#C8922A', backgroundColor: 'rgba(200,146,42,.1)',
+    fill: true, tension: .3, pointRadius: 2, pointHoverRadius: 5,
+  });
+  if (impData) datasets.push({
+    label: 'Importações', data: impData,
+    borderColor: '#2B68A8', backgroundColor: 'rgba(43,104,168,.07)',
+    fill: false, tension: .3, pointRadius: 2, pointHoverRadius: 5,
+  });
+  _charts[canvasId] = new Chart(ctx, {
     type: 'line',
-    data: { labels: niceLbls, datasets },
+    data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${fmtVal(ctx.raw)}`
-          }
-        }
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fmtVal(c.raw)}` } }
       },
       scales: {
         x: { grid: { color: 'rgba(26,36,51,.07)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 45 } },
@@ -583,285 +824,439 @@ function renderEvo() {
   });
 }
 
-// ── Países ────────────────────────────────────────────────────────────────────
-function renderPais() {
-  const f = getPaisFluxo();
-  const top = getTop();
-  let data = _paises.filter(r => !f || r.fluxo === f);
-
-  // Agrega quando fluxo = ambos
-  if (!f) {
-    const map = {};
-    data.forEach(r => {
-      const k = r.pais_cod;
-      if (!map[k]) map[k] = { pais_nome: r.pais_nome, valor_fob: 0, kg_liquido: 0 };
-      map[k].valor_fob  += r.valor_fob;
-      map[k].kg_liquido += r.kg_liquido;
-    });
-    data = Object.values(map).sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
-  } else {
-    data = data.sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
-  }
-
-  const labels = data.map(r => r.pais_nome || String(r.pais_cod));
-  const values = data.map(r => r[valKey()]);
-  const cores  = f === 'I' ? 'rgba(43,104,168,.75)' : f === 'E' ? 'rgba(200,146,42,.75)' : 'rgba(100,140,180,.75)';
-
-  if (_chartPais) _chartPais.destroy();
-  _chartPais = new Chart(document.getElementById('chart-pais'), {
-    type: 'bar',
+function drawCombo(canvasId, labels, expData, impData, saldoData) {
+  destroyChart(canvasId);
+  const ctx = el(canvasId);
+  if (!ctx) return;
+  _charts[canvasId] = new Chart(ctx, {
     data: {
       labels,
-      datasets: [{ label: 'Valor', data: values, backgroundColor: cores,
-        borderColor: f === 'I' ? '#2B68A8' : f === 'E' ? '#C8922A' : '#6490B8',
-        borderWidth: 1, borderRadius: 2 }]
-    },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtVal(ctx.raw) } } },
-      scales: {
-        x: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
-        y: { ticks: { font: { family: 'DM Sans', size: 10 }, color: '#3E5068' }, grid: { display: false } }
-      }
-    }
-  });
-
-  const top1 = data[0];
-  document.getElementById('pais-hint').textContent =
-    top1 ? `Maior parceiro: ${top1.pais_nome || top1.pais_cod} com ${fmtVal(top1[valKey()])}` : '';
-}
-
-// ── NCMs ──────────────────────────────────────────────────────────────────────
-function renderNcm() {
-  const f = getNcmFluxo();
-  const top = getTop();
-  let data = _ncms.filter(r => !f || r.fluxo === f);
-
-  if (!f) {
-    const map = {};
-    data.forEach(r => {
-      if (!map[r.ncm]) map[r.ncm] = { descricao: r.descricao, valor_fob: 0, kg_liquido: 0 };
-      map[r.ncm].valor_fob  += r.valor_fob;
-      map[r.ncm].kg_liquido += r.kg_liquido;
-    });
-    data = Object.values(map).sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
-  } else {
-    data = data.sort((a,b) => b[valKey()] - a[valKey()]).slice(0, top);
-  }
-
-  const labels = data.map(r => (r.descricao || r.ncm || '').slice(0, 45));
-  const values = data.map(r => r[valKey()]);
-
-  if (_chartNcm) _chartNcm.destroy();
-  _chartNcm = new Chart(document.getElementById('chart-ncm'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{ label: 'Valor', data: values,
-        backgroundColor: 'rgba(46,125,82,.65)', borderColor: '#2E7D52',
-        borderWidth: 1, borderRadius: 2 }]
-    },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtVal(ctx.raw) } } },
-      scales: {
-        x: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
-        y: { ticks: { font: { family: 'DM Sans', size: 10 }, color: '#3E5068' }, grid: { display: false } }
-      }
-    }
-  });
-
-  const top1 = data[0];
-  document.getElementById('ncm-hint').textContent =
-    top1 ? `Produto líder: ${(top1.descricao || top1.ncm || '').slice(0,60)} — ${fmtVal(top1[valKey()])}` : '';
-}
-
-// ── UF ───────────────────────────────────────────────────────────────────────
-function renderUf() {
-  const f = getUfFluxo();
-  let data = _ufs.filter(r => !f || r.fluxo === f);
-
-  if (!f) {
-    const map = {};
-    data.forEach(r => {
-      const k = r.uf || '--';
-      if (!map[k]) map[k] = { uf_nome: r.uf_nome || r.uf, valor_fob: 0, kg_liquido: 0 };
-      map[k].valor_fob  += r.valor_fob;
-      map[k].kg_liquido += r.kg_liquido;
-    });
-    data = Object.values(map).sort((a,b) => b[valKey()] - a[valKey()]).slice(0, 15);
-  } else {
-    data = data.sort((a,b) => b[valKey()] - a[valKey()]).slice(0, 15);
-  }
-
-  const paleta = ['rgba(200,146,42,.75)','rgba(43,104,168,.65)','rgba(46,125,82,.65)',
-    'rgba(168,68,43,.65)','rgba(100,80,160,.65)','rgba(43,140,140,.65)'];
-  const cores = data.map((_,i) => paleta[i % paleta.length]);
-
-  if (_chartUf) _chartUf.destroy();
-  _chartUf = new Chart(document.getElementById('chart-uf'), {
-    type: 'bar',
-    data: {
-      labels: data.map(r => r.uf_nome || r.uf || '--'),
-      datasets: [{ label: 'Valor', data: data.map(r => r[valKey()]),
-        backgroundColor: cores, borderWidth: 0, borderRadius: 2 }]
+      datasets: [
+        {
+          type: 'line', label: 'Exportações', data: expData,
+          borderColor: '#C8922A', backgroundColor: 'transparent',
+          tension: .3, pointRadius: 3, pointHoverRadius: 5, yAxisID: 'y',
+        },
+        {
+          type: 'line', label: 'Importações', data: impData,
+          borderColor: '#2B68A8', backgroundColor: 'transparent',
+          tension: .3, pointRadius: 3, pointHoverRadius: 5, yAxisID: 'y',
+        },
+        {
+          type: 'bar', label: 'Saldo', data: saldoData,
+          backgroundColor: saldoData.map(v => v >= 0 ? 'rgba(46,125,82,.65)' : 'rgba(184,48,48,.6)'),
+          borderRadius: 2, yAxisID: 'y2',
+        },
+      ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtVal(ctx.raw) } } },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fmtUSD(c.raw)}` } }
+      },
       scales: {
-        x: { ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 35 }, grid: { display: false } },
-        y: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } }
+        x: { grid: { color: 'rgba(26,36,51,.07)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 45 } },
+        y:  { position: 'left',  grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
+        y2: { position: 'right', grid: { display: false }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
       }
     }
   });
 }
 
-// ── Tabela ───────────────────────────────────────────────────────────────────
-function setTab(tab) {
-  _tabAtual = tab;
-  ['pais','ncm','uf'].forEach(t => {
-    document.getElementById('tab-'+t).className = 'tab-btn' + (t === tab ? ' active' : '');
+// ── Data aggregation ──────────────────────────────────────────────
+function aggPaises() {
+  const map = {};
+  _paises.forEach(r => {
+    const k = r.pais_cod;
+    if (!map[k]) map[k] = { pais_cod: k, pais_nome: r.pais_nome || String(k), exp: 0, imp: 0 };
+    if (r.fluxo === 'E') map[k].exp += r.valor_fob;
+    else                  map[k].imp += r.valor_fob;
   });
-  renderTabela();
+  return Object.values(map).map(r => ({
+    ...r, total: r.exp + r.imp, saldo: r.exp - r.imp,
+    cobertura: r.imp > 0 ? r.exp / r.imp : null,
+  }));
 }
 
-function renderTabela() {
-  const head = document.getElementById('tbl-head');
-  const body = document.getElementById('tbl-body');
-  const title = document.getElementById('tbl-title');
-  const cnt   = document.getElementById('tbl-cnt');
+function aggNcms() {
+  const map = {};
+  _ncms.forEach(r => {
+    if (!map[r.ncm]) map[r.ncm] = { ncm: r.ncm, descricao: r.descricao || r.ncm, exp: 0, imp: 0 };
+    if (r.fluxo === 'E') map[r.ncm].exp += r.valor_fob;
+    else                  map[r.ncm].imp += r.valor_fob;
+  });
+  return Object.values(map).map(r => ({
+    ...r, total: r.exp + r.imp, saldo: r.exp - r.imp,
+    cobertura: r.imp > 0 ? r.exp / r.imp : null,
+  }));
+}
 
-  let cols, rows;
+function aggUfs() {
+  const map = {};
+  _ufs.forEach(r => {
+    const k = r.uf || '--';
+    if (!map[k]) map[k] = { uf: k, uf_nome: r.uf_nome || k, regiao: r.regiao || '', exp: 0, imp: 0 };
+    if (r.fluxo === 'E') map[k].exp += r.valor_fob;
+    else                  map[k].imp += r.valor_fob;
+  });
+  return Object.values(map).map(r => ({
+    ...r, total: r.exp + r.imp, saldo: r.exp - r.imp,
+  }));
+}
 
-  if (_tabAtual === 'pais') {
-    title.textContent = 'Top Parceiros Comerciais';
-    cols = ['Fluxo','País','Valor FOB (US$)','Peso (kg)'];
-    rows = [..._paises].sort((a,b) => b.valor_fob - a.valor_fob).slice(0, getTop() * 2);
-  } else if (_tabAtual === 'ncm') {
-    title.textContent = 'Top Produtos (NCM)';
-    cols = ['Fluxo','Produto (NCM)','Cod. NCM','Valor FOB (US$)','Peso (kg)'];
-    rows = [..._ncms].sort((a,b) => b.valor_fob - a.valor_fob).slice(0, getTop() * 2);
-  } else {
-    title.textContent = 'Por Estado (UF)';
-    cols = ['Fluxo','Estado','Região','Valor FOB (US$)','Peso (kg)'];
-    rows = [..._ufs].sort((a,b) => b.valor_fob - a.valor_fob);
+function getMensalTimeline() {
+  const keys = [...new Set(_mensal.map(r => `${r.ano}-${String(r.mes).padStart(2,'0')}`))] .sort();
+  const mapE = {}, mapI = {};
+  _mensal.filter(r => r.fluxo === 'E').forEach(r => { mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
+  _mensal.filter(r => r.fluxo === 'I').forEach(r => { mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
+  const expData   = keys.map(k => mapE[k] || 0);
+  const impData   = keys.map(k => mapI[k] || 0);
+  const saldoData = keys.map(k => (mapE[k] || 0) - (mapI[k] || 0));
+  const labels    = keys.map(k => { const [a,m] = k.split('-'); return MESES_PT[+m-1] + '/' + a.slice(2); });
+  return { keys, labels, expData, impData, saldoData };
+}
+
+// ── Render: Executivo ─────────────────────────────────────────────
+function renderExecutivo() {
+  const totExp = _mensal.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0);
+  const totImp = _mensal.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0);
+  const saldo  = totExp - totImp;
+  const cob    = totImp > 0 ? totExp / totImp : 0;
+
+  el('kpi-exp').textContent = fmtUSD(totExp);
+  el('kpi-exp-sub').textContent = _mensal.filter(r=>r.fluxo==='E').length + ' meses · período selecionado';
+  el('kpi-imp').textContent = fmtUSD(totImp);
+  el('kpi-imp-sub').textContent = _mensal.filter(r=>r.fluxo==='I').length + ' meses · período selecionado';
+
+  const kpiSaldo = el('kpi-saldo');
+  kpiSaldo.textContent = fmtSaldo(saldo);
+  kpiSaldo.className = 'kpi-value ' + (saldo >= 0 ? 'pos' : 'neg');
+  el('kpi-saldo-sub').textContent = saldo >= 0 ? 'Superávit comercial' : 'Déficit comercial';
+
+  const kpiCob = el('kpi-cob');
+  kpiCob.textContent = cob > 0 ? cob.toFixed(2) + 'x' : '—';
+  kpiCob.className = 'kpi-value ' + (cob >= 1 ? 'pos' : cob > 0 ? 'neg' : '');
+  el('kpi-cob-sub').textContent = cob >= 1 ? 'EXP supera IMP' : cob > 0 ? 'IMP supera EXP' : 'EXP / IMP';
+
+  // Insights
+  const bestExpMonth = [..._mensal].filter(r=>r.fluxo==='E').sort((a,b)=>b.valor_fob-a.valor_fob)[0];
+  if (bestExpMonth) {
+    el('ins-mes-exp-val').textContent = fmtUSD(bestExpMonth.valor_fob);
+    el('ins-mes-exp-sub').textContent = MESES_FULL[bestExpMonth.mes-1] + ' de ' + bestExpMonth.ano;
   }
 
-  head.innerHTML = cols.map((c,i) =>
-    `<th class="${i >= cols.length - 2 ? 'r' : ''}">${c}</th>`
+  const top1pais = [..._paises].filter(r=>r.fluxo==='E').sort((a,b)=>b.valor_fob-a.valor_fob)[0];
+  if (top1pais) {
+    el('ins-parceiro-val').textContent = top1pais.pais_nome || top1pais.pais_cod;
+    el('ins-parceiro-sub').textContent = 'EXP: ' + fmtUSD(top1pais.valor_fob);
+  }
+
+  const top1ncm = [..._ncms].filter(r=>r.fluxo==='E').sort((a,b)=>b.valor_fob-a.valor_fob)[0];
+  if (top1ncm) {
+    el('ins-prod-val').textContent = (top1ncm.descricao || top1ncm.ncm || '').slice(0, 38);
+    el('ins-prod-sub').textContent = 'NCM ' + top1ncm.ncm + ' · ' + fmtUSD(top1ncm.valor_fob);
+  }
+
+  // Evo chart
+  const { labels, expData, impData } = getMensalTimeline();
+  const f = getFluxo();
+  drawEvo('chart-evo', labels, f !== 'I' ? expData : null, f !== 'E' ? impData : null);
+
+  // Mini-ranks
+  const topP = [..._paises].sort((a,b)=>b.valor_fob-a.valor_fob).slice(0, 7);
+  el('mini-pais').innerHTML = topP.map((r,i) =>
+    `<div class="mini-rank-item">
+      <span class="mini-rank-pos">${i+1}.</span>
+      <span class="mini-rank-name" title="${r.pais_nome}">${r.pais_nome || r.pais_cod}</span>
+      <span class="mini-rank-val">${fmtUSD(r.valor_fob)}</span>
+    </div>`
   ).join('');
 
-  body.innerHTML = rows.map(r => {
-    const tag = r.fluxo === 'E'
-      ? '<span class="tag-exp">EXP</span>'
-      : r.fluxo === 'I' ? '<span class="tag-imp">IMP</span>' : '—';
-
-    if (_tabAtual === 'pais') {
-      return `<tr>
-        <td style="width:60px">${tag}</td>
-        <td>${r.pais_nome || r.pais_cod}</td>
-        <td class="r" style="font-family:'DM Mono',monospace">${fmtUSD(r.valor_fob)}</td>
-        <td class="r" style="font-family:'DM Mono',monospace">${fmtKg(r.kg_liquido)}</td>
-      </tr>`;
-    } else if (_tabAtual === 'ncm') {
-      return `<tr>
-        <td style="width:60px">${tag}</td>
-        <td title="${r.descricao || ''}">${(r.descricao || r.ncm || '').slice(0,55)}</td>
-        <td style="font-family:'DM Mono',monospace;width:90px;font-size:.68rem">${r.ncm}</td>
-        <td class="r" style="font-family:'DM Mono',monospace">${fmtUSD(r.valor_fob)}</td>
-        <td class="r" style="font-family:'DM Mono',monospace">${fmtKg(r.kg_liquido)}</td>
-      </tr>`;
-    } else {
-      return `<tr>
-        <td style="width:60px">${tag}</td>
-        <td>${r.uf_nome || r.uf || '—'}</td>
-        <td style="font-family:'DM Mono',monospace;font-size:.68rem">${r.regiao || '—'}</td>
-        <td class="r" style="font-family:'DM Mono',monospace">${fmtUSD(r.valor_fob)}</td>
-        <td class="r" style="font-family:'DM Mono',monospace">${fmtKg(r.kg_liquido)}</td>
-      </tr>`;
-    }
-  }).join('');
-
-  cnt.textContent = rows.length + ' registros';
+  const topN = [..._ncms].sort((a,b)=>b.valor_fob-a.valor_fob).slice(0, 7);
+  el('mini-ncm').innerHTML = topN.map((r,i) =>
+    `<div class="mini-rank-item">
+      <span class="mini-rank-pos">${i+1}.</span>
+      <span class="mini-rank-name" title="${r.descricao}">${(r.descricao||r.ncm||'').slice(0,32)}</span>
+      <span class="mini-rank-val">${fmtUSD(r.valor_fob)}</span>
+    </div>`
+  ).join('');
 }
 
-// ── Render all ───────────────────────────────────────────────────────────────
-function renderAll() {
-  renderKpi();
-  renderEvo();
-  renderPais();
-  renderNcm();
-  renderUf();
-  renderTabela();
+// ── Render: Parceiros ─────────────────────────────────────────────
+function renderParceiros() {
+  const f   = _subPais;
+  const top = getTop();
+  const rows = aggPaises();
 
-  const anos = [...new Set(_mensal.map(r => r.ano))].sort();
-  const meses = _mensal.length;
-  document.getElementById('last-update').textContent =
-    `${meses} meses de dados · ${anos[0] || '—'}–${anos[anos.length-1] || '—'} · Fonte: MDIC/ComexStat`;
+  // Chart: se sub-fluxo, usar dados brutos; senão, usar agregado
+  let chartRows;
+  if (f) {
+    chartRows = [..._paises].filter(r=>r.fluxo===f).sort((a,b)=>b.valor_fob-a.valor_fob).slice(0,top);
+  } else {
+    chartRows = [...rows].sort((a,b)=>b.total-a.total).slice(0,top);
+  }
+  const labels = chartRows.map(r => r.pais_nome || String(r.pais_cod || ''));
+  const values = chartRows.map(r => f === 'E' ? r.exp : f === 'I' ? r.imp : r.total);
+  const color  = f === 'I' ? 'rgba(43,104,168,.7)' : f === 'E' ? 'rgba(200,146,42,.7)' : 'rgba(100,140,180,.7)';
+  drawBarH('chart-pais2', labels, values, { color });
+
+  // Table sort
+  const sorted = [...rows].sort((a,b) => {
+    const va = a[_sortPais.col] ?? 0, vb = b[_sortPais.col] ?? 0;
+    return typeof va === 'string' ? va.localeCompare(vb) * _sortPais.dir : (va - vb) * _sortPais.dir;
+  });
+
+  const totExp = rows.reduce((s,r)=>s+r.exp,0);
+  const totImp = rows.reduce((s,r)=>s+r.imp,0);
+  const grand  = totExp + totImp;
+
+  el('tbl-pais-body').innerHTML = sorted.map(r => {
+    const pct = grand > 0 ? r.total / grand * 100 : 0;
+    return `<tr class="${r.saldo >= 0 ? 'pos' : 'neg'}">
+      <td>${r.pais_nome || r.pais_cod}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:var(--exp)">${fmtUSD(r.exp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:#7AABDC">${fmtUSD(r.imp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:${r.saldo>=0?'var(--saldo-pos)':'var(--saldo-neg)'}">${fmtSaldo(r.saldo)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace">${r.cobertura != null ? r.cobertura.toFixed(2)+'x' : '—'}</td>
+      <td class="r" style="font-family:'DM Mono',monospace">${fmtPct(pct)}</td>
+    </tr>`;
+  }).join('') + `<tr class="total-row">
+    <td>TOTAL</td>
+    <td class="r">${fmtUSD(totExp)}</td>
+    <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r" style="color:${totExp-totImp>=0?'#5AC882':'#E06060'}">${fmtSaldo(totExp-totImp)}</td>
+    <td class="r">${totImp>0?(totExp/totImp).toFixed(2)+'x':'—'}</td>
+    <td class="r">100%</td>
+  </tr>`;
+
+  el('cnt-pais').textContent = rows.length + ' parceiros';
 }
 
-// ── Filtros ──────────────────────────────────────────────────────────────────
+// ── Render: Produtos ──────────────────────────────────────────────
+function renderProdutos() {
+  const f   = _subNcm;
+  const top = getTop();
+  const rows = aggNcms();
+
+  let chartRows;
+  if (f) {
+    chartRows = [..._ncms].filter(r=>r.fluxo===f).sort((a,b)=>b.valor_fob-a.valor_fob).slice(0,top);
+  } else {
+    chartRows = [...rows].sort((a,b)=>b.total-a.total).slice(0,top);
+  }
+  const labels = chartRows.map(r => (r.descricao||r.ncm||'').slice(0,42));
+  const values = chartRows.map(r => f === 'E' ? r.exp : f === 'I' ? r.imp : r.total);
+  const color  = f === 'I' ? 'rgba(43,104,168,.7)' : f === 'E' ? 'rgba(200,146,42,.7)' : 'rgba(46,125,82,.68)';
+  drawBarH('chart-ncm2', labels, values, { color });
+
+  const sorted = [...rows].sort((a,b) => {
+    const va = a[_sortNcm.col] ?? 0, vb = b[_sortNcm.col] ?? 0;
+    return typeof va === 'string' ? va.localeCompare(vb) * _sortNcm.dir : (va - vb) * _sortNcm.dir;
+  });
+
+  const totExp = rows.reduce((s,r)=>s+r.exp,0);
+  const totImp = rows.reduce((s,r)=>s+r.imp,0);
+  const grand  = totExp + totImp;
+
+  el('tbl-ncm-body').innerHTML = sorted.map(r => {
+    const pct = grand > 0 ? r.total / grand * 100 : 0;
+    return `<tr class="${r.saldo >= 0 ? 'pos' : 'neg'}">
+      <td title="${r.descricao}">${(r.descricao||r.ncm||'').slice(0,48)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:.67rem">${r.ncm}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:var(--exp)">${fmtUSD(r.exp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:#7AABDC">${fmtUSD(r.imp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:${r.saldo>=0?'var(--saldo-pos)':'var(--saldo-neg)'}">${fmtSaldo(r.saldo)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace">${fmtPct(pct)}</td>
+    </tr>`;
+  }).join('') + `<tr class="total-row">
+    <td colspan="2">TOTAL</td>
+    <td class="r">${fmtUSD(totExp)}</td>
+    <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r" style="color:${totExp-totImp>=0?'#5AC882':'#E06060'}">${fmtSaldo(totExp-totImp)}</td>
+    <td class="r">100%</td>
+  </tr>`;
+
+  el('cnt-ncm').textContent = rows.length + ' produtos';
+}
+
+// ── Render: Regiões ───────────────────────────────────────────────
+function renderRegioes() {
+  const f    = _subUf;
+  const rows = aggUfs();
+
+  const chartRows = [...rows].sort((a,b)=>b.total-a.total).slice(0, 27);
+  const labels = chartRows.map(r => r.uf_nome || r.uf || '--');
+  const values = chartRows.map(r => f === 'E' ? r.exp : f === 'I' ? r.imp : r.total);
+  const colors = chartRows.map(r => REGIAO_COR[r.regiao] || 'rgba(120,140,160,.7)');
+  drawBarH('chart-uf2', labels, values, { colors });
+
+  const sorted = [...rows].sort((a,b) => {
+    const va = a[_sortUf.col] ?? 0, vb = b[_sortUf.col] ?? 0;
+    return typeof va === 'string' ? va.localeCompare(vb) * _sortUf.dir : (va - vb) * _sortUf.dir;
+  });
+
+  const totExp = rows.reduce((s,r)=>s+r.exp,0);
+  const totImp = rows.reduce((s,r)=>s+r.imp,0);
+  const grand  = totExp + totImp;
+
+  el('tbl-uf-body').innerHTML = sorted.map(r => {
+    const pct = grand > 0 ? r.total / grand * 100 : 0;
+    const rc  = REGIAO_COR[r.regiao];
+    return `<tr>
+      <td>${r.uf_nome || r.uf || '—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:.67rem">${r.uf||'—'}</td>
+      <td>${rc ? `<span style="background:${rc};color:#fff;padding:.04rem .28rem;border-radius:3px;font-size:.55rem;font-family:'DM Mono',monospace">${r.regiao}</span>` : (r.regiao||'—')}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:var(--exp)">${fmtUSD(r.exp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:#7AABDC">${fmtUSD(r.imp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:${r.saldo>=0?'var(--saldo-pos)':'var(--saldo-neg)'}">${fmtSaldo(r.saldo)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace">${fmtPct(pct)}</td>
+    </tr>`;
+  }).join('') + `<tr class="total-row">
+    <td colspan="3">TOTAL</td>
+    <td class="r">${fmtUSD(totExp)}</td>
+    <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r" style="color:${totExp-totImp>=0?'#5AC882':'#E06060'}">${fmtSaldo(totExp-totImp)}</td>
+    <td class="r">100%</td>
+  </tr>`;
+
+  el('cnt-uf').textContent = rows.length + ' estados';
+}
+
+// ── Render: Balança Mensal ────────────────────────────────────────
+function renderBalanca() {
+  const { keys, labels, expData, impData, saldoData } = getMensalTimeline();
+  drawCombo('chart-balanca', labels, expData, impData, saldoData);
+
+  const totExp   = expData.reduce((s,v)=>s+v,0);
+  const totImp   = impData.reduce((s,v)=>s+v,0);
+  const totSaldo = totExp - totImp;
+
+  el('tbl-balanca-body').innerHTML = keys.map((k,i) => {
+    const [ano, mes] = k.split('-');
+    const exp = expData[i], imp = impData[i], sal = saldoData[i];
+    const cob = imp > 0 ? exp / imp : null;
+    return `<tr class="${sal >= 0 ? 'pos' : 'neg'}">
+      <td style="font-family:'DM Mono',monospace">${MESES_PT[+mes-1]}/${ano}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:var(--exp)">${fmtUSD(exp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:#7AABDC">${fmtUSD(imp)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;color:${sal>=0?'var(--saldo-pos)':'var(--saldo-neg)'}">${fmtSaldo(sal)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace">${cob != null ? cob.toFixed(2)+'x' : '—'}</td>
+    </tr>`;
+  }).join('') + `<tr class="total-row">
+    <td>TOTAL</td>
+    <td class="r">${fmtUSD(totExp)}</td>
+    <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r" style="color:${totSaldo>=0?'#5AC882':'#E06060'}">${fmtSaldo(totSaldo)}</td>
+    <td class="r">${totImp>0?(totExp/totImp).toFixed(2)+'x':'—'}</td>
+  </tr>`;
+
+  el('cnt-balanca').textContent = keys.length + ' meses';
+}
+
+// ── Sort ──────────────────────────────────────────────────────────
+function sortCmp(which, col) {
+  const s = which === 'pais' ? _sortPais : which === 'ncm' ? _sortNcm : _sortUf;
+  if (s.col === col) s.dir *= -1; else { s.col = col; s.dir = -1; }
+
+  const tblId = which === 'pais' ? 'tbl-pais' : which === 'ncm' ? 'tbl-ncm' : 'tbl-uf';
+  document.querySelectorAll('#' + tblId + ' th .si').forEach(si => {
+    const th = si.parentElement;
+    si.textContent = th.dataset.col === col ? (s.dir < 0 ? '↓' : '↑') : '⇅';
+  });
+
+  if (which === 'pais') renderParceiros();
+  else if (which === 'ncm') renderProdutos();
+  else renderRegioes();
+}
+
+// ── Render current tab ────────────────────────────────────────────
+function renderCurrentTab() {
+  if (_tab === 'executivo') renderExecutivo();
+  else if (_tab === 'parceiros') renderParceiros();
+  else if (_tab === 'produtos') renderProdutos();
+  else if (_tab === 'regioes') renderRegioes();
+  else if (_tab === 'balanca') renderBalanca();
+}
+
+// ── Load ──────────────────────────────────────────────────────────
+async function loadData() {
+  el('loading').classList.remove('hidden');
+  el('loading-text').textContent = 'Consultando banco de dados…';
+  try {
+    await fetchAll();
+    const anos  = [...new Set(_mensal.map(r=>r.ano))].sort();
+    const nMeses = Math.max(
+      _mensal.filter(r=>r.fluxo==='E').length,
+      _mensal.filter(r=>r.fluxo==='I').length
+    );
+    el('last-update').textContent =
+      `${nMeses} meses de dados · ${anos[0]||'—'}–${anos[anos.length-1]||'—'} · Fonte: MDIC/ComexStat`;
+    renderCurrentTab();
+  } catch(e) {
+    console.error(e);
+    el('loading-text').textContent = 'Erro ao carregar dados. Verifique a conexão.';
+    setTimeout(() => el('loading').classList.add('hidden'), 3500);
+    return;
+  }
+  el('loading').classList.add('hidden');
+}
+
+// ── Filter events ─────────────────────────────────────────────────
 let _debounce = null;
-function onFilterChange() {
-  clearTimeout(_debounce);
-  _debounce = setTimeout(loadData, 350);
-}
-function onFluxoChange() { onFilterChange(); }
+function onFilterChange() { clearTimeout(_debounce); _debounce = setTimeout(loadData, 380); }
 function onMetricaChange() {
   _metrica = document.querySelector('input[name="metrica"]:checked').value;
-  renderAll();
+  renderCurrentTab();
 }
 
 function resetFiltros() {
   document.querySelector('input[name="fluxo"][value=""]').checked = true;
-  document.getElementById('sel-ano-ini').value = String(_lastAvailableYear);
-  document.getElementById('sel-ano-fim').value = String(_lastAvailableYear);
-  document.getElementById('sel-top').value = '15';
+  el('sel-ano-ini').value = String(_lastYear);
+  el('sel-ano-fim').value = String(_lastYear);
+  el('sel-mes-ini').value = '1';
+  el('sel-mes-fim').value = '12';
+  el('sel-top').value = '15';
   document.querySelector('input[name="metrica"][value="valor"]').checked = true;
   _metrica = 'valor';
   loadData();
 }
 
-// ── Carregamento ─────────────────────────────────────────────────────────────
-async function loadData() {
-  document.getElementById('loading').classList.remove('hidden');
-  document.getElementById('loading-text').textContent = 'Consultando banco de dados…';
-  try {
-    await fetchAll();
-    renderAll();
-  } catch(e) {
-    console.error(e);
-    document.getElementById('loading-text').textContent = 'Erro ao carregar dados. Verifique a conexão.';
-    setTimeout(() => document.getElementById('loading').classList.add('hidden'), 3000);
-    return;
-  }
-  document.getElementById('loading').classList.add('hidden');
-}
-
-// ── Nav helpers ──────────────────────────────────────────────────────────────
+// ── Nav helpers ───────────────────────────────────────────────────
 function toggleMenu() {
-  const links = document.getElementById('nav-links');
-  const btn   = document.getElementById('nav-hamburger');
-  links.classList.toggle('open');
-  btn.classList.toggle('open');
+  el('nav-links').classList.toggle('open');
+  el('nav-hamburger').classList.toggle('open');
 }
 function closeMenu() {
-  document.getElementById('nav-links').classList.remove('open');
-  document.getElementById('nav-hamburger').classList.remove('open');
+  el('nav-links').classList.remove('open');
+  el('nav-hamburger').classList.remove('open');
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────
 async function init() {
   try {
     const refs = await fetch(`${API_BASE}/refs`).then(r => r.json());
     const anos = (refs.anos || []).map(Number).sort();
     if (anos.length) {
-      _lastAvailableYear = anos[anos.length - 1];
-      document.getElementById('sel-ano-ini').value = String(_lastAvailableYear);
-      document.getElementById('sel-ano-fim').value = String(_lastAvailableYear);
+      _lastYear = anos[anos.length - 1];
+      el('sel-ano-ini').value = String(_lastYear);
+      el('sel-ano-fim').value = String(_lastYear);
     }
-  } catch(e) { /* usa padrão do HTML */ }
+  } catch(e) {}
+
+  // Restore tab from URL hash
+  const hash = location.hash.slice(1);
+  if (['executivo','parceiros','produtos','regioes','balanca'].includes(hash)) {
+    _tab = hash;
+    document.querySelectorAll('.main-tab').forEach(b =>
+      b.classList.toggle('active', b.dataset.tab === _tab)
+    );
+    document.querySelectorAll('.tab-pane').forEach(p =>
+      p.classList.toggle('active', p.id === 'pane-' + _tab)
+    );
+  }
+
   loadData();
 }
 init();

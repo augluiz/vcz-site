@@ -1140,6 +1140,10 @@ function computeTrends(data, overrideDate=null){
   baseAll.filter(r=>r.data>=lyStart&&r.data<=lyEnd).forEach(r=>{
     if(!lyMap.has(r.produto))lyMap.set(r.produto,[]);lyMap.get(r.produto).push(r);
   });
+  const maMap=new Map();
+  baseAll.filter(r=>r.data>=startN&&r.data<=last).forEach(r=>{
+    if(!maMap.has(r.produto))maMap.set(r.produto,[]);maMap.get(r.produto).push(r);
+  });
   const out=[];
   map.forEach(p=>{
     const rows=p.rows, lastRows=rows.filter(r=>r.data===last);
@@ -1147,7 +1151,7 @@ function computeTrends(data, overrideDate=null){
     const pUlt=avg(lastRows.map(r=>r.pcom));
     const pMax=Math.max(...lastRows.map(r=>r.pmax));
     const pMin=Math.min(...lastRows.map(r=>r.pmin));
-    const pMed=avg(rows.filter(r=>r.data>=startN&&r.data<=last).map(r=>r.pcom));
+    const pMed=avg((maMap.get(p.produto)||[]).map(r=>r.pcom));
     const lyRows=lyMap.get(p.produto)||[];
     const pLY=lyRows.length?avg(lyRows.map(r=>r.pcom)):null;
     const varAno=pLY!=null?(pUlt-pLY)/pLY*100:null;
@@ -1176,7 +1180,12 @@ function drawPreco(key){
   const pCom=dates.map(d=>avg(byDate.get(d).map(r=>r.pcom)));
   const pMax=dates.map(d=>Math.max(...byDate.get(d).map(r=>r.pmax)));
   const pMin=dates.map(d=>Math.min(...byDate.get(d).map(r=>r.pmin)));
-  const pMov=movAvg(pCom,F.n);
+  const pMov=dates.map((d,i)=>{
+    const start=addD(d,-(F.n-1));
+    const lo=dates.findIndex(dd=>dd>=start);
+    const sl=pCom.slice(lo<0?0:lo,i+1).filter(v=>v!=null&&!isNaN(v));
+    return sl.length?sl.reduce((a,b)=>a+b,0)/sl.length:null;
+  });
   lbl.textContent=key;
   if(charts.preco) charts.preco.destroy();
   wrap.innerHTML='<canvas id="cv-preco"></canvas>';
