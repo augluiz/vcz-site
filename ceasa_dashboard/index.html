@@ -228,7 +228,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .pos{color:var(--pos)!important;font-weight:600}.neg{color:var(--neg)!important;font-weight:600}
 .prev-up{background:#E6F5EC!important;color:#1E6B35!important}.prev-dn{background:#FDECEA!important;color:#C0392B!important}
 .dt .col-prod{width:auto;min-width:180px}.dt .col-tend{width:78px}.dt .col-val{width:88px}.dt .col-var{width:84px}.dt .col-embal{width:100px}.dt td.col-embal{font-size:.67rem;color:var(--steel)}.dt .col-peso{width:60px;text-align:right}.dt td.col-peso{font-size:.68rem;color:var(--steel)}
-.full-tbox .dt{min-width:760px}.tbox .dt{min-width:500px}
+.full-tbox .dt{min-width:860px}.tbox .dt{min-width:500px}
 .full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
 .full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
 .full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600;white-space:nowrap}
@@ -701,6 +701,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
             <th class="col-val r" data-col="pPrev" title="Cotação do dia imediatamente anterior">Cotação Dia Anterior <span class="si"></span></th>
             <th class="col-val r col-xp" data-col="pMax" title="Maior preço praticado no dia selecionado">Máx. <span class="si"></span></th>
             <th class="col-val r col-xp" data-col="pMin" title="Menor preço praticado no dia selecionado">Mín. <span class="si"></span></th>
+            <th class="col-val r col-xp" data-col="pKg" title="Preço por kg — Cotação ÷ Peso de conversão">R$/kg <span class="si"></span></th>
             <th class="col-val r" data-col="pMed" title="Média móvel do preço comum nos últimos N dias">Média <span class="si"></span></th>
             <th class="col-val r col-xp" data-col="pLY" title="Preço médio no mesmo período do ano passado">Ano Ant. <span class="si"></span></th>
             <th class="col-var r col-xp" data-col="varAno" title="Variação percentual entre o Preço do Dia e o Ano Anterior">Var. Ano <span class="si"></span></th>
@@ -1157,7 +1158,8 @@ function computeTrends(data, overrideDate=null){
     const prodDates=[...new Set(rows.map(r=>r.data))].sort();
     const prevDate=prodDates.length>=2?prodDates[prodDates.length-2]:null;
     const pPrev=prevDate?avg(rows.filter(r=>r.data===prevDate).map(r=>r.pcom)):null;
-    out.push({produto:p.produto,embal:p.embal||'',convKg:p.convKg,pUlt,pPrev,pMax,pMin,pMed,pLY,varAno,varAnoAbs,tend});
+    const pKg=(pUlt!=null&&p.convKg!=null&&!isNaN(p.convKg)&&p.convKg>0)?pUlt/p.convKg:null;
+    out.push({produto:p.produto,embal:p.embal||'',convKg:p.convKg,pUlt,pPrev,pMax,pMin,pMed,pLY,varAno,varAnoAbs,tend,pKg});
   });
   return out;
 }
@@ -1389,13 +1391,14 @@ function tRow(t){
     <td class="col-val r${t.pPrev!=null?(t.pPrev>t.pUlt?' prev-up':t.pPrev<t.pUlt?' prev-dn':''):''}">${t.pPrev!=null?fmtR(t.pPrev):'—'}</td>
     <td class="col-val r col-xp">${fmtR(t.pMax)}</td>
     <td class="col-val r col-xp">${fmtR(t.pMin)}</td>
+    <td class="col-val r col-xp">${t.pKg!=null?fmtR(t.pKg):'—'}</td>
     <td class="col-val r">${fmtR(t.pMed)}</td>
     <td class="col-val r col-xp">${fmtR(t.pLY)}</td>
     <td class="col-var r col-xp ${vc}">${t.varAno!=null?vs+fmt(t.varAno,2)+'%':'—'}</td>
   </tr>`;
 }
 const EMPTY_T=`<tr><td colspan="6" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum produto</td></tr>`;
-const EMPTY_G=`<tr><td colspan="10" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum produto</td></tr>`;
+const EMPTY_G=`<tr><td colspan="11" style="text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:.67rem;color:#9AAABB">Nenhum produto</td></tr>`;
 function fillTrend(id,rows){document.getElementById(id).innerHTML=rows.length?rows.map(tRowTrend).join(''):EMPTY_T;}
 function renderGeralTable(){
   const data=tableFiltered();
