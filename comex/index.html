@@ -741,7 +741,7 @@ async function fetchAll() {
   // Renderiza parcialmente ao receber /mensal (mais rápido)
   _mensal = await mensalP;
   if (_tab === 'executivo' || _tab === 'balanca') {
-    _updateHeader();
+    el('loading-text').textContent = 'Carregando parceiros, produtos e regiões…';
     el('loading').classList.add('hidden');
     renderCurrentTab();
   }
@@ -1185,7 +1185,14 @@ async function loadData() {
   el('loading').classList.remove('hidden');
   el('loading-text').textContent = 'Consultando banco de dados…';
   try {
-    await fetchAll();
+    const cached = _getCached();
+    if (cached) {
+      ({ mensal: _mensal, paises: _paises, ncms: _ncms, ufs: _ufs } = cached);
+      el('loading-text').textContent = 'Dados em cache…';
+    } else {
+      await fetchAll();
+      _setCache({ mensal: _mensal, paises: _paises, ncms: _ncms, ufs: _ufs });
+    }
     const anos  = [...new Set(_mensal.map(r=>r.ano))].sort();
     const nMeses = Math.max(
       _mensal.filter(r=>r.fluxo==='E').length,
