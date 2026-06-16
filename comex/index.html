@@ -43,6 +43,37 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
 
+/* ── Welcome modal ─────────────────────────────────────────── */
+#welcome-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:1rem}
+#welcome-modal.hidden{display:none}
+.wm-box{background:var(--navy2);border:1px solid rgba(200,146,42,.35);border-top:3px solid var(--gold);border-radius:8px;max-width:560px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:wmIn .28s ease}
+@keyframes wmIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.wm-head{padding:1.4rem 1.6rem .8rem;display:flex;align-items:flex-start;gap:1rem}
+.wm-icon{width:40px;height:40px;flex-shrink:0;background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.wm-titles{flex:1}
+.wm-titles .label{font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:.3rem}
+.wm-titles h2{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--warm-white);font-weight:600;line-height:1.2;margin:0}
+.wm-body{padding:0 1.6rem 1.2rem;display:flex;flex-direction:column;gap:.9rem}
+.wm-desc{font-size:.85rem;color:var(--steel);line-height:1.6}
+.wm-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem}
+.wm-tab{background:rgba(200,146,42,.07);border:1px solid rgba(200,146,42,.18);border-radius:4px;padding:.45rem .3rem;text-align:center}
+.wm-tab .wm-tab-icon{font-size:.9rem;display:block;margin-bottom:.2rem}
+.wm-tab span:last-child{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--steel);text-transform:uppercase;letter-spacing:.06em}
+.wm-hint{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(200,146,42,.6);background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.15);border-radius:4px;padding:.5rem .7rem;line-height:1.5}
+.wm-footer{padding:.9rem 1.6rem 1.2rem;border-top:1px solid rgba(200,146,42,.1);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.wm-loading-row{display:flex;align-items:center;gap:.6rem}
+.wm-spinner{width:14px;height:14px;border:2px solid rgba(200,146,42,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite;flex-shrink:0}
+.wm-status{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--steel)}
+.wm-btn{font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;background:var(--gold);color:var(--navy);border:none;border-radius:4px;padding:.5rem 1.1rem;cursor:pointer;white-space:nowrap;transition:background .15s}
+.wm-btn:hover{background:#E2AC4C}
+@media(max-width:500px){
+  .wm-tabs{grid-template-columns:repeat(3,1fr)}
+  .wm-head{padding:1rem 1.1rem .6rem}
+  .wm-body{padding:0 1.1rem 1rem}
+  .wm-footer{padding:.7rem 1.1rem 1rem;flex-direction:column;align-items:flex-start}
+  .wm-titles h2{font-size:1.25rem}
+}
+
 /* ── Nav ───────────────────────────────────────────────────── */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,.15)}
 .nav-logo img{height:46px;width:auto}
@@ -226,6 +257,40 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 <div id="loading">
   <div class="spinner"></div>
   <p class="loading-text" id="loading-text">Carregando dados ComexStat…</p>
+</div>
+
+<div id="welcome-modal">
+  <div class="wm-box">
+    <div class="wm-head">
+      <div class="wm-icon">🌐</div>
+      <div class="wm-titles">
+        <p class="label">VCZ Consultoria · Dashboard Público</p>
+        <h2>Balança Comercial Brasileira</h2>
+      </div>
+    </div>
+    <div class="wm-body">
+      <p class="wm-desc">
+        Explore os dados oficiais de comércio exterior do Brasil, extraídos diretamente do
+        <strong style="color:var(--warm-white)">ComexStat / MDIC</strong>. Filtre por período,
+        fluxo e métrica — os gráficos e tabelas atualizam em tempo real.
+      </p>
+      <div class="wm-tabs">
+        <div class="wm-tab"><span class="wm-tab-icon">📊</span><span>Executivo</span></div>
+        <div class="wm-tab"><span class="wm-tab-icon">🌍</span><span>Parceiros</span></div>
+        <div class="wm-tab"><span class="wm-tab-icon">📦</span><span>Produtos</span></div>
+        <div class="wm-tab"><span class="wm-tab-icon">🗺️</span><span>Regiões</span></div>
+        <div class="wm-tab"><span class="wm-tab-icon">⚖️</span><span>Balança</span></div>
+      </div>
+      <p class="wm-hint">⏳ O servidor de dados pode levar até 20 segundos para responder na primeira consulta do dia — é gratuito e hiberna quando inativo.</p>
+    </div>
+    <div class="wm-footer">
+      <div class="wm-loading-row">
+        <div class="wm-spinner"></div>
+        <span class="wm-status" id="wm-status-text">Conectando ao servidor…</span>
+      </div>
+      <button class="wm-btn" onclick="closeWelcome()">Entendido</button>
+    </div>
+  </div>
 </div>
 
 <nav>
@@ -638,6 +703,24 @@ const API_BASE = 'https://vcz-api.onrender.com/api/v1/comex/publico';
 
 // Dispara ping imediatamente para acordar o Render (cold start)
 fetch(`${API_BASE}/ping`).catch(() => {});
+
+// ── Welcome modal ─────────────────────────────────────────────────
+let _welcomeClosed = false;
+function closeWelcome() {
+  _welcomeClosed = true;
+  el('welcome-modal').classList.add('hidden');
+  el('loading').classList.add('hidden');
+}
+function _autoCloseWelcome() {
+  if (!_welcomeClosed) {
+    _welcomeClosed = true;
+    el('welcome-modal').classList.add('hidden');
+  }
+}
+function _setWmStatus(txt) {
+  const s = document.getElementById('wm-status-text');
+  if (s) s.textContent = txt;
+}
 
 // ── Estado ────────────────────────────────────────────────────────
 let _mensal = [], _paises = [], _ncms = [], _ufs = [];
@@ -1184,14 +1267,18 @@ function renderCurrentTab() {
 async function loadData() {
   el('loading').classList.remove('hidden');
   el('loading-text').textContent = 'Consultando banco de dados…';
+  _setWmStatus('Conectando ao servidor…');
   try {
     const cached = _getCached();
     if (cached) {
       ({ mensal: _mensal, paises: _paises, ncms: _ncms, ufs: _ufs } = cached);
       el('loading-text').textContent = 'Dados em cache…';
+      _setWmStatus('Dados carregados do cache ✓');
     } else {
+      _setWmStatus('Aguardando resposta do servidor…');
       await fetchAll();
       _setCache({ mensal: _mensal, paises: _paises, ncms: _ncms, ufs: _ufs });
+      _setWmStatus('Dados carregados ✓');
     }
     const anos  = [...new Set(_mensal.map(r=>r.ano))].sort();
     const nMeses = Math.max(
@@ -1201,9 +1288,11 @@ async function loadData() {
     el('last-update').textContent =
       `${nMeses} meses de dados · ${anos[0]||'—'}–${anos[anos.length-1]||'—'} · Fonte: MDIC/ComexStat`;
     renderCurrentTab();
+    _autoCloseWelcome();
   } catch(e) {
     console.error(e);
     el('loading-text').textContent = 'Erro ao carregar dados. Verifique a conexão.';
+    _setWmStatus('Erro de conexão — tente novamente.');
     setTimeout(() => el('loading').classList.add('hidden'), 3500);
     return;
   }
