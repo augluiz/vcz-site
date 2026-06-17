@@ -167,8 +167,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .mini-rank-item:last-child{border-bottom:none}
 .mini-rank-item:hover{background:rgba(200,146,42,.05)}
 .mini-rank-pos{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);width:18px;flex-shrink:0}
-.mini-rank-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mini-rank-val{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text2)}
+.mini-rank-info{flex:1;min-width:0}
+.mini-rank-name{font-family:'DM Sans',sans-serif;font-size:.74rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:.18rem}
+.mini-rank-bar-wrap{height:3px;background:rgba(200,146,42,.1);border-radius:2px}
+.mini-rank-bar-fill{height:100%;background:rgba(200,146,42,.55);border-radius:2px;transition:width .5s ease}
+.mini-rank-right{text-align:right;flex-shrink:0;min-width:68px}
+.mini-rank-val{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text2);display:block}
+.mini-rank-pct{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--gold-aged);display:block}
+/* ── KPI delta (YoY) ────────────────────────────────────────── */
+.kpi-delta{font-family:'DM Mono',monospace;font-size:.59rem;padding:.09rem .32rem;border-radius:3px;display:inline-block;margin-top:.06rem;width:fit-content}
+.kpi-delta.up{background:rgba(90,200,130,.12);color:#5AC882}
+.kpi-delta.dn{background:rgba(224,96,96,.12);color:#E06060}
+/* ── Análise grid ───────────────────────────────────────────── */
+.exec-analise-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;padding:.65rem 1.5rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.1)}
+.analise-card{background:rgba(200,146,42,.04);border:1px solid rgba(200,146,42,.14);border-left:2.5px solid rgba(200,146,42,.5);border-radius:4px;padding:.62rem .85rem;display:flex;flex-direction:column;gap:.16rem}
+.analise-lbl{font-family:'DM Mono',monospace;font-size:.47rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em}
+.analise-val{font-family:'DM Mono',monospace;font-size:.92rem;color:#F2EAD8;font-weight:500;line-height:1.15}
+.analise-val.up{color:#5AC882}.analise-val.dn{color:#E06060}
+.analise-txt{font-family:'DM Sans',sans-serif;font-size:.63rem;color:#7A9AB0;line-height:1.4}
 
 /* ── Chart cards ────────────────────────────────────────────── */
 .chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
@@ -227,6 +243,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 @media(max-width:1200px){.exec-bottom{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:1100px){
   .exec-kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .exec-analise-grid{grid-template-columns:repeat(3,1fr)}
   .exec-insight-row{grid-template-columns:1fr 1fr}
   .exec-bottom{grid-template-columns:1fr}
   .dual-pane{grid-template-columns:1fr}
@@ -240,6 +257,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .tf-vsep{display:none}
   .about-strip{padding:.75rem 1.2rem}
   .exec-kpi-grid{padding:.6rem .9rem;gap:.5rem}
+  .exec-analise-grid{grid-template-columns:repeat(2,1fr);padding:.5rem .9rem;gap:.5rem}
   .exec-insight-row{grid-template-columns:1fr;padding:.6rem .9rem}
   .exec-bottom{padding:.6rem .9rem;gap:.75rem}
   .dual-pane{padding:.6rem .9rem}
@@ -417,46 +435,59 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div id="pane-executivo" class="tab-pane active">
 
-  <!-- KPI strip -->
+  <!-- KPI strip com YoY -->
   <div class="exec-kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">Total Exportações</div>
+      <div class="kpi-label">Exportações (FOB)</div>
       <div class="kpi-value exp" id="kpi-exp">—</div>
+      <div class="kpi-delta" id="kpi-exp-delta"></div>
       <div class="kpi-sub" id="kpi-exp-sub">—</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Total Importações</div>
+      <div class="kpi-label">Importações (FOB)</div>
       <div class="kpi-value imp" id="kpi-imp">—</div>
+      <div class="kpi-delta" id="kpi-imp-delta"></div>
       <div class="kpi-sub" id="kpi-imp-sub">—</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Saldo Comercial</div>
       <div class="kpi-value" id="kpi-saldo">—</div>
+      <div class="kpi-delta" id="kpi-saldo-delta"></div>
       <div class="kpi-sub" id="kpi-saldo-sub">Exportações − Importações</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Cobertura (EXP/IMP)</div>
+      <div class="kpi-label">Cobertura EXP/IMP</div>
       <div class="kpi-value" id="kpi-cob" style="font-size:1rem">—</div>
       <div class="kpi-sub" id="kpi-cob-sub">—</div>
     </div>
   </div>
 
-  <!-- Insight cards -->
-  <div class="exec-insight-row">
-    <div class="insight-card">
-      <div class="insight-label">Melhor Mês — Exportações</div>
-      <div class="insight-value" id="ins-mes-exp-val">—</div>
-      <div class="insight-sub" id="ins-mes-exp-sub">—</div>
+  <!-- 5 cards analíticos -->
+  <div class="exec-analise-grid">
+    <div class="analise-card">
+      <div class="analise-lbl">Concentração de Destinos</div>
+      <div class="analise-val" id="anl-conc-val">—</div>
+      <div class="analise-txt" id="anl-conc-txt">Top 3 países / total EXP</div>
     </div>
-    <div class="insight-card">
-      <div class="insight-label">Principal Parceiro (EXP)</div>
-      <div class="insight-value" id="ins-parceiro-val">—</div>
-      <div class="insight-sub" id="ins-parceiro-sub">—</div>
+    <div class="analise-card">
+      <div class="analise-lbl">Pauta Exportadora</div>
+      <div class="analise-val" id="anl-pauta-val">—</div>
+      <div class="analise-txt" id="anl-pauta-txt">Top 5 produtos / total EXP</div>
     </div>
-    <div class="insight-card">
-      <div class="insight-label">Produto Líder (EXP)</div>
-      <div class="insight-value" id="ins-prod-val" style="font-size:.82rem">—</div>
-      <div class="insight-sub" id="ins-prod-sub">—</div>
+    <div class="analise-card">
+      <div class="analise-lbl">Momentum EXP (M/M)</div>
+      <div class="analise-val" id="anl-mom-val">—</div>
+      <div class="analise-txt" id="anl-mom-txt">Último mês vs média anterior</div>
+    </div>
+    <div class="analise-card">
+      <div class="analise-lbl">Saldo vs Ano Anterior</div>
+      <div class="analise-val" id="anl-saldo-val">—</div>
+      <div class="analise-txt" id="anl-saldo-txt">Comparativo YoY</div>
+    </div>
+    <div class="analise-card">
+      <div class="analise-lbl">Principal Origem IMP</div>
+      <div class="analise-val" id="anl-imp1-val">—</div>
+      <div class="analise-txt" id="anl-imp1-txt">Maior fornecedor externo</div>
     </div>
   </div>
 
@@ -468,6 +499,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       <div class="leg">
         <div class="leg-item"><div class="leg-dot" style="background:#C8922A"></div>Exportações</div>
         <div class="leg-item"><div class="leg-dot" style="background:#2B68A8"></div>Importações</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#5AC882;border-radius:2px"></div>Saldo</div>
       </div>
       <div class="chart-section">
         <canvas id="chart-evo"></canvas>
@@ -476,12 +508,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
     </div>
 
     <div class="mini-rank">
-      <div class="mini-rank-head">Top Parceiros</div>
+      <div class="mini-rank-head">Top Destinos — Exportações</div>
       <div id="mini-pais"></div>
     </div>
 
     <div class="mini-rank">
-      <div class="mini-rank-head">Top Produtos (NCM)</div>
+      <div class="mini-rank-head">Top Produtos — Exportações</div>
       <div id="mini-ncm"></div>
     </div>
 
@@ -813,8 +845,12 @@ function _buildQs() {
 async function fetchAll() {
   const qs = _buildQs();
 
+  // Mensal: busca 1 ano extra para comparativo YoY
+  const qsMensal = new URLSearchParams(qs);
+  qsMensal.set('ano_ini', Math.max(getAnoIni() - 1, 2020));
+
   // Lança todas as 4 requisições em paralelo imediatamente
-  const mensalP = fetch(`${API_BASE}/mensal?${qs}`).then(r => r.json());
+  const mensalP = fetch(`${API_BASE}/mensal?${qsMensal}`).then(r => r.json());
   const paisesP = fetch(`${API_BASE}/por-pais?${qs}`).then(r => r.json());
   const ncmsP   = fetch(`${API_BASE}/por-ncm?${qs}`).then(r => r.json());
   const ufsP    = fetch(`${API_BASE}/por-uf?${qs}`).then(r => r.json());
@@ -872,20 +908,26 @@ function drawBarH(canvasId, labels, values, opts) {
   });
 }
 
-function drawEvo(canvasId, labels, expData, impData) {
+function drawEvo(canvasId, labels, expData, impData, saldoData) {
   destroyChart(canvasId);
   const ctx = el(canvasId);
   if (!ctx) return;
   const datasets = [];
   if (expData) datasets.push({
-    label: 'Exportações', data: expData,
-    borderColor: '#C8922A', backgroundColor: 'rgba(200,146,42,.1)',
-    fill: true, tension: .3, pointRadius: 2, pointHoverRadius: 5,
+    label: 'Exportações', data: expData, yAxisID: 'y',
+    borderColor: '#C8922A', backgroundColor: 'rgba(200,146,42,.08)',
+    fill: true, tension: .35, pointRadius: 2.5, pointHoverRadius: 5, borderWidth: 2,
   });
   if (impData) datasets.push({
-    label: 'Importações', data: impData,
-    borderColor: '#2B68A8', backgroundColor: 'rgba(43,104,168,.07)',
-    fill: false, tension: .3, pointRadius: 2, pointHoverRadius: 5,
+    label: 'Importações', data: impData, yAxisID: 'y',
+    borderColor: '#2B68A8', backgroundColor: 'rgba(43,104,168,.06)',
+    fill: false, tension: .35, pointRadius: 2.5, pointHoverRadius: 5, borderWidth: 2,
+  });
+  if (saldoData && expData && impData) datasets.push({
+    label: 'Saldo', data: saldoData, yAxisID: 'y2', type: 'bar',
+    backgroundColor: saldoData.map(v => v >= 0 ? 'rgba(90,200,130,.35)' : 'rgba(224,96,96,.35)'),
+    borderColor:     saldoData.map(v => v >= 0 ? 'rgba(90,200,130,.7)' : 'rgba(224,96,96,.7)'),
+    borderWidth: 1, borderRadius: 2,
   });
   _charts[canvasId] = new Chart(ctx, {
     type: 'line',
@@ -898,8 +940,9 @@ function drawEvo(canvasId, labels, expData, impData) {
         tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fmtVal(c.raw)}` } }
       },
       scales: {
-        x: { grid: { color: 'rgba(26,36,51,.07)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 45 } },
-        y: { grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } }
+        x:  { grid: { color: 'rgba(26,36,51,.07)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', maxRotation: 45 } },
+        y:  { position: 'left',  grid: { color: 'rgba(26,36,51,.06)' }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#7A8A9A', callback: v => fmtVal(v) } },
+        y2: { position: 'right', grid: { display: false }, ticks: { font: { family: 'DM Mono', size: 9 }, color: '#5AC882', callback: v => fmtVal(v) } },
       }
     }
   });
@@ -988,10 +1031,13 @@ function aggUfs() {
 }
 
 function getMensalTimeline() {
-  const keys = [...new Set(_mensal.map(r => `${r.ano}-${String(r.mes).padStart(2,'0')}`))] .sort();
+  // Filtra apenas o período selecionado (exclui o ano extra do YoY)
+  const anoIni = getAnoIni(), anoFim = getAnoFim();
+  const curr = _mensal.filter(r => r.ano >= anoIni && r.ano <= anoFim);
+  const keys = [...new Set(curr.map(r => `${r.ano}-${String(r.mes).padStart(2,'0')}`))] .sort();
   const mapE = {}, mapI = {};
-  _mensal.filter(r => r.fluxo === 'E').forEach(r => { mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
-  _mensal.filter(r => r.fluxo === 'I').forEach(r => { mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
+  curr.filter(r => r.fluxo === 'E').forEach(r => { mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
+  curr.filter(r => r.fluxo === 'I').forEach(r => { mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`] = r[valKey()]; });
   const expData   = keys.map(k => mapE[k] || 0);
   const impData   = keys.map(k => mapI[k] || 0);
   const saldoData = keys.map(k => (mapE[k] || 0) - (mapI[k] || 0));
@@ -999,70 +1045,137 @@ function getMensalTimeline() {
   return { keys, labels, expData, impData, saldoData };
 }
 
+// ── Helpers executivo ─────────────────────────────────────────────
+function _setDelta(id, pct) {
+  const d = el(id);
+  if (!d) return;
+  if (pct === null || isNaN(pct) || !isFinite(pct)) { d.textContent = ''; return; }
+  const up = pct >= 0;
+  d.textContent = (up ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(1) + '% vs ano ant.';
+  d.className = 'kpi-delta ' + (up ? 'up' : 'dn');
+}
+
+function _miniRankHTML(rows, valFn, totalForPct) {
+  const max = rows[0] ? valFn(rows[0]) : 1;
+  return rows.map((r, i) => {
+    const v = valFn(r);
+    const pct = totalForPct > 0 ? v / totalForPct * 100 : 0;
+    const bar = max > 0 ? v / max * 100 : 0;
+    return `<div class="mini-rank-item">
+      <span class="mini-rank-pos">${i+1}.</span>
+      <div class="mini-rank-info">
+        <div class="mini-rank-name" title="${r._label}">${r._label}</div>
+        <div class="mini-rank-bar-wrap"><div class="mini-rank-bar-fill" style="width:${bar}%"></div></div>
+      </div>
+      <div class="mini-rank-right">
+        <span class="mini-rank-val">${fmtUSD(v)}</span>
+        <span class="mini-rank-pct">${pct.toFixed(1)}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // ── Render: Executivo ─────────────────────────────────────────────
 function renderExecutivo() {
-  const totExp = _mensal.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0);
-  const totImp = _mensal.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0);
-  const saldo  = totExp - totImp;
-  const cob    = totImp > 0 ? totExp / totImp : 0;
+  const anoIni = getAnoIni(), anoFim = getAnoFim();
+  const mesIni = getMesIni(), mesFim = getMesFim();
 
+  // Período atual vs período anterior (YoY)
+  const curr = _mensal.filter(r => r.ano >= anoIni && r.ano <= anoFim);
+  const prev = _mensal.filter(r => r.ano >= anoIni-1 && r.ano <= anoFim-1 && r.mes >= mesIni && r.mes <= mesFim);
+
+  const totExp  = curr.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0);
+  const totImp  = curr.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0);
+  const saldo   = totExp - totImp;
+  const cob     = totImp > 0 ? totExp / totImp : 0;
+  const nMeses  = curr.filter(r=>r.fluxo==='E').length || curr.filter(r=>r.fluxo==='I').length;
+
+  const prevExp  = prev.filter(r=>r.fluxo==='E').reduce((s,r)=>s+r.valor_fob,0);
+  const prevImp  = prev.filter(r=>r.fluxo==='I').reduce((s,r)=>s+r.valor_fob,0);
+  const prevSald = prevExp - prevImp;
+  const pct      = (c,p) => p > 0 ? (c-p)/p*100 : null;
+
+  // ── KPIs ──
   el('kpi-exp').textContent = fmtUSD(totExp);
-  el('kpi-exp-sub').textContent = _mensal.filter(r=>r.fluxo==='E').length + ' meses · período selecionado';
+  el('kpi-exp-sub').textContent = nMeses + ' meses · período selecionado';
+  _setDelta('kpi-exp-delta', pct(totExp, prevExp));
+
   el('kpi-imp').textContent = fmtUSD(totImp);
-  el('kpi-imp-sub').textContent = _mensal.filter(r=>r.fluxo==='I').length + ' meses · período selecionado';
+  el('kpi-imp-sub').textContent = nMeses + ' meses · período selecionado';
+  _setDelta('kpi-imp-delta', pct(totImp, prevImp));
 
-  const kpiSaldo = el('kpi-saldo');
-  kpiSaldo.textContent = fmtSaldo(saldo);
-  kpiSaldo.className = 'kpi-value ' + (saldo >= 0 ? 'pos' : 'neg');
+  el('kpi-saldo').textContent = fmtSaldo(saldo);
+  el('kpi-saldo').className = 'kpi-value ' + (saldo >= 0 ? 'pos' : 'neg');
   el('kpi-saldo-sub').textContent = saldo >= 0 ? 'Superávit comercial' : 'Déficit comercial';
+  _setDelta('kpi-saldo-delta', prevSald !== 0 ? pct(Math.abs(saldo), Math.abs(prevSald)) : null);
 
-  const kpiCob = el('kpi-cob');
-  kpiCob.textContent = cob > 0 ? cob.toFixed(2) + 'x' : '—';
-  kpiCob.className = 'kpi-value ' + (cob >= 1 ? 'pos' : cob > 0 ? 'neg' : '');
-  el('kpi-cob-sub').textContent = cob >= 1 ? 'EXP supera IMP' : cob > 0 ? 'IMP supera EXP' : 'EXP / IMP';
+  el('kpi-cob').textContent = cob > 0 ? cob.toFixed(2) + '×' : '—';
+  el('kpi-cob').className = 'kpi-value ' + (cob >= 1 ? 'pos' : cob > 0 ? 'neg' : '');
+  el('kpi-cob-sub').textContent = cob >= 1 ? `EXP cobre ${cob.toFixed(2)}× as importações` : cob > 0 ? 'Importações superam exportações' : '—';
 
-  // Insights
-  const bestExpMonth = [..._mensal].filter(r=>r.fluxo==='E').sort((a,b)=>b.valor_fob-a.valor_fob)[0];
-  if (bestExpMonth) {
-    el('ins-mes-exp-val').textContent = fmtUSD(bestExpMonth.valor_fob);
-    el('ins-mes-exp-sub').textContent = MESES_FULL[bestExpMonth.mes-1] + ' de ' + bestExpMonth.ano;
+  // ── Análises ──
+  const paisAgg = aggPaises();
+  const ncmAgg  = aggNcms();
+
+  // 1 — Concentração de destinos (top 3 EXP)
+  const top3exp = [...paisAgg].sort((a,b)=>b.exp-a.exp).slice(0,3);
+  const concPct = totExp > 0 ? top3exp.reduce((s,r)=>s+r.exp,0) / totExp * 100 : 0;
+  el('anl-conc-val').textContent = concPct.toFixed(1) + '%';
+  el('anl-conc-val').className = 'analise-val';
+  el('anl-conc-txt').textContent = 'Top 3: ' + top3exp.map(r=>r.pais_nome.split(' ')[0]).join(', ');
+
+  // 2 — Pauta exportadora (top 5 NCM EXP)
+  const top5ncm = [...ncmAgg].sort((a,b)=>b.exp-a.exp).slice(0,5);
+  const pautaPct = totExp > 0 ? top5ncm.reduce((s,r)=>s+r.exp,0) / totExp * 100 : 0;
+  el('anl-pauta-val').textContent = pautaPct.toFixed(1) + '%';
+  el('anl-pauta-txt').textContent = top5ncm.slice(0,2).map(r=>(r.descricao||'').split(/[ ,]/)[0]).join(' · ') + (top5ncm.length > 2 ? ' + outros' : '');
+
+  // 3 — Momentum EXP (último mês vs média dos anteriores)
+  const expMonths = curr.filter(r=>r.fluxo==='E').sort((a,b)=>a.ano===b.ano?a.mes-b.mes:a.ano-b.ano);
+  const last = expMonths[expMonths.length-1];
+  const avgPrev = expMonths.length > 1 ? expMonths.slice(0,-1).reduce((s,r)=>s+r.valor_fob,0)/(expMonths.length-1) : 0;
+  if (last && avgPrev > 0) {
+    const mom = (last.valor_fob - avgPrev) / avgPrev * 100;
+    el('anl-mom-val').textContent = (mom>=0?'▲ +':'▼ ') + Math.abs(mom).toFixed(1) + '%';
+    el('anl-mom-val').className = 'analise-val ' + (mom>=0?'up':'dn');
+    el('anl-mom-txt').textContent = `${MESES_PT[last.mes-1]}/${last.ano}: ${fmtUSD(last.valor_fob)} vs média ${fmtUSD(avgPrev)}`;
+  } else {
+    el('anl-mom-val').textContent = '—'; el('anl-mom-txt').textContent = 'Dados insuficientes';
   }
 
-  const top1pais = [..._paises].filter(r=>r.fluxo==='E').sort((a,b)=>b.valor_fob-a.valor_fob)[0];
-  if (top1pais) {
-    el('ins-parceiro-val').textContent = top1pais.pais_nome || top1pais.pais_cod;
-    el('ins-parceiro-sub').textContent = 'EXP: ' + fmtUSD(top1pais.valor_fob);
+  // 4 — Saldo YoY
+  const saldoDelta = prevSald !== 0 ? pct(saldo, prevSald) : null;
+  if (saldoDelta !== null) {
+    el('anl-saldo-val').textContent = (saldoDelta>=0?'▲ +':'▼ ') + Math.abs(saldoDelta).toFixed(1) + '%';
+    el('anl-saldo-val').className = 'analise-val ' + (saldoDelta>=0?'up':'dn');
+    el('anl-saldo-txt').textContent = `${fmtSaldo(saldo)} vs ${fmtSaldo(prevSald)} (mesmo período ${anoIni-1})`;
+  } else {
+    el('anl-saldo-val').textContent = fmtSaldo(saldo);
+    el('anl-saldo-txt').textContent = 'Sem período anterior disponível';
   }
 
-  const top1ncm = [..._ncms].filter(r=>r.fluxo==='E').sort((a,b)=>b.valor_fob-a.valor_fob)[0];
-  if (top1ncm) {
-    el('ins-prod-val').textContent = (top1ncm.descricao || top1ncm.ncm || '').slice(0, 38);
-    el('ins-prod-sub').textContent = 'NCM ' + top1ncm.ncm + ' · ' + fmtUSD(top1ncm.valor_fob);
+  // 5 — Principal origem IMP
+  const top1imp = [...paisAgg].sort((a,b)=>b.imp-a.imp)[0];
+  if (top1imp) {
+    const impPct = totImp > 0 ? top1imp.imp / totImp * 100 : 0;
+    el('anl-imp1-val').textContent = top1imp.pais_nome.split(' ')[0];
+    el('anl-imp1-txt').textContent = `${fmtUSD(top1imp.imp)} · ${impPct.toFixed(1)}% das importações`;
   }
 
-  // Evo chart
-  const { labels, expData, impData } = getMensalTimeline();
+  // ── Gráfico de evolução com saldo ──
+  const { labels, expData, impData, saldoData } = getMensalTimeline();
   const f = getFluxo();
-  drawEvo('chart-evo', labels, f !== 'I' ? expData : null, f !== 'E' ? impData : null);
+  drawEvo('chart-evo', labels, f !== 'I' ? expData : null, f !== 'E' ? impData : null,
+    (f === '') ? saldoData : null);
 
-  // Mini-ranks
-  const topP = [..._paises].sort((a,b)=>b.valor_fob-a.valor_fob).slice(0, 7);
-  el('mini-pais').innerHTML = topP.map((r,i) =>
-    `<div class="mini-rank-item">
-      <span class="mini-rank-pos">${i+1}.</span>
-      <span class="mini-rank-name" title="${r.pais_nome}">${r.pais_nome || r.pais_cod}</span>
-      <span class="mini-rank-val">${fmtUSD(r.valor_fob)}</span>
-    </div>`
-  ).join('');
+  // ── Mini-ranks com barra de participação (sem duplicatas) ──
+  const paisByExp = [...paisAgg].sort((a,b)=>b.exp-a.exp).slice(0,8)
+    .map(r => ({ ...r, _label: r.pais_nome }));
+  el('mini-pais').innerHTML = _miniRankHTML(paisByExp, r=>r.exp, totExp);
 
-  const topN = [..._ncms].sort((a,b)=>b.valor_fob-a.valor_fob).slice(0, 7);
-  el('mini-ncm').innerHTML = topN.map((r,i) =>
-    `<div class="mini-rank-item">
-      <span class="mini-rank-pos">${i+1}.</span>
-      <span class="mini-rank-name" title="${r.descricao}">${(r.descricao||r.ncm||'').slice(0,32)}</span>
-      <span class="mini-rank-val">${fmtUSD(r.valor_fob)}</span>
-    </div>`
-  ).join('');
+  const ncmByExp = [...ncmAgg].sort((a,b)=>b.exp-a.exp).slice(0,8)
+    .map(r => ({ ...r, _label: (r.descricao||r.ncm||'').slice(0,30) }));
+  el('mini-ncm').innerHTML = _miniRankHTML(ncmByExp, r=>r.exp, totExp);
 }
 
 // ── Render: Parceiros ─────────────────────────────────────────────
