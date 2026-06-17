@@ -116,7 +116,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .badge-mdic{display:inline-flex;align-items:center;gap:.35rem;background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.3);border-radius:4px;padding:.18rem .5rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-aged);white-space:nowrap}
 
 /* ── Filter panel ───────────────────────────────────────────── */
-.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:108px;z-index:99}
 .filter-inner{padding:.55rem 1.5rem;display:flex;align-items:flex-end;gap:1.2rem;flex-wrap:wrap}
 .tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
 .tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
@@ -134,10 +134,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .btn-reset:hover{border-color:var(--gold);color:var(--gold)}
 
 /* ── Main tabs nav ──────────────────────────────────────────── */
-.main-tabs-nav{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);display:flex;align-items:stretch;padding:0 1.5rem;overflow-x:auto;gap:0}
-.main-tab{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#5A7A8A;background:none;border:none;border-bottom:3px solid transparent;padding:.7rem 1.2rem;cursor:pointer;transition:color .18s,border-color .18s;white-space:nowrap;margin-bottom:-2px;flex-shrink:0}
-.main-tab:hover{color:#9AAABB}
-.main-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.main-tabs-nav{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);display:flex;align-items:stretch;padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:72px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.main-tab{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#5A7A8A;background:none;border:none;border-bottom:3px solid transparent;padding:.72rem 1.3rem;cursor:pointer;transition:color .18s,border-color .18s;white-space:nowrap;margin-bottom:-2px;flex-shrink:0}
+.main-tab:hover{color:#C8D8E8}
+.main-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(200,146,42,.04)}
 .tab-pane{display:none}
 .tab-pane.active{display:block}
 
@@ -254,6 +254,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .dash-header h1{font-size:1.75rem}
   .dash-header{padding:.85rem 1.2rem .65rem}
   .filter-inner{gap:.65rem;padding:.45rem .9rem}
+  .filter-panel{top:108px}
   .tf-vsep{display:none}
   .about-strip{padding:.75rem 1.2rem}
   .exec-kpi-grid{padding:.6rem .9rem;gap:.5rem}
@@ -328,27 +329,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   </div>
 </nav>
 
-<div class="dash-header" style="margin-top:72px">
-  <p class="label">MDIC · ComexStat — Ministério do Desenvolvimento, Indústria, Comércio e Serviços</p>
-  <h1>Balança Comercial <em>Brasil</em></h1>
-  <p class="sub" id="last-update">Carregando…</p>
-</div>
-
-<div class="about-strip">
-  <div class="about-cols">
-    <p class="about-what">
-      Acompanhe as <strong>exportações e importações brasileiras</strong> por país de destino/origem, produto (NCM) e unidade federativa — dados oficiais do <strong>MDIC/ComexStat</strong>, em valor FOB (US$) e peso líquido (kg).
-    </p>
-    <div class="about-steps">
-      <div class="about-step"><b>FONTE</b><span>MDIC — dados públicos disponíveis em balanca.economia.gov.br. Carga automática mensal.</span></div>
-      <div class="about-step"><b>NCM</b><span>Nomenclatura Comum do Mercosul — classifica produtos em ~10.000 categorias de 8 dígitos</span></div>
-      <div class="about-step"><b>FOB</b><span>Free On Board — valor no porto de embarque, sem frete e seguro internacionais</span></div>
-    </div>
-    <span class="badge-mdic">&#9679; MDIC · ComexStat</span>
+<!-- Header compacto integrado às abas -->
+<div class="dash-header" style="margin-top:72px;padding:.65rem 1.5rem .55rem;display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap">
+  <div>
+    <p class="label" style="margin-bottom:.15rem">MDIC · ComexStat</p>
+    <h1 style="font-size:1.6rem">Balança Comercial <em>Brasil</em></h1>
   </div>
+  <p class="sub" id="last-update" style="margin:0;flex:1;text-align:right">Carregando…</p>
 </div>
 
-<!-- ── Filtros globais ──────────────────────────────────────────── -->
+<!-- ── Abas principais (sticky logo abaixo do nav) ─────────────── -->
+<div class="main-tabs-nav">
+  <button class="main-tab active" data-tab="executivo" onclick="switchTab('executivo')">📊 Executivo</button>
+  <button class="main-tab" data-tab="parceiros" onclick="switchTab('parceiros')">🌍 Parceiros</button>
+  <button class="main-tab" data-tab="produtos" onclick="switchTab('produtos')">📦 Produtos (NCM)</button>
+  <button class="main-tab" data-tab="regioes" onclick="switchTab('regioes')">🗺️ Regiões (UF)</button>
+  <button class="main-tab" data-tab="balanca" onclick="switchTab('balanca')">⚖️ Balança Mensal</button>
+</div>
+
+<!-- ── Filtros globais (sticky abaixo das abas) ─────────────────── -->
 <div class="filter-panel">
   <div class="filter-inner">
     <div class="tf-grp">
@@ -421,19 +420,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   </div>
 </div>
 
-<!-- ── Main tabs nav ───────────────────────────────────────────── -->
-<div class="main-tabs-nav">
-  <button class="main-tab active" data-tab="executivo" onclick="switchTab('executivo')">&#9660; Executivo</button>
-  <button class="main-tab" data-tab="parceiros" onclick="switchTab('parceiros')">Parceiros Comerciais</button>
-  <button class="main-tab" data-tab="produtos" onclick="switchTab('produtos')">Produtos (NCM)</button>
-  <button class="main-tab" data-tab="regioes" onclick="switchTab('regioes')">Regiões (UF)</button>
-  <button class="main-tab" data-tab="balanca" onclick="switchTab('balanca')">Balança Mensal</button>
-</div>
-
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!-- TAB: EXECUTIVO                                                -->
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div id="pane-executivo" class="tab-pane active">
+
+  <!-- Contexto da fonte (visível só no Executivo) -->
+  <div class="about-strip">
+    <div class="about-cols">
+      <p class="about-what">
+        Acompanhe as <strong>exportações e importações brasileiras</strong> por país de destino/origem, produto (NCM) e unidade federativa — dados oficiais do <strong>MDIC/ComexStat</strong>, em valor FOB (US$) e peso líquido (kg).
+      </p>
+      <div class="about-steps">
+        <div class="about-step"><b>FONTE</b><span>MDIC — dados públicos disponíveis em balanca.economia.gov.br. Carga automática mensal.</span></div>
+        <div class="about-step"><b>NCM</b><span>Nomenclatura Comum do Mercosul — classifica produtos em ~10.000 categorias de 8 dígitos</span></div>
+        <div class="about-step"><b>FOB</b><span>Free On Board — valor no porto de embarque, sem frete e seguro internacionais</span></div>
+      </div>
+      <span class="badge-mdic">&#9679; MDIC · ComexStat</span>
+    </div>
+  </div>
 
   <!-- KPI strip com YoY -->
   <div class="exec-kpi-grid">
