@@ -815,7 +815,8 @@ function switchTab(tab) {
 // ── Cache (sessionStorage, TTL 5 min) ────────────────────────────
 const CACHE_TTL = 5 * 60 * 1000;
 function _cacheKey() {
-  return `comex|${getAnoIni()}|${getAnoFim()}|${getMesIni()}|${getMesFim()}|${getFluxo()}`;
+  // Mensal não filtra por fluxo, mas pais/ncm/uf sim — chave inclui fluxo
+  return `comex|${Math.max(getAnoIni()-1,2020)}|${getAnoFim()}|${getMesIni()}|${getMesFim()}|${getFluxo()}`;
 }
 function _getCached() {
   try {
@@ -845,9 +846,15 @@ function _buildQs() {
 async function fetchAll() {
   const qs = _buildQs();
 
-  // Mensal: busca 1 ano extra para comparativo YoY
-  const qsMensal = new URLSearchParams(qs);
-  qsMensal.set('ano_ini', Math.max(getAnoIni() - 1, 2020));
+  // Mensal: NUNCA filtra por fluxo — executivo precisa de EXP+IMP sempre.
+  // Também busca 1 ano extra para YoY.
+  const qsMensal = new URLSearchParams({
+    ano_ini: Math.max(getAnoIni() - 1, 2020),
+    ano_fim: getAnoFim(),
+    mes_ini: getMesIni(),
+    mes_fim: getMesFim(),
+    top: 100,
+  });
 
   // Lança todas as 4 requisições em paralelo imediatamente
   const mensalP = fetch(`${API_BASE}/mensal?${qsMensal}`).then(r => r.json());
@@ -1162,11 +1169,9 @@ function renderExecutivo() {
     el('anl-imp1-txt').textContent = `${fmtUSD(top1imp.imp)} · ${impPct.toFixed(1)}% das importações`;
   }
 
-  // ── Gráfico de evolução com saldo ──
+  // ── Gráfico de evolução — sempre EXP+IMP+Saldo no Executivo ──
   const { labels, expData, impData, saldoData } = getMensalTimeline();
-  const f = getFluxo();
-  drawEvo('chart-evo', labels, f !== 'I' ? expData : null, f !== 'E' ? impData : null,
-    (f === '') ? saldoData : null);
+  drawEvo('chart-evo', labels, expData, impData, saldoData);
 
   // ── Mini-ranks com barra de participação (sem duplicatas) ──
   const paisByExp = [...paisAgg].sort((a,b)=>b.exp-a.exp).slice(0,8)
