@@ -106,7 +106,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:.28rem;letter-spacing:.04em}
 
 /* ── About strip ────────────────────────────────────────────── */
-.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem;position:relative}
+.about-strip.hidden{display:none}
 .about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr) auto;gap:1rem 2.2rem;align-items:center}
 .about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65}
 .about-what strong{color:#E8D8C0;font-weight:600}
@@ -406,7 +407,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
     </div>
     <div class="tf-vsep"></div>
     <div class="tf-grp">
-      <span class="lbl">Top N</span>
+      <span class="lbl" title="Limita quantos itens aparecem nos gráficos de barras. As tabelas sempre mostram todos os dados.">Gráficos top</span>
       <select class="tf-input" id="sel-top" onchange="onFilterChange()">
         <option value="10">10</option><option value="15" selected>15</option>
         <option value="20">20</option><option value="30">30</option>
@@ -425,8 +426,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div id="pane-executivo" class="tab-pane active">
 
-  <!-- Contexto da fonte (visível só no Executivo) -->
-  <div class="about-strip">
+  <!-- Contexto da fonte (visível só no Executivo, dispensável) -->
+  <div class="about-strip" id="about-strip">
     <div class="about-cols">
       <p class="about-what">
         Acompanhe as <strong>exportações e importações brasileiras</strong> por país de destino/origem, produto (NCM) e unidade federativa — dados oficiais do <strong>MDIC/ComexStat</strong>, em valor FOB (US$) e peso líquido (kg).
@@ -438,6 +439,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
       </div>
       <span class="badge-mdic">&#9679; MDIC · ComexStat</span>
     </div>
+    <button onclick="dismissAbout()" title="Ocultar" style="position:absolute;top:.5rem;right:.75rem;background:none;border:none;color:var(--text3);font-size:1rem;cursor:pointer;line-height:1;padding:.2rem .3rem;border-radius:3px" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">×</button>
   </div>
 
   <!-- KPI strip com YoY -->
@@ -715,7 +717,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
               <th>Período</th>
               <th class="r">Exportações</th>
               <th class="r">Importações</th>
+              <th class="r">Total Neg.</th>
+              <th class="r">%EXP</th>
+              <th class="r">%IMP</th>
               <th class="r">Saldo</th>
+              <th class="r">Δ Saldo M/M</th>
               <th class="r">Cobertura</th>
             </tr></thead>
             <tbody id="tbl-balanca-body"></tbody>
@@ -756,6 +762,15 @@ function _setWmStatus(txt) {
   const s = document.getElementById('wm-status-text');
   if (s) s.textContent = txt;
 }
+
+// ── About strip dismiss ────────────────────────────────────────────
+function dismissAbout() {
+  el('about-strip').classList.add('hidden');
+  try { localStorage.setItem('comex_about_hidden', '1'); } catch(e) {}
+}
+(function() {
+  try { if (localStorage.getItem('comex_about_hidden')) el('about-strip').classList.add('hidden'); } catch(e) {}
+})();
 
 // ── Estado ────────────────────────────────────────────────────────
 let _mensal = [], _paises = [], _ncms = [], _ufs = [];
@@ -1336,23 +1351,40 @@ function renderBalanca() {
   const totExp   = expData.reduce((s,v)=>s+v,0);
   const totImp   = impData.reduce((s,v)=>s+v,0);
   const totSaldo = totExp - totImp;
+  const totNeg   = totExp + totImp;
+  const mono = "font-family:'DM Mono',monospace";
 
   el('tbl-balanca-body').innerHTML = keys.map((k,i) => {
     const [ano, mes] = k.split('-');
     const exp = expData[i], imp = impData[i], sal = saldoData[i];
+    const neg = exp + imp;
+    const pctExp = neg > 0 ? (exp / neg * 100).toFixed(1) + '%' : '—';
+    const pctImp = neg > 0 ? (imp / neg * 100).toFixed(1) + '%' : '—';
     const cob = imp > 0 ? exp / imp : null;
+    const prevSal = i > 0 ? saldoData[i-1] : null;
+    const dSal = prevSal !== null ? sal - prevSal : null;
+    const dTxt = dSal === null ? '—' : (dSal >= 0 ? '+' : '') + fmtSaldo(dSal);
+    const dColor = dSal === null ? '' : dSal >= 0 ? ';color:#5AC882' : ';color:#E06060';
     return `<tr class="${sal >= 0 ? 'pos' : 'neg'}">
-      <td style="font-family:'DM Mono',monospace">${MESES_PT[+mes-1]}/${ano}</td>
-      <td class="r" style="font-family:'DM Mono',monospace;color:var(--exp)">${fmtUSD(exp)}</td>
-      <td class="r" style="font-family:'DM Mono',monospace;color:#7AABDC">${fmtUSD(imp)}</td>
-      <td class="r" style="font-family:'DM Mono',monospace;color:${sal>=0?'var(--saldo-pos)':'var(--saldo-neg)'}">${fmtSaldo(sal)}</td>
-      <td class="r" style="font-family:'DM Mono',monospace">${cob != null ? cob.toFixed(2)+'x' : '—'}</td>
+      <td style="${mono}">${MESES_PT[+mes-1]}/${ano}</td>
+      <td class="r" style="${mono};color:var(--exp)">${fmtUSD(exp)}</td>
+      <td class="r" style="${mono};color:#7AABDC">${fmtUSD(imp)}</td>
+      <td class="r" style="${mono}">${fmtUSD(neg)}</td>
+      <td class="r" style="${mono};color:var(--exp)">${pctExp}</td>
+      <td class="r" style="${mono};color:#7AABDC">${pctImp}</td>
+      <td class="r" style="${mono};color:${sal>=0?'var(--saldo-pos)':'var(--saldo-neg)'}">${fmtSaldo(sal)}</td>
+      <td class="r" style="${mono}${dColor}">${dTxt}</td>
+      <td class="r" style="${mono}">${cob != null ? cob.toFixed(2)+'x' : '—'}</td>
     </tr>`;
   }).join('') + `<tr class="total-row">
-    <td>TOTAL</td>
+    <td>TOTAL PERÍODO</td>
     <td class="r">${fmtUSD(totExp)}</td>
     <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r">${fmtUSD(totNeg)}</td>
+    <td class="r" style="color:var(--exp)">${totNeg>0?(totExp/totNeg*100).toFixed(1)+'%':'—'}</td>
+    <td class="r" style="color:#7AABDC">${totNeg>0?(totImp/totNeg*100).toFixed(1)+'%':'—'}</td>
     <td class="r" style="color:${totSaldo>=0?'#5AC882':'#E06060'}">${fmtSaldo(totSaldo)}</td>
+    <td class="r">—</td>
     <td class="r">${totImp>0?(totExp/totImp).toFixed(2)+'x':'—'}</td>
   </tr>`;
 
@@ -1401,13 +1433,15 @@ async function loadData() {
       _setCache({ mensal: _mensal, paises: _paises, ncms: _ncms, ufs: _ufs });
       _setWmStatus('Dados carregados ✓');
     }
-    const anos  = [...new Set(_mensal.map(r=>r.ano))].sort();
+    const anoIni = getAnoIni(), anoFim = getAnoFim();
+    const selectedM = _mensal.filter(r => r.ano >= anoIni && r.ano <= anoFim);
     const nMeses = Math.max(
-      _mensal.filter(r=>r.fluxo==='E').length,
-      _mensal.filter(r=>r.fluxo==='I').length
+      selectedM.filter(r=>r.fluxo==='E').length,
+      selectedM.filter(r=>r.fluxo==='I').length
     );
+    const periodoTxt = anoIni === anoFim ? String(anoIni) : `${anoIni}–${anoFim}`;
     el('last-update').textContent =
-      `${nMeses} meses de dados · ${anos[0]||'—'}–${anos[anos.length-1]||'—'} · Fonte: MDIC/ComexStat`;
+      `${nMeses} meses de dados · ${periodoTxt} · Fonte: MDIC/ComexStat`;
     renderCurrentTab();
     _autoCloseWelcome();
   } catch(e) {
@@ -1459,6 +1493,18 @@ async function init() {
       _lastYear = anos[anos.length - 1];
       el('sel-ano-ini').value = String(_lastYear);
       el('sel-ano-fim').value = String(_lastYear);
+      // Desabilita anos sem dados nos dois seletores
+      ['sel-ano-ini', 'sel-ano-fim'].forEach(id => {
+        const sel = el(id);
+        if (!sel) return;
+        Array.from(sel.options).forEach(opt => {
+          const yr = Number(opt.value);
+          if (!anos.includes(yr)) {
+            opt.disabled = true;
+            opt.text = opt.value + ' (sem dados)';
+          }
+        });
+      });
     }
   } catch(e) {}
 
