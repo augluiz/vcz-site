@@ -151,7 +151,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .ddm-list input[type=checkbox]{accent-color:var(--gold);flex-shrink:0}
 .ddm-empty{padding:.65rem .5rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
 
-.btn-reset{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.3rem .7rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-reset{background:transparent;border:1px solid rgba(255,255,255,.28);border-radius:4px;padding:.3rem .7rem;color:#9AAABB;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-reset:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,146,42,.08)}
 .filter-main{border-bottom:1px solid rgba(255,255,255,.06)}
 .filter-charts{padding:.38rem 1.5rem;background:rgba(0,0,0,.18);display:flex;align-items:flex-end;gap:1.2rem}
@@ -228,8 +228,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .pos{color:var(--pos)!important;font-weight:600}.neg{color:var(--neg)!important;font-weight:600}
 .prev-up{background:#E6F5EC!important;color:#1E6B35!important}.prev-dn{background:#FDECEA!important;color:#C0392B!important}
 .dt .col-prod{width:auto;min-width:180px}.dt .col-tend{width:78px}.dt .col-val{width:88px}.dt .col-var{width:84px}.dt .col-embal{width:100px}.dt td.col-embal{font-size:.67rem;color:var(--steel)}.dt .col-peso{width:60px;text-align:right}.dt td.col-peso{font-size:.68rem;color:var(--steel)}
-.full-tbox .dt{min-width:600px}.full-tbox.cols-expanded .dt{min-width:920px}.tbox .dt{min-width:500px}
-.full-tbox.cols-expanded .col-xp.col-val{width:68px}.full-tbox.cols-expanded .col-xp.col-var{width:64px}
+.full-tbox .dt{min-width:600px}.full-tbox.cols-expanded .dt{min-width:1100px}.tbox .dt{min-width:500px}
+.full-tbox.cols-expanded .col-xp.col-val{width:90px}.full-tbox.cols-expanded .col-xp.col-var{width:84px}
 .full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
 .full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
 .full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600;white-space:nowrap}
@@ -636,6 +636,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
             <input class="combo-input" type="text" id="f-produto-input" placeholder="Pesquise o produto:" autocomplete="off">
             <div class="combo-drop" id="combo-drop"></div>
           </div>
+          <span class="filter-hint">ou clique em uma linha da tabela ao lado</span>
         </div>
 
         <!-- PRICE MATRIX -->
@@ -1112,6 +1113,10 @@ function applyFilters(skipClima=false){
   const allD=[...new Set(data.map(r=>r.data))].sort();
   const lastD=allD[allD.length-1]||null;
   buildProdutoOptions(data);
+  if(_produtoOptions.length&&(!F.chartProduto||!_produtoOptions.includes(F.chartProduto))){
+    F.chartProduto=_produtoOptions[0];
+    document.getElementById('f-produto-input').value=F.chartProduto;
+  }
   renderComboOptions('');
   if(!skipClima) drawClima();
   renderTrends(trends);
@@ -1176,7 +1181,7 @@ function computeTrends(data, overrideDate=null){
 // ── CHARTS ────────────────────────────────────────────────────
 function drawPreco(key){
   const wrap=document.getElementById('preco-wrap'), lbl=document.getElementById('chart-produto-label');
-  if(!key){if(charts.preco){charts.preco.destroy();charts.preco=null;}lbl.textContent='Selecione um produto no filtro acima';wrap.innerHTML='<p class="no-data">Selecione um produto no filtro acima.</p>';return;}
+  if(!key){if(charts.preco){charts.preco.destroy();charts.preco=null;}lbl.textContent='Selecione um produto para visualizar';wrap.innerHTML='<p class="no-data">Filtre um produto na busca acima ou clique em uma linha da tabela ao lado para visualizar o histórico de preços.</p>';return;}
   const data=ceasa.filter(r=>r.produto===key);
   if(!data.length){wrap.innerHTML='<p class="no-data">Sem dados para o produto.</p>';lbl.textContent=key;return;}
   const byDate=new Map();
