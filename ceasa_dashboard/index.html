@@ -1389,7 +1389,7 @@ function baseOpts(){
     }};
 }
 function xScale(){return{grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#9AAABB',font:{family:'DM Mono',size:9},maxTicksLimit:12,maxRotation:0}};}
-function chartOpts(pre){return{...baseOpts(),scales:{x:xScale(),y:{grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:10},callback:v=>pre+' '+fmt(v,0)}}}};}
+function chartOpts(pre){return{...baseOpts(),scales:{x:xScale(),y:{grid:{color:'rgba(26,36,51,.06)'},ticks:{color:'#7A8A9A',font:{family:'DM Mono',size:10},callback:v=>pre+' '+fmt(v,2)}}}};}
 
 // ── TABLES ────────────────────────────────────────────────────
 const tendCls=t=>t==='Subindo'?'tc-up':t==='Baixando'?'tc-dn':'tc-flat';
