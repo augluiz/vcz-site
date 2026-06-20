@@ -974,7 +974,8 @@ function selectProduto(produto){
 // ── DROPDOWN MULTI ────────────────────────────────────────────
 function renderCestaList(q){
   const list=document.getElementById('cesta-list');
-  const visible=q?_allCesta.filter(c=>c.toLowerCase().includes(q)):_allCesta;
+  const base=F.categoria?_allCesta.filter(c=>categoriaMap[c.toUpperCase()]===F.categoria):_allCesta;
+  const visible=q?base.filter(c=>c.toLowerCase().includes(q)):base;
   if(!visible.length){list.innerHTML='<div class="ddm-empty">Nenhuma cesta</div>';return;}
   list.innerHTML=visible.map(c=>{
     const chk=F.cesta.has(c)?'checked':'', act=F.cesta.has(c)?' active':'';
@@ -1023,7 +1024,15 @@ function setupListeners(){
   document.querySelectorAll('input[name=tipo]').forEach(r=>r.addEventListener('change',e=>{F.tipo=e.target.value;applyFilters();}));
   document.querySelectorAll('input[name=origem]').forEach(r=>r.addEventListener('change',e=>{F.origem=e.target.value;applyFilters();}));
   document.getElementById('f-classif').addEventListener('change',e=>{F.classif=e.target.value;applyFilters();});
-  document.getElementById('f-categoria').addEventListener('change',e=>{F.categoria=e.target.value;applyFilters();});
+  document.getElementById('f-categoria').addEventListener('change',e=>{
+    F.categoria=e.target.value;
+    if(F.categoria&&F.cesta.size){
+      [...F.cesta].forEach(c=>{if(categoriaMap[c.toUpperCase()]!==F.categoria)F.cesta.delete(c);});
+      updateDdmLabel('cesta',F.cesta);
+    }
+    renderCestaList('');
+    applyFilters();
+  });
   document.getElementById('f-cidade').addEventListener('change',e=>{F.cidade=e.target.value;updateClimaTitle();drawClima();drawPrevisao();});
   const nEl=document.getElementById('f-n');
   const onN=e=>{const v=parseInt(e.target.value);if(v&&v>0){F.n=v;updateMedHeader();applyFilters();}};
