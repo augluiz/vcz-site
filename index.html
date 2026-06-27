@@ -1354,6 +1354,62 @@
   .contato-social:hover svg,
   .contato-social:hover .contato-social-text { color: var(--gold-light); }
 
+  /* ── DIAGNÓSTICO FAIXA ─────────────────────────── */
+  .diagnostico-faixa {
+    background: var(--navy);
+    border-top: 1px solid rgba(200,146,42,0.22);
+    border-bottom: 1px solid rgba(200,146,42,0.22);
+    padding: 56px 5vw;
+  }
+
+  .diag-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+  }
+
+  .diag-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 2.7rem);
+    font-weight: 300;
+    color: var(--warm-white);
+    line-height: 1.2;
+    margin-top: 0.8rem;
+    max-width: 560px;
+  }
+
+  .diag-title em { font-style: italic; color: var(--gold); }
+
+  .diag-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--steel);
+    margin-top: 1rem;
+    max-width: 480px;
+    line-height: 1.75;
+  }
+
+  .diag-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .diag-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  @media (max-width: 768px) {
+    .diag-inner { flex-direction: column; align-items: flex-start; }
+  }
+
   /* ── FOOTER ───────────────────────────────────── */
   footer {
     background: var(--navy);
@@ -1507,14 +1563,29 @@
       <p class="hero-eyebrow">Inteligência Comercial Aplicada</p>
       <h1 class="hero-title">Decisões mais <em>claras.</em><br>Resultados mais sólidos.</h1>
       <div class="hero-line"></div>
-      <p class="hero-sub">A VCZ transforma dados de mercado em direção estratégica — para que cada decisão comercial seja tomada com método, evidência e critério. Atuamos em varejo, indústria e e-commerce, em todo o Brasil.</p>
+      <p class="hero-sub">Inteligência comercial aplicada para varejo e indústria — com método, evidência e foco em rentabilidade real. Atuamos em todo o Brasil.</p>
       <div class="hero-actions">
-        <a href="/servicos.html" class="btn-primary">Conheça os serviços</a>
-        <a href="#sobre" class="btn-ghost">Sobre a VCZ</a>
+        <a href="#diagnostico" class="btn-primary">Solicitar Diagnóstico</a>
+        <a href="/servicos.html" class="btn-ghost">Conheça os serviços</a>
       </div>
     </div>
     <div class="hero-right">
       <img src="logo-mark.svg" alt="" aria-hidden="true" class="hero-logo-large">
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNÓSTICO DE RENTABILIDADE -->
+<section id="diagnostico" class="diagnostico-faixa">
+  <div class="diag-inner">
+    <div class="diag-texto reveal">
+      <p class="section-label">Diagnóstico de Rentabilidade</p>
+      <h2 class="diag-title">Identifico onde sua margem está <em>sangrando</em> — e como recuperá-la.</h2>
+      <p class="diag-sub">Para redes de varejo e indústria que precisam de clareza sobre rentabilidade antes de decidir. Entregável concreto: onde está o problema e qual é o próximo passo.</p>
+    </div>
+    <div class="diag-cta reveal">
+      <a href="https://wa.me/5541996242909?text=Ol%C3%A1%2C%20tenho%20interesse%20no%20Diagn%C3%B3stico%20de%20Rentabilidade%20da%20VCZ." target="_blank" rel="noopener" class="btn-primary">Quero o Diagnóstico</a>
+      <p class="diag-hint">Entre em contato pelo WhatsApp</p>
     </div>
   </div>
 </section>
@@ -1606,8 +1677,8 @@
   <p class="section-label reveal">Quem está à frente</p>
   <h2 class="section-title reveal">Experiência de quem<br><em>vive</em> o mercado.</h2>
   <div class="frente-texto reveal">
-    <p><strong>Augusto Luiz</strong> está à frente da VCZ — especialista em inteligência comercial com mais de 8 anos de experiência construída na prática, no varejo, na indústria e no e-commerce.</p>
-    <p><strong>No varejo</strong>, especialista em inteligência comercial no <strong>Grupo Koch</strong>, 8ª maior rede supermercadista do Brasil — responsável pelo <strong>JBP</strong>, <strong>análises de mercado</strong>, <strong>performance comercial</strong>, <strong>rentabilidade</strong>, <strong>precificação</strong>, qualificação de sortimento, <strong>forecast</strong> e <strong>dashboards gerenciais</strong>. Trabalhou ainda com <strong>dados Nielsen</strong> e <strong>pesquisa de mercado</strong> aplicada à estratégia e ao posicionamento competitivo.</p>
+    <p><strong>Augusto Luiz</strong> está à frente da VCZ Consultoria. Referência como especialista em inteligência comercial, atuou na maior rede de varejo alimentar de Santa Catarina — o <strong>Grupo Koch</strong> —, entregando rentabilidade, JBP, precificação, forecast, dashboards e dados Nielsen por dentro de uma das maiores operações de varejo do Sul do Brasil.</p>
+    <p><strong>No varejo</strong>, experiência construída no <strong>Grupo Koch</strong> — maior rede de varejo alimentar de Santa Catarina —, responsável pelo <strong>JBP</strong>, <strong>análises de mercado</strong>, <strong>performance comercial</strong>, <strong>rentabilidade</strong>, <strong>precificação</strong>, qualificação de sortimento, <strong>forecast</strong> e <strong>dashboards gerenciais</strong>. Trabalhou ainda com <strong>dados Nielsen</strong> e <strong>pesquisa de mercado</strong> aplicada à estratégia e ao posicionamento competitivo.</p>
     <p><strong>Na indústria</strong>, experiência em <strong>pesquisa de mercado</strong>, <strong>performance comercial</strong>, <strong>precificação</strong>, qualificação de portfólio, <strong>planejamento de demanda</strong>, análise de ruptura e <strong>forecast de vendas</strong>.</p>
     <p class="frente-resumo">Mais de 8 anos de experiência em varejo, indústria e e-commerce, com especialização em inteligência comercial.</p>
   </div>
@@ -1673,11 +1744,11 @@
         <label for="assunto">Área de interesse</label>
         <select id="assunto" name="assunto">
           <option value="" disabled selected>Selecione</option>
+          <option>Diagnóstico de Rentabilidade</option>
           <option>Inteligência Comercial</option>
           <option>Pesquisa de Mercado</option>
           <option>JBP — Joint Business Plan</option>
           <option>Desenvolvimento de Dashboards</option>
-          <option>Ambas as frentes</option>
           <option>Outro</option>
         </select>
       </div>
