@@ -10,6 +10,7 @@ vcz_linkedin.png
 vcz_instagram.png
 # Generated JPGs from screenshots
 *.jpg
+!augusto-luiz.jpg
 gerar_story.py
 gerar_linkedin.py
 gerar_instagram.py

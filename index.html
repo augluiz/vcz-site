@@ -732,6 +732,73 @@
 
   .sobre-servico-items li.destaque::before { color: var(--gold); }
 
+  /* Grid 3x3 dos 9 serviços, no estilo de card escuro do material do
+     portfolio (mesmo padrão de /servicos.html), compacto pra caber
+     nesta coluna — título + texto breve, sempre visíveis. */
+  .sobre-servicos-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+  .sobre-mini-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(183,160,115,0.15);
+    border-top: 2px solid var(--gold);
+    border-radius: 6px;
+    padding: 0.9rem 0.8rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sobre-mini-card:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(183,160,115,0.3);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+    transform: translateY(-3px);
+  }
+
+  .sobre-mini-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
+
+  .sobre-mini-icon {
+    width: 30px; height: 30px;
+    background: var(--gold);
+    border-radius: 7px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sobre-mini-num { font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; color: var(--gold-aged); }
+
+  .sobre-mini-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 700; color: var(--warm-white); line-height: 1.25; margin-bottom: 0.4rem; }
+
+  .sobre-mini-desc { font-size: 10.5px; font-weight: 300; color: var(--steel); line-height: 1.5; }
+
+  /* Conteúdo antigo (2 cards) fica pronto no HTML mas escondido.
+     Alterna com a lista nova via toggleServicosHome(). */
+  .sobre-servicos-old { display: none; }
+  .sobre-servicos-old.open { display: block; }
+
+  .btn-toggle-servicos {
+    margin-top: 0.9rem;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steel);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .btn-toggle-servicos:hover { color: var(--gold); }
+  .btn-toggle-servicos .chevron { transition: transform 0.2s; font-size: 9px; }
+  .btn-toggle-servicos.open .chevron { transform: rotate(180deg); }
+
   /* ── ENTREGÁVEIS ─────────────────────────────── */
   #entregas { background: var(--navy); padding: 52px 5vw; }
 
@@ -774,9 +841,52 @@
   #frente .section-title { color: var(--graphite); }
   #frente .section-title em { color: var(--gold); }
 
+  .frente-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2.5vw;
+    align-items: center;
+    margin-top: 2.5rem;
+  }
+
+  .frente-photo {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    transform: translate(-16px, -28px);
+  }
+
+  .frente-photo-ring {
+    position: absolute;
+    inset: -14px;
+    border: 1px solid var(--gold-aged);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .frente-photo-frame {
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 7px solid var(--graphite);
+    box-shadow: 0 40px 70px -25px rgba(13,27,42,0.5);
+  }
+
+  .frente-photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 28%;
+    transform: scale(1.32);
+    transform-origin: 50% 28%;
+    filter: contrast(1.04) saturate(0.95);
+  }
+
   .frente-texto {
     max-width: 860px;
-    margin-top: 2.5rem;
+    border-left: 1px solid var(--graphite);
+    padding-left: 1.8rem;
   }
 
   .frente-texto p {
@@ -801,7 +911,7 @@
     margin-top: 0.5rem;
   }
 
-  .frente-portfolio { margin-top: 2.5rem; }
+  .frente-portfolio { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 14px; }
 
   .btn-portfolio {
     display: inline-flex;
@@ -821,6 +931,25 @@
 
   .btn-portfolio::after { content: '↓'; font-size: 14px; }
   .btn-portfolio:hover { background: var(--gold); color: var(--navy); }
+
+  .btn-apresentacao {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--graphite);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    border: 1px solid var(--graphite);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-apresentacao::after { content: '↗'; font-size: 13px; }
+  .btn-apresentacao:hover { background: var(--graphite); color: var(--cream); }
 
   .frente-stats {
     display: grid;
@@ -853,7 +982,9 @@
   }
 
   @media (max-width: 768px) {
-    .frente-grid { grid-template-columns: 1fr; }
+    .frente-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .frente-photo { max-width: 240px; margin: 0 auto; order: -1; transform: none; }
+    .frente-texto { border-left: none; padding-left: 0; }
     .frente-stats { grid-template-columns: 1fr 1fr; }
   }
 
@@ -1669,6 +1800,7 @@
     .contato-form { order: -1; }
     .entregas-grid { grid-template-columns: 1fr 1fr; }
     .sobre-servicos { grid-template-columns: 1fr; }
+    .sobre-servicos-grid3 { grid-template-columns: 1fr 1fr; }
     .nav-cta { display: none; }
   }
 </style>
@@ -1760,42 +1892,129 @@
     </div>
     <div>
       <p class="section-label reveal">Sobre os produtos</p>
-      <div class="sobre-servicos reveal" style="margin-top: 1.2rem;">
-      <div class="sobre-servico-card">
-        <div class="sobre-servico-header">
-          <span class="sobre-servico-num">01</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+
+      <!-- Grid 3x3 dos 9 serviços do portfólio 2026 — mesmo estilo de
+           card escuro de /servicos.html, só que compacto pra caber
+           nesta coluna. Título + texto breve, sempre visíveis. -->
+      <div class="sobre-servicos-grid3 reveal" id="sobre-servicos-novo" style="margin-top: 1.2rem;">
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+            <span class="sobre-mini-num">01</span>
+          </div>
+          <p class="sobre-mini-title">Análise de rentabilidade</p>
+          <p class="sobre-mini-desc">Estudo de margem por categoria e SKU, com prioridade de correção.</p>
         </div>
-        <p class="sobre-servico-title">Inteligência Comercial</p>
-        <p class="sobre-servico-desc">Análise da operação para identificar onde o negócio pode crescer mais, com mais margem e consistência.</p>
-        <ul class="sobre-servico-items">
-          <li class="destaque">Análise de resultado e rentabilidade</li>
-          <li>Estratégia e análise de precificação</li>
-          <li>Mix e qualificação do portfólio</li>
-          <li class="destaque">Dashboards gerenciais e visualizações</li>
-          <li>Análise de projetos piloto</li>
-          <li class="destaque">Forecast e diarização de vendas</li>
-          <li>Monitoramento de metas</li>
-        </ul>
-      </div>
-      <div class="sobre-servico-card">
-        <div class="sobre-servico-header">
-          <span class="sobre-servico-num">02</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></span>
+            <span class="sobre-mini-num">02</span>
+          </div>
+          <p class="sobre-mini-title">JBP</p>
+          <p class="sobre-mini-desc">Parceria com fornecedores: metas de venda e rentabilidade acordadas.</p>
         </div>
-        <p class="sobre-servico-title">Pesquisa de Mercado</p>
-        <p class="sobre-servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades.</p>
-        <ul class="sobre-servico-items">
-          <li class="destaque">Comportamento e jornada do consumidor</li>
-          <li>Percepção de marca e produtos</li>
-          <li>Alinhamento e validação de estratégia</li>
-          <li class="destaque">Análise da dinâmica competitiva</li>
-          <li>Inteligência estratégica e cenários</li>
-          <li>Análises recorrentes de mercado</li>
-          <li>Benchmarks setoriais</li>
-        </ul>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+            <span class="sobre-mini-num">03</span>
+          </div>
+          <p class="sobre-mini-title">Precificação</p>
+          <p class="sobre-mini-desc">Competitividade por região, com simulador de preço e rentabilidade.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+            <span class="sobre-mini-num">04</span>
+          </div>
+          <p class="sobre-mini-title">Estrutura mercadológica</p>
+          <p class="sobre-mini-desc">Sortimento, curva ABC e revisão da estrutura de categorias.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
+            <span class="sobre-mini-num">05</span>
+          </div>
+          <p class="sobre-mini-title">Planejamento de compra</p>
+          <p class="sobre-mini-desc">Giro, prazo de pagamento e antecipação diante de reajuste.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
+            <span class="sobre-mini-num">06</span>
+          </div>
+          <p class="sobre-mini-title">Projeto piloto</p>
+          <p class="sobre-mini-desc">Lojas teste e espelho, com sugestão de replicar nas demais.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
+            <span class="sobre-mini-num">07</span>
+          </div>
+          <p class="sobre-mini-title">Painéis gerenciais</p>
+          <p class="sobre-mini-desc">Do gerencial ao SKU, atualizados sem retrabalho.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+            <span class="sobre-mini-num">08</span>
+          </div>
+          <p class="sobre-mini-title">Painel de mercado</p>
+          <p class="sobre-mini-desc">Nielsen, Scanntech, GFK: performance frente à concorrência.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <span class="sobre-mini-num">09</span>
+          </div>
+          <p class="sobre-mini-title">Pesquisa de mercado</p>
+          <p class="sobre-mini-desc">Comportamento de compra, percepção de marca e tendências.</p>
+        </div>
       </div>
-    </div>
+
+      <!-- Conteúdo antigo (2 cards Inteligência Comercial / Pesquisa de Mercado) —
+           preservado por inteiro, só fica oculto até o botão abaixo ser clicado. -->
+      <div class="sobre-servicos-old" id="sobre-servicos-old">
+        <div class="sobre-servicos" style="margin-top: 1.2rem;">
+          <div class="sobre-servico-card">
+            <div class="sobre-servico-header">
+              <span class="sobre-servico-num">01</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <p class="sobre-servico-title">Inteligência Comercial</p>
+            <p class="sobre-servico-desc">Análise da operação para identificar onde o negócio pode crescer mais, com mais margem e consistência.</p>
+            <ul class="sobre-servico-items">
+              <li class="destaque">Análise de resultado e rentabilidade</li>
+              <li>Estratégia e análise de precificação</li>
+              <li>Mix e qualificação do portfólio</li>
+              <li class="destaque">Dashboards gerenciais e visualizações</li>
+              <li>Análise de projetos piloto</li>
+              <li class="destaque">Forecast e diarização de vendas</li>
+              <li>Monitoramento de metas</li>
+            </ul>
+          </div>
+          <div class="sobre-servico-card">
+            <div class="sobre-servico-header">
+              <span class="sobre-servico-num">02</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <p class="sobre-servico-title">Pesquisa de Mercado</p>
+            <p class="sobre-servico-desc">Estudo do mercado, do consumidor e da concorrência para validar estratégias e identificar oportunidades.</p>
+            <ul class="sobre-servico-items">
+              <li class="destaque">Comportamento e jornada do consumidor</li>
+              <li>Percepção de marca e produtos</li>
+              <li>Alinhamento e validação de estratégia</li>
+              <li class="destaque">Análise da dinâmica competitiva</li>
+              <li>Inteligência estratégica e cenários</li>
+              <li>Análises recorrentes de mercado</li>
+              <li>Benchmarks setoriais</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-toggle-servicos" id="btn-toggle-servicos-home" onclick="toggleServicosHome()">
+        Ver lista anterior de serviços <span class="chevron">▾</span>
+      </button>
     </div>
   </div>
 </section>
@@ -1852,15 +2071,28 @@
 <section id="frente">
   <p class="section-label reveal">Quem está à frente</p>
   <h2 class="section-title reveal">Experiência de quem<br><em>vive</em> o mercado.</h2>
-  <div class="frente-texto reveal">
-    <p><strong>Augusto Luiz</strong> está à frente da VCZ Consultoria. Referência como especialista em inteligência comercial, atuou na maior rede de varejo alimentar de Santa Catarina — o <strong>Grupo Koch</strong> —, entregando rentabilidade, JBP, precificação, forecast, dashboards e dados Nielsen por dentro de uma das maiores operações de varejo do Sul do Brasil.</p>
-    <p><strong>No varejo</strong>, experiência construída no <strong>Grupo Koch</strong> — maior rede de varejo alimentar de Santa Catarina —, responsável pelo <strong>JBP</strong>, <strong>análises de mercado</strong>, <strong>performance comercial</strong>, <strong>rentabilidade</strong>, <strong>precificação</strong>, qualificação de sortimento, <strong>forecast</strong> e <strong>dashboards gerenciais</strong>. Trabalhou ainda com <strong>dados Nielsen</strong> e <strong>pesquisa de mercado</strong> aplicada à estratégia e ao posicionamento competitivo.</p>
-    <p><strong>Na indústria</strong>, experiência em <strong>pesquisa de mercado</strong>, <strong>performance comercial</strong>, <strong>precificação</strong>, qualificação de portfólio, <strong>planejamento de demanda</strong>, análise de ruptura e <strong>forecast de vendas</strong>.</p>
-  </div>
-  <div class="frente-portfolio reveal">
-    <a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" class="btn-portfolio">
-      Baixar Portfolio
-    </a>
+  <div class="frente-grid">
+    <div class="frente-content">
+      <div class="frente-texto reveal">
+        <p><strong>Augusto Luiz</strong> está à frente da VCZ Consultoria. Referência como especialista em inteligência comercial, atuou na maior rede de varejo alimentar de Santa Catarina — o <strong>Grupo Koch</strong> —, entregando rentabilidade, JBP, precificação, forecast, dashboards e dados Nielsen por dentro de uma das maiores operações de varejo do Sul do Brasil.</p>
+        <p><strong>No varejo</strong>, experiência construída no <strong>Grupo Koch</strong> — maior rede de varejo alimentar de Santa Catarina —, responsável pelo <strong>JBP</strong>, <strong>análises de mercado</strong>, <strong>performance comercial</strong>, <strong>rentabilidade</strong>, <strong>precificação</strong>, qualificação de sortimento, <strong>forecast</strong> e <strong>dashboards gerenciais</strong>. Trabalhou ainda com <strong>dados Nielsen</strong> e <strong>pesquisa de mercado</strong> aplicada à estratégia e ao posicionamento competitivo.</p>
+        <p><strong>Na indústria</strong>, experiência em <strong>pesquisa de mercado</strong>, <strong>performance comercial</strong>, <strong>precificação</strong>, qualificação de portfólio, <strong>planejamento de demanda</strong>, análise de ruptura e <strong>forecast de vendas</strong>.</p>
+      </div>
+      <div class="frente-portfolio reveal">
+        <a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" class="btn-portfolio">
+          Baixar Portfolio
+        </a>
+        <a href="/VCZ_Apresentacao_Servicos.pptx" target="_blank" rel="noopener" class="btn-apresentacao">
+          Ver Apresentação
+        </a>
+      </div>
+    </div>
+    <div class="frente-photo reveal">
+      <div class="frente-photo-ring"></div>
+      <div class="frente-photo-frame">
+        <img src="augusto-luiz.jpg" alt="Augusto Luiz, fundador da VCZ Consultoria">
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1974,6 +2206,20 @@
   function closeMenu() {
     document.getElementById('nav-links').classList.remove('open');
     document.getElementById('nav-hamburger').classList.remove('open');
+  }
+
+  /* ── LISTA DE SERVIÇOS (SOBRE) ──────────────────────────────────
+     #sobre-servicos-novo (visível, 9 serviços agrupados por categoria)
+     e #sobre-servicos-old (guardado, 2 cards da versão anterior do site).
+     O botão só troca qual dos dois fica visível — nada é apagado.
+  ──────────────────────────────────────────────────────────────── */
+  function toggleServicosHome() {
+    const novo = document.getElementById('sobre-servicos-novo');
+    const antigo = document.getElementById('sobre-servicos-old');
+    const btn = document.getElementById('btn-toggle-servicos-home');
+    const mostrandoAntiga = antigo.classList.toggle('open');
+    novo.style.display = mostrandoAntiga ? 'none' : '';
+    btn.firstChild.textContent = mostrandoAntiga ? 'Ver lista atual de serviços ' : 'Ver lista anterior de serviços ';
   }
 
   /* ── ANIMAÇÕES DE SCROLL ───────────────────────────────────────

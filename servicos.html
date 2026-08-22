@@ -102,6 +102,124 @@
   /* ── SERVIÇOS ── */
   #servicos { background: var(--navy2); padding: 56px 5vw 80px; }
 
+  /* ── 9 SERVIÇOS (portfólio 2026), agrupados em 4 categorias ── */
+  .categoria-block { margin-bottom: 3rem; }
+  .categoria-block:first-child { margin-top: 0; }
+  .categoria-block:last-child { margin-bottom: 0; }
+
+  .categoria-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .categoria-label::after { content: ''; flex: 1; height: 1px; background: rgba(183,160,115,0.2); }
+  .categoria-label-sep { color: var(--gold-aged); opacity: 0.6; }
+
+  .servicos-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+  /* Card claro (creme), no mesmo padrão do resto do site: borda
+     dourada no topo, número + ícone no cabeçalho, título + texto curto. */
+  .servico-mini-card {
+    background: var(--cream);
+    padding: 1.8rem 1.6rem 1.6rem;
+    border-top: 2px solid var(--gold);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.28);
+    transition: box-shadow 0.25s ease;
+  }
+  .servico-mini-card:hover { box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
+
+  .servico-mini-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
+
+  .servico-mini-icon { color: var(--gold); display: flex; }
+
+  .servico-mini-num { font-family: 'DM Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--gold); }
+
+  .servico-mini-title { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--graphite); line-height: 1.25; margin-bottom: 0.7rem; }
+  .servico-mini-sub { font-weight: 400; font-size: 14px; color: #888; }
+
+  .servico-mini-desc { font-size: 14.5px; font-weight: 300; color: #555; line-height: 1.8; }
+
+  /* "+" com tooltip no hover/foco: mostra os 3 pontos de detalhe de
+     cada serviço (extraídos da apresentação). Não muda a altura do
+     card — a caixa flutua por cima, os cards da linha nunca desalinham. */
+  .servico-mini-more {
+    position: relative;
+    margin-top: 0.9rem;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-aged);
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1;
+    cursor: help;
+    transition: background 0.2s, color 0.2s;
+  }
+  .servico-mini-more:hover,
+  .servico-mini-more:focus { background: var(--gold); color: var(--navy); outline: none; }
+
+  .servico-mini-tip {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 10px);
+    width: 260px;
+    max-width: 75vw;
+    background: var(--navy);
+    border: 1px solid rgba(183,160,115,0.3);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+    z-index: 40;
+  }
+  .servico-mini-more:hover .servico-mini-tip,
+  .servico-mini-more:focus .servico-mini-tip { opacity: 1; visibility: visible; transform: translateY(0); }
+
+  .tip-item { font-size: 12px; font-weight: 300; color: var(--fog); line-height: 1.55; text-align: left; }
+  .tip-item strong { display: block; color: var(--warm-white); font-weight: 600; font-size: 12px; margin-bottom: 2px; }
+
+  /* ── TOGGLE: detalhamento anterior por área ── */
+  .detalhe-toggle-wrap { margin-top: 3.5rem; text-align: center; }
+
+  .btn-toggle-detalhe {
+    background: none;
+    border: 1px solid rgba(183,160,115,0.4);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 12px 26px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-toggle-detalhe:hover { background: rgba(200,146,42,0.08); border-color: var(--gold); }
+  .btn-toggle-detalhe .chevron { transition: transform 0.2s; }
+  .btn-toggle-detalhe.open .chevron { transform: rotate(180deg); }
+
+  /* Conteúdo antigo (2 cards por área) — preservado no HTML, só fica
+     visível quando o botão acima é clicado. Nada foi apagado. */
+  .servicos-detalhe { display: none; margin-top: 3rem; }
+  .servicos-detalhe.open { display: block; }
+
   .servicos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
   .servico-card { background: var(--cream); border-top: 3px solid var(--gold); padding: 2.5rem 2.2rem 3rem; transition: box-shadow 0.3s; }
@@ -148,6 +266,8 @@
     .nav-links a { padding: 1rem 5vw; font-size: 13px; letter-spacing: 0.2em; border-bottom: 1px solid rgba(183,160,115,0.08); }
     .nav-links li:last-child a { border-bottom: none; }
     .nav-cta { display: none; }
+    .servicos-mini-grid { grid-template-columns: 1fr; }
+    .servico-mini-tip { display: none; }
     .servicos-grid { grid-template-columns: 1fr; }
     .page-header-title { font-size: clamp(2rem, 7vw, 3rem); }
   }
@@ -237,6 +357,180 @@
 
 <!-- SERVIÇOS -->
 <section id="servicos">
+  <!-- MARGEM E PREÇO -->
+  <div class="categoria-block">
+    <p class="categoria-label reveal">Margem e Preço</p>
+    <div class="servicos-mini-grid">
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+          <span class="servico-mini-num">01</span>
+        </div>
+        <p class="servico-mini-title">Análise de rentabilidade</p>
+        <p class="servico-mini-desc">Estudo de margem por categoria e SKU: preço desalinhado, custo não repassado e verba desproporcional, com prioridade de correção.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Onde a margem se perde</strong>Categoria e SKU com preço desalinhado, custo não repassado ou verba que não acompanhou.</span>
+            <span class="tip-item"><strong>Preço e competitividade</strong>Se o preço praticado sustenta a margem frente ao mercado, e onde há barganha com a indústria.</span>
+            <span class="tip-item"><strong>O que acompanhar</strong>Categorias e produtos a monitorar, priorizados por impacto no resultado.</span>
+          </span>
+        </span>
+      </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></span>
+          <span class="servico-mini-num">02</span>
+        </div>
+        <p class="servico-mini-title">JBP <span class="servico-mini-sub">Joint Business Plan</span></p>
+        <p class="servico-mini-desc">Parceria com fornecedores estratégicos: metas de venda e rentabilidade acordadas para crescimento sustentável.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Metas acordadas</strong>Histórico reconstruído e projeção de crescimento acordada entre as partes.</span>
+            <span class="tip-item"><strong>Plano de ativação</strong>Sortimento, preço, espaço e promoção com responsável e prazo.</span>
+            <span class="tip-item"><strong>Report no ano</strong>Acompanhamento periódico do combinado, com correção de rota.</span>
+          </span>
+        </span>
+      </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+          <span class="servico-mini-num">03</span>
+        </div>
+        <p class="servico-mini-title">Precificação</p>
+        <p class="servico-mini-desc">Estratégia de precificação, competitividade por região e sensibilidade de preços, com simulador de preço e rentabilidade.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Estratégia de precificação</strong>Papel de cada categoria no preço: item de imagem, de destino e de margem.</span>
+            <span class="tip-item"><strong>Preços e competitividade</strong>Posicionamento frente ao mercado, por praça e por concorrente.</span>
+            <span class="tip-item"><strong>Simulador de preço</strong>Efeito em volume, margem e rentabilidade antes de mexer no preço.</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SORTIMENTO E COMPRA + TESTE E OPERAÇÃO (juntas: 2+1 = 3, preenche a linha) -->
+  <div class="categoria-block">
+    <p class="categoria-label reveal"><span>Sortimento e Compra</span><span class="categoria-label-sep">·</span><span>Teste e Operação</span></p>
+    <div class="servicos-mini-grid">
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+          <span class="servico-mini-num">04</span>
+        </div>
+        <p class="servico-mini-title">Estrutura mercadológica</p>
+        <p class="servico-mini-desc">Análise de sortimento e rentabilidade, papel da categoria e do produto, curva ABC, revisão de mix e da estrutura de categorias.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Árvore mercadológica</strong>Setor, categoria, subcategoria e segmento revisados de ponta a ponta.</span>
+            <span class="tip-item"><strong>Curva ABC e papel do produto</strong>O que sustenta a categoria, o que canibaliza e o que pode sair.</span>
+            <span class="tip-item"><strong>Revisão de mix</strong>Espaços de marca, tamanho e faixa de preço ainda não cobertos.</span>
+          </span>
+        </span>
+      </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
+          <span class="servico-mini-num">05</span>
+        </div>
+        <p class="servico-mini-title">Planejamento de compra</p>
+        <p class="servico-mini-desc">Compra assertiva: giro dentro do prazo de pagamento, sem financiar estoque com capital próprio, e quanto antecipar de compra no custo atual diante de um reajuste anunciado.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Antecipação de aumento</strong>Quanto comprar no custo antigo antes da nova tabela entrar em vigor.</span>
+            <span class="tip-item"><strong>Giro e estoque atual</strong>A recomendação nasce da cobertura real de cada item, não do desconto oferecido.</span>
+            <span class="tip-item"><strong>Valorização do dinheiro</strong>O ganho na compra comparado ao custo de capital e de armazenagem do período.</span>
+          </span>
+        </span>
+      </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
+          <span class="servico-mini-num">06</span>
+        </div>
+        <p class="servico-mini-title">Projeto piloto</p>
+        <p class="servico-mini-desc">Proposta do que testar e como: lojas teste e espelho, indicadores definidos, acompanhamento do projeto, leitura do que funcionou, correções e sugestão de replicar nas demais lojas.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Desenho do piloto</strong>Hipótese, escopo, período e indicadores definidos antes de começar.</span>
+            <span class="tip-item"><strong>Lojas teste e espelho</strong>Indicamos onde testar e contra quais lojas comparar o resultado.</span>
+            <span class="tip-item"><strong>Sugestão de replicar</strong>Acompanhamento periódico e sugestão de replicar nas demais lojas.</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DADOS E MERCADO -->
+  <div class="categoria-block">
+    <p class="categoria-label reveal">Dados e Mercado</p>
+    <div class="servicos-mini-grid">
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
+          <span class="servico-mini-num">07</span>
+        </div>
+        <p class="servico-mini-title">Painéis gerenciais</p>
+        <p class="servico-mini-desc">Painéis sob medida, do gerencial ao SKU, com visão por região, bandeira, canal e loja, atualizados sem retrabalho.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Indicadores que o time usa</strong>Poucos KPIs, bem definidos, ligados à decisão de cada área.</span>
+            <span class="tip-item"><strong>Rotina automatizada</strong>Atualização recorrente, sem retrabalho manual de relatório.</span>
+            <span class="tip-item"><strong>Leitura por recorte</strong>Categoria, loja, região e fornecedor no mesmo painel.</span>
+          </span>
+        </span>
+      </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+          <span class="servico-mini-num">08</span>
+        </div>
+        <p class="servico-mini-title">Painel de mercado</p>
+        <p class="servico-mini-desc">Painel construído com os dados que você já possui (Nielsen, Scanntech, GFK): sua performance frente à concorrência e mais força na negociação com o fornecedor.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Share e benchmark</strong>Sua participação por categoria frente ao mercado e à região.</span>
+            <span class="tip-item"><strong>Tendência de consumo</strong>Movimentos de categoria que antecipam oportunidade e risco.</span>
+            <span class="tip-item"><strong>Visão gerencial</strong>Os relatórios que você já possui viram base para negociar e corrigir rota.</span>
+          </span>
+        </span>
+      </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <span class="servico-mini-num">09</span>
+        </div>
+        <p class="servico-mini-title">Pesquisa de mercado</p>
+        <p class="servico-mini-desc">Estudos quantitativos e qualitativos para entender comportamento de compra, percepção de marca, tendências de consumo e onde o cliente vê valor.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Quanti e quali</strong>Estudos de campo para entender comportamento de compra e percepção de marca.</span>
+            <span class="tip-item"><strong>Tendências de consumo</strong>Movimentos de consumo que antecipam oportunidade e risco na categoria.</span>
+            <span class="tip-item"><strong>Onde o cliente vê valor</strong>A pesquisa termina em direção de sortimento, comunicação e posicionamento.</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="detalhe-toggle-wrap">
+    <button type="button" class="btn-toggle-detalhe" id="btn-toggle-detalhe" onclick="toggleDetalhe()">
+      Ver detalhamento completo por área <span class="chevron">▾</span>
+    </button>
+  </div>
+
+  <!-- Conteúdo anterior do site (2 cards com todas as subáreas) —
+       preservado por inteiro, só some da tela até o botão acima ser clicado. -->
+  <div class="servicos-detalhe" id="servicos-detalhe">
   <div class="servicos-grid">
 
     <div class="servico-card">
@@ -318,6 +612,7 @@
     </div>
 
   </div>
+  </div>
 </section>
 
 <!-- CTA -->
@@ -358,6 +653,20 @@
     document.getElementById('nav-links').classList.remove('open');
     document.getElementById('nav-hamburger').classList.remove('open');
   }
+
+  /* ── DETALHAMENTO ANTERIOR ─────────────────────────────────────
+     O conteúdo antigo (2 cards com todas as subáreas) continua
+     inteiro no HTML dentro de #servicos-detalhe, só com display:none.
+     Esse botão apenas alterna a classe "open" pra mostrar/esconder. ──── */
+  function toggleDetalhe() {
+    const bloco = document.getElementById('servicos-detalhe');
+    const btn = document.getElementById('btn-toggle-detalhe');
+    const abrindo = bloco.classList.toggle('open');
+    btn.classList.toggle('open', abrindo);
+    btn.firstChild.textContent = abrindo ? 'Ocultar detalhamento por área ' : 'Ver detalhamento completo por área ';
+    if (abrindo) bloco.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
