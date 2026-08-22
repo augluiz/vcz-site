@@ -21,7 +21,7 @@
 <style>
 :root{
   --bg:#F5F0E8; --panel:#FFFFFF; --panel2:#EDE7DC; --panel3:#E0D8CC;
-  --navy:#0D1B2A; --navy2:#162B40;
+  --navy:#0D1B2A; --navy2:#162B40; --steel:#9AAABB;
   --gold:#C8922A; --gold-light:#E2AC4C; --gold-aged:#B7A073;
   --text:#1A2433; --text2:#3E5068; --text3:#7A8A9A;
   --border:rgba(26,36,51,.1);
@@ -87,7 +87,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 }
 
 /* DISCLAIMER */
-.disclaimer-note{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;max-width:900px}
+.disclaimer-note{font-family:'DM Mono',monospace;font-size:.52rem;color:rgba(154,170,187,.65);line-height:1.6;max-width:900px}
 /* HEADER */
 .dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2)}
 .dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
@@ -124,7 +124,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 /* COMBOBOX */
 .combo-wrap{position:relative}
 .combo-input{width:210px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem .3rem 1.65rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B7A073' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.42rem center}
-.combo-input::placeholder{color:rgba(183,160,115,.45)}
+.combo-input::placeholder{color:rgba(183,160,115,.6)}
 .combo-input:focus{border-color:var(--gold)}
 .combo-drop{position:absolute;top:calc(100% + 2px);left:0;width:310px;max-height:240px;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;display:none}
 .combo-drop.open{display:block}
@@ -242,7 +242,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
 .full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
 .full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600;white-space:nowrap}
-.full-tbox-head input{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.26rem .5rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;width:190px;transition:border-color .2s}
+.full-tbox-head input{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.26rem .5rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;width:230px;transition:border-color .2s}
+.full-tbox-head input::placeholder{color:var(--text3)}
 .full-tbox-head input:focus{border-color:var(--gold)}
 .geral-date-sel{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.26rem .5rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.65rem;outline:none;cursor:pointer;transition:border-color .2s;color-scheme:dark}
 .geral-date-sel option{background:var(--navy2);color:#EDE7DC}
@@ -253,7 +254,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .full-tbox .col-xp{display:none}
 .full-tbox.cols-expanded .col-xp{display:table-cell}
 
-.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
+.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#8AAABB;flex-wrap:wrap;gap:.5rem}
 .dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
 .dash-footer a:hover{color:var(--gold)}
 
@@ -262,7 +263,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .tbox-desc strong{color:var(--text2);font-weight:500}
 .chart-hint{padding:.25rem 1.1rem .45rem;font-family:'DM Sans',sans-serif;font-size:.67rem;color:var(--text3);line-height:1.45;background:var(--panel)}
 .chart-hint strong{color:var(--text2);font-weight:500}
-.chart-filter-bar .filter-hint{font-family:'DM Sans',sans-serif;font-size:.65rem;color:#3A5A6A;font-style:italic}
+.chart-filter-bar .filter-hint{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--steel);font-style:italic}
 /* ABOUT STRIP */
 .about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
 .about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr) auto;gap:1rem 2.2rem;align-items:center}
@@ -551,7 +552,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
           <span id="ddm-cesta-lbl">Todas</span><span class="arr">▾</span>
         </button>
         <div class="ddm-panel" id="ddm-cesta-panel">
-          <input class="ddm-search" type="text" id="f-cesta-search" placeholder="Pesquisar…" autocomplete="off">
+          <input class="ddm-search" type="text" id="f-cesta-search" placeholder="Digite para pesquisar produtos…" autocomplete="off">
           <div class="ddm-list" id="cesta-list"></div>
         </div>
       </div>
@@ -642,7 +643,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
         <div class="chart-filter-bar">
           <span class="lbl">Produto</span>
           <div class="combo-wrap" id="combo-produto" style="flex:1">
-            <input class="combo-input" type="text" id="f-produto-input" placeholder="Pesquise o produto:" autocomplete="off">
+            <input class="combo-input" type="text" id="f-produto-input" placeholder="Digite o nome do produto…" autocomplete="off">
             <div class="combo-drop" id="combo-drop"></div>
           </div>
           <span class="filter-hint">ou clique em uma linha da tabela ao lado</span>
@@ -704,7 +705,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
           <h3>Cotação Geral</h3>
           <span class="tbox-cnt" id="cnt-geral" style="color:var(--gold);border-color:rgba(200,146,42,.3)">0</span>
           <select id="geral-date" class="geral-date-sel"></select>
-          <input type="text" id="tbl-search" placeholder="Filtrar…">
+          <input type="text" id="tbl-search" placeholder="Digite o produto para filtrar…">
           <button class="geral-expand-btn" id="geral-expand-btn" title="Mostrar/ocultar Máx., Mín., Ano Anterior e Var. Ano">⊞ Detalhar</button>
         </div>
         <div class="tscroll limited">
@@ -854,8 +855,12 @@ function sortRows(rows,col,dir){
   });
 }
 
-const loadCSV=url=>new Promise((res,rej)=>
-  Papa.parse(url,{download:true,header:true,delimiter:';',skipEmptyLines:true,complete:r=>res(r.data),error:rej}));
+const loadCSV=(url,tentativas=3)=>new Promise((res,rej)=>{
+  const tentar=n=>Papa.parse(url,{download:true,header:true,delimiter:';',skipEmptyLines:true,
+    complete:r=>res(r.data),
+    error:e=>n>1?setTimeout(()=>tentar(n-1),800):rej(e)});
+  tentar(tentativas);
+});
 
 async function boot(){
   try{
