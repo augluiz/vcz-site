@@ -309,7 +309,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
         <option value="subcesta">Subcesta</option>
         <option value="marca">Marca</option>
         <option value="tamanho">Tamanho</option>
-        <option value="produto">Produto (SKU)</option>
+        <option value="produto" selected>Produto (SKU)</option>
       </select>
     </div>
     <div class="tf-grp">
@@ -425,7 +425,7 @@ const state = {
   filtros: { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
              ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
              depto:'', descricao:'', ean:'', disp:'' },
-  verPor: 'categoria', metrica: 'preco_regular', agregacao: 'media',
+  verPor: 'produto', metrica: 'preco_regular', agregacao: 'media',
   marcaDestaque: '', // marca fixa que ganha 1 coluna extra na tabela, sem filtrar o resto (ex: cliente da VCZ acompanhando ao vivo)
   _aliasProduto: new Map(), // chaveBruta -> chaveCanônica, recalculado a cada render de Produto (ver calcularAliasProduto)
   drill: null,                // {campo, valor} — linha do pivot selecionada
