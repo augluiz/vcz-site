@@ -57,7 +57,6 @@ nav{position:fixed;top:0;left:0;right:0;height:72px;background:rgba(13,27,42,.97
 /* ---- filter panel ---- */
 .filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
 .filter-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.85rem 1.1rem;padding:.7rem 2rem}
-.filter-row.row2{background:var(--navy2);border-top:1px solid rgba(200,146,42,.12)}
 .tf-grp{display:flex;flex-direction:column;gap:.22rem}
 .tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
 .tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.32rem .55rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
@@ -94,13 +93,6 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 
 /* ---- main ---- */
 .dash-main{max-width:1500px;margin:0 auto;padding:1.3rem 2rem 3rem}
-
-/* stat tiles */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1.1rem}
-.stat-tile{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);padding:.75rem .9rem}
-.stat-tile .st-lbl{font-family:'DM Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin-bottom:.3rem}
-.stat-tile .st-val{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--navy);line-height:1}
-.stat-tile .st-sub{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);margin-top:.25rem}
 
 /* tbox (mesmo padrão do ceasa) */
 .tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.1rem;box-shadow:var(--shadow-sm)}
@@ -145,8 +137,32 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .pager button:disabled{opacity:.4;cursor:default}
 .pager span{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3)}
 
-.hint{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text3);margin-bottom:.9rem;line-height:1.5}
-.hint strong{color:var(--navy)}
+/* ---- about strip (introdução + instruções) ---- */
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.4fr);gap:1rem 2.2rem;align-items:center}
+.about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65}
+.about-what strong{color:#E8D8C0;font-weight:600}
+.about-steps{display:flex;flex-direction:column;gap:.42rem}
+.about-step{display:flex;align-items:flex-start;gap:.55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8AAABB;line-height:1.5}
+.about-step span{flex:1;min-width:0}
+.about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;white-space:nowrap;flex-shrink:0;margin-top:.12rem}
+@media(max-width:900px){.about-cols{grid-template-columns:1fr}}
+
+/* ---- toggle pra ocultar/mostrar o painel de filtros (desktop e mobile, diferente do ceasa que só mostra no mobile) ---- */
+.filter-toggle-row{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.5rem 1.2rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.18);cursor:pointer;user-select:none}
+.filter-toggle-chev{color:var(--gold-aged);font-size:.7rem;transition:transform .2s}
+.filter-toggle-row.open .filter-toggle-chev{transform:rotate(180deg)}
+.filter-collapsible{display:none}
+.filter-collapsible.open{display:block}
+
+/* ---- param-strip: "como montar a tabela" — separado visualmente dos
+   filtros de dados de propósito, pra não parecer só mais um filtro. Cada
+   parâmetro vira um "quadro" próprio (fundo+borda), não só texto solto. ---- */
+.param-strip{background:var(--navy2);margin-top:.6rem;border-top:3px solid var(--gold);border-bottom:2px solid rgba(200,146,42,.4);box-shadow:0 4px 14px rgba(0,0,0,.3);padding:.7rem 2rem;display:flex;align-items:stretch;gap:.9rem;flex-wrap:wrap}
+.param-strip-label{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold-light);text-transform:uppercase;letter-spacing:.1em;font-weight:600;white-space:nowrap;flex-shrink:0;display:flex;align-items:center}
+.param-strip .filter-row{padding:0;border:none;flex:1;gap:.7rem}
+.param-strip .tf-grp{background:rgba(0,0,0,.22);border:1px solid rgba(200,146,42,.35);border-radius:7px;padding:.42rem .8rem;justify-content:center}
+.param-strip .tf-vsep{display:none}
 
 /* ---- combo search (autocomplete de produto p/ evolução) ---- */
 .combo-wrap{position:relative;flex:1;min-width:260px;max-width:520px}
@@ -165,7 +181,12 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .evo-summary{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#EDE7DC}
 .evo-summary b{color:var(--gold-light)}
 .evo-summary .ean{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-aged)}
-.evo-chart-box{padding:1rem;height:320px}
+.evo-chart-box{padding:1rem;height:352px;display:flex;flex-direction:column}
+.evo-chart-legenda{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-bottom:.5rem;flex-shrink:0}
+.evo-chart-box canvas{flex:1;min-height:0}
+.evo-table-toolbar{display:flex;align-items:center;gap:.8rem;padding:.5rem 1rem;background:var(--panel2);border-bottom:1px solid var(--border)}
+.evo-table-toolbar .lbl{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.evo-table-toolbar .radio-row label{color:var(--text2)}
 .evo-empty{padding:2.5rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text3)}
 .dt td.rede-cell{font-weight:600;color:var(--navy);white-space:nowrap;position:sticky;left:0;background:var(--tr-odd);vertical-align:middle;border-right:1px solid var(--border)}
 #evo-table tbody tr:nth-child(4n+1) td,#evo-table tbody tr:nth-child(4n+2) td{background:var(--tr-even)}
@@ -199,8 +220,29 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
   <p class="sub" id="last-update">Carregando…</p>
 </div>
 
+<!-- ABOUT STRIP -->
+<div class="about-strip">
+  <div class="about-cols">
+    <p class="about-what">
+      Painel interno que compara, produto a produto, o preço praticado pelas <strong>principais redes de varejo de SC</strong> — e também pelo e-commerce próprio do cliente, quando fizer parte do escopo — pensado pra embasar consultoria de precificação e reuniões com marca ou rede.
+    </p>
+    <div class="about-steps">
+      <div class="about-step"><b>1</b><span>Filtre por categoria, marca, produto etc. e escolha em <strong style="color:#E8D8C0">"Ver tabela por"</strong> a dimensão das linhas — Produto, Marca, Categoria...</span></div>
+      <div class="about-step"><b>2</b><span>Clique numa linha da tabela pra filtrar o <strong style="color:#E8D8C0">Detalhe de SKUs</strong> abaixo só com aquele item.</span></div>
+      <div class="about-step"><b>3</b><span><strong style="color:#E8D8C0">Arraste</strong> o cabeçalho ⠿ de uma rede pra reordenar as colunas como quiser comparar.</span></div>
+      <div class="about-step"><b>4</b><span><strong style="color:#E8D8C0">Clique duplo</strong> num preço abre o produto direto no site daquela rede, numa aba nova.</span></div>
+      <div class="about-step"><b>5</b><span>O símbolo <strong style="color:#E8D8C0">≈</strong> antes de um preço indica linha <strong style="color:#E8D8C0">agrupada automaticamente</strong> — produtos sem o mesmo código EAN mas com nome e tamanho muito parecidos entre redes. Vale conferir se o agrupamento faz sentido antes de usar o número.</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- FILTER PANEL -->
 <div class="filter-panel">
+  <div class="filter-toggle-row open" id="filter-toggle-row" onclick="toggleFilterPanel()">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em">Filtros — clique pra ocultar/mostrar</span>
+    <span class="filter-toggle-chev">▾</span>
+  </div>
+  <div class="filter-collapsible open" id="filter-collapsible">
   <div class="filter-row">
     <div class="tf-grp">
       <span class="lbl">Data <span id="data-cnt" class="date-cnt"></span></span>
@@ -299,7 +341,14 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 
     <button class="btn-reset" id="btn-reset">↺ Limpar filtros</button>
   </div>
+  </div><!-- /filter-collapsible -->
+</div><!-- /filter-panel -->
 
+<!-- PARÂMETROS DE EXIBIÇÃO — separado dos filtros de propósito (não estreita
+     os dados, muda como a tabela é montada) e sempre visível, mesmo com os
+     filtros ocultos -->
+<div class="param-strip">
+  <span class="param-strip-label">⚙ Como montar a tabela</span>
   <div class="filter-row row2">
     <div class="tf-grp">
       <span class="lbl">Ver tabela de comparação por</span>
@@ -331,17 +380,13 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     </div>
     <div class="tf-vsep"></div>
     <div class="tf-grp">
-      <span class="lbl" title="Digite uma marca (ex: Cottonbaby) pra somar 1 coluna nova com o preço só dela, ou uma rede (ex: Bistek) pra só destacar a coluna que já existe — útil em reunião com fabricante ou com a própria rede">★ Destacar marca ou rede</span>
-      <input class="tf-input" type="text" id="f-marca-destaque" list="lista-marcas-destaque" placeholder="ex: Cottonbaby ou Bistek" style="min-width:190px" autocomplete="off">
-      <datalist id="lista-marcas-destaque"></datalist>
+      <span class="lbl" title="Escolha uma rede pra destacar a coluna dela e ver o índice de Competitividade (preço dela ÷ média de mercado)">★ Destacar rede</span>
+      <select class="tf-input" id="f-marca-destaque" style="min-width:190px"><option value="">Nenhuma</option></select>
     </div>
   </div>
-</div>
+</div><!-- /param-strip -->
 
 <div class="dash-main">
-  <p class="hint">Compare como cada rede posiciona o preço de <strong>uma mesma categoria, marca ou produto</strong> em relação às demais. Clique numa linha da tabela de comparação para ver o detalhe de SKUs abaixo. Coluna verde = <strong>preço mais baixo</strong> da linha, vermelha = <strong>mais alto</strong>.</p>
-
-  <div class="stat-grid" id="stat-grid"></div>
 
   <div class="tbox">
     <div class="tbox-head">
@@ -379,7 +424,18 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
       </div>
       <div class="evo-summary" id="evo-summary">Nenhum produto selecionado — busque acima ou clique em "evolução" numa linha da tabela de detalhe.</div>
     </div>
-    <div class="evo-chart-box" id="evo-chart-box" style="display:none"><canvas id="evo-canvas"></canvas></div>
+    <div class="evo-chart-box" id="evo-chart-box" style="display:none">
+      <p class="evo-chart-legenda">Linha cheia = preço regular · área sombreada = quanto caiu quando teve promoção</p>
+      <canvas id="evo-canvas"></canvas>
+    </div>
+    <div class="evo-table-toolbar" id="evo-table-toolbar" style="display:none">
+      <span class="lbl">Preço na tabela abaixo</span>
+      <div class="radio-row">
+        <label><input type="radio" name="evo-metrica" value="regular" checked> Regular</label>
+        <label><input type="radio" name="evo-metrica" value="promo"> Promoção</label>
+        <label><input type="radio" name="evo-metrica" value="menor"> Menor preço</label>
+      </div>
+    </div>
     <div class="tbl-scroll" id="evo-table-wrap" style="display:none"><table class="dt" id="evo-table"><thead></thead><tbody></tbody></table></div>
   </div>
 </div>
@@ -414,6 +470,11 @@ const SITE_PALETTE = ['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300
 const SITE_COLOR = {};
 SITE_ORDER.forEach((s,i) => { SITE_COLOR[s] = SITE_PALETTE[i % SITE_PALETTE.length]; });
 
+function hexParaRgba(hex, alpha){
+  const n = parseInt(hex.replace('#',''), 16);
+  return `rgba(${(n>>16)&255}, ${(n>>8)&255}, ${n&255}, ${alpha})`;
+}
+
 const DIM_FIELD = {categoria:'categoria', subcategoria:'subcategoria', marca:'marca', produto:'descricao', subcesta:'_subcesta', tamanho:'_tamanho'};
 const DIM_LABEL = {categoria:'Categoria', subcategoria:'Subcategoria', marca:'Marca', produto:'Produto', subcesta:'Subcesta', tamanho:'Tamanho'};
 const PAGE_SIZE = 50;
@@ -422,18 +483,22 @@ const state = {
   indice: [],                 // [{data, linhas, arquivo}]
   cache: new Map(),           // data -> linhas parseadas (array de objetos)
   diasSelecionados: new Set(),
-  filtros: { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
+  // marca já vem com Cottonbaby pré-selecionada como exemplo (pedido do
+  // usuário) — troca/limpa normalmente pelo filtro de Marca
+  filtros: { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(['Cottonbaby']),
              ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
              depto:'', descricao:'', ean:'', disp:'' },
   verPor: 'produto', metrica: 'preco_regular', agregacao: 'media',
   marcaDestaque: '', // marca fixa que ganha 1 coluna extra na tabela, sem filtrar o resto (ex: cliente da VCZ acompanhando ao vivo)
   _aliasProduto: new Map(), // chaveBruta -> chaveCanônica, recalculado a cada render de Produto (ver calcularAliasProduto)
   drill: null,                // {campo, valor} — linha do pivot selecionada
-  siteColOrder: [...SITE_ORDER], // ordem das colunas de rede na tabela — o usuário pode arrastar pra reordenar
+  siteColOrder: [...SITE_ORDER], // ordem das colunas de rede na tabela
+  siteOrderManual: false, // true assim que o usuário arrasta 1x — daí o auto-ordenar por densidade para de mexer
   pivotSort: {col:'_n', dir:-1}, detailSort: {col:'data', dir:-1},
   pivotBusca: '',
   pivotPage: 1, detailPage: 1,
   evolucao: { ean:null, descricao:null }, // produto único selecionado na seção de evolução
+  evoTabelaMetrica: 'regular', // regular | promo | menor — só a tabela da seção de evolução, o gráfico continua fixo mostrando as duas linhas
   _evoChart: null,
 };
 
@@ -608,37 +673,78 @@ function canonicalizarSubcestas(rows){
   rows.forEach(r => { if(r._subcesta) r._subcesta = canonico.get(norm(r._subcesta)); });
 }
 
+// campo do dropdown -> campo da linha, pra montar as opções cruzadas
+const CAMPO_DDM_PARA_LINHA = { depto:'departamento', sites:'site', categorias:'categoria',
+  subcategorias:'subcategoria', marcas:'marca', ufs:'uf', cidades:'cidade',
+  subcestas:'_subcesta', tamanhos:'_tamanho' };
+
 function montarFiltrosDependentes(){
   const rows = linhasCarregadas();
   canonicalizarSubcestas(rows);
 
+  // cada dropdown enxerga as linhas filtradas por TODOS os outros filtros já
+  // ativos, menos o dele próprio — assim marcar "Cottonbaby" em Marca já
+  // esconde "Abacate"/"Abajur" da lista de Subcesta, por exemplo. Faz isso
+  // num loop só (não 9 filtros separados) porque o dataset passa de 370mil
+  // linhas com todos os dias carregados, e 9 varreduras cheias travava a UI.
+  const f = state.filtros;
+  const qDesc = norm(f.descricao);
+  const camposDdm = Object.keys(CAMPO_DDM_PARA_LINHA);
+  const sets = {}; camposDdm.forEach(c => sets[c] = new Set());
+  const tamanhoQtd = new Map();
+
+  rows.forEach(r => {
+    const checks = {
+      depto: !f.depto || r.departamento === f.depto,
+      sites: !f.sites.size || f.sites.has(r.site),
+      categorias: !f.categorias.size || f.categorias.has(r.categoria),
+      subcategorias: !f.subcategorias.size || f.subcategorias.has(r.subcategoria),
+      marcas: !f.marcas.size || f.marcas.has(r.marca),
+      ufs: !f.ufs.size || f.ufs.has(r.uf),
+      cidades: !f.cidades.size || f.cidades.has(r.cidade),
+      subcestas: !f.subcestas.size || f.subcestas.has(r._subcesta),
+      tamanhos: !f.tamanhos.size || f.tamanhos.has(r._tamanho),
+      disp: !f.disp || r.disponivel === f.disp,
+      descricao: !qDesc || norm(r.descricao).includes(qDesc),
+      ean: !f.ean || (r.ean||'').includes(f.ean),
+    };
+    let falhas = 0, campoQueFalhou = null;
+    for(const k in checks){ if(!checks[k]){ falhas++; campoQueFalhou = k; if(falhas>1) break; } }
+    if(falhas>1) return; // falhou em 2+ filtros -> não entra em nenhuma lista de opções
+    // falhas===0: linha passa em tudo, conta pra todo dropdown; falhas===1: só
+    // conta pro dropdown que ela falhou (ignorando ele mesmo é o que a deixa passar)
+    const camposParaContar = falhas===0 ? camposDdm : (sets[campoQueFalhou] ? [campoQueFalhou] : []);
+    camposParaContar.forEach(campo => {
+      const v = r[CAMPO_DDM_PARA_LINHA[campo]];
+      if(v){ sets[campo].add(v); if(campo==='tamanhos') tamanhoQtd.set(v, r._tamanhoQtd); }
+    });
+  });
+
+  const ordenar = vs => [...vs].sort((a,b)=>a.localeCompare(b,'pt'));
+
   // Departamento — select simples (poucas opções)
-  const deptos = distintos(rows,'departamento');
+  const deptos = ordenar(sets.depto);
   const selDepto = document.getElementById('f-depto');
   const deptoAtual = selDepto.value;
   selDepto.innerHTML = '<option value="">Todos</option>' + deptos.map(d=>`<option value="${d}">${d}</option>`).join('');
   selDepto.value = deptos.includes(deptoAtual) ? deptoAtual : '';
 
-  criarDdmMultiSelect('site', distintos(rows,'site').map(s=>({v:s,lbl:SITE_LABELS[s]||s})), state.filtros.sites, 'rede','redes');
-  criarDdmMultiSelect('categoria', distintos(rows,'categoria').map(v=>({v,lbl:v})), state.filtros.categorias, 'categoria','categorias');
-  criarDdmMultiSelect('subcategoria', distintos(rows,'subcategoria').map(v=>({v,lbl:v})), state.filtros.subcategorias, 'subcategoria','subcategorias');
-  criarDdmMultiSelect('marca', distintos(rows,'marca').map(v=>({v,lbl:v})), state.filtros.marcas, 'marca','marcas');
-  criarDdmMultiSelect('uf', distintos(rows,'uf').map(v=>({v,lbl:v})), state.filtros.ufs, 'uf','ufs');
-  criarDdmMultiSelect('cidade', distintos(rows,'cidade').map(v=>({v,lbl:v})), state.filtros.cidades, 'cidade','cidades');
-  criarDdmMultiSelect('subcesta', distintos(rows,'_subcesta').map(v=>({v,lbl:v})), state.filtros.subcestas, 'subcesta','subcestas');
-  criarDdmMultiSelect('tamanho', distintosTamanho(rows), state.filtros.tamanhos, 'tamanho','tamanhos');
+  criarDdmMultiSelect('site', ordenar(sets.sites).map(s=>({v:s,lbl:SITE_LABELS[s]||s})), state.filtros.sites, 'rede','redes');
+  criarDdmMultiSelect('categoria', ordenar(sets.categorias).map(v=>({v,lbl:v})), state.filtros.categorias, 'categoria','categorias');
+  criarDdmMultiSelect('subcategoria', ordenar(sets.subcategorias).map(v=>({v,lbl:v})), state.filtros.subcategorias, 'subcategoria','subcategorias');
+  criarDdmMultiSelect('marca', ordenar(sets.marcas).map(v=>({v,lbl:v})), state.filtros.marcas, 'marca','marcas');
+  criarDdmMultiSelect('uf', ordenar(sets.ufs).map(v=>({v,lbl:v})), state.filtros.ufs, 'uf','ufs');
+  criarDdmMultiSelect('cidade', ordenar(sets.cidades).map(v=>({v,lbl:v})), state.filtros.cidades, 'cidade','cidades');
+  criarDdmMultiSelect('subcesta', ordenar(sets.subcestas).map(v=>({v,lbl:v})), state.filtros.subcestas, 'subcesta','subcestas');
+  criarDdmMultiSelect('tamanho', [...tamanhoQtd.entries()].sort((a,b)=>a[1]-b[1]).map(([lbl])=>({v:lbl,lbl})), state.filtros.tamanhos, 'tamanho','tamanhos');
 
-  document.getElementById('lista-marcas-destaque').innerHTML =
-    [...distintos(rows,'site').map(s=>SITE_LABELS[s]||s), ...distintos(rows,'marca')]
-      .map(v=>`<option value="${v}">`).join('');
-}
-
-// tamanho ordena pela quantidade de verdade (50g, 100g, 1kg…), não
-// alfabético — senão "100 g" viria antes de "50 g"
-function distintosTamanho(rows){
-  const qtdPorLabel = new Map();
-  rows.forEach(r => { if(r._tamanho && !qtdPorLabel.has(r._tamanho)) qtdPorLabel.set(r._tamanho, r._tamanhoQtd); });
-  return [...qtdPorLabel.entries()].sort((a,b)=>a[1]-b[1]).map(([lbl])=>({v:lbl, lbl}));
+  const selDestaque = document.getElementById('f-marca-destaque');
+  const destaqueAtual = selDestaque.value;
+  const sitesDisponiveis = state.siteColOrder.filter(s => distintos(rows,'site').includes(s));
+  selDestaque.innerHTML = '<option value="">Nenhuma</option>' +
+    sitesDisponiveis.map(s => `<option value="${s}">${SITE_LABELS[s]||s}</option>`).join('');
+  selDestaque.value = sitesDisponiveis.includes(destaqueAtual) ? destaqueAtual : '';
+  state.marcaDestaque = selDestaque.value;
 }
 
 // gera um dropdown de checkboxes genérico (ddm-<id>) e mantém o Set de
@@ -657,12 +763,18 @@ function criarDdmMultiSelect(id, opcoes, selecionadoSet, singular, plural){
       <label class="${selecionadoSet.has(o.v)?'active':''}" data-v="${o.v}">
         <input type="checkbox" value="${o.v}" ${selecionadoSet.has(o.v)?'checked':''}> ${o.lbl}
       </label>`).join('') : '<div class="ddm-empty">Nada encontrado</div>';
-    lst.querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
-      if(cb.checked) selecionadoSet.add(cb.value); else selecionadoSet.delete(cb.value);
-      cb.closest('label').classList.toggle('active', cb.checked);
-      atualizarLabelDdm(id, selecionadoSet.size, opcoes.length, singular, plural);
-      render();
-    }));
+  };
+  // 1 listener delegado na lista inteira em vez de 1 por checkbox — com
+  // marca/subcesta passando de milhares de opções, criar milhares de
+  // listeners a cada clique (pra refletir o cruzamento de filtros) travava
+  lst.onchange = e => {
+    const cb = e.target;
+    if(!cb || cb.type !== 'checkbox') return;
+    if(cb.checked) selecionadoSet.add(cb.value); else selecionadoSet.delete(cb.value);
+    cb.closest('label').classList.toggle('active', cb.checked);
+    atualizarLabelDdm(id, selecionadoSet.size, opcoes.length, singular, plural);
+    montarFiltrosDependentes(); // os outros filtros precisam refletir essa escolha
+    render();
   };
   render_();
   if(searchInput) searchInput.oninput = () => render_(searchInput.value);
@@ -697,14 +809,23 @@ function wireDdmToggles(){
 // ---------------------------------------------------------------------
 // EVENTOS gerais do painel
 // ---------------------------------------------------------------------
+function toggleFilterPanel(){
+  document.getElementById('filter-toggle-row').classList.toggle('open');
+  document.getElementById('filter-collapsible').classList.toggle('open');
+}
+
 function wireEventos(){
   wireDdmToggles();
   wireEvoCombo();
+  document.querySelectorAll('input[name=evo-metrica]').forEach(r => r.addEventListener('change', e => {
+    state.evoTabelaMetrica = e.target.value;
+    if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao();
+  }));
 
-  document.getElementById('f-depto').addEventListener('change', e => { state.filtros.depto = e.target.value; render(); });
+  document.getElementById('f-depto').addEventListener('change', e => { state.filtros.depto = e.target.value; montarFiltrosDependentes(); render(); });
   document.getElementById('f-descricao').addEventListener('input', e => { state.filtros.descricao = e.target.value; state.detailPage=1; render(); });
   document.getElementById('f-ean').addEventListener('input', e => { state.filtros.ean = e.target.value.trim(); state.detailPage=1; render(); });
-  document.querySelectorAll('input[name=disp]').forEach(r => r.addEventListener('change', e => { state.filtros.disp = e.target.value; render(); }));
+  document.querySelectorAll('input[name=disp]').forEach(r => r.addEventListener('change', e => { state.filtros.disp = e.target.value; montarFiltrosDependentes(); render(); }));
 
   document.getElementById('f-verpor').addEventListener('change', e => { state.verPor = e.target.value; state.drill=null; state.pivotPage=1; render(); });
   document.querySelectorAll('input[name=metrica]').forEach(r => r.addEventListener('change', e => { state.metrica = e.target.value; render(); }));
@@ -712,7 +833,7 @@ function wireEventos(){
 
   document.getElementById('pivot-search').addEventListener('input', e => { state.pivotBusca = e.target.value; state.pivotPage=1; renderPivot(); });
   document.getElementById('btn-clear-drill').addEventListener('click', () => { state.drill=null; state.detailPage=1; render(); });
-  document.getElementById('f-marca-destaque').addEventListener('input', e => { state.marcaDestaque = e.target.value.trim(); render(); });
+  document.getElementById('f-marca-destaque').addEventListener('change', e => { state.marcaDestaque = e.target.value; render(); });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
     state.filtros = { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
@@ -725,6 +846,7 @@ function wireEventos(){
     state.marcaDestaque='';
     document.querySelector('input[name=disp][value=""]').checked = true;
     state.drill = null; state.pivotPage=1; state.detailPage=1;
+    state.siteOrderManual = false; // limpar filtros também volta a ordenar rede por densidade
     montarFiltrosDependentes();
     render();
   });
@@ -734,21 +856,32 @@ function wireEventos(){
 // FILTRAGEM
 // ---------------------------------------------------------------------
 function linhasFiltradas(){
+  return linhasParaOpcoes(null);
+}
+
+// mesmo filtro de linhasFiltradas(), mas ignorando UM campo — é o que faz
+// os filtros se cruzarem de verdade: a lista de opções da Subcesta, por
+// exemplo, respeita Marca/Categoria/etc já marcados, mas não a si mesma
+// (senão marcar 1 opção faria as outras desaparecerem da própria lista).
+// Antes cada dropdown listava TODOS os valores do dia inteiro, sem ligar
+// pros outros filtros já ativos — daí "Abacate"/"Abajur" apareciam na
+// Subcesta mesmo filtrando só produtos da Cottonbaby.
+function linhasParaOpcoes(campoExcluido, rowsBase){
   const f = state.filtros;
   const qDesc = norm(f.descricao);
-  return linhasCarregadas().filter(r => {
-    if(f.depto && r.departamento !== f.depto) return false;
-    if(f.sites.size && !f.sites.has(r.site)) return false;
-    if(f.categorias.size && !f.categorias.has(r.categoria)) return false;
-    if(f.subcategorias.size && !f.subcategorias.has(r.subcategoria)) return false;
-    if(f.marcas.size && !f.marcas.has(r.marca)) return false;
-    if(f.ufs.size && !f.ufs.has(r.uf)) return false;
-    if(f.cidades.size && !f.cidades.has(r.cidade)) return false;
-    if(f.subcestas.size && !f.subcestas.has(r._subcesta)) return false;
-    if(f.tamanhos.size && !f.tamanhos.has(r._tamanho)) return false;
-    if(f.disp && r.disponivel !== f.disp) return false;
-    if(qDesc && !norm(r.descricao).includes(qDesc)) return false;
-    if(f.ean && !(r.ean||'').includes(f.ean)) return false;
+  return (rowsBase || linhasCarregadas()).filter(r => {
+    if(campoExcluido!=='depto' && f.depto && r.departamento !== f.depto) return false;
+    if(campoExcluido!=='sites' && f.sites.size && !f.sites.has(r.site)) return false;
+    if(campoExcluido!=='categorias' && f.categorias.size && !f.categorias.has(r.categoria)) return false;
+    if(campoExcluido!=='subcategorias' && f.subcategorias.size && !f.subcategorias.has(r.subcategoria)) return false;
+    if(campoExcluido!=='marcas' && f.marcas.size && !f.marcas.has(r.marca)) return false;
+    if(campoExcluido!=='ufs' && f.ufs.size && !f.ufs.has(r.uf)) return false;
+    if(campoExcluido!=='cidades' && f.cidades.size && !f.cidades.has(r.cidade)) return false;
+    if(campoExcluido!=='subcestas' && f.subcestas.size && !f.subcestas.has(r._subcesta)) return false;
+    if(campoExcluido!=='tamanhos' && f.tamanhos.size && !f.tamanhos.has(r._tamanho)) return false;
+    if(campoExcluido!=='disp' && f.disp && r.disponivel !== f.disp) return false;
+    if(campoExcluido!=='descricao' && qDesc && !norm(r.descricao).includes(qDesc)) return false;
+    if(campoExcluido!=='ean' && f.ean && !(r.ean||'').includes(f.ean)) return false;
     return true;
   });
 }
@@ -928,36 +1061,26 @@ function calcularAliasProduto(rows){
   return alias;
 }
 
-// interpreta o texto de "Destacar marca ou rede": se bater com o nome de
-// uma rede conhecida, só destaca visualmente a coluna que já existe; senão
-// trata como marca e soma 1 coluna nova (marca não é eixo de coluna normal)
-function resolverDestaque(texto){
-  const v = norm(texto);
-  if(!v) return {tipo:null};
-  const slug = SITE_ORDER.find(s => norm(SITE_LABELS[s])===v || s===v);
-  if(slug) return {tipo:'rede', slug};
-  return {tipo:'marca', termo:v};
+// "Destacar rede" agora é sempre 1 rede escolhida de uma lista fechada
+// (select, não texto livre) — sem ambiguidade com marca.
+function resolverDestaque(slug){
+  return slug && SITE_ORDER.includes(slug) ? {tipo:'rede', slug} : {tipo:null};
 }
 
-function computarPivot(rows, destaque){
+function computarPivot(rows){
   const porProduto = state.verPor==='produto';
-  // "Destacar marca" soma 1 coluna fixa com o preço só dessa marca dentro
-  // de cada linha, SEM tirar as outras marcas do resto da tabela — pensado
-  // pra reunião com o próprio fabricante ver onde ele está no panorama geral
-  const destaqueMarcaNorm = destaque.tipo==='marca' ? destaque.termo : '';
   state._aliasProduto = porProduto ? calcularAliasProduto(rows) : new Map();
-  const grupos = new Map(); // chave -> {n, porSite, linkPorSite, marcas, descricoes, ean, destaque, chavesBrutas}
+  const grupos = new Map(); // chave -> {n, porSite, linkPorSite, marcas, descricoes, ean, chavesBrutas}
   for(const r of rows){
     const chave = chaveGrupo(r, state.verPor);
     const preco = precoPorMetrica(r);
-    if(!grupos.has(chave)) grupos.set(chave, {n:0, porSite:new Map(), linkPorSite:new Map(), marcas:new Map(), descricoes:new Map(), ean: null, destaque:[], chavesBrutas:new Set()});
+    if(!grupos.has(chave)) grupos.set(chave, {n:0, porSite:new Map(), linkPorSite:new Map(), marcas:new Map(), descricoes:new Map(), ean: null, chavesBrutas:new Set()});
     const g = grupos.get(chave);
     g.n++;
     if(!isNaN(preco) && preco>0){
       if(!g.porSite.has(r.site)) g.porSite.set(r.site, []);
       g.porSite.get(r.site).push(preco);
       if(r.link) g.linkPorSite.set(r.site, r.link); // pra abrir com duplo-clique na célula — fica com o link mais recente visto
-      if(destaqueMarcaNorm && norm(r.marca)===destaqueMarcaNorm) g.destaque.push(preco);
     }
     if(porProduto){
       // o rótulo exibido e a marca são "o mais frequente do grupo" — o
@@ -985,36 +1108,54 @@ function agregar(valores){
 function renderPivot(){
   const rowsFiltradas = linhasFiltradas();
   const destaque = resolverDestaque(state.marcaDestaque);
-  const grupos = computarPivot(rowsFiltradas, destaque);
+  const grupos = computarPivot(rowsFiltradas);
+
+  // ordena as colunas de rede por quantas linhas ela realmente tem preço
+  // (não só se aparece ou não) — rede quase vazia no filtro atual (ex:
+  // Kalunga sem produto dessa marca) vai pro fim, sem precisar arrastar
+  // manual toda vez que troca o filtro. Só roda enquanto o usuário não
+  // arrastou nada nessa sessão — arrastar 1x vira preferência fixa.
+  if(!state.siteOrderManual){
+    const contagemPorSite = new Map();
+    grupos.forEach(g => g.porSite.forEach((precos, s) => contagemPorSite.set(s, (contagemPorSite.get(s)||0) + precos.length)));
+    state.siteColOrder = [...SITE_ORDER].sort((a,b) => (contagemPorSite.get(b)||0) - (contagemPorSite.get(a)||0));
+  }
+
   const sitesPresentes = state.siteColOrder.filter(s => [...grupos.values()].some(g=>g.porSite.has(s)));
 
-  // só faz sentido mostrar Marca como coluna própria quando a dimensão das
-  // linhas é Produto — nas outras (Categoria/Subcategoria/Marca) cada linha
-  // já mistura várias marcas, então uma coluna "marca mais comum" enganaria
+  // "marca mais comum" do grupo ainda é útil pra busca (ex: digitar o nome
+  // da marca filtra a tabela de Produto), mas não vira coluna própria — o
+  // nome da marca já aparece dentro da descrição do produto, então uma
+  // coluna extra só repetia informação
   const mostrarColMarca = state.verPor==='produto';
-  const mostrarColDestaque = destaque.tipo==='marca'; // marca => soma coluna nova
-  const redeDestacada = destaque.tipo==='rede' ? destaque.slug : null; // rede => só destaca a coluna que já existe
-  // pega a grafia oficial da marca destacada (a que já foi canonicalizada
-  // no ETL) em vez do texto cru que o usuário digitou no campo
-  const nomeDestaqueExibido = mostrarColDestaque
-    ? (rowsFiltradas.find(r => norm(r.marca)===destaque.termo)?.marca || state.marcaDestaque)
-    : '';
+  const NOME_AGREGACAO = { minimo:'Mínimo', maximo:'Máximo', media:'Média' };
+  const labelMercado = `${NOME_AGREGACAO[state.agregacao]||'Média'} Mercado`;
+  const redeDestacada = destaque.tipo==='rede' ? destaque.slug : null;
+  const mostrarColCompetitividade = !!redeDestacada; // índice só faz sentido quando uma rede foi escolhida
 
   // monta linhas com os valores agregados já calculados, pra poder ordenar/paginar sem recalcular
   let linhas = [...grupos.entries()].map(([chave, g]) => {
     const valoresPorSite = {};
     sitesPresentes.forEach(s => valoresPorSite[s] = agregar(g.porSite.get(s)));
     const medias = Object.values(valoresPorSite).filter(v=>v!=null);
-    const mediaMercado = medias.length ? medias.reduce((a,b)=>a+b,0)/medias.length : null;
+    // acompanha a mesma agregação escolhida pro preço de cada rede — se o
+    // usuário marcou "Máximo", essa coluna também vira o maior preço entre
+    // as redes (e o cabeçalho abaixo muda de "Média" pra "Máximo Mercado")
+    const mediaMercado = medias.length ? agregar(medias) : null;
     const amplitude = medias.length>1 ? (Math.max(...medias)-Math.min(...medias))/Math.min(...medias)*100 : null;
     const marca = mostrarColMarca ? maisComum(g.marcas) : '';
     // rótulo exibido: pra Produto é a descrição mais frequente do grupo
     // (pode ter mais de uma grafia mesmo agrupado pelo EAN); pras outras
     // dimensões o rótulo é a própria chave
     const label = mostrarColMarca ? (maisComum(g.descricoes) || chave) : chave;
-    const valorDestaque = mostrarColDestaque ? agregar(g.destaque) : null;
+    // Índice de competitividade: preço da rede escolhida / média de mercado
+    // × 100 — leitura tipo índice econômico (base 100 = na média; abaixo de
+    // 100 = mais barato que o mercado, acima = mais caro)
+    const precoRedeDestacada = redeDestacada ? valoresPorSite[redeDestacada] : null;
+    const indiceCompetitividade = (mostrarColCompetitividade && precoRedeDestacada!=null && mediaMercado)
+      ? (precoRedeDestacada / mediaMercado) * 100 : null;
     const fundido = g.chavesBrutas && g.chavesBrutas.size > 1; // juntou 2+ produtos parecidos sem EAN em comum
-    return { chave, label, ean:g.ean, n:g.n, valoresPorSite, linkPorSite:g.linkPorSite, mediaMercado, amplitude, marca, valorDestaque, fundido };
+    return { chave, label, ean:g.ean, n:g.n, valoresPorSite, linkPorSite:g.linkPorSite, mediaMercado, amplitude, marca, indiceCompetitividade, fundido };
   });
 
   if(state.pivotBusca){
@@ -1026,11 +1167,10 @@ function renderPivot(){
     const {col,dir} = state.pivotSort;
     let va, vb;
     if(col==='_chave'){ va=a.label; vb=b.label; return va.localeCompare(vb,'pt')*dir; }
-    if(col==='_marca'){ va=a.marca; vb=b.marca; return va.localeCompare(vb,'pt')*dir; }
     if(col==='_n'){ va=a.n; vb=b.n; }
     else if(col==='_media'){ va=a.mediaMercado; vb=b.mediaMercado; }
     else if(col==='_amp'){ va=a.amplitude; vb=b.amplitude; }
-    else if(col==='_destaque'){ va=a.valorDestaque; vb=b.valorDestaque; }
+    else if(col==='_competitividade'){ va=a.indiceCompetitividade; vb=b.indiceCompetitividade; }
     else { va=a.valoresPorSite[col]; vb=b.valoresPorSite[col]; }
     va = va==null ? -Infinity : va; vb = vb==null ? -Infinity : vb;
     return (va-vb)*dir;
@@ -1044,16 +1184,15 @@ function renderPivot(){
   const arrow = c => c===state.pivotSort.col ? (state.pivotSort.dir===1?' ▲':' ▼') : '';
   thead.innerHTML = `<tr>
     <th data-col="_chave">${DIM_LABEL[state.verPor]}<span class="si">${arrow('_chave')}</span></th>
-    ${mostrarColMarca ? `<th data-col="_marca">Marca<span class="si">${arrow('_marca')}</span></th>` : ''}
-    <th class="r" data-col="_n">SKUs<span class="si">${arrow('_n')}</span></th>
-    ${mostrarColDestaque ? `<th class="r col-destaque" data-col="_destaque" title="Preço só desta marca, mesmo sem filtrar as outras">★ ${nomeDestaqueExibido}<span class="si">${arrow('_destaque')}</span></th>` : ''}
-    ${sitesPresentes.map(s=>`<th class="r col-rede${s===redeDestacada?' col-destaque':''}" data-col="${s}" data-site="${s}" draggable="true" title="Arraste pra reordenar as redes">${s===redeDestacada?'★ ':'⠿ '}${SITE_LABELS[s]||s}<span class="si">${arrow(s)}</span></th>`).join('')}
-    <th class="r" data-col="_media">Média Mercado<span class="si">${arrow('_media')}</span></th>
+    <th class="r" data-col="_media">${labelMercado}<span class="si">${arrow('_media')}</span></th>
     <th class="r" data-col="_amp">Amplitude<span class="si">${arrow('_amp')}</span></th>
+    ${mostrarColCompetitividade ? `<th class="r col-destaque" data-col="_competitividade" title="Preço da rede destacada ÷ ${labelMercado} × 100 — 100 = na média, abaixo = mais barato que o mercado, acima = mais caro">★ Competitividade<span class="si">${arrow('_competitividade')}</span></th>` : ''}
+    ${sitesPresentes.map(s=>`<th class="r col-rede${s===redeDestacada?' col-destaque':''}" data-col="${s}" data-site="${s}" draggable="true" title="Arraste pra reordenar as redes">${s===redeDestacada?'★ ':'⠿ '}${SITE_LABELS[s]||s}<span class="si">${arrow(s)}</span></th>`).join('')}
+    <th class="r" data-col="_n" title="Quantas observações (dias × redes) sustentam essa linha">SKUs<span class="si">${arrow('_n')}</span></th>
   </tr>`;
   thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const col = th.dataset.col;
-    const textoPorPadrao = col==='_chave' || col==='_marca';
+    const textoPorPadrao = col==='_chave';
     state.pivotSort.dir = state.pivotSort.col===col ? -state.pivotSort.dir : (textoPorPadrao?1:-1);
     state.pivotSort.col = col;
     renderPivot();
@@ -1067,7 +1206,7 @@ function renderPivot(){
 
   const tbody = document.querySelector('#pivot-table tbody');
   if(!pagina.length){
-    tbody.innerHTML = `<tr><td colspan="${3+(mostrarColMarca?1:0)+(mostrarColDestaque?1:0)+sitesPresentes.length}" class="no-data">Nenhum resultado para os filtros atuais</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="${4+(mostrarColCompetitividade?1:0)+sitesPresentes.length}" class="no-data">Nenhum resultado para os filtros atuais</td></tr>`;
   } else {
     tbody.innerHTML = pagina.map(l => {
       const valores = sitesPresentes.map(s=>l.valoresPorSite[s]).filter(v=>v!=null);
@@ -1078,9 +1217,14 @@ function renderPivot(){
       const fundidoTag = l.fundido ? ` <span class="cell-empty" style="font-size:.62rem" title="Produtos parecidos sem EAN em comum, juntados automaticamente por nome+tamanho — confira se faz sentido">≈ agrupado</span>` : '';
       return `<tr class="${ativo}" data-chave="${encodeURIComponent(l.chave)}" data-label="${encodeURIComponent(l.label)}">
         <td class="dim-cell" title="${l.label.replace(/"/g,'&quot;')}">${l.label}${marcaTag}${fundidoTag}</td>
-        ${mostrarColMarca ? `<td>${l.marca||'—'}</td>` : ''}
-        <td class="r">${l.n.toLocaleString('pt-BR')}</td>
-        ${mostrarColDestaque ? `<td class="r col-destaque">${l.valorDestaque!=null?fmtR(l.valorDestaque):'—'}</td>` : ''}
+        <td class="r">${fmtR(l.mediaMercado)}</td>
+        <td class="r">${l.amplitude!=null ? l.amplitude.toFixed(1)+'%' : '—'}</td>
+        ${mostrarColCompetitividade ? (() => {
+          const idx = l.indiceCompetitividade;
+          if(idx==null) return '<td class="r cell-empty col-destaque">—</td>';
+          const cls = idx < 97 ? 'cell-min' : idx > 103 ? 'cell-max' : '';
+          return `<td class="r col-destaque ${cls}" title="${idx<100?'Mais barato':idx>100?'Mais caro':'Na média'} que o mercado">${idx.toFixed(1)}${idx<100?' ↓':idx>100?' ↑':''}</td>`;
+        })() : ''}
         ${sitesPresentes.map(s => {
           const v = l.valoresPorSite[s];
           const destCls = s===redeDestacada ? ' col-destaque' : '';
@@ -1098,8 +1242,7 @@ function renderPivot(){
           const tituloAttr = (tituloFundido || tituloLink) ? ` title="${(tituloFundido+tituloLink).replace(/"/g,'&quot;')}"` : '';
           return `<td${linkAttrs}${tituloAttr}>${prefixo}${fmtR(v)}</td>`;
         }).join('')}
-        <td class="r">${fmtR(l.mediaMercado)}</td>
-        <td class="r">${l.amplitude!=null ? l.amplitude.toFixed(1)+'%' : '—'}</td>
+        <td class="r">${l.n.toLocaleString('pt-BR')}</td>
       </tr>`;
     }).join('');
     tbody.querySelectorAll('tr[data-chave]').forEach(tr => tr.addEventListener('click', () => {
@@ -1139,6 +1282,7 @@ function wireSiteColDrag(thead){
       th.classList.remove('drag-over');
       const alvo = th.dataset.site;
       if(!arrastando || arrastando===alvo) return;
+      state.siteOrderManual = true; // a partir daqui o auto-ordenar por densidade para de sobrescrever
       const ordem = state.siteColOrder;
       ordem.splice(ordem.indexOf(arrastando), 1);
       ordem.splice(ordem.indexOf(alvo), 0, arrastando);
@@ -1151,12 +1295,17 @@ function wireSiteColDrag(thead){
 // TABELA DE DETALHE — linhas cruas (1 por SKU coletado), respeitando os
 // filtros + a seleção feita clicando numa linha do pivot
 // ---------------------------------------------------------------------
+// larguras apertadas de propósito pra somar menos que os ~1436px úteis do
+// container (1500px - padding) e não precisar de scroll horizontal — texto
+// que não cabe trunca com "…" e mostra completo no title (hover)
+// sem coluna de Evolução — clicar no PRODUTO já abre a evolução (ver
+// renderDetail). Largura redistribuída sem o espaço que a coluna ocupava.
 const DETAIL_COLS = [
-  {k:'data', lbl:'Data', w:82}, {k:'site', lbl:'Rede', w:90}, {k:'categoria', lbl:'Categoria', w:150},
-  {k:'subcategoria', lbl:'Subcategoria', w:130}, {k:'marca', lbl:'Marca', w:110}, {k:'descricao', lbl:'Produto', w:280},
-  {k:'ean', lbl:'EAN', w:120}, {k:'preco_regular', lbl:'Preço Reg.', r:true, w:90}, {k:'preco_promocional', lbl:'Preço Promo', r:true, w:90},
-  {k:'preco_pix', lbl:'Preço Pix', r:true, w:90}, {k:'uf', lbl:'UF', w:50}, {k:'cidade', lbl:'Cidade', w:100},
-  {k:'disponivel', lbl:'Disp.', w:60}, {k:'link', lbl:'Link', w:60}, {k:'evo', lbl:'Evolução', w:80},
+  {k:'data', lbl:'Data', w:74}, {k:'site', lbl:'Rede', w:82}, {k:'categoria', lbl:'Categoria', w:160},
+  {k:'subcategoria', lbl:'Subcat.', w:105}, {k:'marca', lbl:'Marca', w:105}, {k:'descricao', lbl:'Produto', w:340},
+  {k:'ean', lbl:'EAN', w:110}, {k:'preco_regular', lbl:'Reg.', r:true, w:74}, {k:'preco_promocional', lbl:'Promo', r:true, w:74},
+  {k:'preco_pix', lbl:'Pix', r:true, w:74}, {k:'uf', lbl:'UF', w:45}, {k:'cidade', lbl:'Cidade', w:90},
+  {k:'disponivel', lbl:'Disp.', w:50}, {k:'link', lbl:'Link', w:50},
 ];
 
 function renderDetail(){
@@ -1189,7 +1338,7 @@ function renderDetail(){
 
   const thead = document.querySelector('#detail-table thead');
   const arrow = c => c===col ? (dir===1?' ▲':' ▼') : '';
-  thead.innerHTML = `<tr>${DETAIL_COLS.map(c=>`<th data-col="${c.k}" class="${c.r?'r':''}">${c.lbl}<span class="si">${arrow(c.k)}</span></th>`).join('')}</tr>`;
+  thead.innerHTML = `<tr>${DETAIL_COLS.map(c=>`<th data-col="${c.k}" class="${c.r?'r':''}" style="width:${c.w}px;max-width:${c.w}px">${c.lbl}<span class="si">${arrow(c.k)}</span></th>`).join('')}</tr>`;
   thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const c = th.dataset.col;
     if(c==='link' || c==='evo') return; // colunas de ação, não fazem sentido ordenar
@@ -1204,17 +1353,23 @@ function renderDetail(){
 
   const tbody = document.querySelector('#detail-table tbody');
   tbody.innerHTML = pagina.length ? pagina.map(r => `<tr>${DETAIL_COLS.map(c => {
-    if(c.k==='data') return `<td>${fmtD(r.data)}</td>`;
-    if(c.k==='site') return `<td>${SITE_LABELS[r.site]||r.site}</td>`;
-    if(c.r) return `<td class="r">${fmtR(parseFloat(r[c.k]))}</td>`;
-    if(c.k==='link') return `<td>${r.link ? `<a href="${r.link}" target="_blank" rel="noopener">abrir ↗</a>` : '—'}</td>`;
-    if(c.k==='disponivel') return `<td>${r.disponivel==='sim'?'Sim':'Não'}</td>`;
-    if(c.k==='evo') return `<td><a class="evo-link" data-ean="${r.ean||''}" data-desc="${encodeURIComponent(r.descricao||'')}">📈 ver</a></td>`;
-    if(c.k==='categoria' || c.k==='subcategoria' || c.k==='marca' || c.k==='descricao') return `<td title="${(r[c.k]||'').replace(/"/g,'&quot;')}">${r[c.k]||'—'}</td>`;
-    return `<td>${r[c.k]||'—'}</td>`;
+    // table-layout:fixed + <col> sozinho não estava sendo suficiente pra
+    // travar a largura (o texto sem quebra ainda empurrava a coluna) —
+    // força também no <td>, que é o que realmente prende de vez
+    const estilo = `width:${c.w}px;max-width:${c.w}px`;
+    if(c.k==='data') return `<td style="${estilo}">${fmtD(r.data)}</td>`;
+    if(c.k==='site') return `<td style="${estilo}">${SITE_LABELS[r.site]||r.site}</td>`;
+    if(c.r) return `<td class="r" style="${estilo}">${fmtR(parseFloat(r[c.k]))}</td>`;
+    if(c.k==='link') return `<td style="${estilo}">${r.link ? `<a href="${r.link}" target="_blank" rel="noopener">abrir ↗</a>` : '—'}</td>`;
+    if(c.k==='disponivel') return `<td style="${estilo}">${r.disponivel==='sim'?'Sim':'Não'}</td>`;
+    // Produto é clicável — abre a evolução daquele item, com todas as
+    // redes que o vendem (substitui a antiga coluna "Evolução" separada)
+    if(c.k==='descricao') return `<td class="dim-cell" style="${estilo}" data-ean="${r.ean||''}" data-desc="${encodeURIComponent(r.descricao||'')}" title="${(r.descricao||'').replace(/"/g,'&quot;')} — clique pra ver a evolução de preço">${r.descricao||'—'}</td>`;
+    if(c.k==='categoria' || c.k==='subcategoria' || c.k==='marca') return `<td style="${estilo}" title="${(r[c.k]||'').replace(/"/g,'&quot;')}">${r[c.k]||'—'}</td>`;
+    return `<td style="${estilo}">${r[c.k]||'—'}</td>`;
   }).join('')}</tr>`).join('') : `<tr><td colspan="${DETAIL_COLS.length}" class="no-data">Nenhum resultado para os filtros atuais</td></tr>`;
-  tbody.querySelectorAll('.evo-link').forEach(a => a.addEventListener('click', () => {
-    selecionarProdutoEvolucao(a.dataset.ean, decodeURIComponent(a.dataset.desc));
+  tbody.querySelectorAll('td.dim-cell[data-desc]').forEach(td => td.addEventListener('click', () => {
+    selecionarProdutoEvolucao(td.dataset.ean, decodeURIComponent(td.dataset.desc));
   }));
 
   renderPager('detail-pager', state.detailPage, totalPaginas, p => { state.detailPage=p; renderDetail(); });
@@ -1231,32 +1386,9 @@ function renderPager(elId, pagina, total, onGo){
 }
 
 // ---------------------------------------------------------------------
-// STAT TILES
+// CABEÇALHO — "Coleta mais recente"
 // ---------------------------------------------------------------------
 function renderStats(){
-  const rows = linhasFiltradas();
-  const sitesNoFiltro = new Set(rows.map(r=>r.site)).size;
-  const precos = rows.map(precoPorMetrica).filter(v=>!isNaN(v)&&v>0);
-  const precoMedio = precos.length ? precos.reduce((a,b)=>a+b,0)/precos.length : null;
-  const skusComparaveis = (() => {
-    // SKU (EAN) visto em 2+ redes = dá pra comparar de fato
-    const porEan = new Map();
-    rows.forEach(r => { if(!r.ean) return; if(!porEan.has(r.ean)) porEan.set(r.ean, new Set()); porEan.get(r.ean).add(r.site); });
-    return [...porEan.values()].filter(s=>s.size>=2).length;
-  })();
-  const ultimaData = [...state.diasSelecionados].sort().pop();
-
-  const tiles = [
-    {lbl:'SKUs no filtro', val: rows.length.toLocaleString('pt-BR')},
-    {lbl:'Redes comparadas', val: sitesNoFiltro},
-    {lbl:'Preço médio', val: fmtR(precoMedio)},
-    {lbl:'EANs em 2+ redes', val: skusComparaveis.toLocaleString('pt-BR'), sub:'comparáveis de verdade'},
-    {lbl:'Dias carregados', val: state.diasSelecionados.size, sub: ultimaData ? `até ${fmtD(ultimaData)}` : ''},
-  ];
-  document.getElementById('stat-grid').innerHTML = tiles.map(t => `
-    <div class="stat-tile"><div class="st-lbl">${t.lbl}</div><div class="st-val">${t.val}</div>${t.sub?`<div class="st-sub">${t.sub}</div>`:''}</div>
-  `).join('');
-
   document.getElementById('last-update').textContent = `Coleta mais recente: ${fmtD(state.indice[0].data)} · ${state.indice[0].linhas.toLocaleString('pt-BR')} itens coletados naquele dia`;
 }
 
@@ -1334,17 +1466,18 @@ function renderEvolucao(){
   const { ean, descricao } = state.evolucao;
   const chartBox = document.getElementById('evo-chart-box');
   const tableWrap = document.getElementById('evo-table-wrap');
+  const toolbar = document.getElementById('evo-table-toolbar');
   const summary = document.getElementById('evo-summary');
 
   if(!ean && !descricao){
-    chartBox.style.display = 'none'; tableWrap.style.display = 'none';
+    chartBox.style.display = 'none'; tableWrap.style.display = 'none'; toolbar.style.display = 'none';
     summary.textContent = 'Nenhum produto selecionado — busque acima ou clique em "📈 ver" numa linha da tabela de detalhe.';
     return;
   }
 
   const linhas = todasLinhasCache().filter(r => ean ? r.ean===ean : r.descricao===descricao);
   if(!linhas.length){
-    chartBox.style.display = 'none'; tableWrap.style.display = 'none';
+    chartBox.style.display = 'none'; tableWrap.style.display = 'none'; toolbar.style.display = 'none';
     summary.innerHTML = `Sem coletas pra esse produto nos dias carregados.`;
     return;
   }
@@ -1381,25 +1514,42 @@ function renderEvolucao(){
   const datas = [...new Set(linhas.map(r=>r.data))].sort();
 
   if(!sitesPresentes.length || !datas.length){
-    chartBox.style.display = 'none'; tableWrap.style.display = 'none';
+    chartBox.style.display = 'none'; tableWrap.style.display = 'none'; toolbar.style.display = 'none';
     return;
   }
-  chartBox.style.display = ''; tableWrap.style.display = '';
+  chartBox.style.display = ''; tableWrap.style.display = ''; toolbar.style.display = 'flex';
 
+  // 1 cor por rede (identidade), a mesma nas duas linhas — não dobra o
+  // número de cores na legenda. Regular = linha cheia, na legenda. Promo =
+  // linha fina na mesma cor + área sombreada preenchida ATÉ a linha
+  // regular (fill aponta pro índice do dataset Regular), pra mostrar de
+  // olho o tamanho do desconto sem precisar ler os dois números — e some
+  // da legenda (o filter abaixo corta "· Promo"), a legenda mostra só a rede.
   const datasets = [];
   sitesPresentes.forEach(s => {
+    const idxRegular = datasets.length;
     datasets.push({
-      label: `${SITE_LABELS[s]||s} · Regular`,
+      label: SITE_LABELS[s]||s,
       data: datas.map(d => { const vs=precosPorSiteEData(s,d,mapaRegular); return vs.length?agregar(vs):null; }),
       borderColor: SITE_COLOR[s], backgroundColor: SITE_COLOR[s],
-      borderWidth: 2.4, pointRadius: 3, pointHoverRadius: 5, spanGaps: true, tension: .25, fill: false,
+      borderWidth: 2.4, pointRadius: 3, pointHoverRadius: 5, spanGaps: true, tension: .25, fill: false, order: 1,
     });
+    // nos dias SEM promoção, usa o preço regular (não null) — assim a
+    // linha/sombra de promo nasce grudada na linha regular e só se separa
+    // exatamente no dia em que o desconto começa, em vez de aparecer do
+    // nada flutuando no meio do gráfico. temPromo marca só os dias com
+    // promoção de verdade, pra não desenhar bolinha nos dias "espelho".
+    const temPromo = datas.map(d => precosPorSiteEData(s,d,mapaPromo).length > 0);
     datasets.push({
       label: `${SITE_LABELS[s]||s} · Promo`,
-      data: datas.map(d => { const vs=precosPorSiteEData(s,d,mapaPromo); return vs.length?agregar(vs):null; }),
-      borderColor: SITE_COLOR[s], backgroundColor: SITE_COLOR[s],
-      borderDash: [5,3], borderWidth: 1.8, pointRadius: 3, pointStyle: 'rectRot', pointHoverRadius: 5,
-      spanGaps: false, tension: .25, fill: false,
+      data: datas.map((d,i) => {
+        if(temPromo[i]) return agregar(precosPorSiteEData(s,d,mapaPromo));
+        const vsRegular = precosPorSiteEData(s,d,mapaRegular);
+        return vsRegular.length ? agregar(vsRegular) : null; // sem regular nem promo nesse dia = buraco de verdade
+      }),
+      borderColor: hexParaRgba(SITE_COLOR[s], .6), backgroundColor: hexParaRgba(SITE_COLOR[s], .16),
+      borderWidth: 1.4, pointRadius: ctx => temPromo[ctx.dataIndex] ? 3 : 0, pointHoverRadius: ctx => temPromo[ctx.dataIndex] ? 5 : 3,
+      spanGaps: true, tension: .25, fill: idxRegular, order: 2,
     });
   });
 
@@ -1410,7 +1560,8 @@ function renderEvolucao(){
     options: {
       responsive: true, maintainAspectRatio: false, interaction: {mode:'index', intersect:false},
       plugins: {
-        legend: {labels:{color:'#3E5068', font:{family:'DM Mono', size:10}, boxWidth:14, padding:10}},
+        legend: {labels:{color:'#3E5068', font:{family:'DM Mono', size:10}, boxWidth:14, padding:10,
+                  filter: item => !item.text.endsWith('· Promo')}}, // só 1 entrada por rede — a área sombreada já explica o resto
         tooltip: {backgroundColor:'rgba(26,36,51,.93)', titleColor:'#E2AC4C', bodyColor:'#EDE7DC',
                   borderColor:'rgba(200,146,42,.4)', borderWidth:1, padding:10,
                   titleFont:{family:'DM Mono', size:11}, bodyFont:{family:'DM Sans', size:12},
@@ -1423,19 +1574,39 @@ function renderEvolucao(){
     },
   });
 
-  // tabela espelha o gráfico: 2 linhas por rede (Regular/Promo)
+  // tabela: 1 linha por rede, seguindo o seletor "Preço na tabela abaixo"
+  // (Regular / Promoção / Menor preço) — separado do gráfico de propósito,
+  // que continua sempre mostrando as duas linhas juntas
+  const valorNaTabela = (s, d) => {
+    const vR = precosPorSiteEData(s,d,mapaRegular), vP = precosPorSiteEData(s,d,mapaPromo);
+    if(state.evoTabelaMetrica==='regular') return vR.length ? agregar(vR) : null;
+    if(state.evoTabelaMetrica==='promo') return vP.length ? agregar(vP) : null;
+    // menor: entre o que existir nesse dia (só regular, só promo, ou os dois)
+    const candidatos = [vR.length?agregar(vR):null, vP.length?agregar(vP):null].filter(v=>v!=null);
+    return candidatos.length ? Math.min(...candidatos) : null;
+  };
+  // matriz de valores primeiro, pra achar mínimo/máximo POR DATA (coluna) —
+  // aqui quem varia entre as redes é a coluna, diferente da tabela
+  // principal onde cada LINHA é um produto e as redes tb são coluna, mas a
+  // comparação é dentro da própria linha
+  const matriz = sitesPresentes.map(s => ({ s, valores: datas.map(d => valorNaTabela(s,d)) }));
+  const minMaxPorData = datas.map((d,i) => {
+    const vs = matriz.map(m => m.valores[i]).filter(v=>v!=null);
+    return vs.length ? { min: Math.min(...vs), max: Math.max(...vs) } : { min:null, max:null };
+  });
+
   const thead = document.querySelector('#evo-table thead');
-  thead.innerHTML = `<tr><th class="rede-th">Rede</th><th>Preço</th>${datas.map(d=>`<th class="r">${fmtD(d)}</th>`).join('')}</tr>`;
+  thead.innerHTML = `<tr><th class="rede-th">Rede</th>${datas.map(d=>`<th class="r">${fmtD(d)}</th>`).join('')}</tr>`;
   const tbody = document.querySelector('#evo-table tbody');
-  tbody.innerHTML = sitesPresentes.map(s => `
+  tbody.innerHTML = matriz.map(({s, valores}) => `
     <tr>
-      <td class="rede-cell" rowspan="2">${SITE_LABELS[s]||s}</td>
-      <td>Regular</td>
-      ${datas.map(d => { const vs=precosPorSiteEData(s,d,mapaRegular); const v=vs.length?agregar(vs):null; return `<td class="r">${v!=null?fmtR(v):'—'}</td>`; }).join('')}
-    </tr>
-    <tr>
-      <td class="cell-empty">Promo</td>
-      ${datas.map(d => { const vs=precosPorSiteEData(s,d,mapaPromo); const v=vs.length?agregar(vs):null; return `<td class="r">${v!=null?fmtR(v):'—'}</td>`; }).join('')}
+      <td class="rede-cell">${SITE_LABELS[s]||s}</td>
+      ${valores.map((v,i) => {
+        if(v==null) return '<td class="r cell-empty">—</td>';
+        const {min,max} = minMaxPorData[i];
+        const cls = (min!==max && v===min) ? 'cell-min' : (min!==max && v===max) ? 'cell-max' : '';
+        return `<td class="r ${cls}">${fmtR(v)}</td>`;
+      }).join('')}
     </tr>`).join('');
 }
 
