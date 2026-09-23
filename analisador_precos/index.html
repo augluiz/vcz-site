@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisador de Preços | VCZ Consultoria</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F5F0E8; --panel:#FFFFFF; --panel2:#EDE7DC; --panel3:#E0D8CC;
+  --navy:#0D1B2A; --navy2:#162B40; --steel:#9AAABB;
+  --gold:#C8922A; --gold-light:#E2AC4C; --gold-aged:#B7A073;
+  --text:#1A2433; --text2:#3E5068; --text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
+  --th-bg:#1A2F45; --th-text:#E8D8C0;
+  --tr-even:#F4F6FA; --tr-odd:#FFFFFF;
+  --pos:#B83030; --neg:#2E7D52; /* pos = preço mais alto da linha, neg = mais baixo (mesma lógica do ceasa_dashboard) */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.06);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(26,36,51,.22);border-radius:4px}
+
+/* ---- loading ---- */
+#loading{position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;z-index:9999}
+#loading.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
+
+/* ---- nav (mesma da vcz-site) ---- */
+nav{position:fixed;top:0;left:0;right:0;height:72px;background:rgba(13,27,42,.97);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:500;border-bottom:1px solid rgba(200,146,42,.15)}
+.nav-logo img{height:30px;display:block}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-aged);border:1px solid rgba(183,160,115,.35);border-radius:3px;padding:.25rem .55rem;white-space:nowrap}
+@media(max-width:900px){.nav-links{display:none}}
+
+/* ---- header ---- */
+.dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2);margin-top:72px}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;color:#F2EAD8;line-height:1.1}
+.dash-header h1 em{color:var(--gold-light);font-style:italic;font-weight:600}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--steel);margin-top:.28rem;letter-spacing:.04em}
+
+/* ---- filter panel ---- */
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.85rem 1.1rem;padding:.7rem 2rem}
+.filter-row.row2{background:var(--navy2);border-top:1px solid rgba(200,146,42,.12)}
+.tf-grp{display:flex;flex-direction:column;gap:.22rem}
+.tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500;white-space:nowrap}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.32rem .55rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;transition:border-color .2s;cursor:pointer}
+.tf-input:focus{border-color:var(--gold)}
+.tf-input option{background:var(--navy2);color:#EDE7DC}
+input.tf-input::placeholder{color:rgba(154,170,187,.6)}
+.tf-vsep{width:1px;align-self:stretch;background:rgba(255,255,255,.1);margin:0 .1rem}
+
+.date-row{display:flex;align-items:center;gap:.4rem}
+.date-row input[type=date]{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.72rem;outline:none;color-scheme:dark;transition:border-color .2s}
+.date-row input[type=date]:focus{border-color:var(--gold)}
+.date-row .sep{font-family:'DM Mono',monospace;font-size:.6rem;color:#4A6A80}
+.date-cnt{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-light);text-transform:none;letter-spacing:0}
+.radio-row,.check-row{display:flex;gap:.6rem;padding-top:.15rem}
+.radio-row label,.check-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer;white-space:nowrap}
+.radio-row input,.check-row input{accent-color:var(--gold)}
+
+.ddm-wrap{position:relative}
+.ddm-btn{min-width:150px;max-width:190px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.32rem .55rem;color:#8AAABB;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:.3rem;transition:border-color .2s;white-space:nowrap}
+.ddm-btn:hover,.ddm-btn.open{border-color:var(--gold);color:#EDE7DC}
+.ddm-btn .arr{font-size:.6rem;color:var(--gold-aged)}
+.ddm-panel{display:none;position:absolute;top:calc(100% + 3px);left:0;width:260px;max-height:280px;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;overflow:hidden;flex-direction:column}
+.ddm-wrap.open .ddm-panel{display:flex}
+.ddm-search{border:none;border-bottom:1px solid var(--border);padding:.5rem .6rem;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none}
+.ddm-list{overflow-y:auto;max-height:230px}
+.ddm-list label{display:flex;align-items:center;gap:.38rem;padding:.34rem .5rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer;border-bottom:1px solid rgba(26,36,51,.05)}
+.ddm-list label:hover{background:#FBF7F2}
+.ddm-list label.active{background:#FDF5E8;color:var(--navy);font-weight:500}
+.ddm-list input[type=checkbox]{accent-color:var(--gold);flex-shrink:0}
+.ddm-empty{padding:.65rem .5rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
+
+.btn-reset{background:transparent;border:1px solid rgba(255,255,255,.28);border-radius:4px;padding:.32rem .75rem;color:#9AAABB;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s;white-space:nowrap;height:29px;align-self:flex-end}
+.btn-reset:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,146,42,.08)}
+
+/* ---- main ---- */
+.dash-main{max-width:1500px;margin:0 auto;padding:1.3rem 2rem 3rem}
+
+/* stat tiles */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1.1rem}
+.stat-tile{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);padding:.75rem .9rem}
+.stat-tile .st-lbl{font-family:'DM Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin-bottom:.3rem}
+.stat-tile .st-val{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--navy);line-height:1}
+.stat-tile .st-sub{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);margin-top:.25rem}
+
+/* tbox (mesmo padrão do ceasa) */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.1rem;box-shadow:var(--shadow-sm)}
+.tbox-head{padding:.6rem .9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15)}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--gold-light)}
+.tbox-cnt{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--gold-aged);background:rgba(200,146,42,.1);padding:.1rem .5rem;border-radius:10px;border:1px solid rgba(200,146,42,.25)}
+.tbox-tools{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.tbox-search{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:4px;padding:.28rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.74rem;outline:none;width:190px}
+.tbox-search::placeholder{color:rgba(154,170,187,.55)}
+
+.tbl-scroll{overflow-x:auto;max-height:560px;overflow-y:auto}
+.dt{width:100%;border-collapse:collapse;font-size:.78rem}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.dt th:hover{background:#0D1B2A}
+.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem}
+.dt td{padding:.38rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* tabela de detalhe tem muitas colunas de tamanho bem diferente (Produto
+   é longo, UF/Disp são curtas) — sem table-layout:fixed + largura por
+   coluna, o layout automático "auto" do navegador estica as colunas curtas
+   pra preencher o espaço todo, ficando com vãos enormes entre elas */
+#detail-table{table-layout:fixed;width:auto}
+.dt tbody tr:nth-child(even){background:var(--tr-even)}
+.dt tbody tr:hover{background:#FDF5E8}
+.dt th.r,.dt td.r{text-align:right}
+.dt td.dim-cell{cursor:pointer;color:var(--navy);font-weight:600}
+.dt td.dim-cell:hover{text-decoration:underline;color:var(--gold)}
+.dt tbody tr.drill-active{background:#FDEFD4 !important}
+.dt th.col-destaque{background:#2A1F0A;color:var(--gold-light)}
+.dt td.col-destaque{background:rgba(200,146,42,.09);font-weight:600;color:var(--navy);border-left:2px solid rgba(200,146,42,.35);border-right:2px solid rgba(200,146,42,.35)}
+.cell-min{background:rgba(46,125,82,.12);color:var(--neg);font-weight:600}
+.cell-max{background:rgba(184,48,48,.10);color:var(--pos);font-weight:600}
+.cell-link{cursor:pointer}
+.cell-link:hover{text-decoration:underline;text-decoration-style:dotted}
+.cell-empty{color:var(--text3)}
+.dt td a{color:var(--gold-aged);text-decoration:none;font-family:'DM Mono',monospace;font-size:.65rem}
+.dt td a:hover{text-decoration:underline}
+.no-data{text-align:center;padding:2.2rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+
+.pager{display:flex;align-items:center;justify-content:flex-end;gap:.6rem;padding:.55rem .9rem;background:var(--panel2);border-top:1px solid var(--border)}
+.pager button{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:.28rem .6rem;font-family:'DM Mono',monospace;font-size:.62rem;cursor:pointer;color:var(--text2)}
+.pager button:disabled{opacity:.4;cursor:default}
+.pager span{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3)}
+
+.hint{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text3);margin-bottom:.9rem;line-height:1.5}
+.hint strong{color:var(--navy)}
+
+/* ---- combo search (autocomplete de produto p/ evolução) ---- */
+.combo-wrap{position:relative;flex:1;min-width:260px;max-width:520px}
+.combo-input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.34rem .6rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none}
+.combo-input:focus{border-color:var(--gold)}
+.combo-input::placeholder{color:rgba(154,170,187,.6)}
+.combo-drop{position:absolute;top:calc(100% + 3px);left:0;width:100%;max-height:280px;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow-md);z-index:300;display:none}
+.combo-drop.open{display:block}
+.combo-drop .ci{padding:.4rem .6rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer;border-bottom:1px solid rgba(26,36,51,.06)}
+.combo-drop .ci:last-child{border-bottom:none}
+.combo-drop .ci:hover{background:#FBF7F2}
+.combo-drop .ci b{color:var(--navy)}
+.combo-drop .ci .ci-meta{display:block;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-top:.1rem}
+.combo-drop .ci-empty{padding:.7rem .6rem;font-family:'DM Mono',monospace;font-size:.66rem;color:var(--text3);text-align:center}
+.evo-head-row{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;padding:.7rem .9rem;background:var(--navy2)}
+.evo-summary{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#EDE7DC}
+.evo-summary b{color:var(--gold-light)}
+.evo-summary .ean{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-aged)}
+.evo-chart-box{padding:1rem;height:320px}
+.evo-empty{padding:2.5rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text3)}
+.dt td.rede-cell{font-weight:600;color:var(--navy);white-space:nowrap;position:sticky;left:0;background:var(--tr-odd);vertical-align:middle;border-right:1px solid var(--border)}
+#evo-table tbody tr:nth-child(4n+1) td,#evo-table tbody tr:nth-child(4n+2) td{background:var(--tr-even)}
+#evo-table tbody tr:nth-child(4n+1) td.rede-cell,#evo-table tbody tr:nth-child(4n+2) td.rede-cell{background:var(--tr-even)}
+.dt th.rede-th{position:sticky;left:0;z-index:4}
+.evo-link{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-decoration:none;cursor:pointer;white-space:nowrap}
+.evo-link:hover{text-decoration:underline;color:var(--gold)}
+.dt th.col-rede{cursor:grab}
+.dt th.col-rede.dragging{opacity:.4}
+.dt th.col-rede.drag-over{background:#0D1B2A;box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold)}
+.evo-loading{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-aged)}
+</style>
+</head>
+<body>
+
+<div id="loading"><div class="spinner"></div><p class="loading-text">Carregando amostra de preços…</p></div>
+
+<nav>
+  <a href="/" class="nav-logo"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
+  <ul class="nav-links">
+    <li><a href="/#sobre">Sobre</a></li>
+    <li><a href="/dashboards/" class="active">Dashboards</a></li>
+    <li><a href="/#contato">Contato</a></li>
+  </ul>
+  <div class="nav-right"><span class="nav-badge">Uso interno</span></div>
+</nav>
+
+<div class="dash-header">
+  <p class="label">Inteligência de Preços</p>
+  <h1>Analisador de <em>Preços</em> — Varejo</h1>
+  <p class="sub" id="last-update">Carregando…</p>
+</div>
+
+<!-- FILTER PANEL -->
+<div class="filter-panel">
+  <div class="filter-row">
+    <div class="tf-grp">
+      <span class="lbl">Data <span id="data-cnt" class="date-cnt"></span></span>
+      <div class="date-row">
+        <input type="date" id="f-data-inicio">
+        <span class="sep">–</span>
+        <input type="date" id="f-data-fim">
+      </div>
+    </div>
+
+    <div class="tf-grp">
+      <span class="lbl">Rede</span>
+      <div class="ddm-wrap" id="ddm-site">
+        <button class="ddm-btn" type="button"><span id="ddm-site-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><div class="ddm-list" id="lst-site"></div></div>
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl">Departamento</span>
+      <select class="tf-input" id="f-depto" style="min-width:150px"><option value="">Todos</option></select>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Categoria</span>
+      <div class="ddm-wrap" id="ddm-categoria">
+        <button class="ddm-btn" type="button"><span id="ddm-categoria-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-categoria" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-categoria"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Subcategoria</span>
+      <div class="ddm-wrap" id="ddm-subcategoria">
+        <button class="ddm-btn" type="button"><span id="ddm-subcategoria-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-subcategoria" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-subcategoria"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Marca</span>
+      <div class="ddm-wrap" id="ddm-marca">
+        <button class="ddm-btn" type="button"><span id="ddm-marca-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-marca" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-marca"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl" title="Primeira palavra da descrição — separa por tipo de item (Refrigerante, Leite, Algodão…) sem depender do de-para de categoria">Subcesta</span>
+      <div class="ddm-wrap" id="ddm-subcesta">
+        <button class="ddm-btn" type="button"><span id="ddm-subcesta-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-subcesta" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-subcesta"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl" title="Quantidade/unidade extraída da descrição (g, kg, ml, L, un)">Tamanho</span>
+      <div class="ddm-wrap" id="ddm-tamanho">
+        <button class="ddm-btn" type="button"><span id="ddm-tamanho-lbl">Todos</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-tamanho" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-tamanho"></div></div>
+      </div>
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl">Produto (descrição)</span>
+      <input class="tf-input" type="text" id="f-descricao" placeholder="ex: refrigerante 2l" style="min-width:190px">
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">EAN</span>
+      <input class="tf-input" type="text" id="f-ean" placeholder="código de barras" style="min-width:130px">
+    </div>
+
+    <div class="tf-vsep"></div>
+
+    <div class="tf-grp">
+      <span class="lbl">UF</span>
+      <div class="ddm-wrap" id="ddm-uf">
+        <button class="ddm-btn" type="button" style="min-width:70px"><span id="ddm-uf-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel" style="width:120px"><div class="ddm-list" id="lst-uf"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Cidade</span>
+      <div class="ddm-wrap" id="ddm-cidade">
+        <button class="ddm-btn" type="button"><span id="ddm-cidade-lbl">Todas</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-cidade" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-cidade"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Disponibilidade</span>
+      <div class="radio-row">
+        <label><input type="radio" name="disp" value="" checked> Todos</label>
+        <label><input type="radio" name="disp" value="sim"> Disponível</label>
+        <label><input type="radio" name="disp" value="nao"> Indisponível</label>
+      </div>
+    </div>
+
+    <button class="btn-reset" id="btn-reset">↺ Limpar filtros</button>
+  </div>
+
+  <div class="filter-row row2">
+    <div class="tf-grp">
+      <span class="lbl">Ver tabela de comparação por</span>
+      <select class="tf-input" id="f-verpor" style="min-width:160px">
+        <option value="categoria">Categoria</option>
+        <option value="subcategoria">Subcategoria</option>
+        <option value="subcesta">Subcesta</option>
+        <option value="marca">Marca</option>
+        <option value="tamanho">Tamanho</option>
+        <option value="produto">Produto (SKU)</option>
+      </select>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Preço analisado</span>
+      <div class="radio-row">
+        <label><input type="radio" name="metrica" value="preco_regular" checked> Regular</label>
+        <label><input type="radio" name="metrica" value="preco_promocional"> Promocional</label>
+        <label><input type="radio" name="metrica" value="preco_pix"> Pix</label>
+        <label><input type="radio" name="metrica" value="menor"> Menor dos 3</label>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Agregação</span>
+      <div class="radio-row">
+        <label><input type="radio" name="agreg" value="media" checked> Média</label>
+        <label><input type="radio" name="agreg" value="minimo"> Mínimo</label>
+        <label><input type="radio" name="agreg" value="maximo"> Máximo</label>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <span class="lbl" title="Digite uma marca (ex: Cottonbaby) pra somar 1 coluna nova com o preço só dela, ou uma rede (ex: Bistek) pra só destacar a coluna que já existe — útil em reunião com fabricante ou com a própria rede">★ Destacar marca ou rede</span>
+      <input class="tf-input" type="text" id="f-marca-destaque" list="lista-marcas-destaque" placeholder="ex: Cottonbaby ou Bistek" style="min-width:190px" autocomplete="off">
+      <datalist id="lista-marcas-destaque"></datalist>
+    </div>
+  </div>
+</div>
+
+<div class="dash-main">
+  <p class="hint">Compare como cada rede posiciona o preço de <strong>uma mesma categoria, marca ou produto</strong> em relação às demais. Clique numa linha da tabela de comparação para ver o detalhe de SKUs abaixo. Coluna verde = <strong>preço mais baixo</strong> da linha, vermelha = <strong>mais alto</strong>.</p>
+
+  <div class="stat-grid" id="stat-grid"></div>
+
+  <div class="tbox">
+    <div class="tbox-head">
+      <h3 id="pivot-title">Comparação por Categoria</h3>
+      <div class="tbox-tools">
+        <input class="tbox-search" id="pivot-search" type="text" placeholder="Buscar na tabela…">
+        <span class="tbox-cnt" id="pivot-cnt">0</span>
+      </div>
+    </div>
+    <div class="tbl-scroll"><table class="dt" id="pivot-table"><thead></thead><tbody></tbody></table></div>
+    <div class="pager" id="pivot-pager"></div>
+  </div>
+
+  <div class="tbox">
+    <div class="tbox-head">
+      <h3 id="detail-title">Detalhe de SKUs</h3>
+      <div class="tbox-tools">
+        <button class="btn-reset" id="btn-clear-drill" style="display:none">✕ Limpar seleção</button>
+        <span class="tbox-cnt" id="detail-cnt">0</span>
+      </div>
+    </div>
+    <div class="tbl-scroll"><table class="dt" id="detail-table"><thead></thead><tbody></tbody></table></div>
+    <div class="pager" id="detail-pager"></div>
+  </div>
+
+  <!-- EVOLUÇÃO DE PREÇO — 1 produto por vez, redes em linha e datas em coluna -->
+  <div class="tbox">
+    <div class="tbox-head">
+      <h3>Evolução de Preço — Produto Único</h3>
+    </div>
+    <div class="evo-head-row">
+      <div class="combo-wrap" id="combo-evo">
+        <input class="combo-input" type="text" id="evo-search" placeholder="Buscar produto por descrição ou EAN para ver a evolução…" autocomplete="off">
+        <div class="combo-drop" id="evo-drop"></div>
+      </div>
+      <div class="evo-summary" id="evo-summary">Nenhum produto selecionado — busque acima ou clique em "evolução" numa linha da tabela de detalhe.</div>
+    </div>
+    <div class="evo-chart-box" id="evo-chart-box" style="display:none"><canvas id="evo-canvas"></canvas></div>
+    <div class="tbl-scroll" id="evo-table-wrap" style="display:none"><table class="dt" id="evo-table"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// ANALISADOR DE PREÇOS — dados carregados sob demanda, dia a dia, a
+// partir de dados/index.json + dados/dias/AAAA-MM-DD.csv (gerados por
+// pesquisa-precos/gerar_dataset_analisador.py). Cada dia é um CSV
+// separado porque o consolidado de todos os dias juntos passa de 80MB —
+// carregar tudo de uma vez travaria o navegador à toa.
+// =====================================================================
+
+const SITE_LABELS = {
+  bistek:'Bistek', kalunga:'Kalunga', koerich:'Koerich', superkoch:'Super Koch',
+  havan:'Havan', festval:'Festval', giassi:'Giassi', muffato:'Muffato',
+  comper:'Comper', meschke:'Meschke', savegnago:'Savegnago', saojoao:'São João',
+  cottonbaby:'Cottonbaby (site próprio)', // não é concorrente — é o e-commerce do próprio cliente, pra comparar preço direto vs. redes
+};
+// Ordem padrão das colunas de rede — nunca reordenada automaticamente por
+// filtro/ranking (cor segue a identidade da rede, não o ranking do momento;
+// ver dataviz skill: "color follows the entity, never its rank"). O usuário
+// pode arrastar as colunas (wireSiteColDrag) pra mudar isso manualmente —
+// aí sim state.siteColOrder muda, mas a cor de cada rede continua igual.
+const SITE_ORDER = ['bistek','kalunga','koerich','superkoch','havan','festval','giassi','muffato','comper','meschke','savegnago','saojoao','cottonbaby'];
+
+// Paleta categórica validada (dataviz skill, ordem fixa de 8 hues — CVD-safe
+// nos pares adjacentes). Como temos 12 redes, os 4 últimos slots reciclam as
+// 4 primeiras cores — na prática dificilmente 9+ redes vendem o mesmo produto
+// ao mesmo tempo pra colidir de verdade no gráfico de evolução.
+const SITE_PALETTE = ['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300','#4a3aa7','#e34948'];
+const SITE_COLOR = {};
+SITE_ORDER.forEach((s,i) => { SITE_COLOR[s] = SITE_PALETTE[i % SITE_PALETTE.length]; });
+
+const DIM_FIELD = {categoria:'categoria', subcategoria:'subcategoria', marca:'marca', produto:'descricao', subcesta:'_subcesta', tamanho:'_tamanho'};
+const DIM_LABEL = {categoria:'Categoria', subcategoria:'Subcategoria', marca:'Marca', produto:'Produto', subcesta:'Subcesta', tamanho:'Tamanho'};
+const PAGE_SIZE = 50;
+
+const state = {
+  indice: [],                 // [{data, linhas, arquivo}]
+  cache: new Map(),           // data -> linhas parseadas (array de objetos)
+  diasSelecionados: new Set(),
+  filtros: { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
+             ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
+             depto:'', descricao:'', ean:'', disp:'' },
+  verPor: 'categoria', metrica: 'preco_regular', agregacao: 'media',
+  marcaDestaque: '', // marca fixa que ganha 1 coluna extra na tabela, sem filtrar o resto (ex: cliente da VCZ acompanhando ao vivo)
+  _aliasProduto: new Map(), // chaveBruta -> chaveCanônica, recalculado a cada render de Produto (ver calcularAliasProduto)
+  drill: null,                // {campo, valor} — linha do pivot selecionada
+  siteColOrder: [...SITE_ORDER], // ordem das colunas de rede na tabela — o usuário pode arrastar pra reordenar
+  pivotSort: {col:'_n', dir:-1}, detailSort: {col:'data', dir:-1},
+  pivotBusca: '',
+  pivotPage: 1, detailPage: 1,
+  evolucao: { ean:null, descricao:null }, // produto único selecionado na seção de evolução
+  _evoChart: null,
+};
+
+// remove acento e caixa pra busca não depender de digitar igualzinho
+function norm(s){ return (s==null?'':String(s)).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim(); }
+function fmtR(v){ return v==null||isNaN(v) ? '—' : v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+// resolve o preço da linha conforme a métrica escolhida no painel — "menor"
+// pega o mínimo entre regular/promocional/pix que existir (ex: sem promo,
+// vale o pix; sem nenhum dos dois, vale o regular), simulando o que o
+// cliente pagaria de fato se buscasse o preço mais baixo do dia
+function precoPorMetrica(r){
+  if(state.metrica === 'menor'){
+    const vs = [r.preco_regular, r.preco_promocional, r.preco_pix]
+      .map(parseFloat).filter(v => !isNaN(v) && v > 0);
+    return vs.length ? Math.min(...vs) : NaN;
+  }
+  return parseFloat(r[state.metrica]);
+}
+function fmtD(iso){ const [a,m,d]=iso.split('-'); return `${d}/${m}/${a}`; }
+
+// ---------------------------------------------------------------------
+// CAMPOS DERIVADOS DA DESCRIÇÃO — calculados 1x por linha ao carregar o
+// dia (não em todo render). Subcesta = primeira palavra da descrição,
+// mesma heurística do _subcategoria_provisoria em gerar_estrutura_
+// mercadologica.py. Tamanho = quantidade+unidade, porta em JS do
+// extrair_tamanho de pesquisa-precos/core/matching.py (mesmas regras de
+// normalização kg->g, L->ml, pra "1kg" e "1000g" caírem no mesmo balde).
+// ---------------------------------------------------------------------
+// pula artigo/preposição no começo do nome ("A Tal Da Castanha..." não
+// pode virar subcesta "A") e usa a próxima palavra de peso de verdade
+const _STOPWORDS_SUBCESTA = new Set(['a','o','as','os','um','uma','uns','umas','de','da','do','das','dos','e']);
+function calcularSubcesta(descricao){
+  const palavras = ((descricao||'').trim().match(/[A-Za-zÀ-ÿ]+/g)) || [];
+  const escolhida = palavras.find(p => !_STOPWORDS_SUBCESTA.has(p.toLowerCase())) || palavras[0];
+  if(!escolhida) return '';
+  return escolhida.charAt(0).toUpperCase() + escolhida.slice(1).toLowerCase();
+}
+
+const _UNIDADES_TAMANHO = {
+  kg:['g',1000], quilo:['g',1000], quilos:['g',1000],
+  g:['g',1], gr:['g',1], gramas:['g',1],
+  l:['ml',1000], litro:['ml',1000], litros:['ml',1000],
+  ml:['ml',1], mililitros:['ml',1],
+  un:['un',1], und:['un',1], unid:['un',1], unidade:['un',1], unidades:['un',1],
+};
+const _TAMANHO_RE = /(\d+(?:[.,]\d+)?)\s*(kg|quilos?|gr?|gramas|l|litros?|ml|mililitros|und?|unid|unidades?)\b/i;
+function extrairTamanho(descricao){
+  const m = _TAMANHO_RE.exec(descricao||'');
+  if(!m) return null;
+  const valor = parseFloat(m[1].replace(',','.'));
+  const unidadeBruta = m[2].toLowerCase();
+  const [unidadeBase, fator] = _UNIDADES_TAMANHO[unidadeBruta] || [unidadeBruta, 1];
+  return { qtd: valor*fator, unidade: unidadeBase };
+}
+function formatarTamanho(t){
+  if(!t) return '';
+  if(t.unidade==='g'  && t.qtd>=1000) return `${(t.qtd/1000).toLocaleString('pt-BR')} kg`;
+  if(t.unidade==='ml' && t.qtd>=1000) return `${(t.qtd/1000).toLocaleString('pt-BR')} L`;
+  return `${t.qtd.toLocaleString('pt-BR')} ${t.unidade}`;
+}
+
+// ---------------------------------------------------------------------
+// CARGA DE DADOS
+// ---------------------------------------------------------------------
+async function init(){
+  const resp = await fetch('dados/index.json');
+  state.indice = await resp.json();
+  if(!state.indice.length){
+    document.getElementById('loading').innerHTML = '<p class="loading-text">Nenhum dado encontrado em dados/index.json — rode gerar_dataset_analisador.py no projeto pesquisa-precos.</p>';
+    return;
+  }
+  state.diasSelecionados.add(state.indice[0].data); // dia mais recente ligado por padrão
+  await carregarDiasSelecionados();
+  montarFiltrosData();
+  montarFiltrosDependentes();
+  wireEventos();
+  render();
+  document.getElementById('loading').classList.add('hidden');
+}
+
+function carregarDia(dia){
+  if(state.cache.has(dia)) return Promise.resolve();
+  const item = state.indice.find(i=>i.data===dia);
+  return new Promise((resolve,reject)=>{
+    Papa.parse(`dados/${item.arquivo}`, {
+      download:true, header:true, skipEmptyLines:true,
+      complete: res => {
+        res.data.forEach(r => {
+          r._subcesta = calcularSubcesta(r.descricao);
+          const t = extrairTamanho(r.descricao);
+          r._tamanho = t ? formatarTamanho(t) : '';
+          r._tamanhoQtd = t ? t.qtd : null; // pra ordenar o filtro por quantidade, não alfabético
+        });
+        state.cache.set(dia, res.data);
+        resolve();
+      },
+      error: reject,
+    });
+  });
+}
+async function carregarDiasSelecionados(){
+  await Promise.all([...state.diasSelecionados].map(carregarDia));
+}
+function linhasCarregadas(){
+  const out = [];
+  state.diasSelecionados.forEach(d => { const rows = state.cache.get(d); if(rows) out.push(...rows); });
+  return out;
+}
+
+// ---------------------------------------------------------------------
+// FILTROS — painel de Data (fonte: index.json, não depende dos dados)
+// ---------------------------------------------------------------------
+// Intervalo de/até em vez de checklist — a coleta é esparsa (só 7 dias
+// existem até agora, com buracos), então o intervalo escolhido seleciona
+// automaticamente TODOS os dias que existirem dentro dele (não exige que
+// cada dia do calendário tenha coleta), e o contador ao lado mostra quantos
+// de fato caíram no intervalo.
+function montarFiltrosData(){
+  const datas = state.indice.map(i=>i.data); // já vem ordenado desc (mais recente primeiro)
+  const maisRecente = datas[0];
+  const maisAntiga = datas[datas.length-1];
+  const inicioEl = document.getElementById('f-data-inicio');
+  const fimEl = document.getElementById('f-data-fim');
+
+  inicioEl.min = fimEl.min = maisAntiga;
+  inicioEl.max = fimEl.max = maisRecente;
+  if(!inicioEl.value) inicioEl.value = maisRecente;
+  if(!fimEl.value) fimEl.value = maisRecente;
+
+  const aplicarIntervalo = async () => {
+    let ini = inicioEl.value, fim = fimEl.value;
+    if(ini && fim && ini > fim){ [ini, fim] = [fim, ini]; inicioEl.value = ini; fimEl.value = fim; }
+    const dentro = state.indice.filter(i => (!ini || i.data>=ini) && (!fim || i.data<=fim));
+    document.getElementById('data-cnt').textContent = `(${dentro.length} de ${state.indice.length} dias)`;
+    if(!dentro.length) return; // intervalo sem nenhuma coleta — mantém o que já estava carregado
+    state.diasSelecionados = new Set(dentro.map(i=>i.data));
+    document.getElementById('loading').classList.remove('hidden');
+    await carregarDiasSelecionados();
+    montarFiltrosDependentes(); // novo dia pode trazer rede/categoria/marca inéditos
+    document.getElementById('loading').classList.add('hidden');
+    render();
+  };
+
+  inicioEl.addEventListener('change', aplicarIntervalo);
+  fimEl.addEventListener('change', aplicarIntervalo);
+  document.getElementById('data-cnt').textContent = `(${state.diasSelecionados.size} de ${state.indice.length} dias)`;
+}
+
+// ---------------------------------------------------------------------
+// FILTROS dependentes dos dados carregados — construídos 1x por conjunto
+// de dias carregado (mesmo padrão do ceasa_dashboard: lista de opções
+// vem dos valores distintos já coletados, sem cascata entre eles; a
+// interação real entre filtros acontece no resultado da tabela).
+// ---------------------------------------------------------------------
+function distintos(rows, campo){ return [...new Set(rows.map(r=>(r[campo]||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt')); }
+
+// junta "Abobora"/"Abóbora" (mesma palavra, um site sem acento) num só
+// rótulo — usa o norm() já existente (remove acento) como chave e fica
+// com a grafia mais frequente; muta _subcesta nas linhas já em cache
+function canonicalizarSubcestas(rows){
+  const contagem = new Map(); // chave normalizada -> Map(grafia -> n)
+  rows.forEach(r => {
+    if(!r._subcesta) return;
+    const chave = norm(r._subcesta);
+    if(!contagem.has(chave)) contagem.set(chave, new Map());
+    const porGrafia = contagem.get(chave);
+    porGrafia.set(r._subcesta, (porGrafia.get(r._subcesta)||0)+1);
+  });
+  const canonico = new Map();
+  contagem.forEach((porGrafia, chave) => canonico.set(chave, maisComum(porGrafia)));
+  rows.forEach(r => { if(r._subcesta) r._subcesta = canonico.get(norm(r._subcesta)); });
+}
+
+function montarFiltrosDependentes(){
+  const rows = linhasCarregadas();
+  canonicalizarSubcestas(rows);
+
+  // Departamento — select simples (poucas opções)
+  const deptos = distintos(rows,'departamento');
+  const selDepto = document.getElementById('f-depto');
+  const deptoAtual = selDepto.value;
+  selDepto.innerHTML = '<option value="">Todos</option>' + deptos.map(d=>`<option value="${d}">${d}</option>`).join('');
+  selDepto.value = deptos.includes(deptoAtual) ? deptoAtual : '';
+
+  criarDdmMultiSelect('site', distintos(rows,'site').map(s=>({v:s,lbl:SITE_LABELS[s]||s})), state.filtros.sites, 'rede','redes');
+  criarDdmMultiSelect('categoria', distintos(rows,'categoria').map(v=>({v,lbl:v})), state.filtros.categorias, 'categoria','categorias');
+  criarDdmMultiSelect('subcategoria', distintos(rows,'subcategoria').map(v=>({v,lbl:v})), state.filtros.subcategorias, 'subcategoria','subcategorias');
+  criarDdmMultiSelect('marca', distintos(rows,'marca').map(v=>({v,lbl:v})), state.filtros.marcas, 'marca','marcas');
+  criarDdmMultiSelect('uf', distintos(rows,'uf').map(v=>({v,lbl:v})), state.filtros.ufs, 'uf','ufs');
+  criarDdmMultiSelect('cidade', distintos(rows,'cidade').map(v=>({v,lbl:v})), state.filtros.cidades, 'cidade','cidades');
+  criarDdmMultiSelect('subcesta', distintos(rows,'_subcesta').map(v=>({v,lbl:v})), state.filtros.subcestas, 'subcesta','subcestas');
+  criarDdmMultiSelect('tamanho', distintosTamanho(rows), state.filtros.tamanhos, 'tamanho','tamanhos');
+
+  document.getElementById('lista-marcas-destaque').innerHTML =
+    [...distintos(rows,'site').map(s=>SITE_LABELS[s]||s), ...distintos(rows,'marca')]
+      .map(v=>`<option value="${v}">`).join('');
+}
+
+// tamanho ordena pela quantidade de verdade (50g, 100g, 1kg…), não
+// alfabético — senão "100 g" viria antes de "50 g"
+function distintosTamanho(rows){
+  const qtdPorLabel = new Map();
+  rows.forEach(r => { if(r._tamanho && !qtdPorLabel.has(r._tamanho)) qtdPorLabel.set(r._tamanho, r._tamanhoQtd); });
+  return [...qtdPorLabel.entries()].sort((a,b)=>a[1]-b[1]).map(([lbl])=>({v:lbl, lbl}));
+}
+
+// gera um dropdown de checkboxes genérico (ddm-<id>) e mantém o Set de
+// filtro selecionado em sincronia — reaproveitado pra rede/categoria/
+// subcategoria/marca/uf/cidade
+function criarDdmMultiSelect(id, opcoes, selecionadoSet, singular, plural){
+  // preserva seleção que ainda existe na nova lista de opções (ex: trocou o dia)
+  [...selecionadoSet].forEach(v => { if(!opcoes.some(o=>o.v===v)) selecionadoSet.delete(v); });
+
+  const lst = document.getElementById(`lst-${id}`);
+  const searchInput = document.getElementById(`search-${id}`);
+  const render_ = (filtro='') => {
+    const f = norm(filtro);
+    const filtradas = f ? opcoes.filter(o=>norm(o.lbl).includes(f)) : opcoes;
+    lst.innerHTML = filtradas.length ? filtradas.map(o => `
+      <label class="${selecionadoSet.has(o.v)?'active':''}" data-v="${o.v}">
+        <input type="checkbox" value="${o.v}" ${selecionadoSet.has(o.v)?'checked':''}> ${o.lbl}
+      </label>`).join('') : '<div class="ddm-empty">Nada encontrado</div>';
+    lst.querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
+      if(cb.checked) selecionadoSet.add(cb.value); else selecionadoSet.delete(cb.value);
+      cb.closest('label').classList.toggle('active', cb.checked);
+      atualizarLabelDdm(id, selecionadoSet.size, opcoes.length, singular, plural);
+      render();
+    }));
+  };
+  render_();
+  if(searchInput) searchInput.oninput = () => render_(searchInput.value);
+  atualizarLabelDdm(id, selecionadoSet.size, opcoes.length, singular, plural);
+}
+
+function atualizarLabelDdm(id, n, total, singular, plural){
+  const el = document.getElementById(`ddm-${id}-lbl`);
+  if(!el) return;
+  el.textContent = n===0 ? 'Todas' : n===1 ? `1 ${singular}` : (n===total ? 'Todas' : `${n} ${plural}`);
+}
+
+// abrir/fechar os dropdowns (clique fora fecha)
+function wireDdmToggles(){
+  document.querySelectorAll('.ddm-wrap').forEach(w => {
+    const btn = w.querySelector('.ddm-btn');
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const estavaAberto = w.classList.contains('open');
+      document.querySelectorAll('.ddm-wrap.open').forEach(o=>o.classList.remove('open'));
+      if(!estavaAberto) w.classList.add('open');
+    });
+    // clique dentro do painel (busca, lista) não pode borbulhar até o
+    // document — senão o listener abaixo fecha o dropdown antes do clique
+    // de foco no campo de busca terminar, e nunca dá pra digitar nada
+    const panel = w.querySelector('.ddm-panel');
+    if(panel) panel.addEventListener('click', e => e.stopPropagation());
+  });
+  document.addEventListener('click', () => document.querySelectorAll('.ddm-wrap.open').forEach(o=>o.classList.remove('open')));
+}
+
+// ---------------------------------------------------------------------
+// EVENTOS gerais do painel
+// ---------------------------------------------------------------------
+function wireEventos(){
+  wireDdmToggles();
+  wireEvoCombo();
+
+  document.getElementById('f-depto').addEventListener('change', e => { state.filtros.depto = e.target.value; render(); });
+  document.getElementById('f-descricao').addEventListener('input', e => { state.filtros.descricao = e.target.value; state.detailPage=1; render(); });
+  document.getElementById('f-ean').addEventListener('input', e => { state.filtros.ean = e.target.value.trim(); state.detailPage=1; render(); });
+  document.querySelectorAll('input[name=disp]').forEach(r => r.addEventListener('change', e => { state.filtros.disp = e.target.value; render(); }));
+
+  document.getElementById('f-verpor').addEventListener('change', e => { state.verPor = e.target.value; state.drill=null; state.pivotPage=1; render(); });
+  document.querySelectorAll('input[name=metrica]').forEach(r => r.addEventListener('change', e => { state.metrica = e.target.value; render(); }));
+  document.querySelectorAll('input[name=agreg]').forEach(r => r.addEventListener('change', e => { state.agregacao = e.target.value; render(); }));
+
+  document.getElementById('pivot-search').addEventListener('input', e => { state.pivotBusca = e.target.value; state.pivotPage=1; renderPivot(); });
+  document.getElementById('btn-clear-drill').addEventListener('click', () => { state.drill=null; state.detailPage=1; render(); });
+  document.getElementById('f-marca-destaque').addEventListener('input', e => { state.marcaDestaque = e.target.value.trim(); render(); });
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    state.filtros = { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
+                       ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
+                       depto:'', descricao:'', ean:'', disp:'' };
+    document.getElementById('f-depto').value='';
+    document.getElementById('f-descricao').value='';
+    document.getElementById('f-ean').value='';
+    document.getElementById('f-marca-destaque').value='';
+    state.marcaDestaque='';
+    document.querySelector('input[name=disp][value=""]').checked = true;
+    state.drill = null; state.pivotPage=1; state.detailPage=1;
+    montarFiltrosDependentes();
+    render();
+  });
+}
+
+// ---------------------------------------------------------------------
+// FILTRAGEM
+// ---------------------------------------------------------------------
+function linhasFiltradas(){
+  const f = state.filtros;
+  const qDesc = norm(f.descricao);
+  return linhasCarregadas().filter(r => {
+    if(f.depto && r.departamento !== f.depto) return false;
+    if(f.sites.size && !f.sites.has(r.site)) return false;
+    if(f.categorias.size && !f.categorias.has(r.categoria)) return false;
+    if(f.subcategorias.size && !f.subcategorias.has(r.subcategoria)) return false;
+    if(f.marcas.size && !f.marcas.has(r.marca)) return false;
+    if(f.ufs.size && !f.ufs.has(r.uf)) return false;
+    if(f.cidades.size && !f.cidades.has(r.cidade)) return false;
+    if(f.subcestas.size && !f.subcestas.has(r._subcesta)) return false;
+    if(f.tamanhos.size && !f.tamanhos.has(r._tamanho)) return false;
+    if(f.disp && r.disponivel !== f.disp) return false;
+    if(qDesc && !norm(r.descricao).includes(qDesc)) return false;
+    if(f.ean && !(r.ean||'').includes(f.ean)) return false;
+    return true;
+  });
+}
+
+// ---------------------------------------------------------------------
+// PIVOT — agrupa pela dimensão escolhida (Categoria/Subcategoria/Marca/
+// Produto) e cruza com Rede em colunas, igual a um parâmetro de campo do
+// Power BI trocando o que aparece nas linhas da matriz.
+// ---------------------------------------------------------------------
+// Quando agrupa por Produto, a chave NÃO pode ser o texto da descrição —
+// cada rede escreve o mesmo produto com um nome ligeiramente diferente
+// ("Algodão Cottonbaby Bolas 50g" na Muffato vs "Algodão Em Bolas Hidrófilo
+// Cottonbaby Pacote 50g" na Bistek/Giassi), mesmo tendo o MESMO EAN — então
+// isso separava em linhas diferentes o que é o mesmo item. EAN é a chave de
+// verdade quando existe; só cai pro texto quando o EAN não veio na coleta.
+function chaveGrupoProdutoBruta(r){
+  return r.ean ? ('EAN:'+r.ean) : ('DESC:'+((r.descricao||'').trim() || '(sem informação)'));
+}
+// quando dois produtos SEM EAN (ou um com e outro sem) são o mesmo item
+// escrito diferente, calcularAliasProduto() aponta a chave bruta de um pro
+// outro — chaveGrupoProduto() sempre passa por esse alias antes de decidir
+// em que linha da tabela o SKU cai (state._aliasProduto é recalculado a
+// cada render de Produto, em computarPivot)
+function chaveGrupoProduto(r){
+  const bruta = chaveGrupoProdutoBruta(r);
+  return state._aliasProduto.get(bruta) || bruta;
+}
+// mesma lógica de chave usada em computarPivot, reaproveitada pro
+// drill-down (clicar numa linha do pivot e filtrar a tabela de detalhe)
+function chaveGrupo(r, dim){
+  if(dim==='produto') return chaveGrupoProduto(r);
+  return (r[DIM_FIELD[dim]]||'').trim() || '(sem informação)';
+}
+
+// ---------------------------------------------------------------------
+// FUSÃO DE PRODUTOS PARECIDOS SEM EAN — inspirada em
+// pesquisa-precos/core/matching.py, mas mais conservadora de propósito
+// (aqui o resultado vai direto pra tabela, sem revisão humana no meio):
+//   1. Nunca funde dois produtos que JÁ têm EAN, mesmo que o nome seja
+//      idêntico — EAN diferente é produto diferente, ponto final.
+//   2. Só funde dentro da MESMA marca (bucket) — nunca entre marcas.
+//   3. Todo número solto do nome (tamanho, unidades, o que for) tem que
+//      bater EXATAMENTE dos dois lados — inclusive um lado ter número e o
+//      outro não conta como "não bate".
+//   4. Só passa nos 3 filtros acima que o nome entra na comparação de
+//      similaridade de texto, e só funde acima de LIMIAR_FUSAO — sem
+//      bônus de nenhum tipo somado ao score.
+// ---------------------------------------------------------------------
+const _TAMANHO_RE_G = /(\d+(?:[.,]\d+)?)\s*(kg|quilos?|gr?|gramas|l|litros?|ml|mililitros|und?|unid|unidades?)\b/gi;
+// Mais alto que o LIMIAR_AUTO=90 do core/matching.py de propósito: lá o
+// score ainda passa por revisão humana antes de virar preço de verdade;
+// aqui o resultado já entra direto numa linha da tabela de comparação, sem
+// ninguém revisando — pedido explícito do usuário em 23/09/2026 pra só
+// fundir quando tiver certeza, depois de um caso real de falso positivo.
+//
+// Calibrado com 2 pares reais (23/09/2026):
+//   "Caixa 75 Unidades" vs "Caixa COM 75 Unidades" (mesmo produto, só
+//   escrita diferente) e "Caixa 75 Unidades" vs "ECO Caixa 75 Unidades"
+//   (produto DIFERENTE — linha eco é outra referência, outro preço) davam
+//   o MESMO score (94.3) na comparação de texto pura — "Com" e "Eco" contam
+//   como "uma palavra a mais" do jeito igual pro algoritmo, então nenhum
+//   limiar sozinho separa os dois casos. A saída foi tirar as palavras de
+//   ligação (preposição/artigo) ANTES de comparar — "Com" some, "Eco" fica
+//   (não é palavra de ligação, é modificador de produto de verdade).
+const LIMIAR_FUSAO = 97;
+const _STOPWORDS_FUSAO = new Set(['de','da','do','das','dos','com','sem','para','em','e','ou','a','o','as','os','um','uma']);
+
+function nomeLimpo(descricao){
+  const limpo = norm(descricao).replace(_TAMANHO_RE_G, ' ').replace(/[^\w\s]/g, ' ');
+  const palavras = limpo.split(/\s+/).filter(p => p && !_STOPWORDS_FUSAO.has(p));
+  return palavras.join(' ');
+}
+// distância indel (só inserção/remoção, sem substituição direta) — é o
+// que o rapidfuzz usa por baixo do fuzz.ratio/token_sort_ratio
+function distanciaIndel(a, b){
+  const m = a.length, n = b.length;
+  if(!m) return n;
+  if(!n) return m;
+  let prev = Array.from({length:n+1}, (_,j)=>j);
+  let curr = new Array(n+1);
+  for(let i=1;i<=m;i++){
+    curr[0] = i;
+    for(let j=1;j<=n;j++){
+      curr[j] = a[i-1]===b[j-1] ? prev[j-1] : Math.min(prev[j]+1, curr[j-1]+1);
+    }
+    [prev,curr] = [curr,prev];
+  }
+  return prev[n];
+}
+function tokenSortRatio(a, b){
+  const ta = (a.match(/\S+/g)||[]).sort().join(' ');
+  const tb = (b.match(/\S+/g)||[]).sort().join(' ');
+  const total = ta.length + tb.length;
+  if(!total) return 100;
+  return 100 * (1 - distanciaIndel(ta,tb)/total);
+}
+// pega TODO número solto do texto, não só o que vem colado numa unidade
+// (g/ml/un) — pego numa fusão real: "Hastes Flexíveis Cottonbaby C/300"
+// não tem "un" depois do número, então extrairTamanho() não achava nada e
+// deixava passar contra "C/75 Un." (produto de tamanho diferente) na pura
+// comparação de texto. Comparar os números crus é mais grosseiro mas muito
+// mais seguro: qualquer número que não bate (75 vs 300, 1kg vs 5kg, 12un vs
+// 6un) já barra a fusão, sem depender de reconhecer a unidade certa.
+function numerosSoltos(descricao){
+  return new Set((norm(descricao).match(/\d+/g)) || []);
+}
+function compararDescricoes(descA, descB){
+  const numA = numerosSoltos(descA), numB = numerosSoltos(descB);
+  // ANTES só rejeitava quando os DOIS lados tinham número e ele diferia —
+  // "Algodão Cottonbaby" (sem número) passava batido contra "Algodão
+  // Cottonbaby 500g" (com número), porque a checagem exigia número dos
+  // dois lados pra valer. Agora qualquer assimetria já barra: só segue pra
+  // comparação de texto quando os conjuntos de números são EXATAMENTE
+  // iguais — inclusive quando nenhum dos dois tem número nenhum.
+  const mesmosNumeros = numA.size===numB.size && [...numA].every(n=>numB.has(n));
+  if(!mesmosNumeros) return 0;
+  // sem bônus de marca aqui — o bucket já garante mesma marca; somar mais
+  // pontos só deixaria mais fácil bater o limiar por coincidência de texto
+  return tokenSortRatio(nomeLimpo(descA), nomeLimpo(descB));
+}
+
+// devolve o mapa chaveBruta -> chaveCanônica depois de fundir o que for
+// parecido o bastante DENTRO da mesma marca; grupos que já têm EAN viram
+// canônicos primeiro (prioridade pra quem já tem identidade confirmada).
+// Trava de segurança: "Ver por Produto" sem filtrar marca/categoria roda
+// isso em cima do dataset inteiro (300k+ linhas) — sem limite, trava a aba
+// por dezenas de segundos. LIMITE_LINHAS pula a fusão de vez quando o
+// recorte é grande demais; ORCAMENTO_COMPARACOES é um teto extra pro caso
+// de uma marca sozinha ter um catálogo enorme mesmo com poucas linhas.
+const LIMITE_LINHAS_FUSAO = 30000;
+function calcularAliasProduto(rows){
+  if(rows.length > LIMITE_LINHAS_FUSAO) return new Map(); // recorte grande demais — mantém agrupamento só por EAN/texto exato, sem travar
+  let orcamentoComparacoes = 60000;
+  const brutos = new Map(); // chaveBruta -> {marcas, descricoes}
+  rows.forEach(r => {
+    const chave = chaveGrupoProdutoBruta(r);
+    if(!brutos.has(chave)) brutos.set(chave, {marcas:new Map(), descricoes:new Map()});
+    const b = brutos.get(chave);
+    if(r.marca) b.marcas.set(r.marca, (b.marcas.get(r.marca)||0)+1);
+    if(r.descricao) b.descricoes.set(r.descricao, (b.descricoes.get(r.descricao)||0)+1);
+  });
+
+  const porMarca = new Map(); // marca normalizada -> [chaveBruta,...]
+  brutos.forEach((b, chave) => {
+    const marcaNorm = norm(maisComum(b.marcas));
+    if(!marcaNorm) return; // sem marca não tem sinal confiável pra fundir
+    if(!porMarca.has(marcaNorm)) porMarca.set(marcaNorm, []);
+    porMarca.get(marcaNorm).push(chave);
+  });
+
+  const alias = new Map();
+  porMarca.forEach(chaves => {
+    if(chaves.length < 2 || orcamentoComparacoes <= 0) return;
+    chaves.sort((a,b) => (b.startsWith('EAN:')?1:0) - (a.startsWith('EAN:')?1:0)); // EAN primeiro = vira canônico primeiro
+    const canonicos = [];
+    chaves.forEach(chave => {
+      if(orcamentoComparacoes <= 0){ canonicos.push(chave); return; } // orçamento estourou — não funde mais, mas não trava
+      // EAN é identidade de verdade — dois EANs diferentes são dois
+      // produtos diferentes por definição, não importa quão parecido o
+      // nome seja (pego num caso real: "150Un" e "Pote 150Un" da Cottonbaby
+      // são EANs diferentes com preços bem diferentes, e quase se fundiram
+      // só por causa do "150" em comum). A fusão só serve pra ligar um
+      // produto SEM EAN a um que já tem, nunca EAN×EAN.
+      const temEan = chave.startsWith('EAN:');
+      const desc = maisComum(brutos.get(chave).descricoes);
+      let melhorAlvo = null, melhorScore = 0;
+      canonicos.forEach(c => {
+        if(orcamentoComparacoes-- <= 0) return;
+        if(temEan && c.startsWith('EAN:')) return; // EAN×EAN nunca funde
+        const score = compararDescricoes(desc, maisComum(brutos.get(c).descricoes));
+        if(score > melhorScore){ melhorScore = score; melhorAlvo = c; }
+      });
+      if(melhorAlvo && melhorScore >= LIMIAR_FUSAO) alias.set(chave, melhorAlvo);
+      else canonicos.push(chave);
+    });
+  });
+  return alias;
+}
+
+// interpreta o texto de "Destacar marca ou rede": se bater com o nome de
+// uma rede conhecida, só destaca visualmente a coluna que já existe; senão
+// trata como marca e soma 1 coluna nova (marca não é eixo de coluna normal)
+function resolverDestaque(texto){
+  const v = norm(texto);
+  if(!v) return {tipo:null};
+  const slug = SITE_ORDER.find(s => norm(SITE_LABELS[s])===v || s===v);
+  if(slug) return {tipo:'rede', slug};
+  return {tipo:'marca', termo:v};
+}
+
+function computarPivot(rows, destaque){
+  const porProduto = state.verPor==='produto';
+  // "Destacar marca" soma 1 coluna fixa com o preço só dessa marca dentro
+  // de cada linha, SEM tirar as outras marcas do resto da tabela — pensado
+  // pra reunião com o próprio fabricante ver onde ele está no panorama geral
+  const destaqueMarcaNorm = destaque.tipo==='marca' ? destaque.termo : '';
+  state._aliasProduto = porProduto ? calcularAliasProduto(rows) : new Map();
+  const grupos = new Map(); // chave -> {n, porSite, linkPorSite, marcas, descricoes, ean, destaque, chavesBrutas}
+  for(const r of rows){
+    const chave = chaveGrupo(r, state.verPor);
+    const preco = precoPorMetrica(r);
+    if(!grupos.has(chave)) grupos.set(chave, {n:0, porSite:new Map(), linkPorSite:new Map(), marcas:new Map(), descricoes:new Map(), ean: null, destaque:[], chavesBrutas:new Set()});
+    const g = grupos.get(chave);
+    g.n++;
+    if(!isNaN(preco) && preco>0){
+      if(!g.porSite.has(r.site)) g.porSite.set(r.site, []);
+      g.porSite.get(r.site).push(preco);
+      if(r.link) g.linkPorSite.set(r.site, r.link); // pra abrir com duplo-clique na célula — fica com o link mais recente visto
+      if(destaqueMarcaNorm && norm(r.marca)===destaqueMarcaNorm) g.destaque.push(preco);
+    }
+    if(porProduto){
+      // o rótulo exibido e a marca são "o mais frequente do grupo" — o
+      // grupo pode juntar textos/grafias diferentes agora que a chave é o EAN
+      // (ou fundiu 2+ chaves brutas parecidas — ver chavesBrutas abaixo)
+      if(r.descricao) g.descricoes.set(r.descricao, (g.descricoes.get(r.descricao)||0)+1);
+      if(r.marca) g.marcas.set(r.marca, (g.marcas.get(r.marca)||0)+1);
+      if(r.ean) g.ean = r.ean;
+      g.chavesBrutas.add(chaveGrupoProdutoBruta(r));
+    }
+  }
+  return grupos;
+}
+function maisComum(mapa){
+  if(!mapa || !mapa.size) return '';
+  return [...mapa.entries()].sort((a,b)=>b[1]-a[1])[0][0];
+}
+function agregar(valores){
+  if(!valores || !valores.length) return null;
+  if(state.agregacao==='minimo') return Math.min(...valores);
+  if(state.agregacao==='maximo') return Math.max(...valores);
+  return valores.reduce((a,b)=>a+b,0)/valores.length;
+}
+
+function renderPivot(){
+  const rowsFiltradas = linhasFiltradas();
+  const destaque = resolverDestaque(state.marcaDestaque);
+  const grupos = computarPivot(rowsFiltradas, destaque);
+  const sitesPresentes = state.siteColOrder.filter(s => [...grupos.values()].some(g=>g.porSite.has(s)));
+
+  // só faz sentido mostrar Marca como coluna própria quando a dimensão das
+  // linhas é Produto — nas outras (Categoria/Subcategoria/Marca) cada linha
+  // já mistura várias marcas, então uma coluna "marca mais comum" enganaria
+  const mostrarColMarca = state.verPor==='produto';
+  const mostrarColDestaque = destaque.tipo==='marca'; // marca => soma coluna nova
+  const redeDestacada = destaque.tipo==='rede' ? destaque.slug : null; // rede => só destaca a coluna que já existe
+  // pega a grafia oficial da marca destacada (a que já foi canonicalizada
+  // no ETL) em vez do texto cru que o usuário digitou no campo
+  const nomeDestaqueExibido = mostrarColDestaque
+    ? (rowsFiltradas.find(r => norm(r.marca)===destaque.termo)?.marca || state.marcaDestaque)
+    : '';
+
+  // monta linhas com os valores agregados já calculados, pra poder ordenar/paginar sem recalcular
+  let linhas = [...grupos.entries()].map(([chave, g]) => {
+    const valoresPorSite = {};
+    sitesPresentes.forEach(s => valoresPorSite[s] = agregar(g.porSite.get(s)));
+    const medias = Object.values(valoresPorSite).filter(v=>v!=null);
+    const mediaMercado = medias.length ? medias.reduce((a,b)=>a+b,0)/medias.length : null;
+    const amplitude = medias.length>1 ? (Math.max(...medias)-Math.min(...medias))/Math.min(...medias)*100 : null;
+    const marca = mostrarColMarca ? maisComum(g.marcas) : '';
+    // rótulo exibido: pra Produto é a descrição mais frequente do grupo
+    // (pode ter mais de uma grafia mesmo agrupado pelo EAN); pras outras
+    // dimensões o rótulo é a própria chave
+    const label = mostrarColMarca ? (maisComum(g.descricoes) || chave) : chave;
+    const valorDestaque = mostrarColDestaque ? agregar(g.destaque) : null;
+    const fundido = g.chavesBrutas && g.chavesBrutas.size > 1; // juntou 2+ produtos parecidos sem EAN em comum
+    return { chave, label, ean:g.ean, n:g.n, valoresPorSite, linkPorSite:g.linkPorSite, mediaMercado, amplitude, marca, valorDestaque, fundido };
+  });
+
+  if(state.pivotBusca){
+    const q = norm(state.pivotBusca);
+    linhas = linhas.filter(l => norm(l.label).includes(q) || (mostrarColMarca && norm(l.marca).includes(q)));
+  }
+
+  linhas.sort((a,b) => {
+    const {col,dir} = state.pivotSort;
+    let va, vb;
+    if(col==='_chave'){ va=a.label; vb=b.label; return va.localeCompare(vb,'pt')*dir; }
+    if(col==='_marca'){ va=a.marca; vb=b.marca; return va.localeCompare(vb,'pt')*dir; }
+    if(col==='_n'){ va=a.n; vb=b.n; }
+    else if(col==='_media'){ va=a.mediaMercado; vb=b.mediaMercado; }
+    else if(col==='_amp'){ va=a.amplitude; vb=b.amplitude; }
+    else if(col==='_destaque'){ va=a.valorDestaque; vb=b.valorDestaque; }
+    else { va=a.valoresPorSite[col]; vb=b.valoresPorSite[col]; }
+    va = va==null ? -Infinity : va; vb = vb==null ? -Infinity : vb;
+    return (va-vb)*dir;
+  });
+
+  document.getElementById('pivot-title').textContent = `Comparação por ${DIM_LABEL[state.verPor]}`;
+  document.getElementById('pivot-cnt').textContent = `${linhas.length.toLocaleString('pt-BR')} ${DIM_LABEL[state.verPor].toLowerCase()}${linhas.length!==1?'s':''}`;
+
+  // header
+  const thead = document.querySelector('#pivot-table thead');
+  const arrow = c => c===state.pivotSort.col ? (state.pivotSort.dir===1?' ▲':' ▼') : '';
+  thead.innerHTML = `<tr>
+    <th data-col="_chave">${DIM_LABEL[state.verPor]}<span class="si">${arrow('_chave')}</span></th>
+    ${mostrarColMarca ? `<th data-col="_marca">Marca<span class="si">${arrow('_marca')}</span></th>` : ''}
+    <th class="r" data-col="_n">SKUs<span class="si">${arrow('_n')}</span></th>
+    ${mostrarColDestaque ? `<th class="r col-destaque" data-col="_destaque" title="Preço só desta marca, mesmo sem filtrar as outras">★ ${nomeDestaqueExibido}<span class="si">${arrow('_destaque')}</span></th>` : ''}
+    ${sitesPresentes.map(s=>`<th class="r col-rede${s===redeDestacada?' col-destaque':''}" data-col="${s}" data-site="${s}" draggable="true" title="Arraste pra reordenar as redes">${s===redeDestacada?'★ ':'⠿ '}${SITE_LABELS[s]||s}<span class="si">${arrow(s)}</span></th>`).join('')}
+    <th class="r" data-col="_media">Média Mercado<span class="si">${arrow('_media')}</span></th>
+    <th class="r" data-col="_amp">Amplitude<span class="si">${arrow('_amp')}</span></th>
+  </tr>`;
+  thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    const textoPorPadrao = col==='_chave' || col==='_marca';
+    state.pivotSort.dir = state.pivotSort.col===col ? -state.pivotSort.dir : (textoPorPadrao?1:-1);
+    state.pivotSort.col = col;
+    renderPivot();
+  }));
+  wireSiteColDrag(thead);
+
+  // paginação
+  const totalPaginas = Math.max(1, Math.ceil(linhas.length/PAGE_SIZE));
+  state.pivotPage = Math.min(state.pivotPage, totalPaginas);
+  const pagina = linhas.slice((state.pivotPage-1)*PAGE_SIZE, state.pivotPage*PAGE_SIZE);
+
+  const tbody = document.querySelector('#pivot-table tbody');
+  if(!pagina.length){
+    tbody.innerHTML = `<tr><td colspan="${3+(mostrarColMarca?1:0)+(mostrarColDestaque?1:0)+sitesPresentes.length}" class="no-data">Nenhum resultado para os filtros atuais</td></tr>`;
+  } else {
+    tbody.innerHTML = pagina.map(l => {
+      const valores = sitesPresentes.map(s=>l.valoresPorSite[s]).filter(v=>v!=null);
+      const min = valores.length ? Math.min(...valores) : null;
+      const max = valores.length ? Math.max(...valores) : null;
+      const ativo = state.drill && state.drill.chave===l.chave ? 'drill-active' : '';
+      const marcaTag = l.ean ? ` <span class="cell-empty" style="font-size:.62rem">· EAN ${l.ean}</span>` : '';
+      const fundidoTag = l.fundido ? ` <span class="cell-empty" style="font-size:.62rem" title="Produtos parecidos sem EAN em comum, juntados automaticamente por nome+tamanho — confira se faz sentido">≈ agrupado</span>` : '';
+      return `<tr class="${ativo}" data-chave="${encodeURIComponent(l.chave)}" data-label="${encodeURIComponent(l.label)}">
+        <td class="dim-cell" title="${l.label.replace(/"/g,'&quot;')}">${l.label}${marcaTag}${fundidoTag}</td>
+        ${mostrarColMarca ? `<td>${l.marca||'—'}</td>` : ''}
+        <td class="r">${l.n.toLocaleString('pt-BR')}</td>
+        ${mostrarColDestaque ? `<td class="r col-destaque">${l.valorDestaque!=null?fmtR(l.valorDestaque):'—'}</td>` : ''}
+        ${sitesPresentes.map(s => {
+          const v = l.valoresPorSite[s];
+          const destCls = s===redeDestacada ? ' col-destaque' : '';
+          if(v==null) return `<td class="r cell-empty${destCls}">—</td>`;
+          const cls = (min!==max && v===min) ? 'cell-min' : (min!==max && v===max) ? 'cell-max' : '';
+          const link = l.linkPorSite.get(s);
+          // "≈" repete no preço de cada rede (não só no nome da linha) —
+          // pedido do usuário: olhando só a célula já dá pra saber que esse
+          // valor é de uma linha fundida automaticamente, sem precisar
+          // voltar o olho pra coluna do produto
+          const prefixo = l.fundido ? '≈ ' : '';
+          const tituloFundido = l.fundido ? 'Linha agrupada automaticamente por nome+tamanho (sem EAN em comum) — confira se faz sentido. ' : '';
+          const tituloLink = link ? `Clique duplo pra abrir o produto em ${SITE_LABELS[s]||s}` : '';
+          const linkAttrs = link ? ` class="r ${cls}${destCls} cell-link" data-link="${link.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"` : ` class="r ${cls}${destCls}"`;
+          const tituloAttr = (tituloFundido || tituloLink) ? ` title="${(tituloFundido+tituloLink).replace(/"/g,'&quot;')}"` : '';
+          return `<td${linkAttrs}${tituloAttr}>${prefixo}${fmtR(v)}</td>`;
+        }).join('')}
+        <td class="r">${fmtR(l.mediaMercado)}</td>
+        <td class="r">${l.amplitude!=null ? l.amplitude.toFixed(1)+'%' : '—'}</td>
+      </tr>`;
+    }).join('');
+    tbody.querySelectorAll('tr[data-chave]').forEach(tr => tr.addEventListener('click', () => {
+      const chave = decodeURIComponent(tr.dataset.chave);
+      const label = decodeURIComponent(tr.dataset.label);
+      state.drill = (state.drill && state.drill.chave===chave) ? null : {dim: state.verPor, chave, label};
+      state.detailPage = 1;
+      render();
+    }));
+    // clique duplo numa célula de preço abre o produto na rede — não conta
+    // como clique de drill-down (stopPropagation evita mexer na seleção)
+    tbody.querySelectorAll('td.cell-link').forEach(td => td.addEventListener('dblclick', e => {
+      e.stopPropagation();
+      window.open(td.dataset.link, '_blank', 'noopener');
+    }));
+  }
+
+  renderPager('pivot-pager', state.pivotPage, totalPaginas, p => { state.pivotPage=p; renderPivot(); });
+}
+
+// arrasta as colunas de rede (⠿) pra reordenar como o usuário quiser
+// comparar lado a lado — é reorder manual, não afeta a cor/identidade de
+// cada rede (continua a mesma em qualquer posição, só muda onde aparece)
+function wireSiteColDrag(thead){
+  let arrastando = null;
+  thead.querySelectorAll('th.col-rede').forEach(th => {
+    th.addEventListener('dragstart', e => {
+      arrastando = th.dataset.site;
+      th.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    th.addEventListener('dragend', () => { th.classList.remove('dragging'); thead.querySelectorAll('th.col-rede').forEach(t=>t.classList.remove('drag-over')); });
+    th.addEventListener('dragover', e => { e.preventDefault(); if(th.dataset.site!==arrastando) th.classList.add('drag-over'); });
+    th.addEventListener('dragleave', () => th.classList.remove('drag-over'));
+    th.addEventListener('drop', e => {
+      e.preventDefault();
+      th.classList.remove('drag-over');
+      const alvo = th.dataset.site;
+      if(!arrastando || arrastando===alvo) return;
+      const ordem = state.siteColOrder;
+      ordem.splice(ordem.indexOf(arrastando), 1);
+      ordem.splice(ordem.indexOf(alvo), 0, arrastando);
+      renderPivot();
+    });
+  });
+}
+
+// ---------------------------------------------------------------------
+// TABELA DE DETALHE — linhas cruas (1 por SKU coletado), respeitando os
+// filtros + a seleção feita clicando numa linha do pivot
+// ---------------------------------------------------------------------
+const DETAIL_COLS = [
+  {k:'data', lbl:'Data', w:82}, {k:'site', lbl:'Rede', w:90}, {k:'categoria', lbl:'Categoria', w:150},
+  {k:'subcategoria', lbl:'Subcategoria', w:130}, {k:'marca', lbl:'Marca', w:110}, {k:'descricao', lbl:'Produto', w:280},
+  {k:'ean', lbl:'EAN', w:120}, {k:'preco_regular', lbl:'Preço Reg.', r:true, w:90}, {k:'preco_promocional', lbl:'Preço Promo', r:true, w:90},
+  {k:'preco_pix', lbl:'Preço Pix', r:true, w:90}, {k:'uf', lbl:'UF', w:50}, {k:'cidade', lbl:'Cidade', w:100},
+  {k:'disponivel', lbl:'Disp.', w:60}, {k:'link', lbl:'Link', w:60}, {k:'evo', lbl:'Evolução', w:80},
+];
+
+function renderDetail(){
+  let rows = linhasFiltradas();
+  if(state.drill) rows = rows.filter(r => chaveGrupo(r, state.drill.dim) === state.drill.chave);
+
+  document.getElementById('btn-clear-drill').style.display = state.drill ? '' : 'none';
+  document.getElementById('detail-title').textContent = state.drill
+    ? `Detalhe de SKUs — ${DIM_LABEL[state.drill.dim]}: ${state.drill.label}`
+    : 'Detalhe de SKUs';
+  document.getElementById('detail-cnt').textContent = `${rows.length.toLocaleString('pt-BR')} linha${rows.length!==1?'s':''}`;
+
+  const {col,dir} = state.detailSort;
+  rows = [...rows].sort((a,b) => {
+    const numCol = DETAIL_COLS.find(c=>c.k===col)?.r;
+    let va=a[col], vb=b[col];
+    if(numCol){ va=parseFloat(va)||-Infinity; vb=parseFloat(vb)||-Infinity; return (va-vb)*dir; }
+    return String(va||'').localeCompare(String(vb||''),'pt')*dir;
+  });
+
+  // <colgroup> é o jeito confiável de fixar largura por coluna com
+  // table-layout:fixed — sem isso as colunas curtas (UF, Disp.) esticam
+  // pra preencher o espaço sobrando, e fica cheio de vão vazio
+  let colgroup = document.querySelector('#detail-table colgroup');
+  if(!colgroup){
+    colgroup = document.createElement('colgroup');
+    document.getElementById('detail-table').prepend(colgroup);
+  }
+  colgroup.innerHTML = DETAIL_COLS.map(c=>`<col style="width:${c.w}px">`).join('');
+
+  const thead = document.querySelector('#detail-table thead');
+  const arrow = c => c===col ? (dir===1?' ▲':' ▼') : '';
+  thead.innerHTML = `<tr>${DETAIL_COLS.map(c=>`<th data-col="${c.k}" class="${c.r?'r':''}">${c.lbl}<span class="si">${arrow(c.k)}</span></th>`).join('')}</tr>`;
+  thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    const c = th.dataset.col;
+    if(c==='link' || c==='evo') return; // colunas de ação, não fazem sentido ordenar
+    state.detailSort.dir = state.detailSort.col===c ? -state.detailSort.dir : 1;
+    state.detailSort.col = c;
+    renderDetail();
+  }));
+
+  const totalPaginas = Math.max(1, Math.ceil(rows.length/PAGE_SIZE));
+  state.detailPage = Math.min(state.detailPage, totalPaginas);
+  const pagina = rows.slice((state.detailPage-1)*PAGE_SIZE, state.detailPage*PAGE_SIZE);
+
+  const tbody = document.querySelector('#detail-table tbody');
+  tbody.innerHTML = pagina.length ? pagina.map(r => `<tr>${DETAIL_COLS.map(c => {
+    if(c.k==='data') return `<td>${fmtD(r.data)}</td>`;
+    if(c.k==='site') return `<td>${SITE_LABELS[r.site]||r.site}</td>`;
+    if(c.r) return `<td class="r">${fmtR(parseFloat(r[c.k]))}</td>`;
+    if(c.k==='link') return `<td>${r.link ? `<a href="${r.link}" target="_blank" rel="noopener">abrir ↗</a>` : '—'}</td>`;
+    if(c.k==='disponivel') return `<td>${r.disponivel==='sim'?'Sim':'Não'}</td>`;
+    if(c.k==='evo') return `<td><a class="evo-link" data-ean="${r.ean||''}" data-desc="${encodeURIComponent(r.descricao||'')}">📈 ver</a></td>`;
+    if(c.k==='categoria' || c.k==='subcategoria' || c.k==='marca' || c.k==='descricao') return `<td title="${(r[c.k]||'').replace(/"/g,'&quot;')}">${r[c.k]||'—'}</td>`;
+    return `<td>${r[c.k]||'—'}</td>`;
+  }).join('')}</tr>`).join('') : `<tr><td colspan="${DETAIL_COLS.length}" class="no-data">Nenhum resultado para os filtros atuais</td></tr>`;
+  tbody.querySelectorAll('.evo-link').forEach(a => a.addEventListener('click', () => {
+    selecionarProdutoEvolucao(a.dataset.ean, decodeURIComponent(a.dataset.desc));
+  }));
+
+  renderPager('detail-pager', state.detailPage, totalPaginas, p => { state.detailPage=p; renderDetail(); });
+}
+
+function renderPager(elId, pagina, total, onGo){
+  const el = document.getElementById(elId);
+  el.innerHTML = `<button ${pagina<=1?'disabled':''} data-go="1">« Primeira</button>
+                   <button ${pagina<=1?'disabled':''} data-go="${pagina-1}">‹ Anterior</button>
+                   <span>Página ${pagina} de ${total}</span>
+                   <button ${pagina>=total?'disabled':''} data-go="${pagina+1}">Próxima ›</button>
+                   <button ${pagina>=total?'disabled':''} data-go="${total}">Última »</button>`;
+  el.querySelectorAll('button:not(:disabled)').forEach(b => b.addEventListener('click', () => onGo(parseInt(b.dataset.go))));
+}
+
+// ---------------------------------------------------------------------
+// STAT TILES
+// ---------------------------------------------------------------------
+function renderStats(){
+  const rows = linhasFiltradas();
+  const sitesNoFiltro = new Set(rows.map(r=>r.site)).size;
+  const precos = rows.map(precoPorMetrica).filter(v=>!isNaN(v)&&v>0);
+  const precoMedio = precos.length ? precos.reduce((a,b)=>a+b,0)/precos.length : null;
+  const skusComparaveis = (() => {
+    // SKU (EAN) visto em 2+ redes = dá pra comparar de fato
+    const porEan = new Map();
+    rows.forEach(r => { if(!r.ean) return; if(!porEan.has(r.ean)) porEan.set(r.ean, new Set()); porEan.get(r.ean).add(r.site); });
+    return [...porEan.values()].filter(s=>s.size>=2).length;
+  })();
+  const ultimaData = [...state.diasSelecionados].sort().pop();
+
+  const tiles = [
+    {lbl:'SKUs no filtro', val: rows.length.toLocaleString('pt-BR')},
+    {lbl:'Redes comparadas', val: sitesNoFiltro},
+    {lbl:'Preço médio', val: fmtR(precoMedio)},
+    {lbl:'EANs em 2+ redes', val: skusComparaveis.toLocaleString('pt-BR'), sub:'comparáveis de verdade'},
+    {lbl:'Dias carregados', val: state.diasSelecionados.size, sub: ultimaData ? `até ${fmtD(ultimaData)}` : ''},
+  ];
+  document.getElementById('stat-grid').innerHTML = tiles.map(t => `
+    <div class="stat-tile"><div class="st-lbl">${t.lbl}</div><div class="st-val">${t.val}</div>${t.sub?`<div class="st-sub">${t.sub}</div>`:''}</div>
+  `).join('');
+
+  document.getElementById('last-update').textContent = `Coleta mais recente: ${fmtD(state.indice[0].data)} · ${state.indice[0].linhas.toLocaleString('pt-BR')} itens coletados naquele dia`;
+}
+
+// ---------------------------------------------------------------------
+// EVOLUÇÃO DE PREÇO — produto único (por EAN, ou por texto exato da
+// descrição quando não tem EAN), rede em linha × data em coluna + gráfico.
+// Sempre olha TODOS os dias carregados no cache, não só os marcados no
+// filtro de Data lá em cima — o objetivo aqui é histórico, então limitar
+// aos dias selecionados no filtro principal esconderia o propósito da
+// seção. Por isso carrega (uma vez só, fica em cache) todo dia que faltar
+// assim que o usuário busca um produto pela primeira vez.
+// ---------------------------------------------------------------------
+function todasLinhasCache(){
+  const out = [];
+  state.cache.forEach(rows => out.push(...rows));
+  return out;
+}
+
+async function garantirTodosDiasCarregados(){
+  const faltando = state.indice.filter(i => !state.cache.has(i.data));
+  if(!faltando.length) return;
+  document.getElementById('evo-summary').innerHTML = '<span class="evo-loading">Carregando dias adicionais pra montar o histórico…</span>';
+  await Promise.all(faltando.map(i => carregarDia(i.data)));
+}
+
+function wireEvoCombo(){
+  const input = document.getElementById('evo-search');
+  const drop = document.getElementById('evo-drop');
+
+  const buscar = async q => {
+    await garantirTodosDiasCarregados();
+    const termo = norm(q);
+    const termoEan = q.trim();
+    if(termo.length < 2){ drop.classList.remove('open'); return; }
+
+    // agrupa sugestões por EAN quando existe (uma por produto de verdade),
+    // senão por texto exato da descrição
+    const porChave = new Map();
+    todasLinhasCache().forEach(r => {
+      const desc = r.descricao || '';
+      if(!norm(desc).includes(termo) && !(r.ean||'').includes(termoEan)) return;
+      const chave = r.ean || ('#'+desc);
+      if(!porChave.has(chave)) porChave.set(chave, {ean:r.ean||'', descricao:desc, n:0});
+      porChave.get(chave).n++;
+    });
+    const sugestoes = [...porChave.values()].sort((a,b)=>b.n-a.n).slice(0,25);
+    drop.innerHTML = sugestoes.length ? sugestoes.map(s => `
+      <div class="ci" data-ean="${s.ean}" data-desc="${encodeURIComponent(s.descricao)}">
+        <b>${s.descricao}</b>
+        <span class="ci-meta">${s.ean ? 'EAN '+s.ean : 'sem EAN — compara só o mesmo texto'} · ${s.n} coleta${s.n!==1?'s':''}</span>
+      </div>`).join('') : '<div class="ci-empty">Nada encontrado</div>';
+    drop.classList.add('open');
+    drop.querySelectorAll('.ci[data-desc]').forEach(el => el.addEventListener('click', () => {
+      input.value = decodeURIComponent(el.dataset.desc);
+      drop.classList.remove('open');
+      selecionarProdutoEvolucao(el.dataset.ean, decodeURIComponent(el.dataset.desc));
+    }));
+  };
+
+  input.addEventListener('input', () => buscar(input.value));
+  input.addEventListener('focus', () => { if(input.value.trim().length>=2) buscar(input.value); });
+  document.addEventListener('click', e => { if(!document.getElementById('combo-evo').contains(e.target)) drop.classList.remove('open'); });
+}
+
+async function selecionarProdutoEvolucao(ean, descricao){
+  state.evolucao = { ean: ean||'', descricao: descricao||'' };
+  await garantirTodosDiasCarregados();
+  renderEvolucao();
+  document.getElementById('combo-evo').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function precosPorSiteEData(site, data, mapa){ return mapa.get(site)?.get(data) || []; }
+
+function renderEvolucao(){
+  const { ean, descricao } = state.evolucao;
+  const chartBox = document.getElementById('evo-chart-box');
+  const tableWrap = document.getElementById('evo-table-wrap');
+  const summary = document.getElementById('evo-summary');
+
+  if(!ean && !descricao){
+    chartBox.style.display = 'none'; tableWrap.style.display = 'none';
+    summary.textContent = 'Nenhum produto selecionado — busque acima ou clique em "📈 ver" numa linha da tabela de detalhe.';
+    return;
+  }
+
+  const linhas = todasLinhasCache().filter(r => ean ? r.ean===ean : r.descricao===descricao);
+  if(!linhas.length){
+    chartBox.style.display = 'none'; tableWrap.style.display = 'none';
+    summary.innerHTML = `Sem coletas pra esse produto nos dias carregados.`;
+    return;
+  }
+
+  // o texto da descrição pode variar um pouco entre redes mesmo com o
+  // mesmo EAN — mostra o mais frequente como título
+  const contagemDesc = new Map();
+  linhas.forEach(r => contagemDesc.set(r.descricao, (contagemDesc.get(r.descricao)||0)+1));
+  const nomeExibido = [...contagemDesc.entries()].sort((a,b)=>b[1]-a[1])[0][0];
+  summary.innerHTML = `<b>${nomeExibido}</b>${ean ? ` <span class="ean">· EAN ${ean}</span>` : ' <span class="ean">· sem EAN, comparando só o texto exato</span>'}`;
+
+  // Regular e Promocional sempre juntos aqui (independente do "Preço
+  // analisado" lá em cima, que continua controlando a tabela de comparação
+  // e os stat tiles) — o pedido era ver os dois preços lado a lado no
+  // histórico. Promo usa spanGaps:false de propósito: um buraco no gráfico
+  // significa "sem promoção naquele dia", não deve virar linha reta fingindo
+  // que a promo continuou ativa.
+  const agruparPorSiteData = campo => {
+    const mapa = new Map();
+    linhas.forEach(r => {
+      const v = parseFloat(r[campo]);
+      if(isNaN(v) || v<=0) return;
+      if(!mapa.has(r.site)) mapa.set(r.site, new Map());
+      const porData = mapa.get(r.site);
+      if(!porData.has(r.data)) porData.set(r.data, []);
+      porData.get(r.data).push(v);
+    });
+    return mapa;
+  };
+  const mapaRegular = agruparPorSiteData('preco_regular');
+  const mapaPromo = agruparPorSiteData('preco_promocional');
+
+  const sitesPresentes = state.siteColOrder.filter(s => mapaRegular.has(s) || mapaPromo.has(s));
+  const datas = [...new Set(linhas.map(r=>r.data))].sort();
+
+  if(!sitesPresentes.length || !datas.length){
+    chartBox.style.display = 'none'; tableWrap.style.display = 'none';
+    return;
+  }
+  chartBox.style.display = ''; tableWrap.style.display = '';
+
+  const datasets = [];
+  sitesPresentes.forEach(s => {
+    datasets.push({
+      label: `${SITE_LABELS[s]||s} · Regular`,
+      data: datas.map(d => { const vs=precosPorSiteEData(s,d,mapaRegular); return vs.length?agregar(vs):null; }),
+      borderColor: SITE_COLOR[s], backgroundColor: SITE_COLOR[s],
+      borderWidth: 2.4, pointRadius: 3, pointHoverRadius: 5, spanGaps: true, tension: .25, fill: false,
+    });
+    datasets.push({
+      label: `${SITE_LABELS[s]||s} · Promo`,
+      data: datas.map(d => { const vs=precosPorSiteEData(s,d,mapaPromo); return vs.length?agregar(vs):null; }),
+      borderColor: SITE_COLOR[s], backgroundColor: SITE_COLOR[s],
+      borderDash: [5,3], borderWidth: 1.8, pointRadius: 3, pointStyle: 'rectRot', pointHoverRadius: 5,
+      spanGaps: false, tension: .25, fill: false,
+    });
+  });
+
+  if(state._evoChart) state._evoChart.destroy();
+  state._evoChart = new Chart(document.getElementById('evo-canvas').getContext('2d'), {
+    type: 'line',
+    data: { labels: datas.map(fmtD), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: {mode:'index', intersect:false},
+      plugins: {
+        legend: {labels:{color:'#3E5068', font:{family:'DM Mono', size:10}, boxWidth:14, padding:10}},
+        tooltip: {backgroundColor:'rgba(26,36,51,.93)', titleColor:'#E2AC4C', bodyColor:'#EDE7DC',
+                  borderColor:'rgba(200,146,42,.4)', borderWidth:1, padding:10,
+                  titleFont:{family:'DM Mono', size:11}, bodyFont:{family:'DM Sans', size:12},
+                  callbacks:{label: ctx => `${ctx.dataset.label}: ${fmtR(ctx.parsed.y)}`}},
+      },
+      scales: {
+        x: {grid:{color:'rgba(26,36,51,.06)'}, ticks:{color:'#9AAABB', font:{family:'DM Mono', size:9}}},
+        y: {grid:{color:'rgba(26,36,51,.06)'}, ticks:{color:'#7A8A9A', font:{family:'DM Mono', size:10}, callback:v=>fmtR(v)}},
+      },
+    },
+  });
+
+  // tabela espelha o gráfico: 2 linhas por rede (Regular/Promo)
+  const thead = document.querySelector('#evo-table thead');
+  thead.innerHTML = `<tr><th class="rede-th">Rede</th><th>Preço</th>${datas.map(d=>`<th class="r">${fmtD(d)}</th>`).join('')}</tr>`;
+  const tbody = document.querySelector('#evo-table tbody');
+  tbody.innerHTML = sitesPresentes.map(s => `
+    <tr>
+      <td class="rede-cell" rowspan="2">${SITE_LABELS[s]||s}</td>
+      <td>Regular</td>
+      ${datas.map(d => { const vs=precosPorSiteEData(s,d,mapaRegular); const v=vs.length?agregar(vs):null; return `<td class="r">${v!=null?fmtR(v):'—'}</td>`; }).join('')}
+    </tr>
+    <tr>
+      <td class="cell-empty">Promo</td>
+      ${datas.map(d => { const vs=precosPorSiteEData(s,d,mapaPromo); const v=vs.length?agregar(vs):null; return `<td class="r">${v!=null?fmtR(v):'—'}</td>`; }).join('')}
+    </tr>`).join('');
+}
+
+function render(){
+  renderStats(); renderPivot(); renderDetail();
+  if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao(); // preço/agregação mudaram, refaz com o produto já selecionado
+}
+
+init();
+</script>
+</body>
+</html>
