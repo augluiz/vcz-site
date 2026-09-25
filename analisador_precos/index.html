@@ -264,6 +264,17 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     <div class="tf-vsep"></div>
 
     <div class="tf-grp">
+      <span class="lbl" title="Agrupamento comercial acima do Departamento — Mercearia, Bebidas, Medicamentos, Não Alimentar">Segmento</span>
+      <select class="tf-input" id="f-segmento" style="min-width:140px"><option value="">Todos</option></select>
+    </div>
+    <div class="tf-grp">
+      <span class="lbl">Bloco</span>
+      <div class="ddm-wrap" id="ddm-bloco">
+        <button class="ddm-btn" type="button"><span id="ddm-bloco-lbl">Todos</span><span class="arr">▾</span></button>
+        <div class="ddm-panel"><div class="ddm-list" id="lst-bloco"></div></div>
+      </div>
+    </div>
+    <div class="tf-grp">
       <span class="lbl">Departamento</span>
       <select class="tf-input" id="f-depto" style="min-width:150px"><option value="">Todos</option></select>
     </div>
@@ -353,6 +364,8 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     <div class="tf-grp">
       <span class="lbl">Ver tabela de comparação por</span>
       <select class="tf-input" id="f-verpor" style="min-width:160px">
+        <option value="segmento">Segmento</option>
+        <option value="bloco">Bloco</option>
         <option value="categoria">Categoria</option>
         <option value="subcategoria">Subcategoria</option>
         <option value="subcesta">Subcesta</option>
@@ -475,8 +488,8 @@ function hexParaRgba(hex, alpha){
   return `rgba(${(n>>16)&255}, ${(n>>8)&255}, ${n&255}, ${alpha})`;
 }
 
-const DIM_FIELD = {categoria:'categoria', subcategoria:'subcategoria', marca:'marca', produto:'descricao', subcesta:'_subcesta', tamanho:'_tamanho'};
-const DIM_LABEL = {categoria:'Categoria', subcategoria:'Subcategoria', marca:'Marca', produto:'Produto', subcesta:'Subcesta', tamanho:'Tamanho'};
+const DIM_FIELD = {segmento:'segmento', bloco:'bloco', categoria:'categoria', subcategoria:'subcategoria', marca:'marca', produto:'descricao', subcesta:'_subcesta', tamanho:'_tamanho'};
+const DIM_LABEL = {segmento:'Segmento', bloco:'Bloco', categoria:'Categoria', subcategoria:'Subcategoria', marca:'Marca', produto:'Produto', subcesta:'Subcesta', tamanho:'Tamanho'};
 const PAGE_SIZE = 50;
 
 const state = {
@@ -485,9 +498,9 @@ const state = {
   diasSelecionados: new Set(),
   // marca já vem com Cottonbaby pré-selecionada como exemplo (pedido do
   // usuário) — troca/limpa normalmente pelo filtro de Marca
-  filtros: { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(['Cottonbaby']),
+  filtros: { sites:new Set(), blocos:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(['Cottonbaby']),
              ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
-             depto:'', descricao:'', ean:'', disp:'' },
+             segmento:'', depto:'', descricao:'', ean:'', disp:'' },
   verPor: 'produto', metrica: 'preco_regular', agregacao: 'media',
   marcaDestaque: '', // marca fixa que ganha 1 coluna extra na tabela, sem filtrar o resto (ex: cliente da VCZ acompanhando ao vivo)
   _aliasProduto: new Map(), // chaveBruta -> chaveCanônica, recalculado a cada render de Produto (ver calcularAliasProduto)
@@ -674,7 +687,7 @@ function canonicalizarSubcestas(rows){
 }
 
 // campo do dropdown -> campo da linha, pra montar as opções cruzadas
-const CAMPO_DDM_PARA_LINHA = { depto:'departamento', sites:'site', categorias:'categoria',
+const CAMPO_DDM_PARA_LINHA = { segmento:'segmento', blocos:'bloco', depto:'departamento', sites:'site', categorias:'categoria',
   subcategorias:'subcategoria', marcas:'marca', ufs:'uf', cidades:'cidade',
   subcestas:'_subcesta', tamanhos:'_tamanho' };
 
@@ -695,6 +708,8 @@ function montarFiltrosDependentes(){
 
   rows.forEach(r => {
     const checks = {
+      segmento: !f.segmento || r.segmento === f.segmento,
+      blocos: !f.blocos.size || f.blocos.has(r.bloco),
       depto: !f.depto || r.departamento === f.depto,
       sites: !f.sites.size || f.sites.has(r.site),
       categorias: !f.categorias.size || f.categorias.has(r.categoria),
@@ -722,13 +737,20 @@ function montarFiltrosDependentes(){
 
   const ordenar = vs => [...vs].sort((a,b)=>a.localeCompare(b,'pt'));
 
-  // Departamento — select simples (poucas opções)
+  // Segmento e Departamento — select simples (poucas opções)
+  const segmentos = ordenar(sets.segmento);
+  const selSegmento = document.getElementById('f-segmento');
+  const segmentoAtual = selSegmento.value;
+  selSegmento.innerHTML = '<option value="">Todos</option>' + segmentos.map(s=>`<option value="${s}">${s}</option>`).join('');
+  selSegmento.value = segmentos.includes(segmentoAtual) ? segmentoAtual : '';
+
   const deptos = ordenar(sets.depto);
   const selDepto = document.getElementById('f-depto');
   const deptoAtual = selDepto.value;
   selDepto.innerHTML = '<option value="">Todos</option>' + deptos.map(d=>`<option value="${d}">${d}</option>`).join('');
   selDepto.value = deptos.includes(deptoAtual) ? deptoAtual : '';
 
+  criarDdmMultiSelect('bloco', ordenar(sets.blocos).map(v=>({v,lbl:v})), state.filtros.blocos, 'bloco','blocos');
   criarDdmMultiSelect('site', ordenar(sets.sites).map(s=>({v:s,lbl:SITE_LABELS[s]||s})), state.filtros.sites, 'rede','redes');
   criarDdmMultiSelect('categoria', ordenar(sets.categorias).map(v=>({v,lbl:v})), state.filtros.categorias, 'categoria','categorias');
   criarDdmMultiSelect('subcategoria', ordenar(sets.subcategorias).map(v=>({v,lbl:v})), state.filtros.subcategorias, 'subcategoria','subcategorias');
@@ -822,6 +844,7 @@ function wireEventos(){
     if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao();
   }));
 
+  document.getElementById('f-segmento').addEventListener('change', e => { state.filtros.segmento = e.target.value; montarFiltrosDependentes(); render(); });
   document.getElementById('f-depto').addEventListener('change', e => { state.filtros.depto = e.target.value; montarFiltrosDependentes(); render(); });
   document.getElementById('f-descricao').addEventListener('input', e => { state.filtros.descricao = e.target.value; state.detailPage=1; render(); });
   document.getElementById('f-ean').addEventListener('input', e => { state.filtros.ean = e.target.value.trim(); state.detailPage=1; render(); });
@@ -836,9 +859,10 @@ function wireEventos(){
   document.getElementById('f-marca-destaque').addEventListener('change', e => { state.marcaDestaque = e.target.value; render(); });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
-    state.filtros = { sites:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
+    state.filtros = { sites:new Set(), blocos:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
                        ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
-                       depto:'', descricao:'', ean:'', disp:'' };
+                       segmento:'', depto:'', descricao:'', ean:'', disp:'' };
+    document.getElementById('f-segmento').value='';
     document.getElementById('f-depto').value='';
     document.getElementById('f-descricao').value='';
     document.getElementById('f-ean').value='';
@@ -870,6 +894,8 @@ function linhasParaOpcoes(campoExcluido, rowsBase){
   const f = state.filtros;
   const qDesc = norm(f.descricao);
   return (rowsBase || linhasCarregadas()).filter(r => {
+    if(campoExcluido!=='segmento' && f.segmento && r.segmento !== f.segmento) return false;
+    if(campoExcluido!=='blocos' && f.blocos.size && !f.blocos.has(r.bloco)) return false;
     if(campoExcluido!=='depto' && f.depto && r.departamento !== f.depto) return false;
     if(campoExcluido!=='sites' && f.sites.size && !f.sites.has(r.site)) return false;
     if(campoExcluido!=='categorias' && f.categorias.size && !f.categorias.has(r.categoria)) return false;
