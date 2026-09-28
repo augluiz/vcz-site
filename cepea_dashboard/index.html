@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indicadores CEPEA | VCZ Consultoria</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F0E8;--panel:#FFFFFF;--panel2:#EDE7DC;--panel3:#E0D8CC;
+  --navy:#0D1B2A;--navy2:#162B40;
+  --gold:#C8922A;--gold-light:#E2AC4C;--gold-aged:#B7A073;
+  --text:#1A2433;--text2:#3E5068;--text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
+  --th-bg:#1A2F45;--th-text:#E8D8C0;
+  --tr-even:#F4F6FA;--tr-odd:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;scrollbar-width:thin;scrollbar-color:rgba(200,146,42,.4) transparent}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(200,146,42,.38);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:rgba(200,146,42,.72)}
+::-webkit-scrollbar-corner{background:transparent}
+
+/* NO-DATA */
+#no-data-screen{display:none;position:fixed;inset:0;background:rgba(13,27,42,.96);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;padding:2rem;text-align:center;backdrop-filter:blur(4px)}
+#no-data-screen.show{display:flex}
+.nd-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:#F0E8D8}
+.nd-body{font-family:'DM Sans',sans-serif;font-size:.9rem;color:#7A9AB0;line-height:1.7;max-width:520px}
+.nd-cmd{background:rgba(0,0,0,.4);border:1px solid rgba(200,146,42,.3);border-radius:6px;padding:.8rem 1.4rem;font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;margin:.4rem 0;display:inline-block;text-align:left;white-space:pre}
+.nd-note{font-family:'DM Mono',monospace;font-size:.6rem;color:#3A5A6A;margin-top:.5rem}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,.15)}
+.nav-logo img{height:46px;width:auto}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,.4);padding:9px 20px;text-decoration:none;transition:all .2s;white-space:nowrap}
+.nav-cta:hover{background:rgba(200,146,42,.08);border-color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:#9AAABB;transition:all .3s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(max-width:768px){
+  .nav-hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(13,27,42,.98);flex-direction:column;gap:0;padding:1rem 0;z-index:99}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:1rem 5vw;font-size:13px;border-bottom:1px solid rgba(183,160,115,.08)}
+  .nav-cta{display:none}
+}
+
+/* HEADER */
+.dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2)}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:#F2EAD8;line-height:1.1}
+.dash-header h1 em{color:var(--gold-light);font-style:italic}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:#4A7A90;margin-top:.28rem;letter-spacing:.04em}
+
+/* ABOUT */
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr);gap:1rem 2.2rem;align-items:center}
+.about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65}
+.about-what strong{color:#E8D8C0}
+.about-steps{display:flex;flex-direction:column;gap:.42rem}
+.about-step{display:flex;align-items:flex-start;gap:.55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8AAABB;line-height:1.5}
+.about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;flex-shrink:0;margin-top:.12rem}
+
+/* CARDS */
+.cards-strip{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.2);padding:.8rem 1.5rem;display:flex;gap:.75rem;overflow-x:auto}
+.prod-card{flex:1;min-width:155px;max-width:230px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.65rem .85rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.prod-card.active{border-color:var(--gold);background:rgba(200,146,42,.07)}
+.prod-card:hover:not(.active){border-color:rgba(200,146,42,.4);background:rgba(255,255,255,.06)}
+.pc-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.pc-nome{font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:#8AAABB;margin-bottom:.06rem}
+.pc-praca{font-family:'DM Mono',monospace;font-size:.5rem;color:#3A5A6A;margin-bottom:.32rem}
+.pc-preco{font-family:'DM Mono',monospace;font-size:1.08rem;font-weight:500;color:#EDE7DC;line-height:1;margin-bottom:.1rem}
+.pc-unidade{font-family:'DM Sans',sans-serif;font-size:.56rem;color:#3A5A6A;margin-bottom:.18rem}
+.pc-var{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600}
+.pc-var.up{color:#E06060}.pc-var.dn{color:#4CAF50}.pc-var.flat{color:#5B8FC4}
+.pc-spark-wrap{height:36px;margin-top:.3rem}
+.pc-spark-wrap canvas{width:100%!important;height:36px!important}
+
+/* FILTER */
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-inner{padding:.65rem 1.5rem;display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap}
+.tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
+.tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500}
+.tf-vsep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:.05rem 0}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer}
+.tf-input:focus{border-color:var(--gold)}
+.tf-input option{background:var(--navy2);color:#EDE7DC}
+.radio-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.radio-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer}
+.radio-row label:hover{color:#C8D8E8}
+.radio-row input[type=radio]{accent-color:var(--gold)}
+.date-row{display:flex;align-items:center;gap:.4rem;margin-top:.4rem}
+.date-row .tf-input{color-scheme:dark;font-family:'DM Mono',monospace;font-size:.7rem;padding:.26rem .4rem;cursor:text}
+.date-sep{color:#8AAABB;font-size:.72rem}
+
+/* MAIN LAYOUT */
+.dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
+.dash-grid{display:grid;grid-template-columns:2fr 3fr;gap:1rem;align-items:start}
+.chart-col,.table-col{display:flex;flex-direction:column;gap:0}
+@media(max-width:960px){.dash-grid{grid-template-columns:1fr}}
+
+/* CHART CARD */
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
+.chart-filter-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12);padding:.45rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.chart-filter-bar .lbl{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;flex-shrink:0}
+.chart-section-bar{background:var(--navy2);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.12);padding:.5rem 1.2rem .45rem}
+.ct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem;font-weight:500}
+.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-bottom:.75rem}
+.chart-section{padding:1rem 1.1rem}
+.no-data{text-align:center;padding:3rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+.chart-divider{display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;background:var(--navy);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.18)}
+.chart-divider span{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em}
+.chart-divider::before,.chart-divider::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.2)}
+
+/* DETAIL GRID */
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.detail-item{background:var(--panel2);border-radius:4px;padding:.5rem .7rem}
+.di-lbl{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.18rem}
+.di-val{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--text);font-weight:500}
+.di-val.up{color:#B83030}.di-val.dn{color:#2E7D32}
+.di-sub{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--text3);margin-top:.1rem}
+
+/* PRACA BADGE */
+.praca-badge{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;padding:.42rem .65rem;background:rgba(13,27,42,.05);border:1px solid rgba(200,146,42,.14);border-radius:4px;margin-bottom:.6rem}
+.praca-label{font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600;background:rgba(200,146,42,.16);color:var(--gold);border:1px solid rgba(200,146,42,.28);border-radius:3px;padding:.06rem .36rem;text-transform:uppercase;letter-spacing:.08em}
+.praca-text{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text2)}
+
+/* TABLES */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.tbox.tbox-alta{border-top:3px solid #B83030}
+.tbox.tbox-queda{border-top:3px solid #2E7D32}
+.tbox.tbox-alta .tbox-head h3{color:#E08A8A}
+.tbox.tbox-queda .tbox-head h3{color:#8FD0A0}
+.tend-legend{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;padding:.4rem .85rem;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:.7rem;box-shadow:var(--shadow-sm)}
+.tl-item{font-family:'DM Mono',monospace;font-size:.58rem;display:flex;align-items:center;gap:.32rem;letter-spacing:.03em;color:var(--text2)}
+.tl-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.tl-up .tl-dot{background:#B83030}.tl-dn .tl-dot{background:#2E7D32}.tl-flat .tl-dot{background:#5B8FC4}
+.tl-sep{color:rgba(200,146,42,.4);font-size:.85rem}
+.tl-note{font-family:'DM Sans',sans-serif;font-size:.62rem;color:var(--text3);margin-left:auto}
+.tc-up{color:#B83030;font-weight:600;font-family:'DM Mono',monospace;font-size:.68rem;display:inline-flex;align-items:center;gap:.2rem}
+.tc-dn{color:#2E7D32;font-weight:600;font-family:'DM Mono',monospace;font-size:.68rem;display:inline-flex;align-items:center;gap:.2rem}
+.tc-flat{color:#3B6FA8;font-weight:500;font-family:'DM Mono',monospace;font-size:.68rem;display:inline-flex;align-items:center;gap:.2rem}
+.trends-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:900px){.trends-grid{grid-template-columns:1fr}}
+.tbox-head{padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15)}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--gold)}
+.tscroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(200,146,42,.3) transparent}
+.dt{width:100%;border-collapse:collapse;font-size:.74rem}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:nowrap;vertical-align:bottom;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.dt th:last-child{border-right:none}
+.dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dt tr:nth-child(even) td{background:var(--tr-even)}.dt tr:nth-child(odd) td{background:var(--tr-odd)}
+.dt tr:hover td{background:#EEF3FB!important}
+.dt tr:last-child td{border-bottom:none}
+.dt th.r,.dt td.r{text-align:right}
+.dt th[data-col]{cursor:pointer;user-select:none}
+.dt th[data-col]:hover{color:var(--gold-light)}
+.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem;display:inline-block;min-width:.5rem;vertical-align:middle}
+.stale-badge{display:inline-block;margin-left:.3rem;color:#C87A1E;font-size:.72rem;cursor:help}
+.full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
+.full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.full-tbox-head .upd{font-family:'DM Mono',monospace;font-size:.55rem;color:#3A5A6A}
+
+/* MINI SPARK */
+.rbar-cell{display:flex;flex-direction:column;gap:2px;min-width:80px}
+.rb-mini{height:3px;background:var(--panel3);border-radius:2px;position:relative}
+.rbm-fill{position:absolute;top:0;height:100%;border-radius:2px}
+
+/* MÉDIA MÓVEL */
+.ma-ctrl{display:flex;align-items:center;gap:.4rem}
+.ma-badge{display:inline-flex;align-items:center;gap:.18rem;font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(91,143,196,.14);color:#5B8FC4;border:1px solid rgba(91,143,196,.35);border-radius:3px;padding:.12rem .42rem;cursor:pointer;user-select:none;transition:all .18s}
+.ma-badge:hover{background:rgba(91,143,196,.24)}
+.ma-badge.off{background:rgba(120,120,120,.08);color:#5A6A7A;border-color:rgba(120,120,120,.18)}
+input[type=number].ma-num{width:46px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.28rem .35rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.76rem;outline:none;text-align:center;-moz-appearance:textfield}
+
+/* OVERLAY DO GRÁFICO: toggle "Ano Anterior" + tooltip de hover */
+.chart-overlay{position:absolute;top:8px;left:8px;z-index:5;display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;pointer-events:none}
+.chart-toggle{pointer-events:auto;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.03em;color:#FFFFFF;background:rgba(13,27,42,.6);border:1px dashed rgba(255,255,255,.55);border-radius:4px;padding:.3rem .55rem;transition:all .18s}
+.chart-toggle:hover{background:rgba(13,27,42,.78);border-color:#FFFFFF}
+.chart-toggle .ct-mark{font-weight:700;font-size:.72rem;line-height:1;transition:transform .18s}
+.chart-toggle.active{background:rgba(200,146,42,.85);border-style:solid;border-color:var(--gold)}
+.chart-toggle.active .ct-mark{transform:rotate(45deg)}
+.hover-info{pointer-events:none;background:rgba(13,27,42,.88);border:1px solid rgba(255,255,255,.14);border-radius:5px;padding:.5rem .65rem;font-family:'DM Mono',monospace;font-size:.64rem;color:#EDE7DC;line-height:1.65;min-width:150px;display:none;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.hover-info.show{display:block}
+.hover-info .hi-date{color:#FFFFFF;font-weight:700;margin-bottom:.2rem;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:.25rem}
+.hover-info .hi-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.hover-info .hi-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:.32rem;flex-shrink:0}
+.hover-info .hi-lbl{display:flex;align-items:center;color:#9AAABB}
+input[type=number].ma-num:focus{border-color:var(--gold)}
+input[type=number].ma-num::-webkit-inner-spin-button{opacity:.4}
+
+/* MISC */
+.chip{display:inline-block;font-family:'DM Mono',monospace;font-size:.58rem;background:rgba(200,146,42,.12);color:var(--gold-aged);border:1px solid rgba(200,146,42,.25);border-radius:3px;padding:.05rem .3rem}
+.comm-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.38rem;vertical-align:middle;flex-shrink:0}
+.disclaimer-note{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;max-width:900px}
+.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
+.dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
+.dash-footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- TELA SEM DADOS -->
+<div id="no-data-screen">
+  <div>
+    <p style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">VCZ · Dashboard CEPEA</p>
+    <div class="nd-title">Dados não encontrados</div>
+    <p class="nd-body" style="margin-top:.8rem">
+      Execute o script de atualização para baixar os indicadores de preços do CEPEA antes de abrir o dashboard.
+    </p>
+    <div style="margin-top:1.2rem">
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin-bottom:.5rem">1. Acesse a pasta do projeto:</p>
+      <div class="nd-cmd">cd C:\Users\augus\vcz-site\cepea_dashboard</div>
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">2. Instale dependências (primeira vez):</p>
+      <div class="nd-cmd">pip install requests beautifulsoup4 lxml</div>
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">3. Baixe os dados:</p>
+      <div class="nd-cmd">python atualizar.py</div>
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">4. Sirva localmente e abra no browser:</p>
+      <div class="nd-cmd">cd ..\
+python -m http.server 8080
+<span style="color:#5A7A8A"># abra: http://localhost:8080/cepea_dashboard/</span></div>
+    </div>
+    <p class="nd-note" style="margin-top:1rem">Fonte: CEPEA/ESALQ-USP · cepea.org.br</p>
+  </div>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-cta" href="https://wa.me/5541996242909" target="_blank" rel="noopener">Falar com especialista</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="dash-header" style="margin-top:72px">
+  <div class="label">VCZ Consultoria · Inteligência de Mercado</div>
+  <h1>Indicadores de Preço <em>Agrícola</em></h1>
+  <div class="sub" id="last-update">—</div>
+</div>
+
+<div class="about-strip">
+  <div class="about-cols">
+    <div class="about-what">
+      <strong>CEPEA/ESALQ-USP</strong> — Centro de Estudos Avançados em Economia Aplicada da Universidade de São Paulo. Referência nacional em indicadores de preços agropecuários. Preços <strong>spot (à vista)</strong> coletados diariamente em praças de referência: Paranaguá, Campinas, São Paulo, Cerrado MG e Paraná. <em style="color:#3A5A6A">Dados em R$ — sem conversão cambial.</em>
+    </div>
+    <div class="about-steps">
+      <div class="about-step"><b>1</b><span>Clique em um <strong style="color:#E8D8C0">produto</strong> para ver o histórico de preços e os detalhes da praça de referência.</span></div>
+      <div class="about-step"><b>2</b><span>Use o seletor de <strong style="color:#E8D8C0">período</strong> para ampliar ou reduzir a janela do gráfico.</span></div>
+      <div class="about-step"><b>3</b><span>Execute <strong style="color:#E8D8C0">python atualizar_diario.py</strong> na pasta do projeto para atualizar com os preços mais recentes.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cards-strip" id="cards-strip"></div>
+
+<div class="filter-panel">
+  <div class="filter-inner">
+    <div class="tf-grp">
+      <div class="lbl">Período do Gráfico</div>
+      <div class="radio-row" id="range-row">
+        <label><input type="radio" name="range" value="15d"> 15 dias</label>
+        <label><input type="radio" name="range" value="1mo"> 1 mês</label>
+        <label><input type="radio" name="range" value="3mo"> 3 meses</label>
+        <label><input type="radio" name="range" value="ytd"> YTD</label>
+        <label><input type="radio" name="range" value="all" checked> Tudo</label>
+      </div>
+      <div class="date-row">
+        <input type="date" id="f-inicio" class="tf-input">
+        <span class="date-sep">–</span>
+        <input type="date" id="f-fim" class="tf-input">
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <div class="lbl">Produto</div>
+      <select id="sel-produto" class="tf-input"></select>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <div class="lbl">Média Móvel</div>
+      <div class="ma-ctrl">
+        <span id="ma-badge" class="ma-badge" onclick="toggleMA()" title="Clique para ligar/desligar">MM</span>
+        <input type="number" id="ma-window" class="ma-num" value="7" min="2" max="120"
+               oninput="updateMAWindow()" title="Período em dias úteis">
+        <span style="font-family:'DM Mono',monospace;font-size:.54rem;color:#3A5A6A">dias</span>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp" style="margin-left:auto">
+      <div class="lbl">Fonte</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#3A5A6A">CEPEA/ESALQ-USP · Preço spot</div>
+    </div>
+  </div>
+</div>
+
+<div class="dash-main">
+  <div class="dash-grid">
+
+    <div class="chart-col">
+      <div class="chart-card">
+        <div class="chart-filter-bar">
+          <div class="lbl" id="chart-nome-lbl">—</div>
+          <span class="chip" id="chart-praca-chip">—</span>
+          <span style="font-family:'DM Mono',monospace;font-size:.52rem;color:#3A5A6A;margin-left:auto" id="chart-unit-lbl">—</span>
+        </div>
+        <div class="chart-section-bar">
+          <div class="ct" id="chart-titulo">Histórico de Preços</div>
+          <div class="cs" id="chart-sub">Preço spot diário · CEPEA/ESALQ-USP</div>
+        </div>
+        <div class="chart-section" style="padding:.6rem .8rem .8rem">
+          <div id="main-chart-wrap" style="position:relative">
+            <p class="no-data" id="chart-no-data">Selecione um produto.</p>
+            <div id="lw-chart-container" style="display:none;width:100%;height:340px;border-radius:4px;overflow:hidden"></div>
+            <div class="chart-overlay">
+              <span id="py-badge" class="chart-toggle" onclick="togglePrevYear()" title="Mostra o preço do mesmo dia no ano anterior, quando disponível"><span class="ct-mark">+</span> Comparar Ano Anterior</span>
+              <div id="hover-info" class="hover-info"></div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-divider"><span>Detalhes</span></div>
+        <div class="chart-section" id="detail-section">
+          <p class="no-data" style="padding:1.5rem">Aguardando…</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-col">
+
+      <div class="full-tbox">
+        <div class="full-tbox-head">
+          <h3>Indicadores — Preços à Vista</h3>
+          <span class="upd" id="table-upd"></span>
+        </div>
+        <div class="tscroll">
+          <table class="dt" style="min-width:520px">
+            <thead id="th-main"><tr>
+              <th style="width:140px" data-col="nome">Produto <span class="si"></span></th>
+              <th style="width:95px" data-col="tend" title="Preço do último dia vs. média móvel — configurável em Média Móvel">Tend. <span class="si"></span></th>
+              <th class="r" style="width:120px" data-col="preco">Preço (R$) <span class="si"></span></th>
+              <th class="r" style="width:80px" data-col="kg">R$/kg <span class="si"></span></th>
+              <th class="r" style="width:75px" data-col="variacao_pct">Var. % <span class="si"></span></th>
+              <th class="r" style="width:75px" data-col="variacao">Var. Abs. <span class="si"></span></th>
+              <th style="width:105px" data-col="unidade">Unidade <span class="si"></span></th>
+              <th style="width:120px" data-col="praca">Praça <span class="si"></span></th>
+              <th style="width:90px" data-col="data_ref" title="Data do preço mostrado nesta linha">Data <span class="si"></span></th>
+            </tr></thead>
+            <tbody id="tb-main"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tbox">
+        <div class="tbox-head"><h3 id="hist-title">Histórico Recente</h3></div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto">
+          <table class="dt" style="min-width:300px">
+            <thead><tr>
+              <th style="width:110px">Data</th>
+              <th class="r">Preço (R$)</th>
+              <th class="r" style="width:80px">Var. %</th>
+            </tr></thead>
+            <tbody id="tb-hist"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VISÃO DE TENDÊNCIA — mesmo critério do CEASA: preço do último dia
+       vs. média móvel N dias (configurável no filtro Média Móvel acima). -->
+  <div class="tend-legend">
+    <span class="tl-item tl-up"><span class="tl-dot"></span> Subindo</span>
+    <span class="tl-sep">·</span>
+    <span class="tl-item tl-dn"><span class="tl-dot"></span> Baixando</span>
+    <span class="tl-sep">·</span>
+    <span class="tl-item tl-flat"><span class="tl-dot"></span> Estagnado</span>
+    <span class="tl-note">Tendência = preço do último dia vs. média móvel N dias</span>
+  </div>
+
+  <div class="trends-grid">
+    <div class="tbox tbox-alta">
+      <div class="tbox-head">
+        <h3>↑ Tendências de alta</h3>
+        <span class="upd" id="cnt-alta">0</span>
+      </div>
+      <div class="tscroll">
+        <table class="dt">
+          <thead id="th-alta"><tr>
+            <th data-col="nome">Produto <span class="si"></span></th>
+            <th class="r" data-col="atual">Atual <span class="si"></span></th>
+            <th class="r" data-col="anterior">Anterior <span class="si"></span></th>
+            <th class="r" data-col="media">Média <span class="si"></span></th>
+            <th data-col="data_ref" title="Data do preço mostrado">Data <span class="si"></span></th>
+          </tr></thead>
+          <tbody id="tb-alta"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tbox tbox-queda">
+      <div class="tbox-head">
+        <h3>↓ Tendências de queda</h3>
+        <span class="upd" id="cnt-queda">0</span>
+      </div>
+      <div class="tscroll">
+        <table class="dt">
+          <thead id="th-queda"><tr>
+            <th data-col="nome">Produto <span class="si"></span></th>
+            <th class="r" data-col="atual">Atual <span class="si"></span></th>
+            <th class="r" data-col="anterior">Anterior <span class="si"></span></th>
+            <th class="r" data-col="media">Média <span class="si"></span></th>
+            <th data-col="data_ref" title="Data do preço mostrado">Data <span class="si"></span></th>
+          </tr></thead>
+          <tbody id="tb-queda"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div style="background:var(--navy);border-top:2px solid rgba(200,146,42,.35);padding:2rem">
+  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
+    <div>
+      <p style="font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:.45rem">VCZ Consultoria · Inteligência Comercial</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:#F0E8D8;line-height:1.2;margin-bottom:.5rem">Gostou do painel? <em style="color:var(--gold-light);font-style:italic">Posso aplicar no seu negócio.</em></h2>
+      <p style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:#5A8AA0;line-height:1.65;max-width:560px">Dashboards de inteligência de preços e mercado — sob medida para cooperativas, tradings, atacadistas e produtores rurais.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.65rem;min-width:200px">
+      <a href="https://wa.me/5541996242909?text=Ol%C3%A1%2C+vi+o+painel+do+CEPEA+e+quero+saber+mais." target="_blank" rel="noopener"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.45);color:#5DD88A;font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px;font-weight:600"
+         onmouseover="this.style.background='rgba(37,211,102,.25)'" onmouseout="this.style.background='rgba(37,211,102,.15)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.558 4.14 1.535 5.878L0 24l6.302-1.512A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.002-1.368l-.36-.214-3.733.895.934-3.617-.235-.373A9.785 9.785 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
+        WhatsApp
+      </a>
+      <a href="mailto:vcz.grupo@gmail.com?subject=Painel%20CEPEA%20%E2%80%94%20Quero%20saber%20mais"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;border:1px solid rgba(200,146,42,.4);color:var(--gold-aged);font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px"
+         onmouseover="this.style.borderColor='#C8922A';this.style.color='#E2AC4C'" onmouseout="this.style.borderColor='rgba(200,146,42,.4)';this.style.color='#B7A073'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        E-mail
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="dash-footer">
+  <span>Fonte: CEPEA/ESALQ-USP · cepea.org.br · Preços spot diários</span>
+  <a href="/">© VCZ Consultoria</a>
+  <p class="disclaimer-note">Informações de caráter informativo obtidas de fontes públicas. Preços spot coletados pelo CEPEA/ESALQ-USP nas praças de referência indicadas. O VCZ Consultoria não se responsabiliza por decisões comerciais baseadas nestes dados.</p>
+</footer>
+
+<!-- dados gerados por atualizar.py -->
+<script src="dados/cepea_data.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// ── Verifica dados ─────────────────────────────────────────────────────────
+if (typeof window.CEPEA_DATA === 'undefined') {
+  document.getElementById('no-data-screen').classList.add('show');
+}
+
+const RAW   = window.CEPEA_DATA || { produtos: [] };
+const PRODS = RAW.produtos.filter(p => p.ok);
+
+// Data mais recente que realmente existe nos dados (não "hoje") — os
+// períodos relativos (15 dias / 1 mês / 3 meses) contam a partir daqui,
+// senão um dado que parou de atualizar sempre pareceria "sem dados".
+const ULTIMA_DATA = PRODS.reduce((max, p) => {
+  const d = p.historico?.length ? p.historico[p.historico.length - 1].data : null;
+  return d && d > max ? d : max;
+}, '0000-00-00');
+
+// ── Estado ─────────────────────────────────────────────────────────────────
+let selectedId = PRODS[0]?.id || '';
+let chartRange = 'all';
+let customRange = null; // {inicio, fim} quando o usuário escolhe datas específicas
+let lwChart = null, lwLine = null, lwMA = null, lwPrevYear = null;
+let showPrevYear = false; // liga/desliga a série "Ano Anterior" no gráfico
+let maWindow = 7, maVisible = true;
+const sparkCharts = {};
+
+// ── Formatters ─────────────────────────────────────────────────────────────
+const f2  = v => (v == null || isNaN(v)) ? '—' : v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+const f4  = v => (v == null || isNaN(v)) ? '—' : v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:4});
+const sgn = v => v > 0 ? '+' : '';
+const pct = v => (v == null || isNaN(v)) ? '—' : `${sgn(v)}${f2(v)}%`;
+const abv = v => (v == null || isNaN(v)) ? '—' : `${sgn(v)}${f2(v)}`;
+const fdt = s => {
+  if (!s) return '—';
+  const [y, m, d] = s.split('-');
+  return `${d}/${m}/${y}`;
+};
+
+function byId(id) { return PRODS.find(p => p.id === id); }
+
+// ── Dado desatualizado ────────────────────────────────────────────────────
+// Se um produto não recebe atualização há muitos dias (ex: Leite, Suíno e
+// Ovinos, que o CEPEA só publica mensalmente ou sem tabela pública diária),
+// mostra um aviso — em vez de deixar parecer que o preço é de hoje.
+// 10 dias cobre folgadamente os produtos de cadência semanal (Mandioca,
+// Tilápia etc. — até ~7-8 dias entre pontos é normal pra eles). Acima
+// disso, é sinal de que a coleta realmente parou (caso do Leite, Suíno
+// e Ovinos, parados desde junho).
+const LIMIAR_DESATUALIZADO = 10;
+
+function diasDesdeUltimaAtualizacao(p) {
+  if (!p.data_ref || ULTIMA_DATA === '0000-00-00') return 0;
+  const a = new Date(p.data_ref + 'T00:00:00');
+  const b = new Date(ULTIMA_DATA + 'T00:00:00');
+  return Math.round((b - a) / 86400000);
+}
+
+function isStale(p) { return diasDesdeUltimaAtualizacao(p) > LIMIAR_DESATUALIZADO; }
+
+function staleBadge(p) {
+  if (!isStale(p)) return '';
+  const dias = diasDesdeUltimaAtualizacao(p);
+  return `<span class="stale-badge" title="Sem atualização desde ${fdt(p.data_ref)} (${dias} dias atrás)">⚠</span>`;
+}
+
+// ── Ordenação de tabelas (clique no cabeçalho) ─────────────────────────────
+const _sort = { main: { col: null, dir: 1 }, alta: { col: null, dir: 1 }, queda: { col: null, dir: 1 } };
+
+function sortRowsBy(rows, col, dir, getters) {
+  if (!col || !getters[col]) return rows;
+  const get = getters[col];
+  return [...rows].sort((a, b) => {
+    const va = get(a), vb = get(b);
+    if (va == null && vb == null) return 0;
+    if (va == null) return dir;
+    if (vb == null) return -dir;
+    return typeof va === 'string' ? va.localeCompare(vb, 'pt') * dir : (va - vb) * dir;
+  });
+}
+
+function setupSortHeaders() {
+  const rerender = { main: renderTables, alta: renderTrends, queda: renderTrends };
+  ['main', 'alta', 'queda'].forEach(key => {
+    const thead = document.getElementById('th-' + key);
+    if (!thead) return;
+    thead.querySelectorAll('th[data-col]').forEach(t => {
+      t.addEventListener('click', () => {
+        const col = t.dataset.col, s = _sort[key];
+        s.dir = s.col === col ? -s.dir : 1;
+        s.col = col;
+        thead.querySelectorAll('.si').forEach(si => si.textContent = '');
+        t.querySelector('.si').textContent = s.dir === 1 ? ' ▲' : ' ▼';
+        rerender[key]();
+      });
+    });
+  });
+}
+
+// ── Média Móvel ────────────────────────────────────────────────────────────
+function calcMA(data, n) {
+  const out = [];
+  for (let i = n - 1; i < data.length; i++) {
+    let sum = 0;
+    for (let j = i - n + 1; j <= i; j++) sum += data[j].value;
+    out.push({ time: data[i].time, value: +(sum / n).toFixed(4) });
+  }
+  return out;
+}
+
+function toggleMA() {
+  maVisible = !maVisible;
+  document.getElementById('ma-badge').classList.toggle('off', !maVisible);
+  renderMainChart();
+}
+
+function updateMAWindow() {
+  const v = parseInt(document.getElementById('ma-window').value, 10);
+  if (v >= 2 && v <= 120) { maWindow = v; renderMainChart(); renderTrends(); }
+}
+
+// ── Ano Anterior ───────────────────────────────────────────────────────────
+function togglePrevYear() {
+  showPrevYear = !showPrevYear;
+  document.getElementById('py-badge').classList.toggle('active', showPrevYear);
+  renderMainChart();
+}
+
+// Pra cada dia visível, procura o preço de exatamente 1 ano antes no
+// histórico completo do produto (não só no período filtrado).
+function anoAnteriorSeries(histVisivel, historicoCompleto) {
+  const porData = new Map(historicoCompleto.map(h => [h.data, h.preco]));
+  const out = [];
+  histVisivel.forEach(h => {
+    const [y, m, d] = h.data.split('-');
+    const dataAnt = `${parseInt(y, 10) - 1}-${m}-${d}`;
+    if (porData.has(dataAnt)) out.push({ time: h.data, value: porData.get(dataAnt) });
+  });
+  return out;
+}
+
+// ── Tendência (mesmo critério do CEASA) ─────────────────────────────────────
+// Compara o preço do último dia disponível com a média móvel dos últimos
+// N dias (N = janela de Média Móvel do filtro acima). Acima da média =
+// Subindo; abaixo = Baixando; igual = Estagnado.
+function computeTrend(p) {
+  const hist = p.historico || [];
+  if (hist.length < 2) return null;
+  const janela = hist.slice(-maWindow);
+  const pMed = janela.reduce((a, h) => a + h.preco, 0) / janela.length;
+  const pUlt = hist[hist.length - 1].preco;
+  const pPrev = hist[hist.length - 2].preco;
+  if (!pMed) return null;
+  const variacao = (pUlt - pMed) / pMed;
+  const tend = variacao > 0.0005 ? 'Subindo' : variacao < -0.0005 ? 'Baixando' : 'Estagnado';
+  return { pUlt, pPrev, pMed, tend, dataRef: hist[hist.length - 1].data };
+}
+
+const tendCls = t => t === 'Subindo' ? 'tc-up' : t === 'Baixando' ? 'tc-dn' : 'tc-flat';
+const tendIcon = t => t === 'Subindo' ? '▲' : t === 'Baixando' ? '▼' : '■';
+
+function tendBadge(tend) {
+  if (!tend) return '<span class="tc-flat">—</span>';
+  return `<span class="${tendCls(tend.tend)}">${tendIcon(tend.tend)} ${tend.tend}</span>`;
+}
+
+const trendGetters = {
+  nome:     r => r.p.nome,
+  atual:    r => r.t.pUlt,
+  anterior: r => r.t.pPrev,
+  media:    r => r.t.pMed,
+  data_ref: r => r.t.dataRef,
+};
+
+function renderTrends() {
+  const alta = [], queda = [];
+  PRODS.forEach(p => {
+    const t = computeTrend(p);
+    if (!t) return;
+    const row = { p, t };
+    if (t.tend === 'Subindo') alta.push(row);
+    else if (t.tend === 'Baixando') queda.push(row);
+  });
+
+  // Ordem padrão: maior desvio da média primeiro. Clicar num cabeçalho troca pra sort manual.
+  alta.sort((a, b) => (b.t.pUlt - b.t.pMed) / b.t.pMed - (a.t.pUlt - a.t.pMed) / a.t.pMed);
+  queda.sort((a, b) => (a.t.pUlt - a.t.pMed) / a.t.pMed - (b.t.pUlt - b.t.pMed) / b.t.pMed);
+  const altaOrd  = sortRowsBy(alta,  _sort.alta.col,  _sort.alta.dir,  trendGetters);
+  const quedaOrd = sortRowsBy(queda, _sort.queda.col, _sort.queda.dir, trendGetters);
+
+  document.getElementById('cnt-alta').textContent  = alta.length;
+  document.getElementById('cnt-queda').textContent = queda.length;
+
+  const rowHtml = ({ p, t }) => `<tr onclick="selectProd('${p.id}')" style="cursor:pointer">
+    <td><span class="comm-dot" style="background:${p.cor}"></span>${p.nome}${staleBadge(p)}</td>
+    <td class="r" style="font-family:'DM Mono',monospace">R$ ${f2(t.pUlt)}</td>
+    <td class="r" style="font-family:'DM Mono',monospace;color:var(--text3)">R$ ${f2(t.pPrev)}</td>
+    <td class="r" style="font-family:'DM Mono',monospace;color:var(--text3)">R$ ${f2(t.pMed)}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:.68rem;color:${isStale(p) ? '#C87A1E' : 'var(--text3)'}">${fdt(t.dataRef)}</td>
+  </tr>`;
+
+  document.getElementById('tb-alta').innerHTML  = altaOrd.map(rowHtml).join('')  || '<tr><td colspan="5" class="no-data">Nenhum produto em alta no momento.</td></tr>';
+  document.getElementById('tb-queda').innerHTML = quedaOrd.map(rowHtml).join('') || '<tr><td colspan="5" class="no-data">Nenhum produto em queda no momento.</td></tr>';
+}
+
+// ── Preço por kg ───────────────────────────────────────────────────────────
+function precoKg(preco, unidade) {
+  if (!preco || !unidade) return null;
+  const u = unidade.toLowerCase();
+  if (u.includes('/kg'))      return preco;
+  if (u.includes('/sc 60'))   return preco / 60;
+  if (u.includes('/sc 50'))   return preco / 50;
+  if (u.includes('/arroba'))  return preco / 15;   // 1 arroba = 15 kg
+  if (u.match(/\/t\b/))       return preco / 1000; // R$/t → R$/kg
+  return null; // R$/litro, R$/cab., R$/dz — não convertível por massa
+}
+
+// ── Filtro de histórico por range ──────────────────────────────────────────
+// Se houver datas específicas escolhidas (customRange), elas mandam.
+// Senão, os presets (15d/1mo/3mo) contam a partir de ULTIMA_DATA, não de
+// "hoje" — assim o gráfico nunca fica vazio só porque a coleta parou.
+const RANGE_DIAS = { '15d': 15, '1mo': 31, '3mo': 93 };
+
+function computeRangeDates(range) {
+  if (range === 'all' || !ULTIMA_DATA || ULTIMA_DATA === '0000-00-00') return null;
+  if (range === 'ytd') {
+    const ano = ULTIMA_DATA.slice(0, 4);
+    return { inicio: `${ano}-01-01`, fim: ULTIMA_DATA };
+  }
+  const dias = RANGE_DIAS[range] || 31;
+  const fim = new Date(ULTIMA_DATA + 'T00:00:00');
+  const inicio = new Date(fim.getTime() - dias * 86400000);
+  return { inicio: inicio.toISOString().slice(0, 10), fim: ULTIMA_DATA };
+}
+
+function filterHist(hist, range) {
+  if (!hist || !hist.length) return hist;
+  if (customRange) {
+    return hist.filter(h => h.data >= customRange.inicio && h.data <= customRange.fim);
+  }
+  if (range === 'all') return hist;
+  const janela = computeRangeDates(range);
+  if (!janela) return hist;
+  return hist.filter(h => h.data >= janela.inicio && h.data <= janela.fim);
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+function init() {
+  if (!PRODS.length) return;
+
+  const ts = RAW.timestamp ? new Date(RAW.timestamp).toLocaleString('pt-BR') : '—';
+  document.getElementById('last-update').textContent = `Atualizado em ${ts} · CEPEA/ESALQ-USP`;
+
+  buildSelect();
+  buildCards();
+  buildSparklines();
+
+  // Preenche os campos de data com o período do preset já marcado (1 mês),
+  // calculado a partir do último dado real — não do dia de hoje.
+  syncDateInputsFromPreset(chartRange);
+
+  renderAll();
+  setupSortHeaders();
+
+  document.querySelectorAll('input[name="range"]').forEach(r => {
+    r.addEventListener('change', () => {
+      chartRange = r.value;
+      customRange = null; // volta a mandar o preset, não a data escolhida à mão
+      syncDateInputsFromPreset(chartRange);
+      renderMainChart();
+    });
+  });
+
+  const fIni = document.getElementById('f-inicio');
+  const fFim = document.getElementById('f-fim');
+  function onDateInputChange() {
+    if (!fIni.value || !fFim.value) return;
+    customRange = { inicio: fIni.value, fim: fFim.value };
+    document.querySelectorAll('input[name="range"]').forEach(r => { r.checked = false; });
+    renderMainChart();
+  }
+  fIni.addEventListener('change', onDateInputChange);
+  fFim.addEventListener('change', onDateInputChange);
+}
+
+function syncDateInputsFromPreset(range) {
+  const fIni = document.getElementById('f-inicio');
+  const fFim = document.getElementById('f-fim');
+  if (range === 'all') {
+    fIni.value = PRODS[0]?.historico?.[0]?.data || '';
+    fFim.value = ULTIMA_DATA !== '0000-00-00' ? ULTIMA_DATA : '';
+    return;
+  }
+  const janela = computeRangeDates(range);
+  if (janela) { fIni.value = janela.inicio; fFim.value = janela.fim; }
+}
+
+// ── Select ─────────────────────────────────────────────────────────────────
+function buildSelect() {
+  const sel = document.getElementById('sel-produto');
+  sel.innerHTML = PRODS.map(p => `<option value="${p.id}">${p.nome}</option>`).join('');
+  sel.value = selectedId;
+  sel.addEventListener('change', () => { selectedId = sel.value; updateActiveCard(); renderAll(); });
+}
+
+// ── Cards ──────────────────────────────────────────────────────────────────
+function buildCards() {
+  document.getElementById('cards-strip').innerHTML = PRODS.map(p => `
+    <div class="prod-card ${p.id === selectedId ? 'active':''}" id="card-${p.id}" onclick="selectProd('${p.id}')">
+      <div class="pc-accent" style="background:${p.cor}"></div>
+      <div class="pc-nome">${p.nome}${staleBadge(p)}</div>
+      <div class="pc-praca">${p.praca}</div>
+      <div class="pc-preco">R$ ${f2(p.preco)}</div>
+      <div class="pc-unidade">${p.unidade}</div>
+      <div class="pc-var ${(p.variacao_pct||0) > 0 ? 'up' : (p.variacao_pct||0) < 0 ? 'dn' : 'flat'}">
+        ${pct(p.variacao_pct)}
+      </div>
+      <div class="pc-spark-wrap"><canvas id="spark-${p.id}"></canvas></div>
+    </div>
+  `).join('');
+}
+
+function buildSparklines() {
+  PRODS.forEach(p => {
+    if (sparkCharts[p.id]) sparkCharts[p.id].destroy();
+    const canvas = document.getElementById('spark-' + p.id);
+    if (!canvas) return;
+    const hist = filterHist(p.historico, '1mo');
+    const vals = hist.slice(-20).map(h => h.preco).filter(v => v != null);
+    if (!vals.length) return;
+    sparkCharts[p.id] = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: vals.map((_, i) => i),
+        datasets: [{ data: vals, borderColor: p.cor, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3 }]
+      },
+      options: {
+        animation: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+        responsive: true, maintainAspectRatio: false,
+      }
+    });
+  });
+}
+
+function selectProd(id) { selectedId = id; updateActiveCard(); renderAll(); }
+
+function updateActiveCard() {
+  PRODS.forEach(p => {
+    const el = document.getElementById('card-' + p.id);
+    if (el) el.classList.toggle('active', p.id === selectedId);
+  });
+  document.getElementById('sel-produto').value = selectedId;
+}
+
+// ── Main Chart (Lightweight Charts — linha) ────────────────────────────────
+function renderMainChart() {
+  const p = byId(selectedId);
+  const noDataEl  = document.getElementById('chart-no-data');
+  const container = document.getElementById('lw-chart-container');
+
+  document.getElementById('chart-nome-lbl').textContent    = p?.nome || '—';
+  document.getElementById('chart-praca-chip').textContent  = p?.praca || '—';
+  document.getElementById('chart-unit-lbl').textContent    = p?.unidade || '—';
+  document.getElementById('chart-titulo').textContent      = p ? `${p.nome} — Preço Spot` : 'Histórico';
+  document.getElementById('chart-sub').textContent         = p ? `Preço diário à vista · ${p.praca} · CEPEA/ESALQ-USP` : '';
+
+  function showNoData(msg) {
+    noDataEl.textContent = msg;
+    noDataEl.style.display = '';
+    container.style.display = 'none';
+    destroyLW();
+    renderDetailSection();
+  }
+
+  if (!p) return showNoData('Selecione um produto.');
+
+  const hist = filterHist(p.historico, chartRange);
+  if (!hist || !hist.length) return showNoData('Sem dados para o período selecionado.');
+
+  const series = hist
+    .map(h => ({ time: h.data, value: h.preco }))
+    .filter(d => d.value != null);
+
+  if (!series.length) return showNoData('Dados de preço indisponíveis.');
+
+  noDataEl.style.display = 'none';
+  container.style.display = 'block';
+
+  destroyLW();
+
+  lwChart = LightweightCharts.createChart(container, {
+    width:  container.clientWidth,
+    height: 340,
+    layout: {
+      background:  { color: '#FFFFFF' },
+      textColor:   '#3E5068',
+      fontFamily:  "'DM Mono', monospace",
+      fontSize:    11,
+    },
+    grid: {
+      vertLines: { color: 'rgba(26,36,51,.06)' },
+      horzLines: { color: 'rgba(26,36,51,.06)' },
+    },
+    crosshair:       { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: 'rgba(26,36,51,.12)' },
+    timeScale:       { borderColor: 'rgba(26,36,51,.12)', timeVisible: false },
+    handleScroll: true,
+    handleScale:  true,
+  });
+
+  lwLine = lwChart.addLineSeries({
+    color:            p.cor,
+    lineWidth:        2,
+    priceLineVisible: true,
+    lastValueVisible: true,
+    crosshairMarkerVisible: true,
+    crosshairMarkerRadius:  4,
+    title: p.unidade,
+  });
+  lwLine.setData(series);
+
+  // Média Móvel — calculada sobre o HISTÓRICO COMPLETO (não só o período
+  // visível), depois recortada pro período. Assim o 1º dia visível já tem
+  // uma média correta, usando dias anteriores ao corte como contexto —
+  // antes disso os primeiros ~N dias do gráfico ficavam sem linha de MM.
+  if (maVisible) {
+    const fullSeries = p.historico.map(h => ({ time: h.data, value: h.preco })).filter(d => d.value != null);
+    if (fullSeries.length >= maWindow) {
+      const maFull  = calcMA(fullSeries, maWindow);
+      const inicioVisivel = series[0].time;
+      const maData  = maFull.filter(d => d.time >= inicioVisivel);
+      if (maData.length) {
+        lwMA = lwChart.addLineSeries({
+          color:            'rgba(91,143,196,0.85)',
+          lineWidth:        1.5,
+          lineStyle:        LightweightCharts.LineStyle.Dashed,
+          priceLineVisible: false,
+          lastValueVisible: true,
+          crosshairMarkerVisible: false,
+          title: `MM${maWindow}`,
+        });
+        lwMA.setData(maData);
+      }
+    }
+  }
+
+  // Ano Anterior — mesmo eixo de datas do período visível, mas com o preço
+  // de exatamente 1 ano antes (quando existir no histórico completo).
+  if (showPrevYear) {
+    const prevData = anoAnteriorSeries(hist, p.historico);
+    if (prevData.length) {
+      lwPrevYear = lwChart.addLineSeries({
+        color:            'rgba(200,146,42,0.75)',
+        lineWidth:        1.5,
+        lineStyle:        LightweightCharts.LineStyle.Dotted,
+        priceLineVisible: false,
+        lastValueVisible: true,
+        crosshairMarkerVisible: false,
+        title: 'Ano Anterior',
+      });
+      lwPrevYear.setData(prevData);
+    }
+  }
+
+  lwChart.timeScale().fitContent();
+
+  const ro = new ResizeObserver(() => {
+    if (lwChart) lwChart.applyOptions({ width: container.clientWidth });
+  });
+  ro.observe(container);
+
+  // Tooltip de hover: ao passar o mouse, mostra data + preço + média
+  // móvel + ano anterior (o que estiver ligado) naquele ponto exato.
+  const hoverEl = document.getElementById('hover-info');
+  lwChart.subscribeCrosshairMove(param => {
+    if (!param || !param.time || !param.seriesData || !param.seriesData.size) {
+      hoverEl.classList.remove('show');
+      return;
+    }
+    const priceD = param.seriesData.get(lwLine);
+    const maD    = lwMA       ? param.seriesData.get(lwMA)       : null;
+    const pyD    = lwPrevYear ? param.seriesData.get(lwPrevYear) : null;
+
+    let html = `<div class="hi-date">${fdt(param.time)}</div>`;
+    if (priceD) html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:${p.cor}"></span>${p.unidade}</span><strong>R$ ${f2(priceD.value)}</strong></div>`;
+    if (maD)    html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:#5B8FC4"></span>MM${maWindow}</span><span>R$ ${f2(maD.value)}</span></div>`;
+    if (pyD)    html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:#C8922A"></span>Ano Anterior</span><span>R$ ${f2(pyD.value)}</span></div>`;
+
+    hoverEl.innerHTML = html;
+    hoverEl.classList.add('show');
+  });
+
+  renderDetailSection();
+}
+
+function destroyLW() {
+  if (lwChart) { lwChart.remove(); lwChart = null; lwLine = null; lwMA = null; lwPrevYear = null; }
+}
+
+// ── Detail ─────────────────────────────────────────────────────────────────
+function renderDetailSection() {
+  const p = byId(selectedId);
+  const sec = document.getElementById('detail-section');
+  if (!p) { sec.innerHTML = '<p class="no-data" style="padding:1.5rem">Sem dados.</p>'; return; }
+
+  const chgClass = (p.variacao_pct || 0) > 0 ? 'up' : (p.variacao_pct || 0) < 0 ? 'dn' : '';
+
+  // Variação mensal e máx/mín do período visível
+  const hist = filterHist(p.historico, chartRange);
+  const precos = hist.map(h => h.preco).filter(v => v != null);
+  const maxP   = precos.length ? Math.max(...precos) : null;
+  const minP   = precos.length ? Math.min(...precos) : null;
+  const pos    = (maxP && minP && maxP !== minP)
+    ? ((p.preco - minP) / (maxP - minP) * 100)
+    : null;
+
+  sec.innerHTML = `
+    <div class="praca-badge">
+      <span class="praca-label">CEPEA</span>
+      <span class="praca-text">${p.descricao || `CEPEA/ESALQ-USP · ${p.nome} · ${p.praca}`}</span>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="di-lbl">Preço Atual</div>
+        <div class="di-val">R$ ${f2(p.preco)}</div>
+        <div class="di-sub">${p.unidade}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Preço Anterior</div>
+        <div class="di-val">R$ ${f2(p.preco_ant)}</div>
+        <div class="di-sub">${p.unidade}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Variação Dia</div>
+        <div class="di-val ${chgClass}">${pct(p.variacao_pct)}</div>
+        <div class="di-sub">${abv(p.variacao)} R$</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Data Ref.</div>
+        <div class="di-val" style="font-size:.72rem">${fdt(p.data_ref)}</div>
+        <div class="di-sub">último dado</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Máx. Período</div>
+        <div class="di-val" style="color:#B83030">R$ ${f2(maxP)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Mín. Período</div>
+        <div class="di-val" style="color:#2E7D32">R$ ${f2(minP)}</div>
+      </div>
+    </div>
+    ${pos != null ? `
+    <div style="margin-top:.85rem">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.52rem;color:var(--text3);margin-bottom:.22rem">
+        <span>Mín: R$ ${f2(minP)}</span>
+        <span style="color:${p.cor}">Atual: R$ ${f2(p.preco)} (${f2(pos)}%)</span>
+        <span>Máx: R$ ${f2(maxP)}</span>
+      </div>
+      <div style="height:4px;background:var(--panel3);border-radius:2px;position:relative">
+        <div style="position:absolute;top:0;height:100%;border-radius:2px;background:${p.cor};width:${pos}%"></div>
+        <div style="position:absolute;top:-3px;width:10px;height:10px;border-radius:50%;background:${p.cor};transform:translateX(-50%);left:${pos}%"></div>
+      </div>
+    </div>` : ''}
+    <div style="margin-top:.75rem;font-family:'DM Mono',monospace;font-size:.5rem;color:#2E4A58;line-height:1.6;padding:.4rem .6rem;background:rgba(13,27,42,.04);border-left:2px solid rgba(200,146,42,.28);border-radius:0 3px 3px 0">
+      Praça: <strong>${p.praca}</strong> · Fonte: CEPEA/ESALQ-USP · Preço spot (à vista) coletado diariamente.
+      Dados para referência informativa — não constituem oferta de compra ou venda.
+    </div>
+  `;
+}
+
+// ── Tabelas ─────────────────────────────────────────────────────────────────
+function renderAll() { renderMainChart(); renderTables(); renderTrends(); }
+
+const mainGetters = {
+  nome:         r => r.nome,
+  tend:         r => computeTrend(r)?.tend || '',
+  preco:        r => r.preco,
+  kg:           r => precoKg(r.preco, r.unidade),
+  variacao_pct: r => r.variacao_pct,
+  variacao:     r => r.variacao,
+  unidade:      r => r.unidade,
+  praca:        r => r.praca,
+  data_ref:     r => r.data_ref,
+};
+
+function renderTables() {
+  // Tabela principal
+  const rows = sortRowsBy(PRODS, _sort.main.col, _sort.main.dir, mainGetters);
+  document.getElementById('tb-main').innerHTML = rows.map(p => {
+    const cls = (p.variacao_pct || 0) > 0
+      ? 'background:rgba(180,40,40,.08);color:#B83030'
+      : (p.variacao_pct || 0) < 0
+        ? 'background:rgba(40,160,60,.08);color:#2E7D32'
+        : '';
+    const kg = precoKg(p.preco, p.unidade);
+    return `<tr onclick="selectProd('${p.id}')" style="cursor:pointer">
+      <td><span class="comm-dot" style="background:${p.cor}"></span><strong>${p.nome}</strong>${staleBadge(p)}</td>
+      <td>${tendBadge(computeTrend(p))}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-weight:600">R$ ${f2(p.preco)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:${kg ? '#3E5068' : '#BCBCBC'}">${kg != null ? f2(kg) : '—'}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;${cls}">${pct(p.variacao_pct)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;${cls}">${abv(p.variacao)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:.65rem;color:#7A8A9A">${p.unidade}</td>
+      <td style="font-family:'DM Sans',sans-serif;font-size:.7rem;color:var(--text3)">${p.praca}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:.68rem;color:${isStale(p) ? '#C87A1E' : 'var(--text3)'}">${fdt(p.data_ref)}</td>
+    </tr>`;
+  }).join('');
+
+  // Histórico do produto selecionado
+  renderHistTable();
+}
+
+function renderHistTable() {
+  const p = byId(selectedId);
+  const titleEl = document.getElementById('hist-title');
+  if (!p) { document.getElementById('tb-hist').innerHTML = ''; return; }
+
+  titleEl.textContent = `Histórico — ${p.nome}`;
+  const hist = [...(filterHist(p.historico, chartRange) || [])].reverse().slice(0, 60);
+
+  document.getElementById('tb-hist').innerHTML = hist.map((h, i) => {
+    const prev   = hist[i + 1];
+    const varPct = (prev && prev.preco) ? ((h.preco - prev.preco) / prev.preco * 100) : null;
+    const cls    = varPct > 0 ? 'color:#B83030' : varPct < 0 ? 'color:#2E7D32' : 'color:#7A8A9A';
+    return `<tr>
+      <td style="font-family:'DM Mono',monospace;font-size:.68rem">${fdt(h.data)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-weight:600">R$ ${f2(h.preco)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.68rem;${cls}">${pct(varPct)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Nav helpers ────────────────────────────────────────────────────────────
+function toggleMenu() {
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+
+init();
+</script>
+</body>
+</html>
