@@ -65,6 +65,16 @@ nav{position:fixed;top:0;left:0;right:0;height:72px;background:rgba(13,27,42,.97
 input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .tf-vsep{width:1px;align-self:stretch;background:rgba(255,255,255,.1);margin:0 .1rem}
 
+/* ---- agrupamento dos filtros em blocos temáticos (categoria/marca-rede/
+   data/produto-ean/local) — cada um vira um "quadro" próprio com título,
+   pra ficar claro o que pertence a cada assunto em vez de uma fileira só
+   de 15 campos soltos ---- */
+.filter-sections{display:flex;flex-wrap:wrap;align-items:stretch;gap:.7rem;padding:.7rem 2rem}
+.filter-section{background:rgba(255,255,255,.035);border:1px solid rgba(200,146,42,.22);border-radius:8px;padding:.5rem .75rem .6rem;display:flex;flex-direction:column;gap:.45rem}
+.filter-section-title{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.filter-section-body{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.6rem .85rem}
+.filter-section-reset{display:flex;align-items:center;padding:.7rem 2rem .9rem;margin-top:-.2rem}
+
 .date-row{display:flex;align-items:center;gap:.4rem}
 .date-row input[type=date]{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Mono',monospace;font-size:.72rem;outline:none;color-scheme:dark;transition:border-color .2s}
 .date-row input[type=date]:focus{border-color:var(--gold)}
@@ -243,113 +253,135 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     <span class="filter-toggle-chev">▾</span>
   </div>
   <div class="filter-collapsible open" id="filter-collapsible">
-  <div class="filter-row">
-    <div class="tf-grp">
-      <span class="lbl">Data <span id="data-cnt" class="date-cnt"></span></span>
-      <div class="date-row">
-        <input type="date" id="f-data-inicio">
-        <span class="sep">–</span>
-        <input type="date" id="f-data-fim">
+  <div class="filter-sections">
+
+    <div class="filter-section">
+      <span class="filter-section-title">Data</span>
+      <div class="filter-section-body">
+        <div class="tf-grp">
+          <span class="lbl">Período <span id="data-cnt" class="date-cnt"></span></span>
+          <div class="date-row">
+            <input type="date" id="f-data-inicio">
+            <span class="sep">–</span>
+            <input type="date" id="f-data-fim">
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="tf-grp">
-      <span class="lbl">Rede</span>
-      <div class="ddm-wrap" id="ddm-site">
-        <button class="ddm-btn" type="button"><span id="ddm-site-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><div class="ddm-list" id="lst-site"></div></div>
+    <div class="filter-section">
+      <span class="filter-section-title">Categoria</span>
+      <div class="filter-section-body">
+        <div class="tf-grp">
+          <span class="lbl" title="Agrupamento comercial acima do Departamento — Mercearia, Bebidas, Medicamentos, Não Alimentar">Nível 1</span>
+          <select class="tf-input" id="f-segmento" style="min-width:130px"><option value="">Todos</option></select>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Nível 2</span>
+          <div class="ddm-wrap" id="ddm-bloco">
+            <button class="ddm-btn" type="button"><span id="ddm-bloco-lbl">Todos</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><div class="ddm-list" id="lst-bloco"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Departamento</span>
+          <select class="tf-input" id="f-depto" style="min-width:150px"><option value="">Todos</option></select>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Categoria</span>
+          <div class="ddm-wrap" id="ddm-categoria">
+            <button class="ddm-btn" type="button"><span id="ddm-categoria-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><input class="ddm-search" type="text" id="search-categoria" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-categoria"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Subcategoria</span>
+          <div class="ddm-wrap" id="ddm-subcategoria">
+            <button class="ddm-btn" type="button"><span id="ddm-subcategoria-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><input class="ddm-search" type="text" id="search-subcategoria" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-subcategoria"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl" title="Primeira palavra da descrição — separa por tipo de item (Refrigerante, Leite, Algodão…) sem depender do de-para de categoria">Subcesta</span>
+          <div class="ddm-wrap" id="ddm-subcesta">
+            <button class="ddm-btn" type="button"><span id="ddm-subcesta-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><input class="ddm-search" type="text" id="search-subcesta" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-subcesta"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl" title="Quantidade/unidade extraída da descrição (g, kg, ml, L, un)">Tamanho</span>
+          <div class="ddm-wrap" id="ddm-tamanho">
+            <button class="ddm-btn" type="button"><span id="ddm-tamanho-lbl">Todos</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><input class="ddm-search" type="text" id="search-tamanho" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-tamanho"></div></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="tf-vsep"></div>
-
-    <div class="tf-grp">
-      <span class="lbl" title="Agrupamento comercial acima do Departamento — Mercearia, Bebidas, Medicamentos, Não Alimentar">Segmento</span>
-      <select class="tf-input" id="f-segmento" style="min-width:140px"><option value="">Todos</option></select>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Bloco</span>
-      <div class="ddm-wrap" id="ddm-bloco">
-        <button class="ddm-btn" type="button"><span id="ddm-bloco-lbl">Todos</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><div class="ddm-list" id="lst-bloco"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Departamento</span>
-      <select class="tf-input" id="f-depto" style="min-width:150px"><option value="">Todos</option></select>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Categoria</span>
-      <div class="ddm-wrap" id="ddm-categoria">
-        <button class="ddm-btn" type="button"><span id="ddm-categoria-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-categoria" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-categoria"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Subcategoria</span>
-      <div class="ddm-wrap" id="ddm-subcategoria">
-        <button class="ddm-btn" type="button"><span id="ddm-subcategoria-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-subcategoria" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-subcategoria"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Marca</span>
-      <div class="ddm-wrap" id="ddm-marca">
-        <button class="ddm-btn" type="button"><span id="ddm-marca-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-marca" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-marca"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl" title="Primeira palavra da descrição — separa por tipo de item (Refrigerante, Leite, Algodão…) sem depender do de-para de categoria">Subcesta</span>
-      <div class="ddm-wrap" id="ddm-subcesta">
-        <button class="ddm-btn" type="button"><span id="ddm-subcesta-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-subcesta" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-subcesta"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl" title="Quantidade/unidade extraída da descrição (g, kg, ml, L, un)">Tamanho</span>
-      <div class="ddm-wrap" id="ddm-tamanho">
-        <button class="ddm-btn" type="button"><span id="ddm-tamanho-lbl">Todos</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-tamanho" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-tamanho"></div></div>
+    <div class="filter-section">
+      <span class="filter-section-title">Marca e fornecedor</span>
+      <div class="filter-section-body">
+        <div class="tf-grp">
+          <span class="lbl">Marca</span>
+          <div class="ddm-wrap" id="ddm-marca">
+            <button class="ddm-btn" type="button"><span id="ddm-marca-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><input class="ddm-search" type="text" id="search-marca" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-marca"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Rede</span>
+          <div class="ddm-wrap" id="ddm-site">
+            <button class="ddm-btn" type="button"><span id="ddm-site-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><div class="ddm-list" id="lst-site"></div></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="tf-vsep"></div>
-
-    <div class="tf-grp">
-      <span class="lbl">Produto (descrição)</span>
-      <input class="tf-input" type="text" id="f-descricao" placeholder="ex: refrigerante 2l" style="min-width:190px">
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">EAN</span>
-      <input class="tf-input" type="text" id="f-ean" placeholder="código de barras" style="min-width:130px">
-    </div>
-
-    <div class="tf-vsep"></div>
-
-    <div class="tf-grp">
-      <span class="lbl">UF</span>
-      <div class="ddm-wrap" id="ddm-uf">
-        <button class="ddm-btn" type="button" style="min-width:70px"><span id="ddm-uf-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel" style="width:120px"><div class="ddm-list" id="lst-uf"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Cidade</span>
-      <div class="ddm-wrap" id="ddm-cidade">
-        <button class="ddm-btn" type="button"><span id="ddm-cidade-lbl">Todas</span><span class="arr">▾</span></button>
-        <div class="ddm-panel"><input class="ddm-search" type="text" id="search-cidade" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-cidade"></div></div>
-      </div>
-    </div>
-    <div class="tf-grp">
-      <span class="lbl">Disponibilidade</span>
-      <div class="radio-row">
-        <label><input type="radio" name="disp" value="" checked> Todos</label>
-        <label><input type="radio" name="disp" value="sim"> Disponível</label>
-        <label><input type="radio" name="disp" value="nao"> Indisponível</label>
+    <div class="filter-section">
+      <span class="filter-section-title">Pesquisa de produto</span>
+      <div class="filter-section-body">
+        <div class="tf-grp">
+          <span class="lbl">Produto (descrição)</span>
+          <input class="tf-input" type="text" id="f-descricao" placeholder="ex: refrigerante 2l" style="min-width:190px">
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">EAN</span>
+          <input class="tf-input" type="text" id="f-ean" placeholder="código de barras" style="min-width:130px">
+        </div>
       </div>
     </div>
 
+    <div class="filter-section">
+      <span class="filter-section-title">Localização e disponibilidade</span>
+      <div class="filter-section-body">
+        <div class="tf-grp">
+          <span class="lbl">UF</span>
+          <div class="ddm-wrap" id="ddm-uf">
+            <button class="ddm-btn" type="button" style="min-width:70px"><span id="ddm-uf-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel" style="width:120px"><div class="ddm-list" id="lst-uf"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Cidade</span>
+          <div class="ddm-wrap" id="ddm-cidade">
+            <button class="ddm-btn" type="button"><span id="ddm-cidade-lbl">Todas</span><span class="arr">▾</span></button>
+            <div class="ddm-panel"><input class="ddm-search" type="text" id="search-cidade" placeholder="Pesquisar…" autocomplete="off"><div class="ddm-list" id="lst-cidade"></div></div>
+          </div>
+        </div>
+        <div class="tf-grp">
+          <span class="lbl">Disponibilidade</span>
+          <div class="radio-row">
+            <label><input type="radio" name="disp" value="" checked> Todos</label>
+            <label><input type="radio" name="disp" value="sim"> Disponível</label>
+            <label><input type="radio" name="disp" value="nao"> Indisponível</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="filter-section-reset">
     <button class="btn-reset" id="btn-reset">↺ Limpar filtros</button>
   </div>
   </div><!-- /filter-collapsible -->
@@ -364,8 +396,8 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     <div class="tf-grp">
       <span class="lbl">Ver tabela de comparação por</span>
       <select class="tf-input" id="f-verpor" style="min-width:160px">
-        <option value="segmento">Segmento</option>
-        <option value="bloco">Bloco</option>
+        <option value="segmento">Nível 1</option>
+        <option value="bloco">Nível 2</option>
         <option value="categoria">Categoria</option>
         <option value="subcategoria">Subcategoria</option>
         <option value="subcesta">Subcesta</option>
@@ -489,7 +521,7 @@ function hexParaRgba(hex, alpha){
 }
 
 const DIM_FIELD = {segmento:'segmento', bloco:'bloco', categoria:'categoria', subcategoria:'subcategoria', marca:'marca', produto:'descricao', subcesta:'_subcesta', tamanho:'_tamanho'};
-const DIM_LABEL = {segmento:'Segmento', bloco:'Bloco', categoria:'Categoria', subcategoria:'Subcategoria', marca:'Marca', produto:'Produto', subcesta:'Subcesta', tamanho:'Tamanho'};
+const DIM_LABEL = {segmento:'Nível 1', bloco:'Nível 2', categoria:'Categoria', subcategoria:'Subcategoria', marca:'Marca', produto:'Produto', subcesta:'Subcesta', tamanho:'Tamanho'};
 const PAGE_SIZE = 50;
 
 const state = {
