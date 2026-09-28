@@ -204,7 +204,9 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .dt th.rede-th{position:sticky;left:0;z-index:4}
 .evo-link{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-decoration:none;cursor:pointer;white-space:nowrap}
 .evo-link:hover{text-decoration:underline;color:var(--gold)}
-.dt th.col-rede{cursor:grab}
+/* nomes de rede longos ("Cottonbaby (site próprio)") empurravam a coluna
+   inteira de largura — quebra em até 2 linhas em vez de esticar a tabela */
+.dt th.col-rede{cursor:grab;white-space:normal;max-width:108px;line-height:1.25;vertical-align:bottom}
 .dt th.col-rede.dragging{opacity:.4}
 .dt th.col-rede.drag-over{background:#0D1B2A;box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold)}
 .evo-loading{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-aged)}
@@ -1652,6 +1654,10 @@ function renderEvolucao(){
     const vs = matriz.map(m => m.valores[i]).filter(v=>v!=null);
     return vs.length ? { min: Math.min(...vs), max: Math.max(...vs) } : { min:null, max:null };
   });
+  // link do produto naquela rede+dia, pra clique duplo abrir o site — mesmo
+  // padrão da tabela de comparação principal
+  const linkPorSiteData = new Map();
+  linhas.forEach(r => { if(r.link) linkPorSiteData.set(r.site+'|'+r.data, r.link); });
 
   const thead = document.querySelector('#evo-table thead');
   thead.innerHTML = `<tr><th class="rede-th">Rede</th>${datas.map(d=>`<th class="r">${fmtD(d)}</th>`).join('')}</tr>`;
@@ -1663,9 +1669,15 @@ function renderEvolucao(){
         if(v==null) return '<td class="r cell-empty">—</td>';
         const {min,max} = minMaxPorData[i];
         const cls = (min!==max && v===min) ? 'cell-min' : (min!==max && v===max) ? 'cell-max' : '';
-        return `<td class="r ${cls}">${fmtR(v)}</td>`;
+        const link = linkPorSiteData.get(s+'|'+datas[i]);
+        const linkAttrs = link ? ` class="r ${cls} cell-link" data-link="${link.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" title="Clique duplo pra abrir o produto em ${SITE_LABELS[s]||s}"` : ` class="r ${cls}"`;
+        return `<td${linkAttrs}>${fmtR(v)}</td>`;
       }).join('')}
     </tr>`).join('');
+  tbody.querySelectorAll('td.cell-link').forEach(td => td.addEventListener('dblclick', e => {
+    e.stopPropagation();
+    window.open(td.dataset.link, '_blank', 'noopener');
+  }));
 }
 
 function render(){
