@@ -272,6 +272,10 @@ footer {
 footer a { color: var(--gold-aged); text-decoration: none; transition: color .15s; }
 footer a:hover { color: var(--gold); }
 
+/* Acesso interno — ponto quase invisível, só clareia um pouco no hover */
+.footer-hidden { color: rgba(154,170,187,.45); text-decoration: none; padding: 0 .4rem; cursor: default; }
+.footer-hidden:hover { color: rgba(200,146,42,.5); cursor: pointer; }
+
 /* ── MOBILE ─────────────────────────────────────── */
 @media (max-width: 1100px) {
   .dash-grid { grid-template-columns: repeat(2, 1fr); }
@@ -359,6 +363,30 @@ footer a:hover { color: var(--gold); }
       </div>
     </div>
 
+    <!-- 1b — CEPEA (ativo) -->
+    <div class="dash-card">
+      <div class="card-thumb">
+        🌾
+      </div>
+      <div class="card-body">
+        <span class="card-label">Preços · Agropecuária · Brasil</span>
+        <h2 class="card-title">Indicadores de Preço Agrícola — CEPEA/ESALQ</h2>
+        <p class="card-desc">Preços spot diários de 18 commodities agropecuárias (boi, soja, milho, café, açúcar e mais), com tendência, comparação com o ano anterior e histórico completo.</p>
+        <div class="card-tags">
+          <span class="card-tag">Boi Gordo</span>
+          <span class="card-tag">Soja</span>
+          <span class="card-tag">Café</span>
+          <span class="card-tag">Tendência</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="/cepea_dashboard/" class="card-link">
+          Acessar painel
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
     <!-- 2 — Commodities (em breve) -->
     <div class="dash-card coming-soon">
       <div class="card-thumb">
@@ -435,7 +463,7 @@ footer a:hover { color: var(--gold); }
 </a>
 
 <footer>
-  <span>VCZ Consultoria · Inteligência Comercial · Santa Catarina</span>
+  <span>VCZ Consultoria · Inteligência Comercial · Santa Catarina<a href="/analisador_precos/" class="footer-hidden" title="">·</a></span>
   <a href="/">← Voltar ao site</a>
 </footer>
 

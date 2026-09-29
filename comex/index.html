@@ -42,6 +42,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
+.loading-error{display:none;flex-direction:column;align-items:center;gap:.9rem;max-width:380px;text-align:center;padding:0 1.5rem}
+.loading-error.show{display:flex}
+.err-icon{font-size:1.8rem}
+.err-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:#F0E8D8}
+.err-desc{font-family:'DM Sans',sans-serif;font-size:.8rem;color:#9AB0C0;line-height:1.55}
+.err-retry{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;background:var(--gold);color:#0D1B2A;border:none;border-radius:5px;padding:.55rem 1.4rem;cursor:pointer;transition:background .15s,transform .1s}
+.err-retry:hover{background:#E2AC4C;transform:translateY(-1px)}
 
 /* ── Welcome modal ─────────────────────────────────────────── */
 #welcome-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:rgba(5,12,22,.82);backdrop-filter:blur(6px)}
@@ -277,8 +284,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 <body>
 
 <div id="loading">
-  <div class="spinner"></div>
+  <div class="spinner" id="loading-spinner"></div>
   <p class="loading-text" id="loading-text">Carregando dados ComexStat…</p>
+  <div class="loading-error" id="loading-error">
+    <span class="err-icon">⚠️</span>
+    <p class="err-title">Servidor indisponível</p>
+    <p class="err-desc">Não foi possível carregar os dados do ComexStat no momento. O servidor pode estar temporariamente fora do ar. Tente novamente em instantes.</p>
+    <button class="err-retry" onclick="loadData()">Tentar novamente</button>
+  </div>
 </div>
 
 <div id="welcome-modal">
@@ -745,12 +758,28 @@ const API_BASE = 'https://vcz-api.onrender.com/api/v1/comex/publico';
 // Dispara ping imediatamente para acordar o Render (cold start)
 fetch(`${API_BASE}/ping`).catch(() => {});
 
+// ── Fetch com timeout ────────────────────────────────────────────
+// Sem isso, se o servidor (Render free tier) estiver fora do ar, o
+// fetch fica pendurado por minutos sem erro nenhum — parece "lento"
+// mas na prática nunca termina. 25s cobre um cold start normal (~20s)
+// e ainda assim falha rápido se o serviço estiver realmente caído.
+const FETCH_TIMEOUT_MS = 25000;
+function fetchTimeout(url, ms = FETCH_TIMEOUT_MS) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal })
+    .then(r => { clearTimeout(id); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .catch(e => { clearTimeout(id); throw e; });
+}
+
 // ── Welcome modal ─────────────────────────────────────────────────
 let _welcomeClosed = false;
 function closeWelcome() {
   _welcomeClosed = true;
   el('welcome-modal').classList.add('hidden');
-  el('loading').classList.add('hidden');
+  // Não força esconder #loading: se os dados ainda não chegaram (ou o
+  // servidor falhar), o overlay de carregamento/erro por trás do modal
+  // precisa continuar visível — quem controla isso é loadData().
 }
 function _autoCloseWelcome() {
   if (!_welcomeClosed) {
@@ -877,10 +906,10 @@ async function fetchAll() {
   });
 
   // Lança todas as 4 requisições em paralelo imediatamente
-  const mensalP = fetch(`${API_BASE}/mensal?${qsMensal}`).then(r => r.json());
-  const paisesP = fetch(`${API_BASE}/por-pais?${qs}`).then(r => r.json());
-  const ncmsP   = fetch(`${API_BASE}/por-ncm?${qs}`).then(r => r.json());
-  const ufsP    = fetch(`${API_BASE}/por-uf?${qs}`).then(r => r.json());
+  const mensalP = fetchTimeout(`${API_BASE}/mensal?${qsMensal}`);
+  const paisesP = fetchTimeout(`${API_BASE}/por-pais?${qs}`);
+  const ncmsP   = fetchTimeout(`${API_BASE}/por-ncm?${qs}`);
+  const ufsP    = fetchTimeout(`${API_BASE}/por-uf?${qs}`);
 
   // Renderiza parcialmente ao receber /mensal (mais rápido)
   _mensal = await mensalP;
@@ -1419,6 +1448,9 @@ function renderCurrentTab() {
 // ── Load ──────────────────────────────────────────────────────────
 async function loadData() {
   el('loading').classList.remove('hidden');
+  el('loading-error').classList.remove('show');
+  el('loading-spinner').style.display = '';
+  el('loading-text').style.display = '';
   el('loading-text').textContent = 'Consultando banco de dados…';
   _setWmStatus('Conectando ao servidor…');
   try {
@@ -1446,9 +1478,10 @@ async function loadData() {
     _autoCloseWelcome();
   } catch(e) {
     console.error(e);
-    el('loading-text').textContent = 'Erro ao carregar dados. Verifique a conexão.';
     _setWmStatus('Erro de conexão — tente novamente.');
-    setTimeout(() => el('loading').classList.add('hidden'), 3500);
+    el('loading-spinner').style.display = 'none';
+    el('loading-text').style.display = 'none';
+    el('loading-error').classList.add('show');
     return;
   }
   el('loading').classList.add('hidden');
@@ -1485,9 +1518,11 @@ function closeMenu() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────
-async function init() {
+// refs e loadData() são independentes — disparados em paralelo (não em
+// sequência) pra não somar os dois timeouts caso o servidor esteja lento/caído.
+async function loadRefs() {
   try {
-    const refs = await fetch(`${API_BASE}/refs`).then(r => r.json());
+    const refs = await fetchTimeout(`${API_BASE}/refs`);
     const anos = (refs.anos || []).map(Number).sort();
     if (anos.length) {
       _lastYear = anos[anos.length - 1];
@@ -1507,6 +1542,10 @@ async function init() {
       });
     }
   } catch(e) {}
+}
+
+function init() {
+  loadRefs();
 
   // Restore tab from URL hash
   const hash = location.hash.slice(1);
