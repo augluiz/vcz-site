@@ -1,5 +1,10 @@
 [
   {
+    "data": "2026-09-30",
+    "linhas": 88320,
+    "arquivo": "dias/2026-09-30.csv"
+  },
+  {
     "data": "2026-09-29",
     "linhas": 69018,
     "arquivo": "dias/2026-09-29.csv"
