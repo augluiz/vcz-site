@@ -191,7 +191,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .evo-summary{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#EDE7DC}
 .evo-summary b{color:var(--gold-light)}
 .evo-summary .ean{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-aged)}
-.evo-chart-box{padding:1rem;height:352px;display:flex;flex-direction:column}
+.evo-chart-box{padding:1.3rem 1.5rem 1.1rem;height:440px;display:flex;flex-direction:column}
 .evo-chart-legenda{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text3);margin-bottom:.5rem;flex-shrink:0}
 .evo-chart-box canvas{flex:1;min-height:0}
 .evo-table-toolbar{display:flex;align-items:center;gap:.8rem;padding:.5rem 1rem;background:var(--panel2);border-bottom:1px solid var(--border)}
@@ -209,6 +209,13 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .dt th.col-rede{cursor:grab;white-space:normal;max-width:108px;line-height:1.25;vertical-align:bottom}
 .dt th.col-rede.dragging{opacity:.4}
 .dt th.col-rede.drag-over{background:#0D1B2A;box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold)}
+#pivot-table{table-layout:fixed}
+.dt th{position:relative}
+/* alça fina na borda direita de cada cabeçalho — arrasta pra redimensionar
+   a coluna (muda só a largura do <col> no colgroup, que já controla
+   cabeçalho e corpo juntos por causa do table-layout:fixed) */
+.th-resize{position:absolute;top:0;right:-4px;bottom:0;width:8px;cursor:col-resize;z-index:6}
+.th-resize:hover,.th-resize.resizing{background:rgba(200,146,42,.45)}
 .evo-loading{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-aged)}
 </style>
 </head>
@@ -435,6 +442,29 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 
 <div class="dash-main">
 
+  <!-- ALERTAS DE VARIAÇÃO ANÔMALA — não é a tabela comum filtrada, olha o
+       histórico completo de cada produto+rede e sinaliza quando o preço
+       mais recente foge muito da mediana anterior daquela mesma loja. É
+       "o que mudou estranho", não "todo mundo que mudou de preço" (promoção
+       pontual é esperada, não é anomalia). -->
+  <div class="tbox" id="alertas-box">
+    <div class="tbox-head">
+      <h3>⚠ Alertas de Variação Anômala</h3>
+      <div class="tbox-tools">
+        <span class="lbl" style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3)">Variação mínima</span>
+        <select class="tf-input" id="alertas-limiar" style="min-width:90px">
+          <option value="0.15">15%</option>
+          <option value="0.25" selected>25%</option>
+          <option value="0.4">40%</option>
+          <option value="0.6">60%</option>
+        </select>
+        <span class="tbox-cnt" id="alertas-cnt">0</span>
+      </div>
+    </div>
+    <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico pra entrar na comparação.</p>
+    <div class="tbl-scroll"><table class="dt" id="alertas-table"><thead></thead><tbody></tbody></table></div>
+  </div>
+
   <div class="tbox">
     <div class="tbox-head">
       <h3 id="pivot-title">Comparação por Categoria</h3>
@@ -547,11 +577,62 @@ const state = {
   evolucao: { ean:null, descricao:null }, // produto único selecionado na seção de evolução
   evoTabelaMetrica: 'regular', // regular | promo | menor — só a tabela da seção de evolução, o gráfico continua fixo mostrando as duas linhas
   _evoChart: null,
+  colWidths: carregarLarguraColunas(), // largura de coluna customizada pelo usuário (arrastando), por tabela+coluna — ver wireColResize
 };
 
 // remove acento e caixa pra busca não depender de digitar igualzinho
 function norm(s){ return (s==null?'':String(s)).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim(); }
 function fmtR(v){ return v==null||isNaN(v) ? '—' : v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+// largura de coluna é preferência só deste navegador/pessoa, não dado
+// compartilhado — por isso localStorage (nunca lido por outro visitante)
+function carregarLarguraColunas(){
+  try{ return JSON.parse(localStorage.getItem('dp_col_widths')||'{}'); }catch(e){ return {}; }
+}
+function salvarLarguraColunas(){
+  try{ localStorage.setItem('dp_col_widths', JSON.stringify(state.colWidths)); }catch(e){}
+}
+function colW(prefixo, chave, padrao){ return state.colWidths[prefixo+chave] || padrao; }
+
+// adiciona uma alça arrastável na borda direita de cada <th> pra
+// redimensionar a coluna. table-layout:fixed + <colgroup> faz o <col>
+// mandar na largura real — então só precisa mexer nele durante o arrasto,
+// sem re-renderizar a tabela inteira a cada pixel movido
+function wireColResize(table, colKeys, prefixo, defaults){
+  const colgroup = table.querySelector('colgroup');
+  if(!colgroup) return;
+  const ths = table.querySelectorAll('thead th');
+  ths.forEach((th, i) => {
+    const chave = colKeys[i];
+    if(!chave || !colgroup.children[i]) return;
+    const handle = document.createElement('span');
+    handle.className = 'th-resize';
+    handle.title = 'Arraste pra redimensionar a coluna';
+    th.appendChild(handle);
+    handle.addEventListener('click', e => e.stopPropagation()); // não deixa disparar o sort do cabeçalho
+    handle.addEventListener('mousedown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const col = colgroup.children[i];
+      const startX = e.clientX;
+      const startW = col.getBoundingClientRect().width;
+      handle.classList.add('resizing');
+      const onMove = ev => {
+        const novaLargura = Math.max(40, Math.round(startW + (ev.clientX - startX)));
+        col.style.width = novaLargura + 'px';
+      };
+      const onUp = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        handle.classList.remove('resizing');
+        state.colWidths[prefixo+chave] = parseInt(col.style.width, 10);
+        salvarLarguraColunas();
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+}
 
 // resolve o preço da linha conforme a métrica escolhida no painel — "menor"
 // pega o mínimo entre regular/promocional/pix que existir (ex: sem promo,
@@ -625,6 +706,7 @@ async function init(){
   wireEventos();
   render();
   document.getElementById('loading').classList.add('hidden');
+  carregarEResenharAlertas(); // não espera — roda em paralelo, não trava a 1ª tela
 }
 
 function carregarDia(dia){
@@ -873,6 +955,7 @@ function toggleFilterPanel(){
 function wireEventos(){
   wireDdmToggles();
   wireEvoCombo();
+  document.getElementById('alertas-limiar').addEventListener('change', renderAlertas);
   document.querySelectorAll('input[name=evo-metrica]').forEach(r => r.addEventListener('change', e => {
     state.evoTabelaMetrica = e.target.value;
     if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao();
@@ -1240,6 +1323,7 @@ function renderPivot(){
   document.getElementById('pivot-cnt').textContent = `${linhas.length.toLocaleString('pt-BR')} ${DIM_LABEL[state.verPor].toLowerCase()}${linhas.length!==1?'s':''}`;
 
   // header
+  const pivotTable = document.getElementById('pivot-table');
   const thead = document.querySelector('#pivot-table thead');
   const arrow = c => c===state.pivotSort.col ? (state.pivotSort.dir===1?' ▲':' ▼') : '';
   thead.innerHTML = `<tr>
@@ -1258,6 +1342,20 @@ function renderPivot(){
     renderPivot();
   }));
   wireSiteColDrag(thead);
+
+  // <colgroup> com table-layout:fixed = a coluna do Produto não fica mais
+  // esticando sozinha e empurrando as redes pra fora da vista — e dá pra
+  // arrastar a borda do cabeçalho (wireColResize) pra ajustar manualmente
+  const pivotColKeys = ['_chave','_media','_amp', ...(mostrarColCompetitividade?['_competitividade']:[]), ...sitesPresentes, '_n'];
+  const pivotDefaults = {_chave:230,_media:92,_amp:88,_competitividade:108,_n:64};
+  sitesPresentes.forEach(s => { if(!(s in pivotDefaults)) pivotDefaults[s]=92; });
+  let colgroupPivot = pivotTable.querySelector('colgroup');
+  if(!colgroupPivot){
+    colgroupPivot = document.createElement('colgroup');
+    pivotTable.prepend(colgroupPivot);
+  }
+  colgroupPivot.innerHTML = pivotColKeys.map(k=>`<col style="width:${colW('pivot_',k,pivotDefaults[k]||92)}px">`).join('');
+  wireColResize(pivotTable, pivotColKeys, 'pivot_', pivotDefaults);
 
   // paginação
   const totalPaginas = Math.max(1, Math.ceil(linhas.length/PAGE_SIZE));
@@ -1394,11 +1492,11 @@ function renderDetail(){
     colgroup = document.createElement('colgroup');
     document.getElementById('detail-table').prepend(colgroup);
   }
-  colgroup.innerHTML = DETAIL_COLS.map(c=>`<col style="width:${c.w}px">`).join('');
+  colgroup.innerHTML = DETAIL_COLS.map(c=>`<col style="width:${colW('detail_',c.k,c.w)}px">`).join('');
 
   const thead = document.querySelector('#detail-table thead');
   const arrow = c => c===col ? (dir===1?' ▲':' ▼') : '';
-  thead.innerHTML = `<tr>${DETAIL_COLS.map(c=>`<th data-col="${c.k}" class="${c.r?'r':''}" style="width:${c.w}px;max-width:${c.w}px">${c.lbl}<span class="si">${arrow(c.k)}</span></th>`).join('')}</tr>`;
+  thead.innerHTML = `<tr>${DETAIL_COLS.map(c=>`<th data-col="${c.k}" class="${c.r?'r':''}" style="width:${colW('detail_',c.k,c.w)}px;max-width:${colW('detail_',c.k,c.w)}px">${c.lbl}<span class="si">${arrow(c.k)}</span></th>`).join('')}</tr>`;
   thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const c = th.dataset.col;
     if(c==='link' || c==='evo') return; // colunas de ação, não fazem sentido ordenar
@@ -1406,6 +1504,7 @@ function renderDetail(){
     state.detailSort.col = c;
     renderDetail();
   }));
+  wireColResize(document.getElementById('detail-table'), DETAIL_COLS.map(c=>c.k), 'detail_', Object.fromEntries(DETAIL_COLS.map(c=>[c.k,c.w])));
 
   const totalPaginas = Math.max(1, Math.ceil(rows.length/PAGE_SIZE));
   state.detailPage = Math.min(state.detailPage, totalPaginas);
@@ -1416,7 +1515,7 @@ function renderDetail(){
     // table-layout:fixed + <col> sozinho não estava sendo suficiente pra
     // travar a largura (o texto sem quebra ainda empurrava a coluna) —
     // força também no <td>, que é o que realmente prende de vez
-    const estilo = `width:${c.w}px;max-width:${c.w}px`;
+    const estilo = `width:${colW('detail_',c.k,c.w)}px;max-width:${colW('detail_',c.k,c.w)}px`;
     if(c.k==='data') return `<td style="${estilo}">${fmtD(r.data)}</td>`;
     if(c.k==='site') return `<td style="${estilo}">${SITE_LABELS[r.site]||r.site}</td>`;
     if(c.r) return `<td class="r" style="${estilo}">${fmtR(parseFloat(r[c.k]))}</td>`;
@@ -1472,6 +1571,82 @@ async function garantirTodosDiasCarregados(){
   if(!faltando.length) return;
   document.getElementById('evo-summary').innerHTML = '<span class="evo-loading">Carregando dias adicionais pra montar o histórico…</span>';
   await Promise.all(faltando.map(i => carregarDia(i.data)));
+}
+
+// ---------------------------------------------------------------------
+// ALERTAS DE VARIAÇÃO ANÔMALA — preço regular mais recente de cada produto
+// numa rede, comparado contra a MEDIANA dos dias anteriores daquela MESMA
+// rede (nunca entre redes diferentes — lojas diferentes têm preço-base
+// diferente, isso não é anomalia). Mediana em vez de média pra não deixar
+// 1 dia ruim isolado no passado distorcer a base de comparação. Promoção
+// pontual entra no cálculo normalmente — se for grande o bastante ela
+// aparece como alerta mesmo, de propósito (também é "preço fora do padrão",
+// só que esperado; quem olha a lista decide se ignora).
+function detectarAnomalias(limiar){
+  const grupos = new Map(); // "site|chaveProduto" -> [{data, preco, descricao, ean, site, link}]
+  todasLinhasCache().forEach(r => {
+    const preco = parseFloat(r.preco_regular);
+    if(isNaN(preco) || preco <= 0) return;
+    const chaveProduto = r.ean || norm(r.descricao);
+    const chave = r.site + '|' + chaveProduto;
+    if(!grupos.has(chave)) grupos.set(chave, []);
+    grupos.get(chave).push({data:r.data, preco, descricao:r.descricao, ean:r.ean, site:r.site, link:r.link});
+  });
+
+  const alertas = [];
+  grupos.forEach(obs => {
+    if(obs.length < 4) return; // precisa de histórico mínimo pra mediana fazer sentido
+    obs.sort((a,b) => a.data < b.data ? -1 : 1);
+    const atual = obs[obs.length-1];
+    const anteriores = obs.slice(0,-1).map(o=>o.preco).sort((a,b)=>a-b);
+    const meio = anteriores.length/2;
+    const mediana = anteriores.length%2
+      ? anteriores[Math.floor(meio)]
+      : (anteriores[meio-1]+anteriores[meio])/2;
+    if(mediana <= 0) return;
+    const variacao = (atual.preco - mediana)/mediana;
+    if(Math.abs(variacao) >= limiar) alertas.push({...atual, mediana, variacao});
+  });
+  alertas.sort((a,b) => Math.abs(b.variacao)-Math.abs(a.variacao));
+  return alertas;
+}
+
+async function carregarEResenharAlertas(){
+  await garantirTodosDiasCarregados();
+  renderAlertas();
+}
+
+function renderAlertas(){
+  const limiar = parseFloat(document.getElementById('alertas-limiar').value);
+  const alertas = detectarAnomalias(limiar);
+  document.getElementById('alertas-cnt').textContent = alertas.length.toLocaleString('pt-BR');
+
+  const thead = document.querySelector('#alertas-table thead');
+  thead.innerHTML = `<tr><th>Data</th><th>Rede</th><th>Produto</th><th class="r">Preço Anterior</th><th class="r">Preço Atual</th><th class="r">Variação</th></tr>`;
+
+  const tbody = document.querySelector('#alertas-table tbody');
+  if(!alertas.length){
+    tbody.innerHTML = `<tr><td colspan="6" class="no-data">Nenhuma variação acima de ${(limiar*100).toFixed(0)}% encontrada no histórico carregado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = alertas.slice(0,200).map(a => {
+    const subiu = a.variacao > 0;
+    const cls = subiu ? 'cell-max' : 'cell-min';
+    const seta = subiu ? '▲' : '▼';
+    const linkAttrs = a.link
+      ? ` class="dim-cell cell-link" data-link="${a.link.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" title="Clique duplo pra abrir o produto nessa rede"`
+      : ' class="dim-cell"';
+    const eanTag = a.ean ? ` <span class="cell-empty" style="font-size:.62rem">· EAN ${a.ean}</span>` : '';
+    return `<tr>
+      <td>${fmtD(a.data)}</td>
+      <td>${SITE_LABELS[a.site]||a.site}</td>
+      <td${linkAttrs} title="${(a.descricao||'').replace(/"/g,'&quot;')}">${a.descricao}${eanTag}</td>
+      <td class="r">${fmtR(a.mediana)}</td>
+      <td class="r ${cls}">${fmtR(a.preco)}</td>
+      <td class="r ${cls}">${seta} ${(a.variacao*100).toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+  tbody.querySelectorAll('td.cell-link').forEach(td => td.addEventListener('dblclick', () => window.open(td.dataset.link, '_blank', 'noopener')));
 }
 
 function wireEvoCombo(){
@@ -1619,17 +1794,19 @@ function renderEvolucao(){
     data: { labels: datas.map(fmtD), datasets },
     options: {
       responsive: true, maintainAspectRatio: false, interaction: {mode:'index', intersect:false},
+      layout: {padding:{top:12, right:16, bottom:4, left:4}},
       plugins: {
-        legend: {labels:{color:'#3E5068', font:{family:'DM Mono', size:10}, boxWidth:14, padding:10,
+        legend: {position:'top', align:'start', labels:{color:'#3E5068', font:{family:'DM Mono', size:10.5}, boxWidth:16, boxHeight:3, padding:16, usePointStyle:false,
                   filter: item => !item.text.endsWith('· Promo')}}, // só 1 entrada por rede — a área sombreada já explica o resto
         tooltip: {backgroundColor:'rgba(26,36,51,.93)', titleColor:'#E2AC4C', bodyColor:'#EDE7DC',
-                  borderColor:'rgba(200,146,42,.4)', borderWidth:1, padding:10,
-                  titleFont:{family:'DM Mono', size:11}, bodyFont:{family:'DM Sans', size:12},
+                  borderColor:'rgba(200,146,42,.4)', borderWidth:1, padding:12,
+                  titleFont:{family:'DM Mono', size:11}, bodyFont:{family:'DM Sans', size:12.5}, boxPadding:4,
                   callbacks:{label: ctx => `${ctx.dataset.label}: ${fmtR(ctx.parsed.y)}`}},
       },
       scales: {
-        x: {grid:{color:'rgba(26,36,51,.06)'}, ticks:{color:'#9AAABB', font:{family:'DM Mono', size:9}}},
-        y: {grid:{color:'rgba(26,36,51,.06)'}, ticks:{color:'#7A8A9A', font:{family:'DM Mono', size:10}, callback:v=>fmtR(v)}},
+        x: {grid:{color:'rgba(26,36,51,.06)'}, offset:true,
+            ticks:{color:'#9AAABB', font:{family:'DM Mono', size:9.5}, maxRotation:0, autoSkip:true, maxTicksLimit:9, padding:8}},
+        y: {grid:{color:'rgba(26,36,51,.06)'}, ticks:{color:'#7A8A9A', font:{family:'DM Mono', size:10.5}, padding:8, callback:v=>fmtR(v)}},
       },
     },
   });
