@@ -1,9 +1,9 @@
 /* Gerado por atualizar.py / atualizar_diario.py — não editar manualmente */
 window.CEPEA_DATA = {
-  "timestamp": "2026-10-01T18:14:01",
+  "timestamp": "2026-10-02T17:39:45",
   "fonte": "CEPEA/ESALQ-USP",
   "data_inicio": "01/01/2025",
-  "data_fim": "01/10/2026",
+  "data_fim": "02/10/2026",
   "produtos": [
     {
       "id": "acucar",
@@ -11,11 +11,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 50kg",
       "praca": "São Paulo/SP",
       "cor": "#AB47BC",
-      "preco": 121.12,
-      "preco_ant": 121.27,
-      "variacao": -0.15,
-      "variacao_pct": -0.1237,
-      "data_ref": "2026-09-30",
+      "preco": 121.23,
+      "preco_ant": 121.12,
+      "variacao": 0.11,
+      "variacao_pct": 0.0908,
+      "data_ref": "2026-10-01",
       "historico": [
         {
           "data": "2025-01-02",
@@ -1552,6 +1552,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-09-30",
           "preco": 121.12
+        },
+        {
+          "data": "2026-10-01",
+          "preco": 121.23
         }
       ],
       "ok": true
