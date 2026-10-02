@@ -209,7 +209,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .dt th.col-rede{cursor:grab;white-space:normal;max-width:108px;line-height:1.25;vertical-align:bottom}
 .dt th.col-rede.dragging{opacity:.4}
 .dt th.col-rede.drag-over{background:#0D1B2A;box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold)}
-#pivot-table{table-layout:fixed}
+#pivot-table,#alertas-table{table-layout:fixed}
 .dt th{position:relative}
 /* alça fina na borda direita de cada cabeçalho — arrasta pra redimensionar
    a coluna (muda só a largura do <col> no colgroup, que já controla
@@ -463,6 +463,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     </div>
     <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico pra entrar na comparação.</p>
     <div class="tbl-scroll"><table class="dt" id="alertas-table"><thead></thead><tbody></tbody></table></div>
+    <div class="pager" id="alertas-pager"></div>
   </div>
 
   <div class="tbox">
@@ -573,7 +574,7 @@ const state = {
   siteOrderManual: false, // true assim que o usuário arrasta 1x — daí o auto-ordenar por densidade para de mexer
   pivotSort: {col:'_n', dir:-1}, detailSort: {col:'data', dir:-1},
   pivotBusca: '',
-  pivotPage: 1, detailPage: 1,
+  pivotPage: 1, detailPage: 1, alertasPage: 1,
   evolucao: { ean:null, descricao:null }, // produto único selecionado na seção de evolução
   evoTabelaMetrica: 'regular', // regular | promo | menor — só a tabela da seção de evolução, o gráfico continua fixo mostrando as duas linhas
   _evoChart: null,
@@ -955,7 +956,7 @@ function toggleFilterPanel(){
 function wireEventos(){
   wireDdmToggles();
   wireEvoCombo();
-  document.getElementById('alertas-limiar').addEventListener('change', renderAlertas);
+  document.getElementById('alertas-limiar').addEventListener('change', () => { state.alertasPage=1; renderAlertas(); });
   document.querySelectorAll('input[name=evo-metrica]').forEach(r => r.addEventListener('change', e => {
     state.evoTabelaMetrica = e.target.value;
     if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao();
@@ -963,8 +964,12 @@ function wireEventos(){
 
   document.getElementById('f-segmento').addEventListener('change', e => { state.filtros.segmento = e.target.value; montarFiltrosDependentes(); render(); });
   document.getElementById('f-depto').addEventListener('change', e => { state.filtros.depto = e.target.value; montarFiltrosDependentes(); render(); });
-  document.getElementById('f-descricao').addEventListener('input', e => { state.filtros.descricao = e.target.value; state.detailPage=1; render(); });
-  document.getElementById('f-ean').addEventListener('input', e => { state.filtros.ean = e.target.value.trim(); state.detailPage=1; render(); });
+  // Descrição/EAN também precisam atualizar os dropdowns dependentes — sem
+  // isso, Nível 2/Categoria/Subcategoria etc. ficavam mostrando a lista de
+  // ANTES de digitar (podendo até aparecer "Nada encontrado" por engano,
+  // se o estado anterior dos outros filtros já tivesse esvaziado a lista).
+  document.getElementById('f-descricao').addEventListener('input', e => { state.filtros.descricao = e.target.value; state.detailPage=1; montarFiltrosDependentes(); render(); });
+  document.getElementById('f-ean').addEventListener('input', e => { state.filtros.ean = e.target.value.trim(); state.detailPage=1; montarFiltrosDependentes(); render(); });
   document.querySelectorAll('input[name=disp]').forEach(r => r.addEventListener('change', e => { state.filtros.disp = e.target.value; montarFiltrosDependentes(); render(); }));
 
   document.getElementById('f-verpor').addEventListener('change', e => { state.verPor = e.target.value; state.drill=null; state.pivotPage=1; render(); });
@@ -1616,37 +1621,58 @@ async function carregarEResenharAlertas(){
   renderAlertas();
 }
 
+const ALERTAS_COLS = [
+  {k:'data', lbl:'Data', w:84}, {k:'site', lbl:'Rede', w:110}, {k:'produto', lbl:'Produto', w:380},
+  {k:'mediana', lbl:'Preço Anterior', r:true, w:120}, {k:'preco', lbl:'Preço Atual', r:true, w:110},
+  {k:'variacao', lbl:'Variação', r:true, w:110},
+];
+
 function renderAlertas(){
   const limiar = parseFloat(document.getElementById('alertas-limiar').value);
   const alertas = detectarAnomalias(limiar);
   document.getElementById('alertas-cnt').textContent = alertas.length.toLocaleString('pt-BR');
 
-  const thead = document.querySelector('#alertas-table thead');
-  thead.innerHTML = `<tr><th>Data</th><th>Rede</th><th>Produto</th><th class="r">Preço Anterior</th><th class="r">Preço Atual</th><th class="r">Variação</th></tr>`;
+  const table = document.getElementById('alertas-table');
+  let colgroup = table.querySelector('colgroup');
+  if(!colgroup){ colgroup = document.createElement('colgroup'); table.prepend(colgroup); }
+  colgroup.innerHTML = ALERTAS_COLS.map(c=>`<col style="width:${colW('alertas_',c.k,c.w)}px">`).join('');
 
-  const tbody = document.querySelector('#alertas-table tbody');
+  const thead = table.querySelector('thead');
+  thead.innerHTML = `<tr>${ALERTAS_COLS.map(c=>`<th class="${c.r?'r':''}" style="width:${colW('alertas_',c.k,c.w)}px;max-width:${colW('alertas_',c.k,c.w)}px">${c.lbl}</th>`).join('')}</tr>`;
+  wireColResize(table, ALERTAS_COLS.map(c=>c.k), 'alertas_', Object.fromEntries(ALERTAS_COLS.map(c=>[c.k,c.w])));
+
+  const tbody = table.querySelector('tbody');
   if(!alertas.length){
-    tbody.innerHTML = `<tr><td colspan="6" class="no-data">Nenhuma variação acima de ${(limiar*100).toFixed(0)}% encontrada no histórico carregado.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="${ALERTAS_COLS.length}" class="no-data">Nenhuma variação acima de ${(limiar*100).toFixed(0)}% encontrada no histórico carregado.</td></tr>`;
+    document.getElementById('alertas-pager').innerHTML = '';
     return;
   }
-  tbody.innerHTML = alertas.slice(0,200).map(a => {
+
+  const totalPaginas = Math.max(1, Math.ceil(alertas.length/PAGE_SIZE));
+  state.alertasPage = Math.min(state.alertasPage||1, totalPaginas);
+  const pagina = alertas.slice((state.alertasPage-1)*PAGE_SIZE, state.alertasPage*PAGE_SIZE);
+
+  tbody.innerHTML = pagina.map(a => {
     const subiu = a.variacao > 0;
     const cls = subiu ? 'cell-max' : 'cell-min';
     const seta = subiu ? '▲' : '▼';
+    const estiloProduto = `width:${colW('alertas_','produto',380)}px;max-width:${colW('alertas_','produto',380)}px`;
     const linkAttrs = a.link
       ? ` class="dim-cell cell-link" data-link="${a.link.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" title="Clique duplo pra abrir o produto nessa rede"`
       : ' class="dim-cell"';
-    const eanTag = a.ean ? ` <span class="cell-empty" style="font-size:.62rem">· EAN ${a.ean}</span>` : '';
+    const eanTag = a.ean ? ` <span class="cell-empty" style="font-size:.6rem;display:block">EAN ${a.ean}</span>` : '';
     return `<tr>
       <td>${fmtD(a.data)}</td>
       <td>${SITE_LABELS[a.site]||a.site}</td>
-      <td${linkAttrs} title="${(a.descricao||'').replace(/"/g,'&quot;')}">${a.descricao}${eanTag}</td>
+      <td${linkAttrs} style="${estiloProduto}white-space:normal" title="${(a.descricao||'').replace(/"/g,'&quot;')}">${a.descricao}${eanTag}</td>
       <td class="r">${fmtR(a.mediana)}</td>
       <td class="r ${cls}">${fmtR(a.preco)}</td>
-      <td class="r ${cls}">${seta} ${(a.variacao*100).toFixed(1)}%</td>
+      <td class="r"><span class="${cls}" style="display:inline-block;padding:.12rem .5rem;border-radius:3px">${seta} ${(a.variacao*100).toFixed(1)}%</span></td>
     </tr>`;
   }).join('');
   tbody.querySelectorAll('td.cell-link').forEach(td => td.addEventListener('dblclick', () => window.open(td.dataset.link, '_blank', 'noopener')));
+
+  renderPager('alertas-pager', state.alertasPage, totalPaginas, p => { state.alertasPage=p; renderAlertas(); });
 }
 
 function wireEvoCombo(){
