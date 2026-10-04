@@ -1,9 +1,9 @@
 /* Gerado por atualizar.py / atualizar_diario.py — não editar manualmente */
 window.CEPEA_DATA = {
-  "timestamp": "2026-10-03T15:57:06",
+  "timestamp": "2026-10-04T16:39:35",
   "fonte": "CEPEA/ESALQ-USP",
   "data_inicio": "01/01/2025",
-  "data_fim": "03/10/2026",
+  "data_fim": "04/10/2026",
   "produtos": [
     {
       "id": "acucar",
