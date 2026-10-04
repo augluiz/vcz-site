@@ -461,7 +461,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
         <span class="tbox-cnt" id="alertas-cnt">0</span>
       </div>
     </div>
-    <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico pra entrar na comparação.</p>
+    <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico, e só entra produto visto numa das 2 coletas mais recentes (produto que saiu do catálogo não vira alerta).</p>
     <div class="tbl-scroll"><table class="dt" id="alertas-table"><thead></thead><tbody></tbody></table></div>
     <div class="pager" id="alertas-pager"></div>
   </div>
@@ -575,6 +575,7 @@ const state = {
   pivotSort: {col:'_n', dir:-1}, detailSort: {col:'data', dir:-1},
   pivotBusca: '',
   pivotPage: 1, detailPage: 1, alertasPage: 1,
+  alertas: [],  // vem pronto de dados/alertas.json (pré-calculado no ETL)
   evolucao: { ean:null, descricao:null }, // produto único selecionado na seção de evolução
   evoTabelaMetrica: 'regular', // regular | promo | menor — só a tabela da seção de evolução, o gráfico continua fixo mostrando as duas linhas
   _evoChart: null,
@@ -584,6 +585,15 @@ const state = {
 // remove acento e caixa pra busca não depender de digitar igualzinho
 function norm(s){ return (s==null?'':String(s)).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim(); }
 function fmtR(v){ return v==null||isNaN(v) ? '—' : v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+// Descrição/marca/categoria vêm de HTML raspado de site de terceiro — se um
+// deles trouxer "<img src=x onerror=...>", interpolar direto executaria o
+// script aqui dentro. Escapa antes de qualquer interpolação em HTML.
+function esc(v){
+  return String(v == null ? '' : v)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
 // largura de coluna é preferência só deste navegador/pessoa, não dado
 // compartilhado — por isso localStorage (nunca lido por outro visitante)
@@ -1379,7 +1389,7 @@ function renderPivot(){
       const marcaTag = l.ean ? ` <span class="cell-empty" style="font-size:.62rem">· EAN ${l.ean}</span>` : '';
       const fundidoTag = l.fundido ? ` <span class="cell-empty" style="font-size:.62rem" title="Produtos parecidos sem EAN em comum, juntados automaticamente por nome+tamanho — confira se faz sentido">≈ agrupado</span>` : '';
       return `<tr class="${ativo}" data-chave="${encodeURIComponent(l.chave)}" data-label="${encodeURIComponent(l.label)}">
-        <td class="dim-cell" title="${l.label.replace(/"/g,'&quot;')}">${l.label}${marcaTag}${fundidoTag}</td>
+        <td class="dim-cell" title="${esc(l.label)}">${esc(l.label)}${marcaTag}${fundidoTag}</td>
         <td class="r">${fmtR(l.mediaMercado)}</td>
         <td class="r">${l.amplitude!=null ? l.amplitude.toFixed(1)+'%' : '—'}</td>
         ${mostrarColCompetitividade ? (() => {
@@ -1524,13 +1534,13 @@ function renderDetail(){
     if(c.k==='data') return `<td style="${estilo}">${fmtD(r.data)}</td>`;
     if(c.k==='site') return `<td style="${estilo}">${SITE_LABELS[r.site]||r.site}</td>`;
     if(c.r) return `<td class="r" style="${estilo}">${fmtR(parseFloat(r[c.k]))}</td>`;
-    if(c.k==='link') return `<td style="${estilo}">${r.link ? `<a href="${r.link}" target="_blank" rel="noopener">abrir ↗</a>` : '—'}</td>`;
+    if(c.k==='link') return `<td style="${estilo}">${r.link ? `<a href="${esc(r.link)}" target="_blank" rel="noopener">abrir ↗</a>` : '—'}</td>`;
     if(c.k==='disponivel') return `<td style="${estilo}">${r.disponivel==='sim'?'Sim':'Não'}</td>`;
     // Produto é clicável — abre a evolução daquele item, com todas as
     // redes que o vendem (substitui a antiga coluna "Evolução" separada)
-    if(c.k==='descricao') return `<td class="dim-cell" style="${estilo}" data-ean="${r.ean||''}" data-desc="${encodeURIComponent(r.descricao||'')}" title="${(r.descricao||'').replace(/"/g,'&quot;')} — clique pra ver a evolução de preço">${r.descricao||'—'}</td>`;
-    if(c.k==='categoria' || c.k==='subcategoria' || c.k==='marca') return `<td style="${estilo}" title="${(r[c.k]||'').replace(/"/g,'&quot;')}">${r[c.k]||'—'}</td>`;
-    return `<td style="${estilo}">${r[c.k]||'—'}</td>`;
+    if(c.k==='descricao') return `<td class="dim-cell" style="${estilo}" data-ean="${esc(r.ean||'')}" data-desc="${encodeURIComponent(r.descricao||'')}" title="${esc(r.descricao||'')} — clique pra ver a evolução de preço">${esc(r.descricao||'—')}</td>`;
+    if(c.k==='categoria' || c.k==='subcategoria' || c.k==='marca') return `<td style="${estilo}" title="${esc(r[c.k]||'')}">${esc(r[c.k]||'—')}</td>`;
+    return `<td style="${estilo}">${esc(r[c.k]||'—')}</td>`;
   }).join('')}</tr>`).join('') : `<tr><td colspan="${DETAIL_COLS.length}" class="no-data">Nenhum resultado para os filtros atuais</td></tr>`;
   tbody.querySelectorAll('td.dim-cell[data-desc]').forEach(td => td.addEventListener('click', () => {
     selecionarProdutoEvolucao(td.dataset.ean, decodeURIComponent(td.dataset.desc));
@@ -1579,45 +1589,30 @@ async function garantirTodosDiasCarregados(){
 }
 
 // ---------------------------------------------------------------------
-// ALERTAS DE VARIAÇÃO ANÔMALA — preço regular mais recente de cada produto
-// numa rede, comparado contra a MEDIANA dos dias anteriores daquela MESMA
-// rede (nunca entre redes diferentes — lojas diferentes têm preço-base
-// diferente, isso não é anomalia). Mediana em vez de média pra não deixar
-// 1 dia ruim isolado no passado distorcer a base de comparação. Promoção
-// pontual entra no cálculo normalmente — se for grande o bastante ela
-// aparece como alerta mesmo, de propósito (também é "preço fora do padrão",
-// só que esperado; quem olha a lista decide se ignora).
+// ALERTAS DE VARIAÇÃO ANÔMALA — a lista vem pronta do ETL (ver
+// carregarEResenharAlertas logo abaixo). Aqui só se filtra pelo limiar que o
+// usuário escolheu no seletor; o arquivo já traz tudo acima de 15%.
+// ---------------------------------------------------------------------
 function detectarAnomalias(limiar){
-  const grupos = new Map(); // "site|chaveProduto" -> [{data, preco, descricao, ean, site, link}]
-  todasLinhasCache().forEach(r => {
-    const preco = parseFloat(r.preco_regular);
-    if(isNaN(preco) || preco <= 0) return;
-    const chaveProduto = r.ean || norm(r.descricao);
-    const chave = r.site + '|' + chaveProduto;
-    if(!grupos.has(chave)) grupos.set(chave, []);
-    grupos.get(chave).push({data:r.data, preco, descricao:r.descricao, ean:r.ean, site:r.site, link:r.link});
-  });
-
-  const alertas = [];
-  grupos.forEach(obs => {
-    if(obs.length < 4) return; // precisa de histórico mínimo pra mediana fazer sentido
-    obs.sort((a,b) => a.data < b.data ? -1 : 1);
-    const atual = obs[obs.length-1];
-    const anteriores = obs.slice(0,-1).map(o=>o.preco).sort((a,b)=>a-b);
-    const meio = anteriores.length/2;
-    const mediana = anteriores.length%2
-      ? anteriores[Math.floor(meio)]
-      : (anteriores[meio-1]+anteriores[meio])/2;
-    if(mediana <= 0) return;
-    const variacao = (atual.preco - mediana)/mediana;
-    if(Math.abs(variacao) >= limiar) alertas.push({...atual, mediana, variacao});
-  });
-  alertas.sort((a,b) => Math.abs(b.variacao)-Math.abs(a.variacao));
-  return alertas;
+  return (state.alertas || []).filter(a => Math.abs(a.variacao) >= limiar);
 }
 
+// Os alertas vêm prontos do ETL (dados/alertas.json), não são calculados
+// aqui. A primeira versão calculava no navegador, o que obrigava a baixar
+// TODOS os dias no load da página — 299MB em 03/10/2026, crescendo ~50MB por
+// dia. Agora é um arquivo de algumas centenas de KB, e o cálculo (mesmo
+// critério) mora em gerar_dataset_analisador.py:_gerar_alertas.
 async function carregarEResenharAlertas(){
-  await garantirTodosDiasCarregados();
+  try {
+    const resp = await fetch('dados/alertas.json');
+    if(!resp.ok) throw new Error(resp.status);
+    state.alertas = await resp.json();
+  } catch(e) {
+    state.alertas = [];
+    document.querySelector('#alertas-table tbody').innerHTML =
+      `<tr><td colspan="6" class="no-data">Alertas indisponíveis — rode gerar_dataset_analisador.py pra gerar dados/alertas.json.</td></tr>`;
+    return;
+  }
   renderAlertas();
 }
 
@@ -1664,7 +1659,7 @@ function renderAlertas(){
     return `<tr>
       <td>${fmtD(a.data)}</td>
       <td>${SITE_LABELS[a.site]||a.site}</td>
-      <td${linkAttrs} style="${estiloProduto}white-space:normal" title="${(a.descricao||'').replace(/"/g,'&quot;')}">${a.descricao}${eanTag}</td>
+      <td${linkAttrs} style="${estiloProduto}white-space:normal" title="${esc(a.descricao||'')}">${esc(a.descricao)}${eanTag}</td>
       <td class="r">${fmtR(a.mediana)}</td>
       <td class="r ${cls}">${fmtR(a.preco)}</td>
       <td class="r"><span class="${cls}" style="display:inline-block;padding:.12rem .5rem;border-radius:3px">${seta} ${(a.variacao*100).toFixed(1)}%</span></td>
@@ -1697,9 +1692,9 @@ function wireEvoCombo(){
     });
     const sugestoes = [...porChave.values()].sort((a,b)=>b.n-a.n).slice(0,25);
     drop.innerHTML = sugestoes.length ? sugestoes.map(s => `
-      <div class="ci" data-ean="${s.ean}" data-desc="${encodeURIComponent(s.descricao)}">
-        <b>${s.descricao}</b>
-        <span class="ci-meta">${s.ean ? 'EAN '+s.ean : 'sem EAN — compara só o mesmo texto'} · ${s.n} coleta${s.n!==1?'s':''}</span>
+      <div class="ci" data-ean="${esc(s.ean)}" data-desc="${encodeURIComponent(s.descricao)}">
+        <b>${esc(s.descricao)}</b>
+        <span class="ci-meta">${s.ean ? 'EAN '+esc(s.ean) : 'sem EAN — compara só o mesmo texto'} · ${s.n} coleta${s.n!==1?'s':''}</span>
       </div>`).join('') : '<div class="ci-empty">Nada encontrado</div>';
     drop.classList.add('open');
     drop.querySelectorAll('.ci[data-desc]').forEach(el => el.addEventListener('click', () => {
@@ -1748,7 +1743,7 @@ function renderEvolucao(){
   const contagemDesc = new Map();
   linhas.forEach(r => contagemDesc.set(r.descricao, (contagemDesc.get(r.descricao)||0)+1));
   const nomeExibido = [...contagemDesc.entries()].sort((a,b)=>b[1]-a[1])[0][0];
-  summary.innerHTML = `<b>${nomeExibido}</b>${ean ? ` <span class="ean">· EAN ${ean}</span>` : ' <span class="ean">· sem EAN, comparando só o texto exato</span>'}`;
+  summary.innerHTML = `<b>${esc(nomeExibido)}</b>${ean ? ` <span class="ean">· EAN ${esc(ean)}</span>` : ' <span class="ean">· sem EAN, comparando só o texto exato</span>'}`;
 
   // Regular e Promocional sempre juntos aqui (independente do "Preço
   // analisado" lá em cima, que continua controlando a tabela de comparação
