@@ -36,10 +36,13 @@ jobs:
       - name: Instalar navegador do Playwright
         run: playwright install --with-deps chromium
 
+      # Sem continue-on-error de proposito: com ele o workflow ficava verde mesmo
+      # quando o CEPEA bloqueava a coleta inteira, e a falha passava semanas sem
+      # ser notada. O script sai com codigo 1 so quando a MAIORIA dos produtos
+      # falha — produto isolado com erro nao derruba a execucao.
       - name: Atualizar indicadores CEPEA
         working-directory: cepea_dashboard
         run: python atualizar_diario.py
-        continue-on-error: true   # nao cancela o workflow se o CEPEA estiver fora
 
       - name: Commitar e publicar dados atualizados
         run: |

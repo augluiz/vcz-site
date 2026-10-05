@@ -198,6 +198,14 @@ def main():
                 print(f'{len(novos)} dia(s) novo(s) · último: {historico[-1]["data"]}')
             except Exception as e:
                 erros += 1
+                # Mantém o último preço conhecido, mas registra a falha: sem
+                # isso o produto seguia marcado ok=True e o dashboard não
+                # tinha como distinguir dado fresco de série parada.
+                anterior = por_id.get(pid)
+                if anterior:
+                    anterior['ok'] = True  # ainda exibível — o aviso vem de coleta_erro
+                    anterior['coleta_erro'] = str(e)
+                    anterior['coleta_erro_em'] = datetime.now().strftime('%Y-%m-%d')
                 print(f'ERRO ({e}) — mantido valor anterior')
             page.wait_for_timeout(600)
 
@@ -205,8 +213,16 @@ def main():
 
     # Mantém produtos que não estavam na lista filtrada (--produto=)
     payload['produtos'] = [por_id[p['id']] for p in PRODUTOS if p['id'] in por_id]
-    payload['timestamp'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-    payload['data_fim'] = datetime.now().strftime('%d/%m/%Y')
+
+    # Só carimba data nova se ALGO foi realmente coletado. Antes o timestamp e
+    # o data_fim eram reescritos em toda execução — numa rodada 100% bloqueada
+    # isso gerava diff, commit e push, e o painel passava a anunciar "atualizado
+    # hoje" com preço de semanas atrás. O arquivo só muda se o dado mudou.
+    if novos_total > 0:
+        payload['timestamp'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+        payload['data_fim'] = datetime.now().strftime('%d/%m/%Y')
+    else:
+        print('Nenhum dia novo — timestamp e data_fim preservados.')
 
     OUT_JS.write_text(
         '/* Gerado por atualizar.py / atualizar_diario.py — não editar manualmente */\n'
@@ -216,6 +232,13 @@ def main():
     print(f'\n{"="*50}')
     print(f'{novos_total} dia(s) novo(s) no total · {erros} produto(s) com erro')
     print(f'Salvo em {OUT_JS}')
+
+    # Sai com erro quando a coleta falhou em massa (ex: o CEPEA bloqueando o IP
+    # do runner, que derruba 17 de 18 de uma vez). Sem isso a execução terminava
+    # com código 0 e o agendamento ficava verde por semanas sem coletar nada.
+    if erros > len(produtos) / 2:
+        print(f'FALHA: {erros} de {len(produtos)} produtos falharam — coleta considerada quebrada.')
+        sys.exit(1)
 
 
 if __name__ == '__main__':

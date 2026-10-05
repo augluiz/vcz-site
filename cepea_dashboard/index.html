@@ -109,7 +109,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 /* MAIN LAYOUT */
 .dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
 .dash-grid{display:grid;grid-template-columns:2fr 3fr;gap:1rem;align-items:start}
-.chart-col,.table-col{display:flex;flex-direction:column;gap:0}
+/* min-width:0 — sem isso o filho de grid herda min-width:auto e se recusa a
+   encolher abaixo do conteúdo. O gráfico (largura fixa em px) travava a
+   coluna larga e esticava a página inteira no mobile. */
+.chart-col,.table-col{display:flex;flex-direction:column;gap:0;min-width:0}
+.chart-card,.tbox,.full-tbox{min-width:0;max-width:100%}
+#lw-chart-container{max-width:100%}
 @media(max-width:960px){.dash-grid{grid-template-columns:1fr}}
 
 /* CHART CARD */
@@ -170,7 +175,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .dt th[data-col]{cursor:pointer;user-select:none}
 .dt th[data-col]:hover{color:var(--gold-light)}
 .dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem;display:inline-block;min-width:.5rem;vertical-align:middle}
+.dt th .th-hint{font-size:.46rem;color:rgba(232,216,192,.52);text-transform:none;letter-spacing:.02em;font-weight:400}
 .stale-badge{display:inline-block;margin-left:.3rem;color:#C87A1E;font-size:.72rem;cursor:help}
+.cad-chip{display:inline-block;margin-left:.34rem;font-family:'DM Mono',monospace;font-size:.5rem;text-transform:uppercase;letter-spacing:.05em;color:#3B6FA8;background:rgba(59,111,168,.1);border:1px solid rgba(59,111,168,.3);border-radius:3px;padding:.02rem .26rem;cursor:help;vertical-align:middle}
+.aviso-stale{display:none;background:rgba(200,122,30,.1);border:1px solid rgba(200,122,30,.4);border-left:3px solid #C87A1E;border-radius:4px;padding:.6rem .85rem;margin-bottom:.9rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8A5A14;line-height:1.6}
+.aviso-stale.show{display:block}
+.aviso-stale strong{color:#C87A1E}
+.aviso-stale a{color:#8A5A14;text-decoration:underline}
 .full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
 .full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
 .full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
@@ -211,6 +222,47 @@ input[type=number].ma-num::-webkit-inner-spin-button{opacity:.4}
 .dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
 .dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
 .dash-footer a:hover{color:var(--gold)}
+
+/* AFFORDANCE DE SCROLL DOS CARDS — sem isso não há pista de que a faixa
+   continua para o lado (18 produtos, ~8 cabem na tela). */
+.cards-wrap{position:relative}
+.cards-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:56px;pointer-events:none;background:linear-gradient(90deg,rgba(13,27,42,0),var(--navy));opacity:1;transition:opacity .2s}
+.cards-wrap.at-end::after{opacity:0}
+.cards-hint{position:absolute;right:.55rem;top:50%;transform:translateY(-50%);z-index:2;pointer-events:none;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--gold);background:rgba(13,27,42,.82);border:1px solid rgba(200,146,42,.45);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.cards-wrap.at-end .cards-hint{opacity:0}
+
+/* FOCO VISÍVEL — navegação por teclado */
+.prod-card:focus-visible,.dt th[data-col]:focus-visible,.chart-toggle:focus-visible,.ma-badge:focus-visible{outline:2px solid var(--gold-light);outline-offset:2px}
+
+/* RESPONSIVO ───────────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  /* about-cols em 2 colunas tinha mínimo de ~555px e esticava a PÁGINA
+     inteira para 802px. Como o <nav> é fixo com left/right:0, ele esticava
+     junto e jogava o hambúrguer para fora da tela. */
+  /* No celular o painel de filtros ocupava ~1/3 da tela e, por ser sticky,
+     nunca saía — sobrava pouca altura para o gráfico. Aqui ele rola junto. */
+  .filter-panel{position:static}
+  .about-cols{grid-template-columns:1fr;gap:.9rem}
+  .about-strip{padding:.85rem 1rem}
+  .about-what{font-size:.78rem}
+  .dash-header{padding:1rem 1rem .8rem}
+  .dash-header h1{font-size:1.85rem}
+  .cards-strip{padding:.7rem 1rem}
+  .filter-inner{padding:.6rem 1rem;gap:.9rem}
+  .tf-vsep{display:none}
+  .tf-grp{width:100%}
+  .tf-grp[style*="margin-left:auto"]{margin-left:0!important}
+  .dash-main{padding:1rem}
+  .detail-grid{grid-template-columns:repeat(2,1fr)}
+  .chart-section{padding:.8rem .7rem}
+  .tend-legend{font-size:.9em}
+  .tl-note{margin-left:0;flex-basis:100%}
+  .dash-footer{padding:.75rem 1rem}
+}
+@media(max-width:480px){
+  .dash-header h1{font-size:1.6rem}
+  .detail-grid{grid-template-columns:1fr 1fr;gap:.45rem}
+}
 </style>
 </head>
 <body>
@@ -219,23 +271,19 @@ input[type=number].ma-num::-webkit-inner-spin-button{opacity:.4}
 <div id="no-data-screen">
   <div>
     <p style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">VCZ · Dashboard CEPEA</p>
-    <div class="nd-title">Dados não encontrados</div>
+    <div class="nd-title">Indicadores temporariamente indisponíveis</div>
     <p class="nd-body" style="margin-top:.8rem">
-      Execute o script de atualização para baixar os indicadores de preços do CEPEA antes de abrir o dashboard.
+      Não foi possível carregar a série de preços do CEPEA agora. Atualize a página em alguns
+      instantes — se o problema continuar, fale com a gente que verificamos o painel.
     </p>
-    <div style="margin-top:1.2rem">
-      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin-bottom:.5rem">1. Acesse a pasta do projeto:</p>
-      <div class="nd-cmd">cd C:\Users\augus\vcz-site\cepea_dashboard</div>
-      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">2. Instale dependências (primeira vez):</p>
-      <div class="nd-cmd">pip install requests beautifulsoup4 lxml</div>
-      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">3. Baixe os dados:</p>
-      <div class="nd-cmd">python atualizar.py</div>
-      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">4. Sirva localmente e abra no browser:</p>
-      <div class="nd-cmd">cd ..\
-python -m http.server 8080
-<span style="color:#5A7A8A"># abra: http://localhost:8080/cepea_dashboard/</span></div>
+    <div style="margin-top:1.4rem;display:flex;gap:.65rem;justify-content:center;flex-wrap:wrap">
+      <a href="https://wa.me/5541996242909?text=Ol%C3%A1%2C+o+painel+do+CEPEA+est%C3%A1+fora+do+ar."
+         target="_blank" rel="noopener"
+         style="font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;color:#5DD88A;border:1px solid rgba(37,211,102,.45);border-radius:4px;padding:.55rem 1.1rem">Avisar a VCZ</a>
+      <a href="/dashboards/"
+         style="font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;color:var(--gold-aged);border:1px solid rgba(200,146,42,.4);border-radius:4px;padding:.55rem 1.1rem">Outros painéis</a>
     </div>
-    <p class="nd-note" style="margin-top:1rem">Fonte: CEPEA/ESALQ-USP · cepea.org.br</p>
+    <p class="nd-note" style="margin-top:1.2rem">Fonte: CEPEA/ESALQ-USP · cepea.org.br</p>
   </div>
 </div>
 
@@ -272,12 +320,15 @@ python -m http.server 8080
     <div class="about-steps">
       <div class="about-step"><b>1</b><span>Clique em um <strong style="color:#E8D8C0">produto</strong> para ver o histórico de preços e os detalhes da praça de referência.</span></div>
       <div class="about-step"><b>2</b><span>Use o seletor de <strong style="color:#E8D8C0">período</strong> para ampliar ou reduzir a janela do gráfico.</span></div>
-      <div class="about-step"><b>3</b><span>Execute <strong style="color:#E8D8C0">python atualizar_diario.py</strong> na pasta do projeto para atualizar com os preços mais recentes.</span></div>
+      <div class="about-step"><b>3</b><span>Toque ou passe o mouse no gráfico para ler <strong style="color:#E8D8C0">preço, média móvel e ano anterior</strong> de cada dia — e clique no cabeçalho das tabelas para ordenar.</span></div>
     </div>
   </div>
 </div>
 
-<div class="cards-strip" id="cards-strip"></div>
+<div class="cards-wrap" id="cards-wrap">
+  <div class="cards-strip" id="cards-strip"></div>
+  <span class="cards-hint" aria-hidden="true">›</span>
+</div>
 
 <div class="filter-panel">
   <div class="filter-inner">
@@ -307,8 +358,9 @@ python -m http.server 8080
       <div class="ma-ctrl">
         <span id="ma-badge" class="ma-badge" onclick="toggleMA()" title="Clique para ligar/desligar">MM</span>
         <input type="number" id="ma-window" class="ma-num" value="7" min="2" max="120"
-               oninput="updateMAWindow()" title="Período em dias úteis">
-        <span style="font-family:'DM Mono',monospace;font-size:.54rem;color:#3A5A6A">dias</span>
+               oninput="updateMAWindow()" title="Quantidade de pontos da série usados na média móvel">
+        <span style="font-family:'DM Mono',monospace;font-size:.54rem;color:#3A5A6A"
+              title="Pontos da série, não dias de calendário: num indicador semanal como o Etanol, 7 pontos equivalem a 7 semanas.">pontos</span>
       </div>
     </div>
     <div class="tf-vsep"></div>
@@ -320,6 +372,7 @@ python -m http.server 8080
 </div>
 
 <div class="dash-main">
+  <div id="aviso-desatualizado" class="aviso-stale"></div>
   <div class="dash-grid">
 
     <div class="chart-col">
@@ -361,11 +414,11 @@ python -m http.server 8080
           <table class="dt" style="min-width:520px">
             <thead id="th-main"><tr>
               <th style="width:140px" data-col="nome">Produto <span class="si"></span></th>
-              <th style="width:95px" data-col="tend" title="Preço do último dia vs. média móvel — configurável em Média Móvel">Tend. <span class="si"></span></th>
+              <th style="width:105px" data-col="tend" title="Tendência: preço do último dia comparado com a média móvel do período (configurável em Média Móvel). Mede o movimento da semana — por isso pode divergir da variação do dia.">Tend. <span class="th-hint">vs&nbsp;média</span> <span class="si"></span></th>
               <th class="r" style="width:120px" data-col="preco">Preço (R$) <span class="si"></span></th>
-              <th class="r" style="width:80px" data-col="kg">R$/kg <span class="si"></span></th>
-              <th class="r" style="width:75px" data-col="variacao_pct">Var. % <span class="si"></span></th>
-              <th class="r" style="width:75px" data-col="variacao">Var. Abs. <span class="si"></span></th>
+              <th class="r" style="width:80px" data-col="kg" title="Preço convertido para R$/kg quando a unidade permite — serve para comparar produtos de unidades diferentes">R$/kg <span class="si"></span></th>
+              <th class="r" style="width:85px" data-col="variacao_pct" title="Variação percentual entre os dois últimos pontos da série. O intervalo depende da cadência do indicador — diária na maioria, semanal no Etanol. Passe o mouse na célula para ver as datas comparadas.">Var. % <span class="th-hint">vs ponto ant.</span> <span class="si"></span></th>
+              <th class="r" style="width:85px" data-col="variacao" title="Variação absoluta em R$ entre os dois últimos pontos da série">Var. Abs. <span class="th-hint">vs ponto ant.</span> <span class="si"></span></th>
               <th style="width:105px" data-col="unidade">Unidade <span class="si"></span></th>
               <th style="width:120px" data-col="praca">Praça <span class="si"></span></th>
               <th style="width:90px" data-col="data_ref" title="Data do preço mostrado nesta linha">Data <span class="si"></span></th>
@@ -400,7 +453,7 @@ python -m http.server 8080
     <span class="tl-item tl-dn"><span class="tl-dot"></span> Baixando</span>
     <span class="tl-sep">·</span>
     <span class="tl-item tl-flat"><span class="tl-dot"></span> Estagnado</span>
-    <span class="tl-note">Tendência = preço do último dia vs. média móvel N dias</span>
+    <span class="tl-note">Tendência = último preço vs. média móvel de N pontos da série</span>
   </div>
 
   <div class="trends-grid">
@@ -499,7 +552,8 @@ const ULTIMA_DATA = PRODS.reduce((max, p) => {
 let selectedId = PRODS[0]?.id || '';
 let chartRange = 'all';
 let customRange = null; // {inicio, fim} quando o usuário escolhe datas específicas
-let lwChart = null, lwLine = null, lwMA = null, lwPrevYear = null;
+let lwChart = null, lwLine = null, lwMA = null, lwPrevYear = null, chartResizeObs = null;
+let lwSegments = [];   // a linha de preço pode vir partida em trechos (ver segmentarSerie)
 let showPrevYear = false; // liga/desliga a série "Ano Anterior" no gráfico
 let maWindow = 7, maVisible = true;
 const sparkCharts = {};
@@ -537,10 +591,104 @@ function diasDesdeUltimaAtualizacao(p) {
 
 function isStale(p) { return diasDesdeUltimaAtualizacao(p) > LIMIAR_DESATUALIZADO; }
 
+// Ponto cego da checagem acima: ela é relativa ao dado mais novo do próprio
+// arquivo. Se a coleta parar por completo, todos os produtos ficam velhos
+// JUNTOS e nenhum é marcado — o painel mostraria preço de meses atrás como
+// se fosse de hoje. Esta checagem compara com a data real de hoje.
+const LIMIAR_PAINEL_PARADO = 7;
+
+function avisoPainelDesatualizado() {
+  if (ULTIMA_DATA === '0000-00-00') return;
+  const hoje = new Date();
+  const dias = Math.round((hoje - new Date(ULTIMA_DATA + 'T00:00:00')) / 86400000);
+  if (dias <= LIMIAR_PAINEL_PARADO) return;
+  const el = document.getElementById('aviso-desatualizado');
+  if (!el) return;
+  el.innerHTML = `<strong>Atenção:</strong> o preço mais recente desta página é de
+    ${fdt(ULTIMA_DATA)} — ${dias} dias atrás. A coleta pode estar interrompida;
+    confira a fonte em <a href="https://www.cepea.org.br/br/indicador/" target="_blank" rel="noopener">cepea.org.br</a>.`;
+  el.classList.add('show');
+}
+
 function staleBadge(p) {
   if (!isStale(p)) return '';
   const dias = diasDesdeUltimaAtualizacao(p);
   return `<span class="stale-badge" title="Sem atualização desde ${fdt(p.data_ref)} (${dias} dias atrás)">⚠</span>`;
+}
+
+// ── Cadência real da série ─────────────────────────────────────────────────
+// Nem todo indicador do CEPEA é diário: Etanol é semanal e Leite é mensal na
+// página pública. Tratar tudo como diário faz a tela mentir — a variação entre
+// os dois últimos pontos do Etanol é de uma SEMANA, não de um dia. A cadência
+// é medida no próprio histórico (mediana dos intervalos recentes) em vez de
+// ficar numa tabela fixa, assim acompanha sozinha se a fonte mudar.
+function cadenciaDias(p) {
+  const h = p.historico || [];
+  if (h.length < 4) return null;
+  const recentes = h.slice(-12);
+  const gaps = [];
+  for (let i = 1; i < recentes.length; i++) {
+    gaps.push(Math.round(
+      (new Date(recentes[i].data + 'T00:00:00') - new Date(recentes[i - 1].data + 'T00:00:00')) / 86400000
+    ));
+  }
+  if (!gaps.length) return null;
+  gaps.sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)];
+}
+
+function cadenciaRotulo(p) {
+  const d = cadenciaDias(p);
+  if (d == null) return null;
+  if (d <= 3)  return 'diário';
+  if (d <= 10) return 'semanal';
+  if (d <= 20) return 'quinzenal';
+  return 'mensal';
+}
+
+// Rótulo honesto para a variação: ela compara os dois últimos pontos, que só
+// são "ontem e hoje" numa série diária.
+function intervaloVariacao(p) {
+  const h = p.historico || [];
+  if (h.length < 2) return '';
+  return `${fdt(h[h.length - 2].data)} → ${fdt(h[h.length - 1].data)}`;
+}
+
+// A média móvel conta PONTOS. Em série semanal, MM7 cobre ~7 semanas — o
+// rótulo diz o alcance real pra não parecer uma média de uma semana.
+function maSpanRotulo(p) {
+  const c = cadenciaDias(p);
+  if (c == null || c <= 3) return `MM${maWindow}`;
+  if (c <= 10) return `MM${maWindow} (~${maWindow} sem)`;
+  return `MM${maWindow} (~${maWindow} meses)`;
+}
+
+function cadenciaChip(p) {
+  const r = cadenciaRotulo(p);
+  if (!r || r === 'diário') return '';
+  return `<span class="cad-chip" title="O CEPEA publica este indicador em cadência ${r} — a variação e a média móvel desta linha seguem esse intervalo, não dias.">${r}</span>`;
+}
+
+// Quando a coleta fica parada (ex: soja tem um buraco de 74 dias entre junho e
+// setembro), o gráfico ligava os dois lados do buraco com uma reta — que parece
+// evolução de preço real e não é. Aqui a linha é interrompida: insere um ponto
+// "vazio" no meio do buraco, que o lightweight-charts usa pra cortar o traço.
+// Divide a série em trechos contínuos, cortando onde houve interrupção de
+// coleta (a soja tem um buraco de 74 dias entre junho e setembro). Cada trecho
+// vira uma linha separada no gráfico — testei preencher o vão com pontos
+// vazios, mas o lightweight-charts 4.1.3 liga a linha por cima deles, e uma
+// reta atravessando 2 meses sem dado se lê como evolução de preço real.
+function segmentarSerie(serie, cadencia) {
+  if (serie.length < 2) return [serie];
+  const limite = Math.max(10, (cadencia || 1) * 3);
+  const segs = [[serie[0]]];
+  for (let i = 1; i < serie.length; i++) {
+    const ant = new Date(serie[i - 1].time + 'T00:00:00');
+    const at  = new Date(serie[i].time + 'T00:00:00');
+    if (Math.round((at - ant) / 86400000) > limite) segs.push([]);
+    segs[segs.length - 1].push(serie[i]);
+  }
+  return segs.filter(s => s.length);
 }
 
 // ── Ordenação de tabelas (clique no cabeçalho) ─────────────────────────────
@@ -661,9 +809,12 @@ function renderTrends() {
     else if (t.tend === 'Baixando') queda.push(row);
   });
 
-  // Ordem padrão: maior desvio da média primeiro. Clicar num cabeçalho troca pra sort manual.
-  alta.sort((a, b) => (b.t.pUlt - b.t.pMed) / b.t.pMed - (a.t.pUlt - a.t.pMed) / a.t.pMed);
-  queda.sort((a, b) => (a.t.pUlt - a.t.pMed) / a.t.pMed - (b.t.pUlt - b.t.pMed) / b.t.pMed);
+  // Ordem padrão: maior desvio da média primeiro — mas produto desatualizado
+  // vai pro fim, senão uma série parada há meses (ex: Suíno, parado em junho)
+  // encabeça o ranking como se fosse o movimento mais quente da semana.
+  const desvio = r => (r.t.pUlt - r.t.pMed) / r.t.pMed;
+  alta.sort((a, b)  => (isStale(a.p) - isStale(b.p)) || desvio(b) - desvio(a));
+  queda.sort((a, b) => (isStale(a.p) - isStale(b.p)) || desvio(a) - desvio(b));
   const altaOrd  = sortRowsBy(alta,  _sort.alta.col,  _sort.alta.dir,  trendGetters);
   const quedaOrd = sortRowsBy(queda, _sort.queda.col, _sort.queda.dir, trendGetters);
 
@@ -727,8 +878,14 @@ function filterHist(hist, range) {
 function init() {
   if (!PRODS.length) return;
 
-  const ts = RAW.timestamp ? new Date(RAW.timestamp).toLocaleString('pt-BR') : '—';
-  document.getElementById('last-update').textContent = `Atualizado em ${ts} · CEPEA/ESALQ-USP`;
+  // O que importa pro leitor é a data do PREÇO, não a hora em que o script
+  // rodou — "atualizado hoje" com preço de dois dias atrás induz a erro.
+  const ts = RAW.timestamp
+    ? new Date(RAW.timestamp).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'})
+    : '—';
+  const dataDado = ULTIMA_DATA !== '0000-00-00' ? fdt(ULTIMA_DATA) : '—';
+  document.getElementById('last-update').textContent =
+    `Preços até ${dataDado} · coleta em ${ts} · CEPEA/ESALQ-USP`;
 
   buildSelect();
   buildCards();
@@ -740,6 +897,8 @@ function init() {
 
   renderAll();
   setupSortHeaders();
+  setupCardsScrollHint();
+  avisoPainelDesatualizado();
 
   document.querySelectorAll('input[name="range"]').forEach(r => {
     r.addEventListener('change', () => {
@@ -785,7 +944,10 @@ function buildSelect() {
 // ── Cards ──────────────────────────────────────────────────────────────────
 function buildCards() {
   document.getElementById('cards-strip').innerHTML = PRODS.map(p => `
-    <div class="prod-card ${p.id === selectedId ? 'active':''}" id="card-${p.id}" onclick="selectProd('${p.id}')">
+    <div class="prod-card ${p.id === selectedId ? 'active':''}" id="card-${p.id}" onclick="selectProd('${p.id}')"
+         role="button" tabindex="0" aria-pressed="${p.id === selectedId}"
+         aria-label="${p.nome}, ${p.praca}, R$ ${f2(p.preco)} por ${p.unidade}"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProd('${p.id}')}">
       <div class="pc-accent" style="background:${p.cor}"></div>
       <div class="pc-nome">${p.nome}${staleBadge(p)}</div>
       <div class="pc-praca">${p.praca}</div>
@@ -828,9 +990,27 @@ function selectProd(id) { selectedId = id; updateActiveCard(); renderAll(); }
 function updateActiveCard() {
   PRODS.forEach(p => {
     const el = document.getElementById('card-' + p.id);
-    if (el) el.classList.toggle('active', p.id === selectedId);
+    if (!el) return;
+    const ativo = p.id === selectedId;
+    el.classList.toggle('active', ativo);
+    el.setAttribute('aria-pressed', ativo);
   });
   document.getElementById('sel-produto').value = selectedId;
+}
+
+// A faixa de cards rola na horizontal; o degradê à direita indica que há
+// mais produtos e some ao chegar no fim.
+function setupCardsScrollHint() {
+  const strip = document.getElementById('cards-strip');
+  const wrap  = document.getElementById('cards-wrap');
+  if (!strip || !wrap) return;
+  const sync = () => {
+    const fim = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 4;
+    wrap.classList.toggle('at-end', fim);
+  };
+  strip.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
 }
 
 // ── Main Chart (Lightweight Charts — linha) ────────────────────────────────
@@ -889,16 +1069,22 @@ function renderMainChart() {
     handleScale:  true,
   });
 
-  lwLine = lwChart.addLineSeries({
-    color:            p.cor,
-    lineWidth:        2,
-    priceLineVisible: true,
-    lastValueVisible: true,
-    crosshairMarkerVisible: true,
-    crosshairMarkerRadius:  4,
-    title: p.unidade,
+  const segmentos = segmentarSerie(series, cadenciaDias(p));
+  lwSegments = segmentos.map((seg, i) => {
+    const ultimo = i === segmentos.length - 1;
+    const s = lwChart.addLineSeries({
+      color:            p.cor,
+      lineWidth:        2,
+      priceLineVisible: ultimo,
+      lastValueVisible: ultimo,
+      crosshairMarkerVisible: true,
+      crosshairMarkerRadius:  4,
+      title: ultimo ? p.unidade : '',
+    });
+    s.setData(seg);
+    return s;
   });
-  lwLine.setData(series);
+  lwLine = lwSegments[lwSegments.length - 1] || null;
 
   // Média Móvel — calculada sobre o HISTÓRICO COMPLETO (não só o período
   // visível), depois recortada pro período. Assim o 1º dia visível já tem
@@ -906,23 +1092,29 @@ function renderMainChart() {
   // antes disso os primeiros ~N dias do gráfico ficavam sem linha de MM.
   if (maVisible) {
     const fullSeries = p.historico.map(h => ({ time: h.data, value: h.preco })).filter(d => d.value != null);
-    if (fullSeries.length >= maWindow) {
-      const maFull  = calcMA(fullSeries, maWindow);
-      const inicioVisivel = series[0].time;
-      const maData  = maFull.filter(d => d.time >= inicioVisivel);
-      if (maData.length) {
-        lwMA = lwChart.addLineSeries({
-          color:            'rgba(91,143,196,0.85)',
-          lineWidth:        1.5,
-          lineStyle:        LightweightCharts.LineStyle.Dashed,
-          priceLineVisible: false,
-          lastValueVisible: true,
-          crosshairMarkerVisible: false,
-          title: `MM${maWindow}`,
-        });
-        lwMA.setData(maData);
-      }
-    }
+    const cad = cadenciaDias(p);
+    // A MM é calculada DENTRO de cada trecho contínuo. Calculada sobre o
+    // histórico inteiro, a janela logo após uma interrupção misturaria preços
+    // de antes e depois do buraco — no caso da soja, junho com setembro.
+    const inicioVisivel = series[0].time;
+    const segsMA = segmentarSerie(fullSeries, cad)
+      .filter(seg => seg.length >= maWindow)
+      .map(seg => calcMA(seg, maWindow).filter(d => d.time >= inicioVisivel))
+      .filter(seg => seg.length);
+
+    segsMA.forEach((seg, i) => {
+      const s = lwChart.addLineSeries({
+        color:            'rgba(91,143,196,0.85)',
+        lineWidth:        1.5,
+        lineStyle:        LightweightCharts.LineStyle.Dashed,
+        priceLineVisible: false,
+        lastValueVisible: i === segsMA.length - 1,
+        crosshairMarkerVisible: false,
+        title: i === segsMA.length - 1 ? maSpanRotulo(p) : '',
+      });
+      s.setData(seg);
+      if (i === segsMA.length - 1) lwMA = s;
+    });
   }
 
   // Ano Anterior — mesmo eixo de datas do período visível, mas com o preço
@@ -945,10 +1137,14 @@ function renderMainChart() {
 
   lwChart.timeScale().fitContent();
 
-  const ro = new ResizeObserver(() => {
-    if (lwChart) lwChart.applyOptions({ width: container.clientWidth });
-  });
-  ro.observe(container);
+  // Um observer só, criado na primeira renderização — antes um novo era
+  // registrado a cada troca de produto e nenhum era desconectado.
+  if (!chartResizeObs) {
+    chartResizeObs = new ResizeObserver(() => {
+      if (lwChart) lwChart.applyOptions({ width: container.clientWidth });
+    });
+    chartResizeObs.observe(container);
+  }
 
   // Tooltip de hover: ao passar o mouse, mostra data + preço + média
   // móvel + ano anterior (o que estiver ligado) naquele ponto exato.
@@ -958,13 +1154,15 @@ function renderMainChart() {
       hoverEl.classList.remove('show');
       return;
     }
-    const priceD = param.seriesData.get(lwLine);
+    // A linha pode estar partida em trechos — procura em qual deles o ponto está.
+    let priceD = null;
+    for (const s of lwSegments) { const d = param.seriesData.get(s); if (d) { priceD = d; break; } }
     const maD    = lwMA       ? param.seriesData.get(lwMA)       : null;
     const pyD    = lwPrevYear ? param.seriesData.get(lwPrevYear) : null;
 
     let html = `<div class="hi-date">${fdt(param.time)}</div>`;
     if (priceD) html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:${p.cor}"></span>${p.unidade}</span><strong>R$ ${f2(priceD.value)}</strong></div>`;
-    if (maD)    html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:#5B8FC4"></span>MM${maWindow}</span><span>R$ ${f2(maD.value)}</span></div>`;
+    if (maD)    html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:#5B8FC4"></span>${maSpanRotulo(p)}</span><span>R$ ${f2(maD.value)}</span></div>`;
     if (pyD)    html += `<div class="hi-row"><span class="hi-lbl"><span class="hi-dot" style="background:#C8922A"></span>Ano Anterior</span><span>R$ ${f2(pyD.value)}</span></div>`;
 
     hoverEl.innerHTML = html;
@@ -975,7 +1173,7 @@ function renderMainChart() {
 }
 
 function destroyLW() {
-  if (lwChart) { lwChart.remove(); lwChart = null; lwLine = null; lwMA = null; lwPrevYear = null; }
+  if (lwChart) { lwChart.remove(); lwChart = null; lwLine = null; lwMA = null; lwPrevYear = null; lwSegments = []; }
 }
 
 // ── Detail ─────────────────────────────────────────────────────────────────
@@ -1011,10 +1209,10 @@ function renderDetailSection() {
         <div class="di-val">R$ ${f2(p.preco_ant)}</div>
         <div class="di-sub">${p.unidade}</div>
       </div>
-      <div class="detail-item">
-        <div class="di-lbl">Variação Dia</div>
+      <div class="detail-item" title="Comparação entre os dois últimos pontos da série: ${intervaloVariacao(p)}">
+        <div class="di-lbl">Variação ${cadenciaRotulo(p) === 'semanal' ? 'Semana' : cadenciaRotulo(p) === 'mensal' ? 'Mês' : 'Dia'}</div>
         <div class="di-val ${chgClass}">${pct(p.variacao_pct)}</div>
-        <div class="di-sub">${abv(p.variacao)} R$</div>
+        <div class="di-sub">${abv(p.variacao)} R$ · ${intervaloVariacao(p)}</div>
       </div>
       <div class="detail-item">
         <div class="di-lbl">Data Ref.</div>
@@ -1074,13 +1272,14 @@ function renderTables() {
         ? 'background:rgba(40,160,60,.08);color:#2E7D32'
         : '';
     const kg = precoKg(p.preco, p.unidade);
+    const intervalo = intervaloVariacao(p);
     return `<tr onclick="selectProd('${p.id}')" style="cursor:pointer">
-      <td><span class="comm-dot" style="background:${p.cor}"></span><strong>${p.nome}</strong>${staleBadge(p)}</td>
+      <td><span class="comm-dot" style="background:${p.cor}"></span><strong>${p.nome}</strong>${staleBadge(p)}${cadenciaChip(p)}</td>
       <td>${tendBadge(computeTrend(p))}</td>
       <td class="r" style="font-family:'DM Mono',monospace;font-weight:600">R$ ${f2(p.preco)}</td>
       <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:${kg ? '#3E5068' : '#BCBCBC'}">${kg != null ? f2(kg) : '—'}</td>
-      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;${cls}">${pct(p.variacao_pct)}</td>
-      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;${cls}">${abv(p.variacao)}</td>
+      <td class="r" title="${intervalo}" style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;${cls}">${pct(p.variacao_pct)}</td>
+      <td class="r" title="${intervalo}" style="font-family:'DM Mono',monospace;font-size:.7rem;${cls}">${abv(p.variacao)}</td>
       <td style="font-family:'DM Mono',monospace;font-size:.65rem;color:#7A8A9A">${p.unidade}</td>
       <td style="font-family:'DM Sans',sans-serif;font-size:.7rem;color:var(--text3)">${p.praca}</td>
       <td style="font-family:'DM Mono',monospace;font-size:.68rem;color:${isStale(p) ? '#C87A1E' : 'var(--text3)'}">${fdt(p.data_ref)}</td>
