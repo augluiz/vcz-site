@@ -164,6 +164,19 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 .filter-toggle-row.open .filter-toggle-chev{transform:rotate(180deg)}
 .filter-collapsible{display:none}
 .filter-collapsible.open{display:block}
+/* resumo do que está filtrado — some quando o painel está aberto (lá os
+   próprios dropdowns já mostram), aparece quando está oculto */
+.filtro-chips{display:none;flex-wrap:wrap;gap:.3rem;align-items:center;justify-content:center;max-width:72%}
+.filter-toggle-row:not(.open) .filtro-chips{display:flex}
+.filtro-chip{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--navy);background:var(--gold-light);
+  border-radius:3px;padding:.1rem .4rem;white-space:nowrap}
+.filtro-chip b{font-weight:700}
+.filtro-chip-vazio{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--steel);font-style:italic}
+/* filtro rápido em cima da tabela — os 4 cortes mais usados, sem precisar
+   abrir o painel de filtros lá em cima; são os MESMOS filtros (espelhados) */
+.filtro-rapido{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-left:auto}
+.filtro-rapido .tf-input{min-width:120px;max-width:180px;font-size:.68rem;padding:.22rem .4rem}
+.filtro-rapido .btn-reset{padding:.22rem .45rem;font-size:.62rem}
 
 /* ---- param-strip: "como montar a tabela" — separado visualmente dos
    filtros de dados de propósito, pra não parecer só mais um filtro. Cada
@@ -259,6 +272,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 <div class="filter-panel">
   <div class="filter-toggle-row open" id="filter-toggle-row" onclick="toggleFilterPanel()">
     <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em">Filtros — clique pra ocultar/mostrar</span>
+    <span class="filtro-chips" id="filtro-chips"></span>
     <span class="filter-toggle-chev">▾</span>
   </div>
   <div class="filter-collapsible open" id="filter-collapsible">
@@ -442,33 +456,16 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
 
 <div class="dash-main">
 
-  <!-- ALERTAS DE VARIAÇÃO ANÔMALA — não é a tabela comum filtrada, olha o
-       histórico completo de cada produto+rede e sinaliza quando o preço
-       mais recente foge muito da mediana anterior daquela mesma loja. É
-       "o que mudou estranho", não "todo mundo que mudou de preço" (promoção
-       pontual é esperada, não é anomalia). -->
-  <div class="tbox" id="alertas-box">
-    <div class="tbox-head">
-      <h3>⚠ Alertas de Variação Anômala</h3>
-      <div class="tbox-tools">
-        <span class="lbl" style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3)">Variação mínima</span>
-        <select class="tf-input" id="alertas-limiar" style="min-width:90px">
-          <option value="0.15">15%</option>
-          <option value="0.25" selected>25%</option>
-          <option value="0.4">40%</option>
-          <option value="0.6">60%</option>
-        </select>
-        <span class="tbox-cnt" id="alertas-cnt">0</span>
-      </div>
-    </div>
-    <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico, e só entra produto visto numa das 2 coletas mais recentes (produto que saiu do catálogo não vira alerta).</p>
-    <div class="tbl-scroll"><table class="dt" id="alertas-table"><thead></thead><tbody></tbody></table></div>
-    <div class="pager" id="alertas-pager"></div>
-  </div>
-
   <div class="tbox">
     <div class="tbox-head">
       <h3 id="pivot-title">Comparação por Categoria</h3>
+      <div class="filtro-rapido">
+        <select class="tf-input" id="fr-segmento" title="Nível 1"><option value="">Nível 1: todos</option></select>
+        <select class="tf-input" id="fr-bloco" title="Nível 2"><option value="">Nível 2: todos</option></select>
+        <select class="tf-input" id="fr-marca" title="Marca"><option value="">Marca: todas</option></select>
+        <select class="tf-input" id="fr-site" title="Rede"><option value="">Rede: todas</option></select>
+        <button class="btn-reset" id="fr-limpar" title="Limpa só estes 4">✕</button>
+      </div>
       <div class="tbox-tools">
         <input class="tbox-search" id="pivot-search" type="text" placeholder="Buscar na tabela…">
         <span class="tbox-cnt" id="pivot-cnt">0</span>
@@ -516,6 +513,30 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     </div>
     <div class="tbl-scroll" id="evo-table-wrap" style="display:none"><table class="dt" id="evo-table"><thead></thead><tbody></tbody></table></div>
   </div>
+  <!-- ALERTAS DE VARIAÇÃO ANÔMALA — não é a tabela comum filtrada, olha o
+       histórico completo de cada produto+rede e sinaliza quando o preço
+       mais recente foge muito da mediana anterior daquela mesma loja. É
+       "o que mudou estranho", não "todo mundo que mudou de preço" (promoção
+       pontual é esperada, não é anomalia). -->
+  <div class="tbox" id="alertas-box">
+    <div class="tbox-head">
+      <h3>⚠ Alertas de Variação Anômala</h3>
+      <div class="tbox-tools">
+        <span class="lbl" style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3)">Variação mínima</span>
+        <select class="tf-input" id="alertas-limiar" style="min-width:90px">
+          <option value="0.15">15%</option>
+          <option value="0.25" selected>25%</option>
+          <option value="0.4">40%</option>
+          <option value="0.6">60%</option>
+        </select>
+        <span class="tbox-cnt" id="alertas-cnt">0</span>
+      </div>
+    </div>
+    <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico, e só entra produto visto numa das 2 coletas mais recentes (produto que saiu do catálogo não vira alerta).</p>
+    <div class="tbl-scroll"><table class="dt" id="alertas-table"><thead></thead><tbody></tbody></table></div>
+    <div class="pager" id="alertas-pager"></div>
+  </div>
+
 </div>
 
 <script>
@@ -561,9 +582,11 @@ const state = {
   indice: [],                 // [{data, linhas, arquivo}]
   cache: new Map(),           // data -> linhas parseadas (array de objetos)
   diasSelecionados: new Set(),
-  // marca já vem com Cottonbaby pré-selecionada como exemplo (pedido do
-  // usuário) — troca/limpa normalmente pelo filtro de Marca
-  filtros: { sites:new Set(), blocos:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(['Cottonbaby']),
+  // abre sem filtro nenhum: antes vinha com Marca=Cottonbaby pré-selecionada
+  // como exemplo, mas desde que os Alertas passaram a respeitar os filtros
+  // isso fazia a seção abrir vazia, e a tabela mostrava 1 marca parecendo o
+  // mercado inteiro. Pra olhar só a Cottonbaby, filtra por Marca normalmente.
+  filtros: { sites:new Set(), blocos:new Set(), categorias:new Set(), subcategorias:new Set(), marcas:new Set(),
              ufs:new Set(), cidades:new Set(), subcestas:new Set(), tamanhos:new Set(),
              segmento:'', depto:'', descricao:'', ean:'', disp:'' },
   verPor: 'produto', metrica: 'preco_regular', agregacao: 'media',
@@ -576,6 +599,7 @@ const state = {
   pivotBusca: '',
   pivotPage: 1, detailPage: 1, alertasPage: 1,
   alertas: [],  // vem pronto de dados/alertas.json (pré-calculado no ETL)
+  alertasSort: {col:'_abs', dir:-1}, // padrão: maior variação (pra cima ou pra baixo) primeiro
   evolucao: { ean:null, descricao:null }, // produto único selecionado na seção de evolução
   evoTabelaMetrica: 'regular', // regular | promo | menor — só a tabela da seção de evolução, o gráfico continua fixo mostrando as duas linhas
   _evoChart: null,
@@ -714,7 +738,9 @@ async function init(){
   await carregarDiasSelecionados();
   montarFiltrosData();
   montarFiltrosDependentes();
+  montarFiltroRapido();
   wireEventos();
+  wireFiltroRapido();
   render();
   document.getElementById('loading').classList.add('hidden');
   carregarEResenharAlertas(); // não espera — roda em paralelo, não trava a 1ª tela
@@ -894,6 +920,10 @@ function montarFiltrosDependentes(){
     sitesDisponiveis.map(s => `<option value="${s}">${SITE_LABELS[s]||s}</option>`).join('');
   selDestaque.value = sitesDisponiveis.includes(destaqueAtual) ? destaqueAtual : '';
   state.marcaDestaque = selDestaque.value;
+
+  // mantém o filtro rápido (em cima da tabela) espelhando o painel — só lê
+  // state.filtros e ajusta os <select>, não dispara evento, então não há laço
+  if(document.getElementById('fr-segmento')) montarFiltroRapido();
 }
 
 // gera um dropdown de checkboxes genérico (ddm-<id>) e mantém o Set de
@@ -1594,7 +1624,27 @@ async function garantirTodosDiasCarregados(){
 // usuário escolheu no seletor; o arquivo já traz tudo acima de 15%.
 // ---------------------------------------------------------------------
 function detectarAnomalias(limiar){
-  return (state.alertas || []).filter(a => Math.abs(a.variacao) >= limiar);
+  const f = state.filtros;
+  const qDesc = norm(f.descricao);
+  return (state.alertas || []).filter(a => {
+    if(Math.abs(a.variacao) < limiar) return false;
+    // mesmos filtros das tabelas — alerta fora do recorte que a pessoa
+    // escolheu não deveria aparecer (Subcesta/Tamanho ficam de fora: são
+    // campos derivados no navegador, não existem no alertas.json)
+    if(f.segmento && a.segmento !== f.segmento) return false;
+    if(f.blocos.size && !f.blocos.has(a.bloco)) return false;
+    if(f.depto && a.departamento !== f.depto) return false;
+    if(f.sites.size && !f.sites.has(a.site)) return false;
+    if(f.categorias.size && !f.categorias.has(a.categoria)) return false;
+    if(f.subcategorias.size && !f.subcategorias.has(a.subcategoria)) return false;
+    if(f.marcas.size && !f.marcas.has(a.marca)) return false;
+    if(f.ufs.size && !f.ufs.has(a.uf)) return false;
+    if(f.cidades.size && !f.cidades.has(a.cidade)) return false;
+    if(f.disp && a.disponivel !== f.disp) return false;
+    if(qDesc && !norm(a.descricao).includes(qDesc)) return false;
+    if(f.ean && !(a.ean||'').includes(f.ean)) return false;
+    return true;
+  });
 }
 
 // Os alertas vêm prontos do ETL (dados/alertas.json), não são calculados
@@ -1617,7 +1667,7 @@ async function carregarEResenharAlertas(){
 }
 
 const ALERTAS_COLS = [
-  {k:'data', lbl:'Data', w:84}, {k:'site', lbl:'Rede', w:110}, {k:'produto', lbl:'Produto', w:380},
+  {k:'data', lbl:'Data', w:84}, {k:'site', lbl:'Rede', w:110}, {k:'descricao', lbl:'Produto', w:380},
   {k:'mediana', lbl:'Preço Anterior', r:true, w:120}, {k:'preco', lbl:'Preço Atual', r:true, w:110},
   {k:'variacao', lbl:'Variação', r:true, w:110},
 ];
@@ -1632,13 +1682,36 @@ function renderAlertas(){
   if(!colgroup){ colgroup = document.createElement('colgroup'); table.prepend(colgroup); }
   colgroup.innerHTML = ALERTAS_COLS.map(c=>`<col style="width:${colW('alertas_',c.k,c.w)}px">`).join('');
 
+  // ordena pela coluna escolhida; padrão = maior variação em módulo primeiro
+  const {col, dir} = state.alertasSort;
+  alertas.sort((a,b) => {
+    if(col === '_abs') return (Math.abs(a.variacao)-Math.abs(b.variacao))*dir;
+    const va = a[col], vb = b[col];
+    if(typeof va === 'number' && typeof vb === 'number') return (va-vb)*dir;
+    return String(va||'').localeCompare(String(vb||''),'pt')*dir;
+  });
+
   const thead = table.querySelector('thead');
-  thead.innerHTML = `<tr>${ALERTAS_COLS.map(c=>`<th class="${c.r?'r':''}" style="width:${colW('alertas_',c.k,c.w)}px;max-width:${colW('alertas_',c.k,c.w)}px">${c.lbl}</th>`).join('')}</tr>`;
+  const seta = c => c===state.alertasSort.col ? (state.alertasSort.dir===1?' ▲':' ▼') : '';
+  thead.innerHTML = `<tr>${ALERTAS_COLS.map(c=>`<th class="${c.r?'r':''}" data-col="${c.k}" title="Clique pra ordenar" style="width:${colW('alertas_',c.k,c.w)}px;max-width:${colW('alertas_',c.k,c.w)}px">${c.lbl}<span class="si">${seta(c.k)}</span></th>`).join('')}</tr>`;
+  thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    const c = th.dataset.col;
+    // numérico começa decrescente (maior primeiro), texto começa crescente
+    const numerico = ['preco','mediana','variacao'].includes(c);
+    state.alertasSort.dir = state.alertasSort.col===c ? -state.alertasSort.dir : (numerico?-1:1);
+    state.alertasSort.col = c;
+    state.alertasPage = 1;
+    renderAlertas();
+  }));
   wireColResize(table, ALERTAS_COLS.map(c=>c.k), 'alertas_', Object.fromEntries(ALERTAS_COLS.map(c=>[c.k,c.w])));
 
   const tbody = table.querySelector('tbody');
   if(!alertas.length){
-    tbody.innerHTML = `<tr><td colspan="${ALERTAS_COLS.length}" class="no-data">Nenhuma variação acima de ${(limiar*100).toFixed(0)}% encontrada no histórico carregado.</td></tr>`;
+    const totalSemFiltro = (state.alertas||[]).filter(a => Math.abs(a.variacao) >= limiar).length;
+    const msg = totalSemFiltro
+      ? `Nenhum alerta acima de ${(limiar*100).toFixed(0)}% <b>dentro dos filtros atuais</b> — existem ${totalSemFiltro.toLocaleString('pt-BR')} no total. Limpe os filtros pra ver todos.`
+      : `Nenhuma variação acima de ${(limiar*100).toFixed(0)}% encontrada no histórico.`;
+    tbody.innerHTML = `<tr><td colspan="${ALERTAS_COLS.length}" class="no-data">${msg}</td></tr>`;
     document.getElementById('alertas-pager').innerHTML = '';
     return;
   }
@@ -1878,8 +1951,85 @@ function renderEvolucao(){
   }));
 }
 
+// Filtro rápido em cima da tabela: espelha 4 filtros do painel (Nível 1,
+// Nível 2, Marca, Rede). Não é um filtro paralelo — escreve no MESMO
+// state.filtros, então painel e filtro rápido nunca divergem. Nível 2,
+// Marca e Rede aceitam multi-seleção no painel; aqui, escolher um valor
+// substitui a seleção, e "todos" limpa.
+const FILTRO_RAPIDO = [
+  {id:'fr-segmento', campo:'segmento', tipo:'texto', rotulo:'Nível 1', opcoes:()=>distintos(linhasCarregadas(),'segmento')},
+  {id:'fr-bloco',    campo:'blocos',   tipo:'set',   rotulo:'Nível 2', opcoes:()=>distintos(linhasCarregadas(),'bloco')},
+  {id:'fr-marca',    campo:'marcas',   tipo:'set',   rotulo:'Marca',   opcoes:()=>distintos(linhasCarregadas(),'marca')},
+  {id:'fr-site',     campo:'sites',    tipo:'set',   rotulo:'Rede',    opcoes:()=>distintos(linhasCarregadas(),'site'), label:s=>SITE_LABELS[s]||s},
+];
+
+function montarFiltroRapido(){
+  FILTRO_RAPIDO.forEach(fr => {
+    const sel = document.getElementById(fr.id);
+    const valores = fr.opcoes().filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b),'pt'));
+    const atual = fr.tipo==='texto' ? state.filtros[fr.campo]
+                : (state.filtros[fr.campo].size===1 ? [...state.filtros[fr.campo]][0] : '');
+    sel.innerHTML = `<option value="">${fr.rotulo}: ${fr.rotulo==='Marca'||fr.rotulo==='Rede'?'todas':'todos'}</option>`
+      + valores.map(v=>`<option value="${esc(v)}">${esc(fr.label?fr.label(v):v)}</option>`).join('');
+    sel.value = valores.includes(atual) ? atual : '';
+  });
+}
+
+function wireFiltroRapido(){
+  FILTRO_RAPIDO.forEach(fr => {
+    document.getElementById(fr.id).addEventListener('change', e => {
+      const v = e.target.value;
+      if(fr.tipo==='texto') state.filtros[fr.campo] = v;
+      else { state.filtros[fr.campo].clear(); if(v) state.filtros[fr.campo].add(v); }
+      state.pivotPage = state.detailPage = state.alertasPage = 1;
+      state.drill = null;
+      montarFiltrosDependentes(); montarFiltroRapido(); render();
+    });
+  });
+  document.getElementById('fr-limpar').addEventListener('click', () => {
+    state.filtros.segmento = '';
+    state.filtros.blocos.clear(); state.filtros.marcas.clear(); state.filtros.sites.clear();
+    state.pivotPage = state.detailPage = state.alertasPage = 1;
+    state.drill = null;
+    montarFiltrosDependentes(); montarFiltroRapido(); render();
+  });
+}
+
+// Mostra, no cabeçalho do painel recolhido, o que está filtrado — senão a
+// pessoa esconde os filtros, esquece o que marcou e lê a tabela achando que
+// é o mercado inteiro.
+function renderResumoFiltros(){
+  const f = state.filtros;
+  const chips = [];
+  const addSet = (rotulo, conjunto, formatar) => {
+    if(!conjunto.size) return;
+    const vs = [...conjunto];
+    const txt = vs.length <= 2 ? vs.map(formatar || (v=>v)).join(', ') : `${vs.length} selecionadas`;
+    chips.push(`<span class="filtro-chip">${esc(rotulo)}: <b>${esc(txt)}</b></span>`);
+  };
+  if(f.segmento) chips.push(`<span class="filtro-chip">Nível 1: <b>${esc(f.segmento)}</b></span>`);
+  addSet('Nível 2', f.blocos);
+  if(f.depto) chips.push(`<span class="filtro-chip">Departamento: <b>${esc(f.depto)}</b></span>`);
+  addSet('Categoria', f.categorias);
+  addSet('Subcategoria', f.subcategorias);
+  addSet('Marca', f.marcas);
+  addSet('Rede', f.sites, s => SITE_LABELS[s] || s);
+  addSet('UF', f.ufs);
+  addSet('Cidade', f.cidades);
+  addSet('Subcesta', f.subcestas);
+  addSet('Tamanho', f.tamanhos);
+  if(f.descricao) chips.push(`<span class="filtro-chip">Produto: <b>${esc(f.descricao)}</b></span>`);
+  if(f.ean) chips.push(`<span class="filtro-chip">EAN: <b>${esc(f.ean)}</b></span>`);
+  if(f.disp) chips.push(`<span class="filtro-chip">Disp.: <b>${f.disp==='sim'?'Disponível':'Indisponível'}</b></span>`);
+
+  const el = document.getElementById('filtro-chips');
+  el.innerHTML = chips.length ? chips.join('') : '<span class="filtro-chip-vazio">nenhum filtro ativo</span>';
+}
+
 function render(){
   renderStats(); renderPivot(); renderDetail();
+  renderResumoFiltros();
+  if(state.alertas.length) renderAlertas(); // alertas respeitam os mesmos filtros
   if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao(); // preço/agregação mudaram, refaz com o produto já selecionado
 }
 
