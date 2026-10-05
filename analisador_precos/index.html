@@ -770,8 +770,13 @@ async function carregarDiasSelecionados(){
   await Promise.all([...state.diasSelecionados].map(carregarDia));
 }
 function linhasCarregadas(){
-  const out = [];
-  state.diasSelecionados.forEach(d => { const rows = state.cache.get(d); if(rows) out.push(...rows); });
+  // out.push(...rows) espalha o array inteiro como argumentos da função —
+  // com +100 mil linhas (dia de 05/10/2026 tem 184 mil) isso estoura a pilha
+  // de chamadas do JS ("Maximum call stack size exceeded") e a página trava
+  // pra sempre no "Carregando amostra de preços…". concat() não tem esse
+  // limite porque não vira lista de argumentos.
+  let out = [];
+  state.diasSelecionados.forEach(d => { const rows = state.cache.get(d); if(rows) out = out.concat(rows); });
   return out;
 }
 
@@ -1606,8 +1611,10 @@ function renderStats(){
 // assim que o usuário busca um produto pela primeira vez.
 // ---------------------------------------------------------------------
 function todasLinhasCache(){
-  const out = [];
-  state.cache.forEach(rows => out.push(...rows));
+  // mesmo motivo do linhasCarregadas() acima: concat() em vez de
+  // push(...rows), que estoura a pilha com array grande
+  let out = [];
+  state.cache.forEach(rows => out = out.concat(rows));
   return out;
 }
 
