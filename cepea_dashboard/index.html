@@ -428,14 +428,14 @@ input[type=number].ma-num::-webkit-inner-spin-button{opacity:.4}
         </div>
       </div>
 
-      <div class="tbox">
+      <div class="tbox" style="max-width:360px">
         <div class="tbox-head"><h3 id="hist-title">Histórico Recente</h3></div>
         <div class="tscroll" style="max-height:320px;overflow-y:auto">
-          <table class="dt" style="min-width:300px">
+          <table class="dt" style="table-layout:fixed;width:100%">
             <thead><tr>
-              <th style="width:110px">Data</th>
-              <th class="r">Preço (R$)</th>
-              <th class="r" style="width:80px">Var. %</th>
+              <th style="width:120px">Data</th>
+              <th class="r" style="width:140px">Preço (R$)</th>
+              <th class="r" style="width:90px">Var. %</th>
             </tr></thead>
             <tbody id="tb-hist"></tbody>
           </table>
