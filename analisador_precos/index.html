@@ -464,7 +464,8 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
         <select class="tf-input" id="fr-bloco" title="Nível 2"><option value="">Nível 2: todos</option></select>
         <select class="tf-input" id="fr-marca" title="Marca"><option value="">Marca: todas</option></select>
         <select class="tf-input" id="fr-site" title="Rede"><option value="">Rede: todas</option></select>
-        <button class="btn-reset" id="fr-limpar" title="Limpa só estes 4">✕</button>
+        <select class="tf-input" id="fr-uf" title="UF"><option value="">UF: todas</option></select>
+        <button class="btn-reset" id="fr-limpar" title="Limpa só estes 5">✕</button>
       </div>
       <div class="tbox-tools">
         <input class="tbox-search" id="pivot-search" type="text" placeholder="Buscar na tabela…">
@@ -735,15 +736,47 @@ async function init(){
     return;
   }
   state.diasSelecionados.add(state.indice[0].data); // dia mais recente ligado por padrão
+  const pararTexto = iniciarTextoCarregandoProgressivo(state.indice[0]);
   await carregarDiasSelecionados();
+  pararTexto();
   montarFiltrosData();
   montarFiltrosDependentes();
   montarFiltroRapido();
   wireEventos();
   wireFiltroRapido();
+  wireAutoFecharFiltros();
   render();
   document.getElementById('loading').classList.add('hidden');
   carregarEResenharAlertas(); // não espera — roda em paralelo, não trava a 1ª tela
+}
+
+// Tentei 2 formas de mostrar progresso real (PapaParse `step` linha a
+// linha, depois fetch+ReadableStream manual) — as duas pioraram o tempo de
+// carregamento (5,8s foi pra 18,8s e depois 15,7s), porque as duas quebram
+// o que o PapaParse já faz bem sozinho: baixar E parsear em paralelo, não
+// em sequência. `download:true` já processa o CSV conforme os pedaços
+// chegam da rede, então o tempo total fica perto do tempo de download puro
+// (medido: ~6s pro dia de 184 mil linhas numa conexão real) — don't fix
+// what ain't broken. A sensação de "travado" foi resolvida só com texto
+// melhor (ver wireTextoCarregandoProgressivo), sem tocar aqui.
+// Texto que muda sozinho enquanto espera, só por tempo (não por progresso
+// real — essa parte foi abandonada, ver comentário acima de carregarDia).
+// Pedido do usuário: no dia com mais dado (184 mil linhas, maior até agora)
+// a tela ficava ~6s com o MESMO texto parado, parecendo travada. Troca a
+// mensagem em estágios pra deixar claro que está andando, e já avisa o
+// motivo (volume de dado) em vez de deixar a pessoa imaginando um bug.
+function iniciarTextoCarregandoProgressivo(itemDia){
+  const el = document.querySelector('#loading .loading-text');
+  if(!el || !itemDia) return () => {};
+  const linhas = (itemDia.linhas||0).toLocaleString('pt-BR');
+  const estagios = [
+    [0,    `Carregando preços de ${fmtD(itemDia.data)}…`],
+    [1500, `Buscando ${linhas} preços de ${fmtD(itemDia.data)}…`],
+    [4000, `Ainda carregando — é bastante dado (${linhas} preços num dia só)…`],
+    [8000, `Quase lá — dias grandes levam alguns segundos mesmo…`],
+  ];
+  const timers = estagios.map(([ms, texto]) => setTimeout(() => { el.textContent = texto; }, ms));
+  return () => timers.forEach(clearTimeout);
 }
 
 function carregarDia(dia){
@@ -996,6 +1029,26 @@ function wireDdmToggles(){
 function toggleFilterPanel(){
   document.getElementById('filter-toggle-row').classList.toggle('open');
   document.getElementById('filter-collapsible').classList.toggle('open');
+}
+
+// O painel de filtros é sticky (fica grudado no topo ao rolar) — aberto,
+// ele é grande (Data + 7 dropdowns de Categoria + Marca/Rede + Busca +
+// Localização) e ficava ocupando um pedaço enorme da tela o tempo todo.
+// Fecha sozinho na primeira rolagem pra baixo, deixando só a tira fina do
+// título + chips grudada no topo. Só fecha 1 vez por "sessão de rolagem" —
+// se a pessoa reabrir manualmente enquanto já rolou, não fecha de novo a
+// cada pixel; só rearma quando volta pro topo da página.
+function wireAutoFecharFiltros(){
+  let rearmado = true;
+  window.addEventListener('scroll', () => {
+    const row = document.getElementById('filter-toggle-row');
+    if(window.scrollY > 80 && rearmado && row.classList.contains('open')){
+      toggleFilterPanel();
+      rearmado = false;
+    } else if(window.scrollY <= 10){
+      rearmado = true;
+    }
+  }, {passive:true});
 }
 
 function wireEventos(){
@@ -1963,11 +2016,17 @@ function renderEvolucao(){
 // state.filtros, então painel e filtro rápido nunca divergem. Nível 2,
 // Marca e Rede aceitam multi-seleção no painel; aqui, escolher um valor
 // substitui a seleção, e "todos" limpa.
+// opcoes() usa linhasParaOpcoes(campoExcluido) — a MESMA função de
+// cross-filtro do painel principal (respeita todos os outros filtros
+// ativos, menos o dele próprio). Antes usava linhasCarregadas() direto, que
+// ignora qualquer filtro já ativo — por isso Nível 1=Bebidas deixava
+// aparecer "Bazar"/"Eletro"/"Hortifruti" no Nível 2, sem sentido nenhum.
 const FILTRO_RAPIDO = [
-  {id:'fr-segmento', campo:'segmento', tipo:'texto', rotulo:'Nível 1', opcoes:()=>distintos(linhasCarregadas(),'segmento')},
-  {id:'fr-bloco',    campo:'blocos',   tipo:'set',   rotulo:'Nível 2', opcoes:()=>distintos(linhasCarregadas(),'bloco')},
-  {id:'fr-marca',    campo:'marcas',   tipo:'set',   rotulo:'Marca',   opcoes:()=>distintos(linhasCarregadas(),'marca')},
-  {id:'fr-site',     campo:'sites',    tipo:'set',   rotulo:'Rede',    opcoes:()=>distintos(linhasCarregadas(),'site'), label:s=>SITE_LABELS[s]||s},
+  {id:'fr-segmento', campo:'segmento', tipo:'texto', rotulo:'Nível 1', opcoes:()=>distintos(linhasParaOpcoes('segmento'),'segmento')},
+  {id:'fr-bloco',    campo:'blocos',   tipo:'set',   rotulo:'Nível 2', opcoes:()=>distintos(linhasParaOpcoes('blocos'),'bloco')},
+  {id:'fr-marca',    campo:'marcas',   tipo:'set',   rotulo:'Marca',   opcoes:()=>distintos(linhasParaOpcoes('marcas'),'marca')},
+  {id:'fr-site',     campo:'sites',    tipo:'set',   rotulo:'Rede',    opcoes:()=>distintos(linhasParaOpcoes('sites'),'site'), label:s=>SITE_LABELS[s]||s},
+  {id:'fr-uf',       campo:'ufs',      tipo:'set',   rotulo:'UF',      opcoes:()=>distintos(linhasParaOpcoes('ufs'),'uf')},
 ];
 
 function montarFiltroRapido(){
@@ -1976,7 +2035,7 @@ function montarFiltroRapido(){
     const valores = fr.opcoes().filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b),'pt'));
     const atual = fr.tipo==='texto' ? state.filtros[fr.campo]
                 : (state.filtros[fr.campo].size===1 ? [...state.filtros[fr.campo]][0] : '');
-    sel.innerHTML = `<option value="">${fr.rotulo}: ${fr.rotulo==='Marca'||fr.rotulo==='Rede'?'todas':'todos'}</option>`
+    sel.innerHTML = `<option value="">${fr.rotulo}: ${['Marca','Rede','UF'].includes(fr.rotulo)?'todas':'todos'}</option>`
       + valores.map(v=>`<option value="${esc(v)}">${esc(fr.label?fr.label(v):v)}</option>`).join('');
     sel.value = valores.includes(atual) ? atual : '';
   });
@@ -1995,7 +2054,7 @@ function wireFiltroRapido(){
   });
   document.getElementById('fr-limpar').addEventListener('click', () => {
     state.filtros.segmento = '';
-    state.filtros.blocos.clear(); state.filtros.marcas.clear(); state.filtros.sites.clear();
+    state.filtros.blocos.clear(); state.filtros.marcas.clear(); state.filtros.sites.clear(); state.filtros.ufs.clear();
     state.pivotPage = state.detailPage = state.alertasPage = 1;
     state.drill = null;
     montarFiltrosDependentes(); montarFiltroRapido(); render();
