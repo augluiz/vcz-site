@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futuros Agrícolas | VCZ Consultoria</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F0E8;--panel:#FFFFFF;--panel2:#EDE7DC;--panel3:#E0D8CC;
+  --navy:#0D1B2A;--navy2:#162B40;
+  --gold:#C8922A;--gold-light:#E2AC4C;--gold-aged:#B7A073;
+  --text:#1A2433;--text2:#3E5068;--text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --shadow-md:0 6px 18px rgba(26,36,51,.12),0 0 0 1px rgba(26,36,51,.07);
+  --th-bg:#1A2F45;--th-text:#E8D8C0;
+  --tr-even:#F4F6FA;--tr-odd:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;scrollbar-width:thin;scrollbar-color:rgba(200,146,42,.4) transparent}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(200,146,42,.38);border-radius:10px;transition:background .25s}
+::-webkit-scrollbar-thumb:hover{background:rgba(200,146,42,.72)}
+::-webkit-scrollbar-corner{background:transparent}
+.tscroll{scrollbar-width:thin;scrollbar-color:rgba(200,146,42,.3) transparent}
+
+/* NO-DATA */
+#no-data-screen{display:none;position:fixed;inset:0;background:rgba(13,27,42,.96);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;padding:2rem;text-align:center;backdrop-filter:blur(4px)}
+#no-data-screen.show{display:flex}
+.nd-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:#F0E8D8}
+.nd-body{font-family:'DM Sans',sans-serif;font-size:.9rem;color:#7A9AB0;line-height:1.7;max-width:520px}
+.nd-cmd{background:rgba(0,0,0,.4);border:1px solid rgba(200,146,42,.3);border-radius:6px;padding:.8rem 1.4rem;font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;margin:.4rem 0;display:inline-block;text-align:left;white-space:pre}
+.nd-note{font-family:'DM Mono',monospace;font-size:.6rem;color:#3A5A6A;margin-top:.5rem}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(13,27,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,.15)}
+.nav-logo img{height:46px;width:auto}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,.4);padding:9px 20px;text-decoration:none;transition:all .2s;white-space:nowrap}
+.nav-cta:hover{background:rgba(200,146,42,.08);border-color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:#9AAABB;transition:all .3s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(max-width:768px){
+  .nav-hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(13,27,42,.98);flex-direction:column;gap:0;padding:1rem 0;z-index:99}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:1rem 5vw;font-size:13px;border-bottom:1px solid rgba(183,160,115,.08)}
+  .nav-cta{display:none}
+}
+
+/* HEADER */
+.dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2)}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:#F2EAD8;line-height:1.1}
+.dash-header h1 em{color:var(--gold-light);font-style:italic}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:#4A7A90;margin-top:.28rem;letter-spacing:.04em}
+
+/* ABOUT */
+.about-strip{background:var(--navy2);border-bottom:2px solid rgba(200,146,42,.25);padding:.9rem 2rem}
+.about-cols{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.2fr);gap:1rem 2.2rem;align-items:center}
+.about-what{font-family:'DM Sans',sans-serif;font-size:.82rem;color:#B0C8D8;line-height:1.65}
+.about-what strong{color:#E8D8C0}
+.about-steps{display:flex;flex-direction:column;gap:.42rem}
+.about-step{display:flex;align-items:flex-start;gap:.55rem;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#8AAABB;line-height:1.5}
+.about-step b{font-family:'DM Mono',monospace;font-size:.6rem;background:rgba(200,146,42,.18);color:var(--gold);border-radius:3px;padding:.05rem .32rem;flex-shrink:0;margin-top:.12rem}
+
+/* CARDS */
+.cards-strip{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.2);padding:.8rem 1.5rem;display:flex;gap:.75rem;overflow-x:auto}
+.comm-card{flex:1;min-width:165px;max-width:250px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.65rem .85rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.comm-card.active{border-color:var(--gold);background:rgba(200,146,42,.07)}
+.comm-card:hover:not(.active){border-color:rgba(200,146,42,.4);background:rgba(255,255,255,.06)}
+.cc-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.cc-nome{font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:#8AAABB;margin-bottom:.1rem}
+.cc-symbol{font-family:'DM Mono',monospace;font-size:.5rem;color:#3A5A6A;margin-bottom:.38rem}
+.cc-preco-brl{font-family:'DM Mono',monospace;font-size:1.08rem;font-weight:500;color:#EDE7DC;line-height:1;margin-bottom:.1rem}
+.cc-preco-usd{font-family:'DM Mono',monospace;font-size:.62rem;color:#3A5A6A;margin-bottom:.18rem}
+.cc-var{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600}
+.cc-var.up{color:#E06060}.cc-var.dn{color:#4CAF50}.cc-var.flat{color:#5B8FC4}
+.cc-unit{font-family:'DM Sans',sans-serif;font-size:.58rem;color:#3A5A6A;margin-top:.12rem}
+.cc-spark-wrap{height:38px;margin-top:.3rem}
+.cc-spark-wrap canvas{width:100%!important;height:38px!important}
+
+/* FILTER */
+.filter-panel{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.25);box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:72px;z-index:100}
+.filter-inner{padding:.65rem 1.5rem;display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap}
+.tf-grp{display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
+.tf-grp .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;font-weight:500}
+.tf-vsep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:.05rem 0}
+.tf-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.3rem .5rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;cursor:pointer}
+.tf-input:focus{border-color:var(--gold)}
+.tf-input option{background:var(--navy2);color:#EDE7DC}
+.radio-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.radio-row label{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#8AAABB;display:flex;align-items:center;gap:.28rem;cursor:pointer}
+.radio-row label:hover{color:#C8D8E8}
+.radio-row input[type=radio]{accent-color:var(--gold)}
+.toggle-row{display:flex;gap:.6rem;align-items:center}
+.toggle-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:.28rem .65rem;color:#8AAABB;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .2s}
+.toggle-btn.active{background:rgba(200,146,42,.12);border-color:var(--gold);color:var(--gold)}
+.toggle-btn:hover:not(.active){border-color:rgba(200,146,42,.4);color:#C8D8E8}
+.btn-refresh{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:.3rem .7rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .2s}
+.btn-refresh:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,146,42,.08)}
+
+/* MAIN LAYOUT */
+.dash-main{padding:1.1rem 1.5rem;max-width:1800px;margin:0 auto}
+.dash-grid{display:grid;grid-template-columns:2fr 3fr;gap:1rem;align-items:start}
+.chart-col,.table-col{display:flex;flex-direction:column;gap:0}
+@media(max-width:960px){.dash-grid{grid-template-columns:1fr}}
+
+/* CHART CARD */
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:1rem}
+.chart-filter-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12);padding:.45rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.chart-filter-bar .lbl{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.1em;flex-shrink:0}
+.chart-section-bar{background:var(--navy2);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.12);padding:.5rem 1.2rem .45rem}
+.ct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem;font-weight:500}
+.cs{font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-bottom:.75rem}
+.chart-section{padding:1rem 1.1rem}
+.cv-wrap canvas{display:block;width:100%!important;height:300px!important}
+.no-data{text-align:center;padding:3rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+.chart-divider{display:flex;align-items:center;gap:.7rem;padding:.5rem 1.1rem;background:var(--navy);border-top:1px solid rgba(200,146,42,.18);border-bottom:1px solid rgba(200,146,42,.18)}
+.chart-divider span{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.12em}
+.chart-divider::before,.chart-divider::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.2)}
+
+/* DETAIL GRID */
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.detail-item{background:var(--panel2);border-radius:4px;padding:.5rem .7rem}
+.di-lbl{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.18rem}
+.di-val{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--text);font-weight:500}
+.di-val.up{color:#B83030}.di-val.dn{color:#2E7D32}
+.di-sub{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--text3);margin-top:.1rem}
+
+/* 52W BAR */
+.range-bar-wrap{margin-top:.85rem}
+.rb-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.52rem;color:var(--text3);margin-bottom:.22rem}
+.range-bar{height:4px;background:var(--panel3);border-radius:2px;position:relative}
+.rb-fill{position:absolute;top:0;height:100%;border-radius:2px;background:var(--gold)}
+.rb-cur{position:absolute;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--gold);transform:translateX(-50%)}
+
+/* TABLES */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.tbox-head{padding:.55rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15)}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--gold)}
+.tscroll{overflow-x:auto}
+.dt{width:100%;border-collapse:collapse;font-size:.74rem}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:nowrap;vertical-align:bottom;cursor:default;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.dt th:last-child{border-right:none}
+.dt td{padding:.35rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dt tr:nth-child(even) td{background:var(--tr-even)}.dt tr:nth-child(odd) td{background:var(--tr-odd)}
+.dt tr:hover td{background:#EEF3FB!important}
+.dt tr:last-child td{border-bottom:none}
+.dt th.r,.dt td.r{text-align:right}
+.full-tbox{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--shadow-sm)}
+.full-tbox-head{padding:.58rem .85rem;display:flex;align-items:center;justify-content:space-between;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.2);gap:.8rem;flex-wrap:wrap}
+.full-tbox-head h3{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.full-tbox-head .upd{font-family:'DM Mono',monospace;font-size:.55rem;color:#3A5A6A}
+
+/* MINI BAR */
+.rbar-cell{display:flex;flex-direction:column;gap:2px;min-width:90px}
+.rb-mini{height:3px;background:var(--panel3);border-radius:2px;position:relative}
+.rbm-fill{position:absolute;top:0;height:100%;border-radius:2px}
+
+/* MISC */
+.comm-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.38rem;vertical-align:middle;flex-shrink:0}
+.chip{display:inline-block;font-family:'DM Mono',monospace;font-size:.58rem;background:rgba(200,146,42,.12);color:var(--gold-aged);border:1px solid rgba(200,146,42,.25);border-radius:3px;padding:.05rem .3rem}
+.disclaimer-note{font-family:'DM Mono',monospace;font-size:.52rem;color:#2E4A58;line-height:1.6;max-width:900px}
+.dash-footer{padding:.75rem 1.8rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.57rem;color:#3A5A6A;flex-wrap:wrap;gap:.5rem}
+.dash-footer a{color:var(--gold-aged);text-decoration:none;transition:color .15s}
+.dash-footer a:hover{color:var(--gold)}
+
+/* MARKET BADGE */
+.mkt-badge{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;padding:.42rem .65rem;background:rgba(13,27,42,.05);border:1px solid rgba(200,146,42,.14);border-radius:4px;margin-bottom:.6rem}
+.mkt-exch{font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600;background:rgba(200,146,42,.16);color:var(--gold);border:1px solid rgba(200,146,42,.28);border-radius:3px;padding:.06rem .36rem;text-transform:uppercase;letter-spacing:.08em}
+.mkt-sep{color:rgba(26,36,51,.25);font-size:.55rem}
+.mkt-contract{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text2)}
+.mkt-loc{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--text3)}
+
+/* CONVERSION PANEL */
+.conv-panel{margin-top:.65rem;background:rgba(13,27,42,.035);border:1px solid rgba(200,146,42,.11);border-radius:4px;padding:.5rem .7rem}
+.conv-head{font-family:'DM Mono',monospace;font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-aged);margin-bottom:.38rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.conv-rows{display:flex;flex-direction:column;gap:.16rem}
+.conv-row{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;font-family:'DM Mono',monospace;font-size:.58rem;padding:.06rem 0}
+.conv-row.main{background:rgba(200,146,42,.09);border-radius:3px;padding:.12rem .38rem;margin:0 -.38rem}
+.conv-lbl{color:var(--text3);flex-shrink:0}
+.conv-val{color:var(--text);text-align:right}
+.conv-row.main .conv-val{color:var(--gold);font-weight:600;font-size:.64rem}
+.conv-row.main .conv-lbl{color:var(--text2);font-size:.6rem}
+.conv-gloss{font-family:'DM Mono',monospace;font-size:.49rem;color:#4A6A7A;margin-top:.32rem;padding-top:.32rem;border-top:1px solid rgba(26,36,51,.07);line-height:1.55}
+.conv-b3{font-family:'DM Sans',sans-serif;font-size:.63rem;color:#4A6A7A;line-height:1.6;margin-top:.55rem;padding:.4rem .6rem;background:rgba(13,27,42,.04);border-left:2px solid rgba(200,146,42,.28);border-radius:0 3px 3px 0}
+</style>
+</head>
+<body>
+
+<!-- TELA SEM DADOS -->
+<div id="no-data-screen">
+  <div>
+    <p style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">VCZ · Dashboard Futuros</p>
+    <div class="nd-title">Dados não encontrados</div>
+    <p class="nd-body" style="margin-top:.8rem">
+      Execute o script de atualização para baixar as cotações antes de abrir o dashboard.
+    </p>
+    <div style="margin-top:1.2rem">
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin-bottom:.5rem">1. Acesse a pasta do projeto:</p>
+      <div class="nd-cmd">cd C:\Users\augus\vcz-site\brapi_dashboard</div>
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">2. Baixe os dados:</p>
+      <div class="nd-cmd">python atualizar.py</div>
+      <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:#5A7A8A;margin:.6rem 0 .5rem">3. Sirva localmente e abra no browser:</p>
+      <div class="nd-cmd">cd ..\
+python -m http.server 8080
+<span style="color:#5A7A8A"># abra: http://localhost:8080/brapi_dashboard/</span></div>
+    </div>
+    <p class="nd-note" style="margin-top:1rem">Fonte: Yahoo Finance · Live Cattle, Corn, Soybeans, Coffee, Sugar</p>
+  </div>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/#sobre" onclick="closeMenu()">Sobre</a></li>
+    <li><a href="/servicos.html" onclick="closeMenu()">Serviços</a></li>
+    <li><a href="/#frente" onclick="closeMenu()">Experiência</a></li>
+    <li><a href="/insights/" onclick="closeMenu()">Conteúdos e Estudos</a></li>
+    <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
+    <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
+    <li><a href="/#contato" onclick="closeMenu()">Contato</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-cta" href="https://wa.me/5541996242909" target="_blank" rel="noopener">Falar com especialista</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="dash-header" style="margin-top:72px">
+  <div class="label">VCZ Consultoria · Inteligência de Mercado</div>
+  <h1>Futuros Agrícolas <em>Internacionais</em></h1>
+  <div class="sub" id="last-update">—</div>
+</div>
+
+<div class="about-strip">
+  <div class="about-cols">
+    <div class="about-what">
+      <strong>Contratos Futuros Agrícolas</strong> — acordos padronizados de compra/venda a preço fixado hoje com liquidação futura (tickers <strong>=F</strong>). Referências internacionais de 8 commodities: Boi Gordo, Milho, Soja, Café, Açúcar, Cacau, Algodão e Trigo. Bolsas: CME/CBOT (Chicago) e ICE (Nova York). Dados via <strong>Yahoo Finance</strong>, convertidos para BRL pelo câmbio do dia. <em style="color:#3A5A6A">Não são cotações diretas da B3.</em>
+    </div>
+    <div class="about-steps">
+      <div class="about-step"><b>1</b><span>Clique em uma <strong style="color:#E8D8C0">commodity</strong> para ver o histórico de preços e os detalhes do pregão mais recente.</span></div>
+      <div class="about-step"><b>2</b><span>Use o botão <strong style="color:#E8D8C0">BRL / USD</strong> para alternar entre preço convertido e cotação original.</span></div>
+      <div class="about-step"><b>3</b><span>Execute <strong style="color:#E8D8C0">python atualizar.py</strong> na pasta do projeto para atualizar com o fechamento mais recente.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cards-strip" id="cards-strip"></div>
+
+<div class="filter-panel">
+  <div class="filter-inner">
+    <div class="tf-grp">
+      <div class="lbl">Período do Gráfico</div>
+      <div class="radio-row" id="range-row">
+        <label><input type="radio" name="range" value="5d"> 1 semana</label>
+        <label><input type="radio" name="range" value="1mo" checked> 1 mês</label>
+        <label><input type="radio" name="range" value="3mo"> 3 meses</label>
+        <label><input type="radio" name="range" value="6mo"> 6 meses</label>
+        <label><input type="radio" name="range" value="1y"> 1 ano</label>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <div class="lbl">Commodity</div>
+      <select id="sel-commodity" class="tf-input"></select>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp">
+      <div class="lbl">Moeda do Gráfico</div>
+      <div class="toggle-row">
+        <button class="toggle-btn" id="btn-brl" onclick="setCurrency('brl')">BRL ~</button>
+        <button class="toggle-btn" id="btn-usd" onclick="setCurrency('usd')">USD</button>
+      </div>
+    </div>
+    <div class="tf-vsep"></div>
+    <div class="tf-grp" style="margin-left:auto">
+      <div class="lbl">USD/BRL</div>
+      <div class="toggle-row" style="gap:.3rem">
+        <span id="usd-brl-val" style="font-family:'DM Mono',monospace;font-size:.75rem;color:#C8D8E8">—</span>
+      </div>
+    </div>
+    <div class="tf-grp">
+      <div class="lbl">Dados</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#3A5A6A">Yahoo Finance · EOD</div>
+    </div>
+  </div>
+</div>
+
+<div class="dash-main">
+  <div class="dash-grid">
+
+    <div class="chart-col">
+      <div class="chart-card">
+        <div class="chart-filter-bar">
+          <div class="lbl" id="chart-nome-lbl">—</div>
+          <span class="chip" id="chart-symbol-chip">—</span>
+          <div style="display:flex;align-items:center;gap:.35rem;margin-left:auto">
+            <span style="font-family:'DM Mono',monospace;font-size:.52rem;color:#3A5A6A;text-transform:uppercase;letter-spacing:.08em">MMA</span>
+            <button class="toggle-btn" id="btn-sma20" onclick="setSMA(20)" title="Média Móvel 20 períodos">20</button>
+            <button class="toggle-btn" id="btn-sma50" onclick="setSMA(50)" title="Média Móvel 50 períodos">50</button>
+            <button class="toggle-btn active" id="btn-sma0" onclick="setSMA(0)" title="Sem média móvel">—</button>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:#3A5A6A;margin-left:.8rem" id="chart-unit-lbl">—</span>
+        </div>
+        <div class="chart-section-bar">
+          <div class="ct" id="chart-titulo">Histórico de Preços</div>
+          <div class="cs" id="chart-sub">Fechamento diário · Yahoo Finance</div>
+        </div>
+        <div class="chart-section" style="padding:.6rem .8rem .8rem">
+          <div id="main-chart-wrap">
+            <p class="no-data" id="chart-no-data">Selecione uma commodity.</p>
+            <div id="lw-chart-container" style="display:none;width:100%;height:340px;border-radius:4px;overflow:hidden"></div>
+          </div>
+        </div>
+        <div class="chart-divider"><span>Detalhes do Pregão</span></div>
+        <div class="chart-section" id="detail-section">
+          <p class="no-data" style="padding:1.5rem">Aguardando…</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-col">
+
+      <div class="full-tbox">
+        <div class="full-tbox-head">
+          <h3>Cotações — Referências Internacionais</h3>
+          <span class="upd" id="table-upd">—</span>
+        </div>
+        <div class="tscroll">
+          <table class="dt" style="min-width:560px">
+            <thead><tr>
+              <th style="width:140px">Commodity</th>
+              <th class="r" style="width:110px">Preço BRL ~</th>
+              <th class="r" style="width:100px">Preço USD</th>
+              <th class="r" style="width:80px">Var. %</th>
+              <th class="r" style="width:80px">Var. Abs.</th>
+              <th class="r" style="width:90px">Máx. Dia</th>
+              <th class="r" style="width:90px">Mín. Dia</th>
+            </tr></thead>
+            <tbody id="tb-main"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tbox">
+        <div class="tbox-head"><h3>Intervalo de 52 Semanas</h3></div>
+        <div class="tscroll">
+          <table class="dt" style="min-width:420px">
+            <thead><tr>
+              <th style="width:130px">Commodity</th>
+              <th class="r" style="width:90px">Mín. 52s</th>
+              <th class="r" style="width:90px">Máx. 52s</th>
+              <th class="r" style="width:90px">Atual</th>
+              <th style="width:130px">Posição</th>
+            </tr></thead>
+            <tbody id="tb-52w"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tbox">
+        <div class="tbox-head"><h3>Volume e Referência</h3></div>
+        <div class="tscroll">
+          <table class="dt" style="min-width:400px">
+            <thead><tr>
+              <th style="width:130px">Commodity</th>
+              <th class="r" style="width:100px">Volume</th>
+              <th style="width:120px">Unidade Int.</th>
+              <th>Referência B3</th>
+            </tr></thead>
+            <tbody id="tb-vol"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div style="background:var(--navy);border-top:2px solid rgba(200,146,42,.35);padding:2rem">
+  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem 3rem;align-items:center">
+    <div>
+      <p style="font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:.45rem">VCZ Consultoria · Inteligência Comercial</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700;color:#F0E8D8;line-height:1.2;margin-bottom:.5rem">Gostou do painel? <em style="color:var(--gold-light);font-style:italic">Posso aplicar no seu negócio.</em></h2>
+      <p style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:#5A8AA0;line-height:1.65;max-width:560px">Dashboards de inteligência de preços e mercado — sob medida para cooperativas, tradings, atacadistas e produtores rurais.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.65rem;min-width:200px">
+      <a href="https://wa.me/5541996242909?text=Ol%C3%A1%2C+vi+o+painel+de+Futuros+e+quero+saber+mais." target="_blank" rel="noopener"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.45);color:#5DD88A;font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px;font-weight:600"
+         onmouseover="this.style.background='rgba(37,211,102,.25)'" onmouseout="this.style.background='rgba(37,211,102,.15)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.135.558 4.14 1.535 5.878L0 24l6.302-1.512A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.002-1.368l-.36-.214-3.733.895.934-3.617-.235-.373A9.785 9.785 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
+        WhatsApp
+      </a>
+      <a href="mailto:vczconsultoria@gmail.com?subject=Painel%20Futuros%20%E2%80%94%20Quero%20saber%20mais"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;border:1px solid rgba(200,146,42,.4);color:var(--gold-aged);font-family:'DM Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;padding:.6rem 1.2rem;border-radius:4px"
+         onmouseover="this.style.borderColor='#C8922A';this.style.color='#E2AC4C'" onmouseout="this.style.borderColor='rgba(200,146,42,.4)';this.style.color='#B7A073'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        E-mail
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="dash-footer">
+  <span>Fonte: Yahoo Finance · CME / ICE · Dados EOD · Conversão BRL aproximada</span>
+  <a href="/">© VCZ Consultoria</a>
+  <p class="disclaimer-note">Informações de caráter informativo obtidas de fontes públicas. Preços internacionais (CME/ICE) — não são cotações diretas da B3. A conversão para BRL é uma aproximação. O VCZ Consultoria não se responsabiliza por decisões comerciais baseadas nestes dados.</p>
+</footer>
+
+<!-- dados gerados por atualizar.py -->
+<script src="dados/commodities_data.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// ── Verifica dados ─────────────────────────────────────────────────────────
+if (typeof window.COMMODITIES_DATA === 'undefined') {
+  document.getElementById('no-data-screen').classList.add('show');
+}
+
+const RAW = window.COMMODITIES_DATA || { commodities: [], usd_brl: 0 };
+const COMMS = RAW.commodities.filter(c => c.ok);
+
+// ── Metadados estáticos: bolsa, contrato, conversão de unidades ────────────
+const COMM_META = {
+  boi: {
+    exchange: 'CME Group', exchange_short: 'CME',
+    location: 'Chicago, IL', contract: 'Live Cattle',
+    lot_size: 'Lote CME: 40.000 lb (≈ 18,1 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_brl_cwt = p * r;
+      const p_brl_arr = p_brl_cwt / 3.024;   // 1 cwt = 3.024 arrobas de 15kg
+      return [
+        { lbl: 'Preço de referência',    val: `${f4(p)} USD/cwt`,                                    main: false },
+        { lbl: 'Em Reais (por cwt)',     val: `R$ ${f2(p_brl_cwt)}  (× USD/BRL ${f2(r)})`,           main: false },
+        { lbl: 'Por arroba de 15 kg',   val: `R$ ${f2(p_brl_arr)}/@  (÷ 3,024 arrobas/cwt)`,        main: true  },
+        { lbl: 'Por kg',                 val: `R$ ${f4(p_brl_cwt / 45.36)}/kg`,                       main: false },
+      ];
+    },
+    glossary: '1 cwt (hundredweight) = 100 lb = 45,36 kg = 3,024 arrobas (@ = 15 kg)',
+    b3_note: 'O Boi Gordo na B3 (BGI) é cotado em R$/arroba de animal vivo padrão (@ = 15 kg, tipo 1). O LE=F é liquidado financeiramente nos EUA. Preços podem divergir por qualidade, frete e oferta local.',
+  },
+  milho: {
+    exchange: 'CBOT / CME Group', exchange_short: 'CBOT',
+    location: 'Chicago, IL', contract: 'Corn',
+    lot_size: 'Lote CBOT: 5.000 bu (≈ 127 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_usd_bu   = p / 100;                        // USc → USD
+      const p_brl_bu   = p_usd_bu * r;
+      const bu_sc      = 60 / 25.40;                      // bu por saca de 60kg
+      const p_brl_sc   = p_brl_bu * bu_sc;
+      return [
+        { lbl: 'Preço de referência',   val: `${f4(p)} USc/bu  = ${f4(p_usd_bu)} USD/bu`,            main: false },
+        { lbl: 'Em Reais (por bushel)', val: `R$ ${f4(p_brl_bu)}/bu  (× USD/BRL ${f2(r)})`,          main: false },
+        { lbl: 'Por saca de 60 kg',    val: `R$ ${f2(p_brl_sc)}/sc  (× ${f4(bu_sc)} bu/saca)`,       main: true  },
+        { lbl: 'Por kg',                val: `R$ ${f4(p_brl_bu / 25.40)}/kg`,                          main: false },
+      ];
+    },
+    glossary: '1 bushel de milho = 25,40 kg · 1 saca (60 kg) = 2,362 bu · USc = centavos de USD',
+    b3_note: 'O Milho na B3 (CCM) é cotado em R$/saca de 60 kg com base em Campinas/SP. O ZC=F reflete FOB Chicago. A diferença (basis) inclui frete, câmbio e oferta local.',
+  },
+  soja: {
+    exchange: 'CBOT / CME Group', exchange_short: 'CBOT',
+    location: 'Chicago, IL', contract: 'Soybeans',
+    lot_size: 'Lote CBOT: 5.000 bu (≈ 136 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_usd_bu   = p / 100;
+      const p_brl_bu   = p_usd_bu * r;
+      const bu_sc      = 60 / 27.22;
+      const p_brl_sc   = p_brl_bu * bu_sc;
+      return [
+        { lbl: 'Preço de referência',   val: `${f4(p)} USc/bu  = ${f4(p_usd_bu)} USD/bu`,            main: false },
+        { lbl: 'Em Reais (por bushel)', val: `R$ ${f4(p_brl_bu)}/bu  (× USD/BRL ${f2(r)})`,          main: false },
+        { lbl: 'Por saca de 60 kg',    val: `R$ ${f2(p_brl_sc)}/sc  (× ${f4(bu_sc)} bu/saca)`,       main: true  },
+        { lbl: 'Por kg',                val: `R$ ${f4(p_brl_bu / 27.22)}/kg`,                          main: false },
+      ];
+    },
+    glossary: '1 bushel de soja = 27,22 kg · 1 saca (60 kg) = 2,204 bu · USc = centavos de USD',
+    b3_note: 'A Soja na B3 (SFI) é cotada em R$/saca de 60 kg com paridade Paranaguá/PR. O ZS=F é a referência global FOB barcaça Rio Mississippi. Brasileiros exportam com prêmio ou desconto em relação ao CBOT.',
+  },
+  cafe: {
+    exchange: 'ICE Futures US', exchange_short: 'ICE',
+    location: 'Nova York, NY', contract: 'Coffee C',
+    lot_size: 'Lote ICE: 37.500 lb (≈ 17 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_usd_lb   = p / 100;
+      const lb_sc      = 60 / 0.4536;                    // lb por saca de 60kg = 132,28
+      const p_usd_sc   = p_usd_lb * lb_sc;
+      const p_brl_sc   = p_usd_sc * r;
+      return [
+        { lbl: 'Preço de referência',   val: `${f4(p)} USc/lb  = ${f4(p_usd_lb)} USD/lb`,            main: false },
+        { lbl: 'Libras por saca (60kg)',val: `${f4(lb_sc)} lb/saca  (60 ÷ 0,4536 kg/lb)`,            main: false },
+        { lbl: 'Por saca de 60 kg',    val: `R$ ${f2(p_brl_sc)}/sc  (${f2(p_usd_sc)} USD × ${f2(r)})`, main: true },
+        { lbl: 'Por kg',                val: `R$ ${f4((p_usd_lb / 0.4536) * r)}/kg`,                   main: false },
+      ];
+    },
+    glossary: '1 libra (lb) = 0,4536 kg · 1 saca de café (60 kg) = 132,28 lb · USc = centavos de USD',
+    b3_note: 'O Café Arábica na B3 (ICF) é cotado em USD/saca de 60 kg para entrega em SP/MG/ES. O KC=F (Coffee C) é a referência global para arábica suave lavado. Cafés brasileiros negociam com diferencial de qualidade.',
+  },
+  acucar: {
+    exchange: 'ICE Futures US', exchange_short: 'ICE',
+    location: 'Nova York, NY', contract: 'Sugar No. 11',
+    lot_size: 'Lote ICE: 112.000 lb (≈ 50,8 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_usd_lb   = p / 100;
+      const lb_sc      = 50 / 0.4536;
+      const p_usd_sc   = p_usd_lb * lb_sc;
+      const p_brl_sc   = p_usd_sc * r;
+      return [
+        { lbl: 'Preço de referência',   val: `${f4(p)} USc/lb  = ${f4(p_usd_lb)} USD/lb`,               main: false },
+        { lbl: 'Libras por saca (50kg)',val: `${f4(lb_sc)} lb/saca  (50 ÷ 0,4536 kg/lb)`,               main: false },
+        { lbl: 'Por saca de 50 kg',    val: `R$ ${f2(p_brl_sc)}/sc  (${f2(p_usd_sc)} USD × ${f2(r)})`,  main: true  },
+        { lbl: 'Por kg',                val: `R$ ${f4((p_usd_lb / 0.4536) * r)}/kg`,                      main: false },
+      ];
+    },
+    glossary: '1 libra (lb) = 0,4536 kg · 1 saca de açúcar (50 kg) = 110,23 lb · USc = centavos de USD',
+    b3_note: 'O Açúcar Cristal na B3 (ISU) é cotado em R$/saca de 50 kg (cristal especial). O SB=F (Sugar No. 11) é o benchmark global de açúcar bruto (raw sugar). Diferenças de refino e logística impactam o spread.',
+  },
+  cacau: {
+    exchange: 'ICE Futures US', exchange_short: 'ICE',
+    location: 'Nova York, NY', contract: 'Cocoa',
+    lot_size: 'Lote ICE: 10 t métricas',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_brl_t   = p * r;
+      const p_brl_arr = p_brl_t * 15 / 1000;  // R$/arroba (15kg)
+      return [
+        { lbl: 'Preço de referência',    val: `${f2(p)} USD/t  (tonelada métrica)`,                      main: false },
+        { lbl: 'Em Reais (por tonelada)',val: `R$ ${f2(p_brl_t)}/t  (× USD/BRL ${f2(r)})`,               main: false },
+        { lbl: 'Por arroba (15 kg)',     val: `R$ ${f2(p_brl_arr)}/@  (× 15 ÷ 1.000)`,                   main: true  },
+        { lbl: 'Por kg',                 val: `R$ ${f4(p_brl_t / 1000)}/kg`,                               main: false },
+      ];
+    },
+    glossary: '1 tonelada métrica (t) = 1.000 kg = 66,67 arrobas (@ = 15 kg) · Lote ICE = 10 t',
+    b3_note: 'O cacau não tem contrato ativo na B3. O CC=F (ICE Cocoa) é o benchmark global. Brasil é o 7° maior produtor mundial. O preço spot no Pará/Bahia pode divergir por qualidade e logística.',
+  },
+  algodao: {
+    exchange: 'ICE Futures US', exchange_short: 'ICE',
+    location: 'Nova York, NY', contract: 'Cotton No. 2',
+    lot_size: 'Lote ICE: 50.000 lb (≈ 22,7 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_usd_lb  = p / 100;
+      const lb_arr    = 15 / 0.4536;  // 33,07 lb por arroba de 15kg
+      const p_brl_arr = p_usd_lb * lb_arr * r;
+      return [
+        { lbl: 'Preço de referência',     val: `${f4(p)} USc/lb  = ${f4(p_usd_lb)} USD/lb`,             main: false },
+        { lbl: 'Libras por arroba (15kg)',val: `${f4(lb_arr)} lb/@  (15 ÷ 0,4536)`,                      main: false },
+        { lbl: 'Por arroba (15 kg)',      val: `R$ ${f2(p_brl_arr)}/@  (× USD/BRL ${f2(r)})`,            main: true  },
+        { lbl: 'Por kg',                  val: `R$ ${f4((p_usd_lb / 0.4536) * r)}/kg`,                    main: false },
+      ];
+    },
+    glossary: '1 libra (lb) = 0,4536 kg · 1 arroba de algodão = 15 kg = 33,07 lb · USc = centavos de USD',
+    b3_note: 'O Algodão na B3 (ACF) é cotado em USc/lb — mesma unidade do CT=F ICE. Brasil é o 2° maior exportador global. Safra concentrada em MT, BA e GO.',
+  },
+  trigo: {
+    exchange: 'CBOT / CME Group', exchange_short: 'CBOT',
+    location: 'Chicago, IL', contract: 'Wheat SRW',
+    lot_size: 'Lote CBOT: 5.000 bu (≈ 136 t)',
+    steps: (p, r) => {
+      if (p == null) return [];
+      const p_usd_bu  = p / 100;
+      const bu_sc     = 60 / 27.22;
+      const p_brl_bu  = p_usd_bu * r;
+      const p_brl_sc  = p_brl_bu * bu_sc;
+      return [
+        { lbl: 'Preço de referência',   val: `${f4(p)} USc/bu  = ${f4(p_usd_bu)} USD/bu`,               main: false },
+        { lbl: 'Em Reais (por bushel)', val: `R$ ${f4(p_brl_bu)}/bu  (× USD/BRL ${f2(r)})`,              main: false },
+        { lbl: 'Por saca (60 kg)',      val: `R$ ${f2(p_brl_sc)}/sc  (× ${f4(bu_sc)} bu/saca)`,          main: true  },
+        { lbl: 'Por kg',                val: `R$ ${f4(p_brl_bu / 27.22)}/kg`,                             main: false },
+      ];
+    },
+    glossary: '1 bushel de trigo = 27,22 kg · 1 saca (60 kg) = 2,204 bu · SRW = Soft Red Winter (variedade CBOT)',
+    b3_note: 'Trigo não tem contrato ativo na B3 (liquidez mínima). O ZW=F (CBOT Wheat) é a referência global. Brasil importa ~50% do trigo consumido — principalmente da Argentina — e o preço local inclui frete + impostos.',
+  },
+};
+
+// ── Estado ─────────────────────────────────────────────────────────────────
+let selectedId = COMMS[0]?.id || '';
+let currency   = 'brl';   // 'brl' | 'usd'
+let chartRange = '1mo';
+let smaPeriod  = 0;        // 0 = off, 20, 50
+let lwChart = null;        // Lightweight Charts instance
+let lwCandles = null;
+let lwVolume  = null;
+let lwSMA     = null;
+const sparkCharts = {};
+
+// ── Formatters ─────────────────────────────────────────────────────────────
+const f2  = v => (v == null || isNaN(v)) ? '—' : v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+const f4  = v => (v == null || isNaN(v)) ? '—' : v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:4});
+const fi  = v => (v == null || isNaN(v)) ? '—' : v.toLocaleString('pt-BR');
+const sgn = v => v > 0 ? '+' : '';
+const pct = v => (v == null || isNaN(v)) ? '—' : `${sgn(v)}${f2(v)}%`;
+const abv = v => (v == null || isNaN(v)) ? '—' : `${sgn(v)}${f2(v)}`;
+
+function byId(id) { return COMMS.find(c => c.id === id); }
+
+// ── Filtro de histórico por range ──────────────────────────────────────────
+function filterHist(hist, range) {
+  if (!hist || !hist.length) return hist;
+  const now = new Date();
+  const cutMap = { '5d': 7, '1mo': 31, '3mo': 93, '6mo': 186, '1y': 366 };
+  const days = cutMap[range] || 93;
+  const cutoff = new Date(now.getTime() - days * 86400000);
+  return hist.filter(h => new Date(h.data) >= cutoff);
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+function init() {
+  if (!COMMS.length) return;
+
+  // Header
+  const ts = RAW.timestamp ? new Date(RAW.timestamp).toLocaleString('pt-BR') : '—';
+  document.getElementById('last-update').textContent = `Atualizado em ${ts} · USD/BRL: ${f2(RAW.usd_brl)}`;
+  document.getElementById('table-upd').textContent   = ts;
+  document.getElementById('usd-brl-val').textContent = `R$ ${f2(RAW.usd_brl)}`;
+
+  buildSelect();
+  buildCards();
+  buildSparklines();
+  renderAll();
+  setCurrency('brl');
+
+  // Range listener
+  document.querySelectorAll('input[name="range"]').forEach(r => {
+    r.addEventListener('change', () => { chartRange = r.value; renderMainChart(); });
+  });
+}
+
+// ── Select ─────────────────────────────────────────────────────────────────
+function buildSelect() {
+  const sel = document.getElementById('sel-commodity');
+  sel.innerHTML = COMMS.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+  sel.value = selectedId;
+  sel.addEventListener('change', () => { selectedId = sel.value; updateActiveCard(); renderAll(); });
+}
+
+// ── Cards ──────────────────────────────────────────────────────────────────
+function buildCards() {
+  document.getElementById('cards-strip').innerHTML = COMMS.map(c => `
+    <div class="comm-card ${c.id === selectedId ? 'active':''}" id="card-${c.id}" onclick="selectComm('${c.id}')">
+      <div class="cc-accent" style="background:${c.cor}"></div>
+      <div class="cc-nome">${c.nome}</div>
+      <div class="cc-symbol">${c.symbol}</div>
+      <div class="cc-preco-brl">R$ ${f2(c.preco_brl)}</div>
+      <div class="cc-preco-usd">${f4(c.preco)} ${c.unidade_int}</div>
+      <div class="cc-var ${c.variacao_pct > 0 ? 'up' : c.variacao_pct < 0 ? 'dn' : 'flat'}">
+        ${pct(c.variacao_pct)}
+      </div>
+      <div class="cc-unit">${c.unidade_br}</div>
+      <div class="cc-spark-wrap"><canvas id="spark-${c.id}"></canvas></div>
+    </div>
+  `).join('');
+}
+
+function buildSparklines() {
+  COMMS.forEach(c => {
+    if (sparkCharts[c.id]) sparkCharts[c.id].destroy();
+    const canvas = document.getElementById('spark-' + c.id);
+    if (!canvas) return;
+    const hist = filterHist(c.historico, '1mo');
+    const vals = hist.slice(-20).map(h => h.fechamento_brl ?? h.fechamento).filter(v => v != null);
+    if (!vals.length) return;
+    sparkCharts[c.id] = new Chart(canvas, {
+      type: 'line',
+      data: { labels: vals.map((_,i) => i), datasets: [{data: vals, borderColor: c.cor, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3}] },
+      options: { animation: false, plugins:{legend:{display:false},tooltip:{enabled:false}}, scales:{x:{display:false},y:{display:false}}, responsive:true, maintainAspectRatio:false }
+    });
+  });
+}
+
+function selectComm(id) { selectedId = id; updateActiveCard(); renderAll(); }
+
+function updateActiveCard() {
+  COMMS.forEach(c => {
+    const el = document.getElementById('card-' + c.id);
+    if (el) el.classList.toggle('active', c.id === selectedId);
+  });
+  document.getElementById('sel-commodity').value = selectedId;
+}
+
+// ── SMA toggle ─────────────────────────────────────────────────────────────
+function setSMA(period) {
+  smaPeriod = period;
+  [0, 20, 50].forEach(p => {
+    const btn = document.getElementById(`btn-sma${p}`);
+    if (btn) btn.classList.toggle('active', p === period);
+  });
+  renderMainChart();
+}
+
+function calcSMA(candles, period) {
+  if (!period || candles.length < period) return [];
+  const result = [];
+  for (let i = period - 1; i < candles.length; i++) {
+    const sum = candles.slice(i - period + 1, i + 1).reduce((s, d) => s + d.close, 0);
+    result.push({ time: candles[i].time, value: parseFloat((sum / period).toFixed(4)) });
+  }
+  return result;
+}
+
+// ── Currency toggle ────────────────────────────────────────────────────────
+function setCurrency(cur) {
+  currency = cur;
+  document.getElementById('btn-brl').classList.toggle('active', cur === 'brl');
+  document.getElementById('btn-usd').classList.toggle('active', cur === 'usd');
+  renderMainChart();
+  updateChartUnitLabel();
+}
+
+function updateChartUnitLabel() {
+  const c = byId(selectedId);
+  if (!c) return;
+  document.getElementById('chart-unit-lbl').textContent = currency === 'brl' ? c.unidade_br : c.unidade_int;
+  document.getElementById('chart-sub').textContent = `Fechamento diário · Yahoo Finance · ${currency === 'brl' ? 'BRL (conversão aprox.)' : 'USD (cotação original)'}`;
+}
+
+// ── Main Chart (Lightweight Charts — candlestick + volume) ─────────────────
+function renderMainChart() {
+  const c = byId(selectedId);
+  const noDataEl  = document.getElementById('chart-no-data');
+  const container = document.getElementById('lw-chart-container');
+
+  document.getElementById('chart-nome-lbl').textContent    = c?.nome || '—';
+  document.getElementById('chart-symbol-chip').textContent = c?.symbol || '—';
+  document.getElementById('chart-titulo').textContent      = c ? `${c.nome} — Candlestick` : 'Histórico';
+  updateChartUnitLabel();
+
+  function showNoData(msg) {
+    noDataEl.textContent = msg;
+    noDataEl.style.display = '';
+    container.style.display = 'none';
+    destroyLW();
+    renderDetailSection();
+  }
+
+  if (!c) return showNoData('Selecione uma commodity.');
+
+  const hist = filterHist(c.historico, chartRange);
+  if (!hist.length) return showNoData('Sem histórico para o período.');
+
+  // Monta séries OHLC + volume
+  const useBrl = currency === 'brl';
+  const candles = [], vols = [];
+
+  hist.forEach(h => {
+    const o = useBrl ? h.abertura_brl  : h.abertura;
+    const hi = useBrl ? h.maximo_brl   : h.maximo;
+    const lo = useBrl ? h.minimo_brl   : h.minimo;
+    const cl = useBrl ? h.fechamento_brl : h.fechamento;
+    if (o == null || hi == null || lo == null || cl == null) return;
+    candles.push({ time: h.data, open: o, high: hi, low: lo, close: cl });
+    vols.push({
+      time: h.data,
+      value: h.volume || 0,
+      color: cl >= o ? 'rgba(46,125,50,.55)' : 'rgba(183,48,48,.55)',
+    });
+  });
+
+  if (!candles.length) return showNoData('Dados OHLC indisponíveis.');
+
+  noDataEl.style.display = 'none';
+  container.style.display = 'block';
+
+  destroyLW();
+
+  lwChart = LightweightCharts.createChart(container, {
+    width: container.clientWidth,
+    height: 340,
+    layout: {
+      background: { color: '#FFFFFF' },
+      textColor: '#3E5068',
+      fontFamily: "'DM Mono', monospace",
+      fontSize: 11,
+    },
+    grid: {
+      vertLines: { color: 'rgba(26,36,51,.06)' },
+      horzLines: { color: 'rgba(26,36,51,.06)' },
+    },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: 'rgba(26,36,51,.12)' },
+    timeScale: { borderColor: 'rgba(26,36,51,.12)', timeVisible: false },
+    handleScroll: true,
+    handleScale: true,
+  });
+
+  // Preço (candlestick) — usa 75% superior
+  lwChart.priceScale('right').applyOptions({
+    scaleMargins: { top: 0.05, bottom: 0.25 },
+  });
+
+  lwCandles = lwChart.addCandlestickSeries({
+    upColor:       '#2E7D32',
+    downColor:     '#B83030',
+    borderVisible: false,
+    wickUpColor:   '#2E7D32',
+    wickDownColor: '#B83030',
+  });
+  lwCandles.setData(candles);
+
+  // Volume (histograma) — usa 20% inferior
+  lwVolume = lwChart.addHistogramSeries({
+    priceFormat:      { type: 'volume' },
+    priceScaleId:     'vol',
+    lastValueVisible: false,
+    priceLineVisible: false,
+  });
+  lwChart.priceScale('vol').applyOptions({
+    scaleMargins: { top: 0.82, bottom: 0 },
+  });
+  lwVolume.setData(vols);
+
+  // Média Móvel (SMA)
+  if (smaPeriod > 0) {
+    const smaData = calcSMA(candles, smaPeriod);
+    if (smaData.length) {
+      lwSMA = lwChart.addLineSeries({
+        color:            'rgba(200,146,42,.85)',
+        lineWidth:        2,
+        lineStyle:        0,  // solid
+        priceLineVisible: false,
+        lastValueVisible: true,
+        title:            `SMA ${smaPeriod}`,
+        crosshairMarkerVisible: false,
+      });
+      lwSMA.setData(smaData);
+    }
+  }
+
+  lwChart.timeScale().fitContent();
+
+  // Responsivo
+  const ro = new ResizeObserver(() => {
+    if (lwChart) lwChart.applyOptions({ width: container.clientWidth });
+  });
+  ro.observe(container);
+
+  renderDetailSection();
+}
+
+function destroyLW() {
+  if (lwChart) { lwChart.remove(); lwChart = null; lwCandles = null; lwVolume = null; lwSMA = null; }
+}
+
+// ── Detail ─────────────────────────────────────────────────────────────────
+function renderDetailSection() {
+  const c = byId(selectedId);
+  const sec = document.getElementById('detail-section');
+  if (!c) { sec.innerHTML = '<p class="no-data" style="padding:1.5rem">Sem dados.</p>'; return; }
+
+  const brl = RAW.usd_brl;
+  const chgClass = c.variacao_pct > 0 ? 'up' : c.variacao_pct < 0 ? 'dn' : '';
+  const lo = c.semanas52_min, hi = c.semanas52_max, cur = c.preco;
+  const pos52 = (lo != null && hi != null && hi !== lo) ? ((cur - lo) / (hi - lo) * 100) : null;
+
+  const meta  = COMM_META[c.id];
+  const steps = meta ? meta.steps(c.preco, brl) : [];
+
+  const mktBadge = meta ? `
+    <div class="mkt-badge">
+      <span class="mkt-exch">${meta.exchange_short}</span>
+      <span class="mkt-sep">·</span>
+      <span class="mkt-contract">${meta.contract}</span>
+      <span class="mkt-sep">·</span>
+      <span class="mkt-contract">${c.symbol}</span>
+      <span class="mkt-sep">·</span>
+      <span class="mkt-loc">${meta.location}</span>
+      <span class="mkt-sep" style="margin-left:.2rem">|</span>
+      <span class="mkt-loc">${meta.lot_size}</span>
+      <span class="mkt-sep" style="margin-left:.2rem">|</span>
+      <span title="Contrato Futuro: acordo padronizado de compra/venda a preço fixado hoje, com liquidação em data futura. Todos os tickers com =F são futuros." style="font-family:'DM Mono',monospace;font-size:.5rem;background:rgba(91,143,196,.1);color:#5B8FC4;border:1px solid rgba(91,143,196,.22);border-radius:3px;padding:.04rem .28rem;cursor:help">Contrato Futuro (?)</span>
+    </div>` : '';
+
+  const convPanel = meta && steps.length ? `
+    <div class="conv-panel">
+      <div class="conv-head">
+        <span>Conversão de Unidades</span>
+        <span style="color:var(--text3);font-size:.48rem;font-weight:400">USD/BRL ${f4(brl)}</span>
+      </div>
+      <div class="conv-rows">
+        ${steps.map(s => `
+          <div class="conv-row${s.main ? ' main' : ''}">
+            <span class="conv-lbl">${s.lbl}</span>
+            <span class="conv-val">${s.val}</span>
+          </div>`).join('')}
+      </div>
+      <div class="conv-gloss">${meta.glossary}</div>
+    </div>
+    <div class="conv-b3">${meta.b3_note}</div>` : `
+    <div style="margin-top:.75rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#3A5A6A">${c.conv_nota || ''}</div>`;
+
+  sec.innerHTML = `
+    ${mktBadge}
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="di-lbl">Preço (BRL ~)</div>
+        <div class="di-val">R$ ${f2(c.preco_brl)}</div>
+        <div class="di-sub">${c.unidade_br}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Preço (USD)</div>
+        <div class="di-val">${f4(c.preco)}</div>
+        <div class="di-sub">${c.unidade_int}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Variação Dia</div>
+        <div class="di-val ${chgClass}">${pct(c.variacao_pct)}</div>
+        <div class="di-sub">${abv(c.variacao)} ${c.unidade_int}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Abertura</div>
+        <div class="di-val">${f4(c.abertura)}</div>
+        <div class="di-sub">${c.unidade_int}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Máx. Dia</div>
+        <div class="di-val">${f4(c.maximo_dia)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="di-lbl">Mín. Dia</div>
+        <div class="di-val">${f4(c.minimo_dia)}</div>
+      </div>
+    </div>
+    ${pos52 != null ? `
+    <div class="range-bar-wrap">
+      <div class="rb-labels">
+        <span>Mín. 52s: ${f4(lo)}</span>
+        <span style="color:var(--gold)">Atual: ${f4(cur)} (${f2(pos52)}%)</span>
+        <span>Máx. 52s: ${f4(hi)}</span>
+      </div>
+      <div class="range-bar">
+        <div class="rb-fill" style="left:0;width:${pos52}%"></div>
+        <div class="rb-cur" style="left:${pos52}%"></div>
+      </div>
+    </div>` : ''}
+    ${convPanel}
+  `;
+}
+
+// ── Tables ─────────────────────────────────────────────────────────────────
+function renderAll() { renderMainChart(); renderTables(); }
+
+function renderTables() {
+  // Tabela principal
+  document.getElementById('tb-main').innerHTML = COMMS.map(c => {
+    const clsBg = c.variacao_pct > 0
+      ? 'background:rgba(180,40,40,.08);color:#B83030'
+      : c.variacao_pct < 0
+        ? 'background:rgba(40,160,60,.08);color:#2E7D32'
+        : '';
+    return `<tr>
+      <td><span class="comm-dot" style="background:${c.cor}"></span><strong>${c.nome}</strong></td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-weight:600">R$ ${f2(c.preco_brl)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:#7A8A9A">${f4(c.preco)} ${c.unidade_int}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:600;${clsBg}">${pct(c.variacao_pct)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;${clsBg}">${abv(c.variacao)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:#7A8A9A">${f4(c.maximo_dia)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:#7A8A9A">${f4(c.minimo_dia)}</td>
+    </tr>`;
+  }).join('');
+
+  // 52 semanas
+  document.getElementById('tb-52w').innerHTML = COMMS.map(c => {
+    const lo = c.semanas52_min, hi = c.semanas52_max, cur = c.preco;
+    const pos = (lo != null && hi != null && hi !== lo) ? ((cur - lo) / (hi - lo) * 100) : null;
+    return `<tr>
+      <td><span class="comm-dot" style="background:${c.cor}"></span>${c.nome}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:#2E7D32">${f4(lo)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.7rem;color:#B83030">${f4(hi)}</td>
+      <td class="r" style="font-family:'DM Mono',monospace;font-size:.72rem;font-weight:600">${f4(cur)}</td>
+      <td>${pos != null ? `
+        <div class="rbar-cell">
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:#7A8A9A;margin-bottom:2px">${f2(pos)}%</div>
+          <div class="rb-mini"><div class="rbm-fill" style="width:${pos}%;background:${c.cor}"></div></div>
+        </div>` : '—'}
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Volume
+  document.getElementById('tb-vol').innerHTML = COMMS.map(c => `<tr>
+    <td><span class="comm-dot" style="background:${c.cor}"></span>${c.nome}</td>
+    <td class="r" style="font-family:'DM Mono',monospace">${fi(c.volume)}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:.65rem;color:#7A8A9A">${c.unidade_int}</td>
+    <td style="font-family:'DM Sans',sans-serif;font-size:.7rem;color:var(--text3)">${c.descricao || '—'}</td>
+  </tr>`).join('');
+}
+
+// ── Nav helpers ────────────────────────────────────────────────────────────
+function toggleMenu(){
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+
+init();
+</script>
+</body>
+</html>

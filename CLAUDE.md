@@ -37,7 +37,7 @@ VCZ_Consultoria_Portfolio.pdf → Portfolio para download
 7. FOOTER
 
 ## Formulário de contato
-Usa **Formspree** (`formspree.io/f/mojzjllq`) → e-mail chega em `vcz.grupo@gmail.com`.
+Usa **Formspree** (`formspree.io/f/mojzjllq`) → e-mail chega em `vczconsultoria@gmail.com`.
 Para trocar destino: criar novo form em formspree.io e atualizar o ID no `handleSubmit`.
 
 ## Política de idiomas
