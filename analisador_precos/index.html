@@ -462,7 +462,7 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
       <div class="filtro-rapido">
         <select class="tf-input" id="fr-segmento" title="Nível 1"><option value="">Nível 1: todos</option></select>
         <select class="tf-input" id="fr-bloco" title="Nível 2"><option value="">Nível 2: todos</option></select>
-        <select class="tf-input" id="fr-marca" title="Marca"><option value="">Marca: todas</option></select>
+        <input class="tf-input" id="fr-marca" type="text" list="fr-marca-opts" title="Marca" placeholder="Marca: todas" autocomplete="off"><datalist id="fr-marca-opts"></datalist>
         <select class="tf-input" id="fr-site" title="Rede"><option value="">Rede: todas</option></select>
         <select class="tf-input" id="fr-uf" title="UF"><option value="">UF: todas</option></select>
         <button class="btn-reset" id="fr-limpar" title="Limpa só estes 5">✕</button>
@@ -476,16 +476,20 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     <div class="pager" id="pivot-pager"></div>
   </div>
 
+  <!-- DISPERSÃO DE PREÇOS — visão geral com os mesmos filtros ativos, sem
+       precisar escolher 1 produto (diferente da Evolução abaixo, que é
+       por produto único). Mostra onde cada rede se posiciona na faixa de
+       preço, amostrando até 400 pontos por rede pra não travar com dias
+       de 150 mil+ linhas. -->
   <div class="tbox">
     <div class="tbox-head">
-      <h3 id="detail-title">Detalhe de SKUs</h3>
+      <h3>Dispersão de Preços por Rede</h3>
       <div class="tbox-tools">
-        <button class="btn-reset" id="btn-clear-drill" style="display:none">✕ Limpar seleção</button>
-        <span class="tbox-cnt" id="detail-cnt">0</span>
+        <span class="tbox-cnt" id="dispersao-cnt">0</span>
       </div>
     </div>
-    <div class="tbl-scroll"><table class="dt" id="detail-table"><thead></thead><tbody></tbody></table></div>
-    <div class="pager" id="detail-pager"></div>
+    <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Cada ponto é 1 SKU (preço regular) com os filtros atuais aplicados — útil pra ver se uma rede se posiciona mais cara/barata ou tem preços mais espalhados que as outras. Amostra até 400 pontos por rede quando há mais dados que isso.</p>
+    <div class="evo-chart-box"><canvas id="dispersao-canvas"></canvas></div>
   </div>
 
   <!-- EVOLUÇÃO DE PREÇO — 1 produto por vez, redes em linha e datas em coluna -->
@@ -536,6 +540,25 @@ input.tf-input::placeholder{color:rgba(154,170,187,.6)}
     <p class="evo-chart-legenda" style="padding:.5rem .9rem 0">Compara o preço regular mais recente de cada produto, em cada rede, contra a mediana dos dias anteriores daquela MESMA rede — não entre redes diferentes. Precisa de pelo menos 4 dias de histórico, e só entra produto visto numa das 2 coletas mais recentes (produto que saiu do catálogo não vira alerta).</p>
     <div class="tbl-scroll"><table class="dt" id="alertas-table"><thead></thead><tbody></tbody></table></div>
     <div class="pager" id="alertas-pager"></div>
+  </div>
+
+  <!-- DETALHE DE SKUs — fica no final e recolhida por padrão (é a tabela
+       "crua" linha-a-linha, menos útil que o resto pra uma primeira olhada;
+       abre sozinha quando o usuário clica numa linha da comparação/pivot
+       pra fazer drill-down, porque aí ela é o ponto da ação). -->
+  <div class="tbox" id="detail-box">
+    <div class="tbox-head">
+      <button class="btn-reset" id="btn-toggle-detail" type="button">▸ Expandir</button>
+      <h3 id="detail-title">Detalhe de SKUs</h3>
+      <div class="tbox-tools">
+        <button class="btn-reset" id="btn-clear-drill" style="display:none">✕ Limpar seleção</button>
+        <span class="tbox-cnt" id="detail-cnt">0</span>
+      </div>
+    </div>
+    <div id="detail-body" style="display:none">
+      <div class="tbl-scroll"><table class="dt" id="detail-table"><thead></thead><tbody></tbody></table></div>
+      <div class="pager" id="detail-pager"></div>
+    </div>
   </div>
 
 </div>
@@ -594,6 +617,7 @@ const state = {
   marcaDestaque: '', // marca fixa que ganha 1 coluna extra na tabela, sem filtrar o resto (ex: cliente da VCZ acompanhando ao vivo)
   _aliasProduto: new Map(), // chaveBruta -> chaveCanônica, recalculado a cada render de Produto (ver calcularAliasProduto)
   drill: null,                // {campo, valor} — linha do pivot selecionada
+  detailAberto: false,        // "Detalhe de SKUs" começa recolhida; abre sozinha ao fazer drill-down
   siteColOrder: [...SITE_ORDER], // ordem das colunas de rede na tabela
   siteOrderManual: false, // true assim que o usuário arrasta 1x — daí o auto-ordenar por densidade para de mexer
   pivotSort: {col:'_n', dir:-1}, detailSort: {col:'data', dir:-1},
@@ -1076,6 +1100,7 @@ function wireEventos(){
 
   document.getElementById('pivot-search').addEventListener('input', e => { state.pivotBusca = e.target.value; state.pivotPage=1; renderPivot(); });
   document.getElementById('btn-clear-drill').addEventListener('click', () => { state.drill=null; state.detailPage=1; render(); });
+  document.getElementById('btn-toggle-detail').addEventListener('click', () => { state.detailAberto = !state.detailAberto; renderDetail(); });
   document.getElementById('f-marca-destaque').addEventListener('change', e => { state.marcaDestaque = e.target.value; render(); });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
@@ -1511,7 +1536,11 @@ function renderPivot(){
       const label = decodeURIComponent(tr.dataset.label);
       state.drill = (state.drill && state.drill.chave===chave) ? null : {dim: state.verPor, chave, label};
       state.detailPage = 1;
-      render();
+      if(state.drill){
+        state.detailAberto = true;
+        render();
+        document.getElementById('detail-box').scrollIntoView({behavior:'smooth', block:'start'});
+      } else render();
     }));
     // clique duplo numa célula de preço abre o produto na rede — não conta
     // como clique de drill-down (stopPropagation evita mexer na seleção)
@@ -1573,6 +1602,8 @@ function renderDetail(){
   let rows = linhasFiltradas();
   if(state.drill) rows = rows.filter(r => chaveGrupo(r, state.drill.dim) === state.drill.chave);
 
+  document.getElementById('detail-body').style.display = state.detailAberto ? '' : 'none';
+  document.getElementById('btn-toggle-detail').textContent = state.detailAberto ? '▾ Recolher' : '▸ Expandir';
   document.getElementById('btn-clear-drill').style.display = state.drill ? '' : 'none';
   document.getElementById('detail-title').textContent = state.drill
     ? `Detalhe de SKUs — ${DIM_LABEL[state.drill.dim]}: ${state.drill.label}`
@@ -2031,19 +2062,41 @@ const FILTRO_RAPIDO = [
 
 function montarFiltroRapido(){
   FILTRO_RAPIDO.forEach(fr => {
-    const sel = document.getElementById(fr.id);
+    const el = document.getElementById(fr.id);
     const valores = fr.opcoes().filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b),'pt'));
     const atual = fr.tipo==='texto' ? state.filtros[fr.campo]
                 : (state.filtros[fr.campo].size===1 ? [...state.filtros[fr.campo]][0] : '');
-    sel.innerHTML = `<option value="">${fr.rotulo}: ${['Marca','Rede','UF'].includes(fr.rotulo)?'todas':'todos'}</option>`
+    if(fr.id === 'fr-marca'){
+      // select nativo não dá pra digitar com milhares de marcas — usa input+datalist
+      document.getElementById('fr-marca-opts').innerHTML = valores.map(v=>`<option value="${esc(fr.label?fr.label(v):v)}">`).join('');
+      el.value = valores.includes(atual) ? (fr.label?fr.label(atual):atual) : '';
+      el._valores = valores;
+      return;
+    }
+    el.innerHTML = `<option value="">${fr.rotulo}: ${['Marca','Rede','UF'].includes(fr.rotulo)?'todas':'todos'}</option>`
       + valores.map(v=>`<option value="${esc(v)}">${esc(fr.label?fr.label(v):v)}</option>`).join('');
-    sel.value = valores.includes(atual) ? atual : '';
+    el.value = valores.includes(atual) ? atual : '';
   });
 }
 
 function wireFiltroRapido(){
   FILTRO_RAPIDO.forEach(fr => {
-    document.getElementById(fr.id).addEventListener('change', e => {
+    const el = document.getElementById(fr.id);
+    if(fr.id === 'fr-marca'){
+      const aplicar = () => {
+        const digitado = el.value.trim();
+        const match = digitado ? (el._valores||[]).find(v => v.toLowerCase() === digitado.toLowerCase()) : '';
+        el.value = match || '';
+        state.filtros.marcas.clear(); if(match) state.filtros.marcas.add(match);
+        state.pivotPage = state.detailPage = state.alertasPage = 1;
+        state.drill = null;
+        montarFiltrosDependentes(); montarFiltroRapido(); render();
+      };
+      el.addEventListener('change', aplicar);
+      el.addEventListener('keydown', e => { if(e.key === 'Enter') el.blur(); });
+      return;
+    }
+    el.addEventListener('change', e => {
       const v = e.target.value;
       if(fr.tipo==='texto') state.filtros[fr.campo] = v;
       else { state.filtros[fr.campo].clear(); if(v) state.filtros[fr.campo].add(v); }
@@ -2092,8 +2145,50 @@ function renderResumoFiltros(){
   el.innerHTML = chips.length ? chips.join('') : '<span class="filtro-chip-vazio">nenhum filtro ativo</span>';
 }
 
+// gráfico "visão geral" com os filtros ativos (sem precisar escolher 1
+// produto, diferente da Evolução) — onde cada rede se posiciona na faixa
+// de preço. Amostra aleatória por rede pra não travar com dia grande.
+function renderDispersao(){
+  const rows = linhasFiltradas().filter(r => parseFloat(r.preco_regular) > 0);
+  const porSite = {};
+  rows.forEach(r => { (porSite[r.site] = porSite[r.site] || []).push(parseFloat(r.preco_regular)); });
+  const sitesComDado = state.siteColOrder.filter(s => porSite[s] && porSite[s].length);
+  const MAX_PONTOS = 400;
+  const datasets = sitesComDado.map((s, i) => {
+    let precos = porSite[s];
+    if(precos.length > MAX_PONTOS) precos = [...precos].sort(() => Math.random()-0.5).slice(0, MAX_PONTOS);
+    return {
+      label: SITE_LABELS[s] || s,
+      data: precos.map(p => ({x: i + (Math.random()-0.5)*0.6, y: p})),
+      backgroundColor: hexParaRgba(SITE_COLOR[s], .55),
+      borderColor: SITE_COLOR[s],
+      pointRadius: 2.5, pointHoverRadius: 4.5,
+    };
+  });
+  document.getElementById('dispersao-cnt').textContent = `${rows.length.toLocaleString('pt-BR')} SKU${rows.length!==1?'s':''}`;
+  if(state._dispersaoChart) state._dispersaoChart.destroy();
+  state._dispersaoChart = new Chart(document.getElementById('dispersao-canvas').getContext('2d'), {
+    type: 'scatter',
+    data: { datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { min: -0.5, max: Math.max(0.5, sitesComDado.length - 0.5),
+             ticks: { stepSize: 1, autoSkip: false,
+               callback: v => { const s = sitesComDado[Math.round(v)]; return s ? (SITE_LABELS[s]||s) : ''; } },
+             grid: { color: 'rgba(255,255,255,.06)' } },
+        y: { ticks: { callback: v => fmtR(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtR(ctx.parsed.y)}` } },
+      },
+    },
+  });
+}
+
 function render(){
-  renderStats(); renderPivot(); renderDetail();
+  renderStats(); renderPivot(); renderDispersao(); renderDetail();
   renderResumoFiltros();
   if(state.alertas.length) renderAlertas(); // alertas respeitam os mesmos filtros
   if(state.evolucao.ean || state.evolucao.descricao) renderEvolucao(); // preço/agregação mudaram, refaz com o produto já selecionado

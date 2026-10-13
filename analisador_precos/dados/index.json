@@ -1,5 +1,15 @@
 [
   {
+    "data": "2026-10-13",
+    "linhas": 183904,
+    "arquivo": "dias/2026-10-13.csv"
+  },
+  {
+    "data": "2026-10-12",
+    "linhas": 182718,
+    "arquivo": "dias/2026-10-12.csv"
+  },
+  {
     "data": "2026-10-11",
     "linhas": 182635,
     "arquivo": "dias/2026-10-11.csv"
