@@ -11,26 +11,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VCZ Consultoria — Applied Commercial Intelligence</title>
-<meta name="description" content="VCZ Consultoria: applied commercial intelligence, market research and JBP (Joint Business Plan) for retail, industry and e-commerce. Clearer decisions, stronger results.">
-<meta name="keywords" content="commercial intelligence, market research, JBP, joint business plan, management dashboards, pricing strategy, forecast, retail, industry, e-commerce, Brazil consulting">
-<meta property="og:title" content="VCZ Consultoria — Applied Commercial Intelligence">
-<meta property="og:description" content="We transform market data into applied strategy — focused on sales performance, profitability and strategic positioning.">
+<title>VCZ Consultoria — Strategic & Commercial Management Consulting</title>
+<meta name="description" content="Strategic and commercial management consulting for retail, industry, services and e-commerce companies: diagnosis, commercial intelligence, market research and JBP for more profitable decisions.">
+<meta name="keywords" content="strategic and commercial management consulting, strategic consulting, commercial intelligence, market research, JBP, joint business plan, management dashboards, pricing strategy, forecast, purchase planning, category structure, profitability analysis, retail, industry, services, e-commerce, Brazil consulting">
+<meta property="og:title" content="VCZ Consultoria — Strategic & Commercial Management Consulting">
+<meta property="og:description" content="Strategic and commercial management consulting for retail, industry, services and e-commerce companies: diagnosis, commercial intelligence, market research and JBP for more profitable decisions.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://vczconsultoria.com.br/en/">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
-<meta property="og:image:alt" content="VCZ Consultoria — Applied Commercial Intelligence">
+<meta property="og:image:alt" content="VCZ Consultoria — Strategic & Commercial Management Consulting">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="VCZ Consultoria — Applied Commercial Intelligence">
-<meta name="twitter:description" content="Commercial intelligence, market research and JBP for retail, industry and e-commerce. Dashboards, forecast and performance consulting.">
+<meta name="twitter:title" content="VCZ Consultoria — Strategic & Commercial Management Consulting">
+<meta name="twitter:description" content="Strategic and commercial management consulting for retail, industry, services and e-commerce companies: diagnosis, commercial intelligence, market research and JBP for more profitable decisions.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://vczconsultoria.com.br/en/">
 <link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/">
 <link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/">
 <link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/">
+<link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/">
+<link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/">
+<link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/">
 <link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/og-image.png">
@@ -102,18 +105,45 @@
   .sobre-text p { color: var(--fog); font-weight: 300; font-size: 16px; line-height: 1.85; margin-bottom: 1.4rem; }
   .sobre-text p:last-child { margin-bottom: 0; }
   .sobre-text strong { color: var(--warm-white); font-weight: 500; }
-  .sobre-servicos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-self: start; }
-  .sobre-servico-card { background: var(--cream); padding: 1.6rem 1.4rem 1.8rem; border-top: 2px solid var(--gold); }
-  .sobre-servico-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; }
-  .sobre-servico-num { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--gold); }
-  .sobre-servico-icon { color: var(--gold); }
-  .sobre-servico-title { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--graphite); margin-bottom: 0.6rem; }
-  .sobre-servico-desc { font-size: 13px; color: #5a5a5a; font-weight: 300; line-height: 1.7; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(46,46,46,0.1); }
-  .sobre-servico-items { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
-  .sobre-servico-items li { font-size: 12px; color: #888; display: flex; align-items: flex-start; gap: 6px; font-weight: 300; line-height: 1.5; }
-  .sobre-servico-items li.destaque { color: var(--graphite); font-weight: 400; }
-  .sobre-servico-items li::before { content: '—'; color: var(--gold-aged); flex-shrink: 0; font-size: 11px; }
-  .sobre-servico-items li.destaque::before { color: var(--gold); }
+  /* 3x3 grid of the 9 services, dark card style matching /servicos.html,
+     compact to fit this column — title + short text, always visible. */
+  .sobre-servicos-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+  .sobre-mini-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(183,160,115,0.15);
+    border-top: 2px solid var(--gold);
+    border-radius: 6px;
+    padding: 0.9rem 0.8rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sobre-mini-card:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(183,160,115,0.3);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+    transform: translateY(-3px);
+  }
+
+  .sobre-mini-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
+
+  .sobre-mini-icon {
+    width: 30px; height: 30px;
+    background: var(--gold);
+    border-radius: 7px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sobre-mini-num { font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; color: var(--gold-aged); }
+
+  .sobre-mini-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 700; color: var(--warm-white); line-height: 1.25; margin-bottom: 0.4rem; }
+
+  .sobre-mini-desc { font-size: 10.5px; font-weight: 300; color: var(--steel); line-height: 1.5; }
   #entregas { background: var(--navy); padding: 52px 5vw; }
   .entregas-grid { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 2rem; border-top: 1px solid rgba(183,160,115,0.15); }
   .entrega { padding: 1.4rem 1.4rem 1.4rem 1rem; border-left: 2px solid var(--gold); border-right: 1px solid rgba(183,160,115,0.12); }
@@ -182,7 +212,7 @@
     .hero-right { display: none; }
     .contato-form { order: -1; }
     .entregas-grid { grid-template-columns: 1fr 1fr; }
-    .sobre-servicos { grid-template-columns: 1fr; }
+    .sobre-servicos-grid3 { grid-template-columns: 1fr 1fr; }
     .nav-cta { display: none; }
   }
 
@@ -243,6 +273,9 @@
         <a href="/"><img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil"> PT</a>
         <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/gb.png" alt="English"> EN</span>
         <a href="/es/"><img class="flag" src="https://flagcdn.com/w20/es.png" alt="Español"> ES</a>
+        <a href="/de/"><img class="flag" src="https://flagcdn.com/w20/de.png" alt="Deutsch"> DE</a>
+        <a href="/fr/"><img class="flag" src="https://flagcdn.com/w20/fr.png" alt="Français"> FR</a>
+        <a href="/da/"><img class="flag" src="https://flagcdn.com/w20/dk.png" alt="Dansk"> DA</a>
       </div>
     </div>
     <a href="#contato" class="nav-cta">Get in touch</a>
@@ -257,10 +290,10 @@
   <div class="hero-glow"></div>
   <div class="hero-layout">
     <div class="hero-left">
-      <p class="hero-eyebrow">Applied Commercial Intelligence</p>
+      <p class="hero-eyebrow">Strategic & Commercial Management Consulting</p>
       <h1 class="hero-title">Clearer <em>decisions.</em><br>Stronger results.</h1>
       <div class="hero-line"></div>
-      <p class="hero-sub">VCZ transforms market data into strategic direction — so every commercial decision is made with method, evidence, and criteria. Brazil-based, serving clients remotely worldwide in retail, industry, and e-commerce.</p>
+      <p class="hero-sub">VCZ offers strategic and commercial management consulting for retail, industry, services, and e-commerce companies — so every decision is made with method, evidence, and criteria. Brazil-based, serving clients remotely worldwide.</p>
       <div class="hero-actions">
         <a href="#sobre" class="btn-primary">Explore our services</a>
         <a href="#sobre" class="btn-ghost">About VCZ</a>
@@ -278,47 +311,85 @@
       <p class="section-label reveal">The consultancy</p>
       <h2 class="section-title reveal">From market insight<br>to the <em>right decision.</em></h2>
       <div class="sobre-text reveal" style="margin-top: 2rem;">
-        <p>VCZ is a consultancy specialized in <strong>commercial intelligence</strong>, <strong>market research</strong>, and <strong>JBP (Joint Business Plan)</strong> development for companies seeking sustainable growth.</p>
+        <p>VCZ is a <strong>strategic and commercial management consultancy</strong>, specialized in <strong>commercial intelligence</strong>, <strong>market research</strong>, and <strong>JBP (Joint Business Plan)</strong> development for retail, industry, services, and e-commerce companies seeking sustainable growth.</p>
         <p>We transform data and market insight into applied strategy — focused on <strong>sales performance</strong>, <strong>profitability</strong>, and <strong>strategic positioning</strong>.</p>
         <p>From market research to applied commercial intelligence, we work across the full analytical cycle — with method, evidence, and focus on what drives real results for the business.</p>
       </div>
     </div>
     <div>
       <p class="section-label reveal">Our products</p>
-      <div class="sobre-servicos reveal" style="margin-top: 1.2rem;">
-        <div class="sobre-servico-card">
-          <div class="sobre-servico-header">
-            <span class="sobre-servico-num">01</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <div class="sobre-servicos-grid3 reveal" style="margin-top: 1.2rem;">
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+            <span class="sobre-mini-num">01</span>
           </div>
-          <p class="sobre-servico-title">Commercial Intelligence</p>
-          <p class="sobre-servico-desc">Operational analysis to identify where the business can grow with greater margin and consistency.</p>
-          <ul class="sobre-servico-items">
-            <li class="destaque">Results and profitability analysis</li>
-            <li>Pricing strategy and analysis</li>
-            <li>Portfolio mix and qualification</li>
-            <li class="destaque">Management dashboards and visualizations</li>
-            <li>Pilot project analysis</li>
-            <li class="destaque">Sales forecast and daily planning</li>
-            <li>Goal monitoring</li>
-          </ul>
+          <p class="sobre-mini-title">Commercial & Strategic Consulting</p>
+          <p class="sobre-mini-desc">Review of commercial strategy, diagnosis, and action plan.</p>
         </div>
-        <div class="sobre-servico-card">
-          <div class="sobre-servico-header">
-            <span class="sobre-servico-num">02</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sobre-servico-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></span>
+            <span class="sobre-mini-num">02</span>
           </div>
-          <p class="sobre-servico-title">Market Research</p>
-          <p class="sobre-servico-desc">Study of the market, consumer, and competition to validate strategies and identify opportunities.</p>
-          <ul class="sobre-servico-items">
-            <li class="destaque">Consumer behavior and journey</li>
-            <li>Brand and product perception</li>
-            <li>Strategy alignment and validation</li>
-            <li class="destaque">Competitive dynamics analysis</li>
-            <li>Strategic intelligence and scenarios</li>
-            <li>Recurring market analyses</li>
-            <li>Sector benchmarks</li>
-          </ul>
+          <p class="sobre-mini-title">JBP</p>
+          <p class="sobre-mini-desc">Partnership with suppliers: agreed sales and profitability targets.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+            <span class="sobre-mini-num">03</span>
+          </div>
+          <p class="sobre-mini-title">Pricing</p>
+          <p class="sobre-mini-desc">Regional competitiveness, with price and profitability simulator.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+            <span class="sobre-mini-num">04</span>
+          </div>
+          <p class="sobre-mini-title">Profitability Analysis</p>
+          <p class="sobre-mini-desc">Margin study by category and SKU, with correction priority.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+            <span class="sobre-mini-num">05</span>
+          </div>
+          <p class="sobre-mini-title">Category Structure</p>
+          <p class="sobre-mini-desc">Assortment, ABC curve, and category structure review.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
+            <span class="sobre-mini-num">06</span>
+          </div>
+          <p class="sobre-mini-title">Purchase Planning</p>
+          <p class="sobre-mini-desc">Turnover, payment terms, and advance buying ahead of price increases.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
+            <span class="sobre-mini-num">07</span>
+          </div>
+          <p class="sobre-mini-title">Pilot Project</p>
+          <p class="sobre-mini-desc">Test and mirror stores, with suggestion to replicate.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
+            <span class="sobre-mini-num">08</span>
+          </div>
+          <p class="sobre-mini-title">Management & Market Dashboards</p>
+          <p class="sobre-mini-desc">From management to SKU level, plus Nielsen, Scanntech and GFK, without rework.</p>
+        </div>
+        <div class="sobre-mini-card">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <span class="sobre-mini-num">09</span>
+          </div>
+          <p class="sobre-mini-title">Market Research</p>
+          <p class="sobre-mini-desc">Purchase behavior, brand perception, and trends.</p>
         </div>
       </div>
     </div>
@@ -410,11 +481,15 @@
         <label for="assunto">Area of interest</label>
         <select id="assunto" name="assunto">
           <option value="" disabled selected>Select</option>
-          <option>Commercial Intelligence</option>
-          <option>Market Research</option>
+          <option>Commercial & Strategic Consulting</option>
+          <option>Profitability Diagnosis</option>
           <option>JBP — Joint Business Plan</option>
-          <option>Dashboard Development</option>
-          <option>Both areas</option>
+          <option>Pricing</option>
+          <option>Category Structure</option>
+          <option>Purchase Planning</option>
+          <option>Pilot Project</option>
+          <option>Management & Market Dashboards</option>
+          <option>Market Research</option>
           <option>Other</option>
         </select>
       </div>
@@ -437,7 +512,7 @@
 
 <footer>
   <div class="footer-brand"><img src="../logo-ouro.svg" alt="VCZ Consultoria"></div>
-  <p class="footer-copy">© <span id="footer-year">2026</span> VCZ Consultoria<br>Applied Commercial Intelligence<br><a href="/en/privacy.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Privacy Policy</a></p>
+  <p class="footer-copy">© <span id="footer-year">2026</span> VCZ Consultoria<br>Strategic & Commercial Management Consulting<br><a href="/en/privacy.html" style="color:inherit;opacity:0.6;text-decoration:none;font-size:9px;letter-spacing:0.1em;">Privacy Policy</a></p>
 </footer>
 
 <script>

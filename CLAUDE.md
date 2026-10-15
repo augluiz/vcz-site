@@ -12,8 +12,14 @@ insights/index.html     → Listagem de artigos e estudos
 insights/*.html         → Artigos individuais
 en/index.html           → Versão em inglês
 es/index.html           → Versão em espanhol
+de/index.html           → Versão em alemão
+fr/index.html           → Versão em francês
+da/index.html           → Versão em dinamarquês
 en/privacy.html         → Privacy Policy (EN)
 es/privacidad.html      → Política de Privacidad (ES)
+de/datenschutz.html     → Datenschutzerklärung (DE)
+fr/confidentialite.html → Politique de Confidentialité (FR)
+da/privatlivspolitik.html → Privatlivspolitik (DA)
 privacidade.html        → Política de Privacidade (PT)
 termos.html             → Termos de Uso
 sitemap.xml             → Mapa do site para o Google
@@ -41,7 +47,8 @@ Usa **Formspree** (`formspree.io/f/mojzjllq`) → e-mail chega em `vczconsultori
 Para trocar destino: criar novo form em formspree.io e atualizar o ID no `handleSubmit`.
 
 ## Política de idiomas
-`index.html` é a **página-mãe PT-BR**. Toda nova funcionalidade deve ser validada aqui primeiro, depois replicada para `en/index.html` e `es/index.html`.
+`index.html` é a **página-mãe PT-BR**. Toda nova funcionalidade deve ser validada aqui primeiro, depois replicada para `en/index.html`, `es/index.html`, `de/index.html`, `fr/index.html` e `da/index.html`.
+Idiomas disponíveis: PT (mãe), EN, ES, DE, FR, DA. `servicos.html`, `insights/`, `dashboards/` e os dashboards públicos (`ceasa_dashboard/`, `ibge_sidra/`) são PT-only, mas o seletor de idioma neles linka para a home (`/`) de cada idioma.
 
 ## Posts para redes sociais
 - `post-story.html` → Story 1080×1920px

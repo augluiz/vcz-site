@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serviços — VCZ Consultoria</title>
-<meta name="description" content="Conheça os serviços da VCZ Consultoria: Inteligência Comercial, Pesquisa de Mercado e Joint Business Plan (JBP) para varejo, indústria e e-commerce.">
+<title>Serviços — VCZ Consultoria de Gestão Estratégica e Comercial</title>
+<meta name="description" content="Conheça os serviços da VCZ: consultoria comercial e estratégica, inteligência comercial, pesquisa de mercado e JBP para empresas de varejo, indústria, serviços e e-commerce.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://vczconsultoria.com.br/servicos.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Serviços — VCZ Consultoria">
-<meta property="og:description" content="Inteligência Comercial, Pesquisa de Mercado e Joint Business Plan (JBP) para varejo, indústria e e-commerce.">
+<meta property="og:title" content="Serviços — VCZ Consultoria de Gestão Estratégica e Comercial">
+<meta property="og:description" content="Consultoria comercial e estratégica, inteligência comercial, pesquisa de mercado e JBP para empresas de varejo, indústria, serviços e e-commerce.">
 <meta property="og:url" content="https://vczconsultoria.com.br/servicos.html">
 <meta property="og:image" content="https://vczconsultoria.com.br/og-image.png">
 <meta property="og:image:alt" content="Serviços VCZ Consultoria — Inteligência Comercial, Pesquisa de Mercado e JBP">
@@ -122,6 +122,7 @@
   .categoria-label-sep { color: var(--gold-aged); opacity: 0.6; }
 
   .servicos-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .servicos-mini-grid.grid-2 { grid-template-columns: repeat(2, 1fr); max-width: calc(66.667% - 6px); }
 
   /* Card claro (creme), no mesmo padrão do resto do site: borda
      dourada no topo, número + ícone no cabeçalho, título + texto curto. */
@@ -266,7 +267,7 @@
     .nav-links a { padding: 1rem 5vw; font-size: 13px; letter-spacing: 0.2em; border-bottom: 1px solid rgba(183,160,115,0.08); }
     .nav-links li:last-child a { border-bottom: none; }
     .nav-cta { display: none; }
-    .servicos-mini-grid { grid-template-columns: 1fr; }
+    .servicos-mini-grid, .servicos-mini-grid.grid-2 { grid-template-columns: 1fr; max-width: none; }
     .servico-mini-tip { display: none; }
     .servicos-grid { grid-template-columns: 1fr; }
     .page-header-title { font-size: clamp(2rem, 7vw, 3rem); }
@@ -330,6 +331,9 @@
         <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/br.png" alt="Brasil"> PT</span>
         <a href="/en/"><img class="flag" src="https://flagcdn.com/w20/gb.png" alt="English"> EN</a>
         <a href="/es/"><img class="flag" src="https://flagcdn.com/w20/es.png" alt="Español"> ES</a>
+        <a href="/de/"><img class="flag" src="https://flagcdn.com/w20/de.png" alt="Deutsch"> DE</a>
+        <a href="/fr/"><img class="flag" src="https://flagcdn.com/w20/fr.png" alt="Français"> FR</a>
+        <a href="/da/"><img class="flag" src="https://flagcdn.com/w20/dk.png" alt="Dansk"> DA</a>
       </div>
     </div>
     <a href="/#contato" class="nav-cta">Fale conosco</a>
@@ -346,8 +350,8 @@
   <div class="page-header-layout">
     <div class="page-header-left">
       <p class="page-header-eyebrow">VCZ Consultoria</p>
-      <h1 class="page-header-title">As <em>frentes</em> da inteligência<br>comercial aplicada.</h1>
-      <p class="page-header-sub">Combinamos inteligência comercial e pesquisa de mercado para transformar dados em estratégia real — com método, evidência e foco em resultado.</p>
+      <h1 class="page-header-title">As <em>frentes</em> da gestão<br>estratégica e comercial.</h1>
+      <p class="page-header-sub">Combinamos consultoria estratégica, inteligência comercial e pesquisa de mercado para transformar dados em decisão real — com método, evidência e foco em resultado, para empresas de varejo, indústria, serviços e e-commerce.</p>
     </div>
     <div class="page-header-right">
       <img src="/logo-mark.svg" alt="" aria-hidden="true" class="page-header-mark">
@@ -360,20 +364,20 @@
   <!-- MARGEM E PREÇO -->
   <div class="categoria-block">
     <p class="categoria-label reveal">Margem e Preço</p>
-    <div class="servicos-mini-grid">
+    <div class="servicos-mini-grid grid-2">
       <div class="servico-mini-card reveal">
         <div class="servico-mini-header">
-          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
           <span class="servico-mini-num">01</span>
         </div>
-        <p class="servico-mini-title">Análise de rentabilidade</p>
-        <p class="servico-mini-desc">Estudo de margem por categoria e SKU: preço desalinhado, custo não repassado e verba desproporcional, com prioridade de correção.</p>
+        <p class="servico-mini-title">Consultoria Comercial e Estratégica</p>
+        <p class="servico-mini-desc">Revisão da estratégia comercial da companhia: diagnóstico completo da operação, direcionamento e plano de ação — trabalho de consultoria de ponta a ponta.</p>
         <span class="servico-mini-more" tabindex="0">
           <span class="plus">+</span>
           <span class="servico-mini-tip">
-            <span class="tip-item"><strong>Onde a margem se perde</strong>Categoria e SKU com preço desalinhado, custo não repassado ou verba que não acompanhou.</span>
-            <span class="tip-item"><strong>Preço e competitividade</strong>Se o preço praticado sustenta a margem frente ao mercado, e onde há barganha com a indústria.</span>
-            <span class="tip-item"><strong>O que acompanhar</strong>Categorias e produtos a monitorar, priorizados por impacto no resultado.</span>
+            <span class="tip-item"><strong>Diagnóstico estratégico</strong>Leitura completa da operação comercial: onde a empresa ganha, onde perde e por quê.</span>
+            <span class="tip-item"><strong>Plano de ação</strong>Direcionamento prático, com prioridade e responsável definidos — não um relatório genérico.</span>
+            <span class="tip-item"><strong>Acompanhamento</strong>Revisão periódica do plano frente ao resultado, com correção de rota.</span>
           </span>
         </span>
       </div>
@@ -409,6 +413,22 @@
           </span>
         </span>
       </div>
+      <div class="servico-mini-card reveal">
+        <div class="servico-mini-header">
+          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+          <span class="servico-mini-num">04</span>
+        </div>
+        <p class="servico-mini-title">Análise de rentabilidade</p>
+        <p class="servico-mini-desc">Estudo de margem por categoria e SKU: preço desalinhado, custo não repassado e verba desproporcional, com prioridade de correção.</p>
+        <span class="servico-mini-more" tabindex="0">
+          <span class="plus">+</span>
+          <span class="servico-mini-tip">
+            <span class="tip-item"><strong>Onde a margem se perde</strong>Categoria e SKU com preço desalinhado, custo não repassado ou verba que não acompanhou.</span>
+            <span class="tip-item"><strong>Preço e competitividade</strong>Se o preço praticado sustenta a margem frente ao mercado, e onde há barganha com a indústria.</span>
+            <span class="tip-item"><strong>O que acompanhar</strong>Categorias e produtos a monitorar, priorizados por impacto no resultado.</span>
+          </span>
+        </span>
+      </div>
     </div>
   </div>
 
@@ -419,7 +439,7 @@
       <div class="servico-mini-card reveal">
         <div class="servico-mini-header">
           <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
-          <span class="servico-mini-num">04</span>
+          <span class="servico-mini-num">05</span>
         </div>
         <p class="servico-mini-title">Estrutura mercadológica</p>
         <p class="servico-mini-desc">Análise de sortimento e rentabilidade, papel da categoria e do produto, curva ABC, revisão de mix e da estrutura de categorias.</p>
@@ -435,7 +455,7 @@
       <div class="servico-mini-card reveal">
         <div class="servico-mini-header">
           <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
-          <span class="servico-mini-num">05</span>
+          <span class="servico-mini-num">06</span>
         </div>
         <p class="servico-mini-title">Planejamento de compra</p>
         <p class="servico-mini-desc">Compra assertiva: giro dentro do prazo de pagamento, sem financiar estoque com capital próprio, e quanto antecipar de compra no custo atual diante de um reajuste anunciado.</p>
@@ -451,7 +471,7 @@
       <div class="servico-mini-card reveal">
         <div class="servico-mini-header">
           <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
-          <span class="servico-mini-num">06</span>
+          <span class="servico-mini-num">07</span>
         </div>
         <p class="servico-mini-title">Projeto piloto</p>
         <p class="servico-mini-desc">Proposta do que testar e como: lojas teste e espelho, indicadores definidos, acompanhamento do projeto, leitura do que funcionou, correções e sugestão de replicar nas demais lojas.</p>
@@ -470,36 +490,20 @@
   <!-- DADOS E MERCADO -->
   <div class="categoria-block">
     <p class="categoria-label reveal">Dados e Mercado</p>
-    <div class="servicos-mini-grid">
+    <div class="servicos-mini-grid grid-2">
       <div class="servico-mini-card reveal">
         <div class="servico-mini-header">
           <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
-          <span class="servico-mini-num">07</span>
+          <span class="servico-mini-num">08</span>
         </div>
-        <p class="servico-mini-title">Painéis gerenciais</p>
-        <p class="servico-mini-desc">Painéis sob medida, do gerencial ao SKU, com visão por região, bandeira, canal e loja, atualizados sem retrabalho.</p>
+        <p class="servico-mini-title">Painéis Gerenciais e de Mercado</p>
+        <p class="servico-mini-desc">Painéis sob medida, do gerencial ao SKU, com visão por região, bandeira, canal e loja — e leitura de mercado com os dados que você já possui (Nielsen, Scanntech, GFK), atualizados sem retrabalho.</p>
         <span class="servico-mini-more" tabindex="0">
           <span class="plus">+</span>
           <span class="servico-mini-tip">
             <span class="tip-item"><strong>Indicadores que o time usa</strong>Poucos KPIs, bem definidos, ligados à decisão de cada área.</span>
+            <span class="tip-item"><strong>Share e benchmark</strong>Sua participação por categoria frente ao mercado e à região, com mais força na negociação com o fornecedor.</span>
             <span class="tip-item"><strong>Rotina automatizada</strong>Atualização recorrente, sem retrabalho manual de relatório.</span>
-            <span class="tip-item"><strong>Leitura por recorte</strong>Categoria, loja, região e fornecedor no mesmo painel.</span>
-          </span>
-        </span>
-      </div>
-      <div class="servico-mini-card reveal">
-        <div class="servico-mini-header">
-          <span class="servico-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-          <span class="servico-mini-num">08</span>
-        </div>
-        <p class="servico-mini-title">Painel de mercado</p>
-        <p class="servico-mini-desc">Painel construído com os dados que você já possui (Nielsen, Scanntech, GFK): sua performance frente à concorrência e mais força na negociação com o fornecedor.</p>
-        <span class="servico-mini-more" tabindex="0">
-          <span class="plus">+</span>
-          <span class="servico-mini-tip">
-            <span class="tip-item"><strong>Share e benchmark</strong>Sua participação por categoria frente ao mercado e à região.</span>
-            <span class="tip-item"><strong>Tendência de consumo</strong>Movimentos de categoria que antecipam oportunidade e risco.</span>
-            <span class="tip-item"><strong>Visão gerencial</strong>Os relatórios que você já possui viram base para negociar e corrigir rota.</span>
           </span>
         </span>
       </div>

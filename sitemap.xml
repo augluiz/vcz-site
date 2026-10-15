@@ -5,34 +5,85 @@
   <!-- Página principal PT -->
   <url>
     <loc>https://vczconsultoria.com.br/</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
     <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
+    <xhtml:link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/"/>
+    <xhtml:link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/"/>
   </url>
 
   <!-- Versão EN -->
   <url>
     <loc>https://vczconsultoria.com.br/en/</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
     <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
+    <xhtml:link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/"/>
+    <xhtml:link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/"/>
   </url>
 
   <!-- Versão ES -->
   <url>
     <loc>https://vczconsultoria.com.br/es/</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
     <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
     <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
+    <xhtml:link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/"/>
+    <xhtml:link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/"/>
+  </url>
+
+  <!-- Versão DE -->
+  <url>
+    <loc>https://vczconsultoria.com.br/de/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
+    <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
+    <xhtml:link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/"/>
+    <xhtml:link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/"/>
+  </url>
+
+  <!-- Versão FR -->
+  <url>
+    <loc>https://vczconsultoria.com.br/fr/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
+    <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
+    <xhtml:link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/"/>
+    <xhtml:link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/"/>
+  </url>
+
+  <!-- Versão DA -->
+  <url>
+    <loc>https://vczconsultoria.com.br/da/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/"/>
+    <xhtml:link rel="alternate" hreflang="es"    href="https://vczconsultoria.com.br/es/"/>
+    <xhtml:link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/"/>
+    <xhtml:link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/"/>
   </url>
 
   <!-- Serviços -->
