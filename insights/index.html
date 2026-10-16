@@ -119,6 +119,7 @@
     border-top: 2px solid transparent;
     transition: border-color 0.3s, background 0.3s, opacity 0.3s, transform 0.3s;
     position: relative;
+    container-type: inline-size;
   }
   /* Quando um card da mesma linha do grid é mais alto (ex: o card em
      destaque com foto), o rodapé (data/CTA) desce até a base em vez de
@@ -128,23 +129,6 @@
   .insight-card:hover { border-top-color: var(--gold); background: rgba(22,43,64,0.95); }
   .insight-card.oculto { display: none; }
 
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 1.2rem;
-  }
-  .card-tag {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--navy);
-    background: var(--gold);
-    padding: 3px 10px;
-  }
-  .card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--warm-white); line-height: 1.3; margin-bottom: 0.8rem; }
   .card-desc { font-size: 14px; font-weight: 300; color: var(--steel); line-height: 1.7; margin-bottom: 1.5rem; }
   .card-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--steel); letter-spacing: 0.1em; opacity: 0.6; }
   .card-arrow { position: absolute; bottom: 2.5rem; right: 2.5rem; color: var(--gold); font-size: 18px; opacity: 0; transition: opacity 0.2s; }
@@ -203,7 +187,6 @@
     background-size: cover;
     background-position: 50% 32%;
     border-top: 2px solid var(--gold);
-    container-type: inline-size;
   }
   .card-featured::before {
     content: '';
@@ -212,7 +195,6 @@
     background: linear-gradient(180deg, rgba(13,27,42,0.1) 0%, rgba(13,27,42,0.45) 45%, rgba(13,27,42,0.96) 92%);
   }
   .card-featured > * { position: relative; z-index: 1; }
-  .card-featured .card-tag { background: var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
   .card-featured .card-desc { color: var(--fog); text-shadow: 0 1px 8px rgba(0,0,0,0.5); }
   .card-featured:hover { background-color: transparent; }
   .card-featured:hover::before { background: linear-gradient(180deg, rgba(13,27,42,0.05) 0%, rgba(13,27,42,0.4) 45%, rgba(13,27,42,0.93) 92%); }
@@ -402,30 +384,30 @@
   <!-- ORDENAÇÃO: mais recente primeiro. Adicionar novos cards ACIMA dos anteriores. -->
 
   <a href="/insights/perguntas-frequentes.html" class="insight-card" data-categorias="faq">
-    <div class="card-tags">
-      <span class="card-tag">FAQ</span>
+    <div class="title-banner">
+      <span class="title-banner-line title-banner-eyebrow"><span>FAQ</span></span>
+      <span class="title-banner-line title-banner-main"><span>Perguntas Frequentes</span></span>
     </div>
-    <p class="card-title">Perguntas Frequentes</p>
     <p class="card-desc">Dúvidas comuns sobre consultoria de gestão estratégica e comercial, diagnóstico de rentabilidade, JBP, precificação, revisão de mix e projeto piloto.</p>
     <p class="card-meta">Outubro de 2026</p>
     <span class="card-arrow">→</span>
   </a>
 
   <a href="/insights/o-que-e-inteligencia-comercial.html" class="insight-card" data-categorias="conceitos">
-    <div class="card-tags">
-      <span class="card-tag">Conceitos</span>
+    <div class="title-banner">
+      <span class="title-banner-line title-banner-eyebrow"><span>Conceitos</span></span>
+      <span class="title-banner-line title-banner-main"><span>O que é Inteligência Comercial?</span></span>
     </div>
-    <p class="card-title">O que é Inteligência Comercial?</p>
     <p class="card-desc">Inteligência comercial se baseia em fatos e dados para melhorar a tomada de decisão. Entenda os três níveis de análise e onde ela atua no negócio.</p>
     <p class="card-meta">Junho de 2026</p>
     <span class="card-arrow">→</span>
   </a>
 
   <a href="/ceasa_dashboard/" class="insight-card dashboard-card" data-categorias="dashboard">
-    <div class="card-tags">
-      <span class="card-tag">Dashboard</span>
+    <div class="title-banner">
+      <span class="title-banner-line title-banner-eyebrow"><span>Dashboard</span></span>
+      <span class="title-banner-line title-banner-main"><span>CEASA SC — Preços e Clima</span></span>
     </div>
-    <p class="card-title">CEASA SC — Preços e Clima</p>
     <p class="card-desc">Cotações diárias do CEASA SC cruzadas com histórico climático de 10 cidades. Tendências de alta e queda, variação anual e previsão de 16 dias.</p>
     <div class="dash-card-footer">
       <span class="dash-open-btn">Abrir painel →</span>
