@@ -114,11 +114,17 @@
     background: var(--navy2);
     padding: 2.5rem;
     text-decoration: none;
-    display: block;
+    display: flex;
+    flex-direction: column;
     border-top: 2px solid transparent;
     transition: border-color 0.3s, background 0.3s, opacity 0.3s, transform 0.3s;
     position: relative;
   }
+  /* Quando um card da mesma linha do grid é mais alto (ex: o card em
+     destaque com foto), o rodapé (data/CTA) desce até a base em vez de
+     deixar um vão vazio no meio do card mais curto. */
+  .insight-card .card-meta { margin-top: auto; padding-top: 1rem; }
+  .insight-card .dash-card-footer { margin-top: auto; }
   .insight-card:hover { border-top-color: var(--gold); background: rgba(22,43,64,0.95); }
   .insight-card.oculto { display: none; }
 
@@ -195,7 +201,7 @@
     flex-direction: column;
     justify-content: flex-end;
     background-size: cover;
-    background-position: 50% 22%;
+    background-position: 50% 32%;
     border-top: 2px solid var(--gold);
   }
   .card-featured::before {
