@@ -203,6 +203,7 @@
     background-size: cover;
     background-position: 50% 32%;
     border-top: 2px solid var(--gold);
+    container-type: inline-size;
   }
   .card-featured::before {
     content: '';
@@ -248,10 +249,10 @@
     display: block;
     font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
-    font-size: 26px;
+    font-size: clamp(15px, 7.3cqw, 26px);
     color: var(--navy);
     line-height: 1.2;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .vazio {
