@@ -217,37 +217,41 @@
   .card-featured:hover::before { background: linear-gradient(180deg, rgba(13,27,42,0.05) 0%, rgba(13,27,42,0.4) 45%, rgba(13,27,42,0.93) 92%); }
 
   /* ── FAIXAS DE TÍTULO (estilo post: navy+ouro em cima, creme+navy embaixo) ── */
-  .title-banner { display: inline-flex; flex-direction: column; align-items: flex-start; margin-bottom: 1rem; }
+  .title-banner { display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; margin-bottom: 1rem; }
   .title-banner-line {
     display: inline-block;
+    max-width: 100%;
     transform: skewX(-8deg);
     box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-    white-space: nowrap;
   }
   .title-banner-line span { display: inline-block; transform: skewX(8deg); }
   .title-banner-eyebrow {
     background: var(--navy);
-    padding: 5px 16px 5px 12px;
+    padding: 6px 16px 6px 12px;
     margin-left: 4px;
   }
   .title-banner-eyebrow span {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 18px;
     color: var(--gold);
+    white-space: nowrap;
   }
   .title-banner-main {
     background: var(--cream);
     padding: 8px 18px 8px 14px;
     margin-top: 4px;
+    max-width: 100%;
   }
   .title-banner-main span {
+    display: block;
     font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
     font-size: 26px;
     color: var(--navy);
-    line-height: 1.15;
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .vazio {
