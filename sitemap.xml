@@ -118,6 +118,14 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Perguntas Frequentes -->
+  <url>
+    <loc>https://vczconsultoria.com.br/insights/perguntas-frequentes.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Dashboards de Inteligência -->
   <url>
     <loc>https://vczconsultoria.com.br/dashboards/</loc>
