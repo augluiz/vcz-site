@@ -178,36 +178,40 @@
   }
   .dashboard-card:hover .dash-open-btn { letter-spacing: .2em; }
 
-  /* ── CARD EM DESTAQUE (foto só no topo, estilo pôster) ─────────── */
+  /* ── CARD EM DESTAQUE (foto de fundo cheia, estilo pôster) ─────── */
   .card-featured {
     min-height: 360px;
-    padding: 0;
     display: flex;
     flex-direction: column;
-    border-top: 2px solid var(--gold);
-  }
-  .card-featured-photo {
-    height: 210px;
-    flex-shrink: 0;
+    justify-content: flex-end;
     background-size: cover;
-    background-position: 50% 28%;
-    position: relative;
+    background-position: 50% 32%;
+    border-top: 2px solid var(--gold);
+    container-type: inline-size;
   }
-  .card-featured-photo::after {
+  .card-featured::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(13,27,42,0) 55%, var(--navy2) 100%);
+    background: linear-gradient(180deg, rgba(13,27,42,0.1) 0%, rgba(13,27,42,0.45) 45%, rgba(13,27,42,0.96) 92%);
   }
-  .card-featured-body {
-    padding: 1.8rem 2.5rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    container-type: inline-size;
+  .card-featured > * { position: relative; z-index: 1; }
+  .card-featured .card-desc { color: var(--fog); text-shadow: 0 1px 8px rgba(0,0,0,0.5); }
+  .card-featured:hover { background-color: transparent; }
+  .card-featured:hover::before { background: linear-gradient(180deg, rgba(13,27,42,0.05) 0%, rgba(13,27,42,0.4) 45%, rgba(13,27,42,0.93) 92%); }
+
+  /* ── TEXTURA SUTIL NOS DEMAIS CARDS (fundo chapado ficava sem graça) ── */
+  .insight-card:not(.card-featured)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(200,146,42,.03) 20px, rgba(200,146,42,.03) 21px
+    );
+    pointer-events: none;
   }
-  .card-featured .title-banner { margin-top: -2.6rem; position: relative; z-index: 1; }
-  .card-featured:hover .card-featured-photo { filter: brightness(1.08); }
+  .insight-card:not(.card-featured) > * { position: relative; z-index: 1; }
 
   /* ── FAIXAS DE TÍTULO (estilo post: navy+ouro em cima, creme+navy embaixo) ── */
   .title-banner { display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; margin-bottom: 1rem; }
@@ -425,17 +429,14 @@
     </div>
   </a>
 
-  <a href="/insights/apresentacao.html" class="insight-card card-featured" data-categorias="institucional">
-    <div class="card-featured-photo" style="background-image: url('../augusto-luiz.jpg');"></div>
-    <div class="card-featured-body">
-      <div class="title-banner">
-        <span class="title-banner-line title-banner-eyebrow"><span>Apresentação e Experiência</span></span>
-        <span class="title-banner-line title-banner-main"><span>Quem está à frente da VCZ</span></span>
-      </div>
-      <p class="card-desc">O lançamento oficial da VCZ — especializada em inteligência comercial e pesquisa de mercado.</p>
-      <p class="card-meta">Junho de 2026</p>
-      <span class="card-arrow">→</span>
+  <a href="/insights/apresentacao.html" class="insight-card card-featured" data-categorias="institucional" style="background-image: url('../augusto-luiz.jpg');">
+    <div class="title-banner">
+      <span class="title-banner-line title-banner-eyebrow"><span>Apresentação e Experiência</span></span>
+      <span class="title-banner-line title-banner-main"><span>Quem está à frente da VCZ</span></span>
     </div>
+    <p class="card-desc">O lançamento oficial da VCZ — especializada em inteligência comercial e pesquisa de mercado.</p>
+    <p class="card-meta">Junho de 2026</p>
+    <span class="card-arrow">→</span>
   </a>
 
   <p class="vazio" id="vazio">Nenhum conteúdo nesta categoria ainda.</p>
