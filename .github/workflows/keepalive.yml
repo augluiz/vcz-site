@@ -12,10 +12,27 @@ jobs:
     steps:
       - name: Ping API
         run: |
+          # O plano free do Render hiberna o serviço: o primeiro request acorda o
+          # container e pode demorar bem mais que os 30s usados antes, o que fazia
+          # o curl abortar (exit 28) e, com "bash -e", derrubar o job inteiro antes
+          # mesmo de avaliar o status. Agora: janela de 120s, 2 novas tentativas em
+          # caso de erro de conexão e "|| true" para o job nunca morrer no curl —
+          # quem decide o resultado é a checagem de status abaixo.
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            --max-time 30 \
-            https://vcz-api.onrender.com/api/v1/comex/publico/ping)
-          echo "Status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
-            echo "Aviso: API retornou $STATUS"
+            --max-time 120 \
+            --retry 2 --retry-delay 10 --retry-connrefused \
+            https://vcz-api.onrender.com/api/v1/comex/publico/ping || true)
+
+          # curl sem resposta devolve string vazia; normaliza para "000"
+          STATUS=${STATUS:-000}
+          echo "Status HTTP: $STATUS"
+
+          if [ "$STATUS" = "200" ]; then
+            echo "API respondeu normalmente."
+          elif [ "$STATUS" = "000" ]; then
+            # Sem resposta nenhuma dentro da janela: serviço suspenso, removido ou
+            # com deploy quebrado no Render — acordar por ping não resolve.
+            echo "::warning::API nao respondeu em 120s. Verificar o servico vcz-api no painel do Render."
+          else
+            echo "::warning::API respondeu $STATUS (esperado 200)."
           fi

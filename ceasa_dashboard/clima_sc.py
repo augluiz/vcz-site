@@ -37,6 +37,8 @@ import sys
 from datetime import date, timedelta
 
 import pandas as pd
+import time
+
 import requests
 
 # ============================================================
@@ -48,10 +50,21 @@ DIR_DADOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dados")
 # Cidades de SC que representam as principais zonas agriclimaticas
 # lat/lon sao as coordenadas geograficas usadas pela API do Open-Meteo
 CIDADES = [
-    {"nome": "Sao Jose",  "lat": -27.6138, "lon": -48.6358, "regiao": "Grande Florianopolis"},
-    {"nome": "Lages",     "lat": -27.8181, "lon": -50.3261, "regiao": "Serra Catarinense"},
-    {"nome": "Chapeco",   "lat": -27.1008, "lon": -52.6161, "regiao": "Oeste Catarinense"},
+    {"nome": "Sao Jose",    "lat": -27.6138, "lon": -48.6358, "regiao": "Grande Florianopolis"},
+    {"nome": "Lages",       "lat": -27.8181, "lon": -50.3261, "regiao": "Serra Catarinense"},
+    {"nome": "Chapeco",     "lat": -27.1008, "lon": -52.6161, "regiao": "Oeste Catarinense"},
+    {"nome": "Tijucas",     "lat": -27.1208, "lon": -48.6353, "regiao": "Grande Florianopolis"},
+    {"nome": "Itajai",      "lat": -26.9078, "lon": -48.6631, "regiao": "Litoral Norte"},
+    {"nome": "Joinville",   "lat": -26.3045, "lon": -48.8487, "regiao": "Norte Catarinense"},
+    {"nome": "Blumenau",    "lat": -26.9194, "lon": -49.0661, "regiao": "Vale do Itajai"},
+    {"nome": "Rio do Sul",  "lat": -27.2137, "lon": -49.6428, "regiao": "Alto Vale do Itajai"},
+    {"nome": "Sao Joaquim", "lat": -28.2942, "lon": -49.9358, "regiao": "Serra Catarinense"},
+    {"nome": "Ararangua",   "lat": -28.9344, "lon": -49.4867, "regiao": "Sul Catarinense"},
 ]
+# As 7 cidades alem das 3 primeiras tinham historico ate 2026-06-06 e deixaram de
+# ser coletadas. A rotina de atualizacao e incremental por cidade (calcula as datas
+# faltantes e baixa so elas), entao ao voltarem para esta lista o proprio script
+# fecha o buraco de 2026-06-07 ate ontem na primeira execucao.
 # Nota: nomes sem acentos para evitar problemas de encoding em diferentes sistemas
 
 # Primeiro ano de dados historicos a coletar
@@ -213,15 +226,30 @@ _BASE_PARAMS = {
 }
 
 
-def _get_meteo(endpoint: str, lat: float, lon: float, extra: dict) -> dict:
-    """Faz um GET para o Open-Meteo com os parametros combinados."""
-    resp = _SESSION.get(
-        endpoint,
-        params={"latitude": lat, "longitude": lon, **_BASE_PARAMS, **extra},
-        timeout=30,
-    )
-    resp.raise_for_status()
-    return resp.json()
+def _get_meteo(endpoint: str, lat: float, lon: float, extra: dict,
+               tentativas: int = 3) -> dict:
+    """
+    Faz um GET para o Open-Meteo com os parametros combinados.
+
+    Tenta ate 3 vezes com espera crescente (2s, 4s): com 10 cidades sao ~20
+    chamadas por execucao e a API as vezes recusa uma delas por excesso de
+    requisicoes. Sem o retry, a cidade que falha so e preenchida no dia seguinte.
+    """
+    for tentativa in range(1, tentativas + 1):
+        try:
+            resp = _SESSION.get(
+                endpoint,
+                params={"latitude": lat, "longitude": lon, **_BASE_PARAMS, **extra},
+                timeout=30,
+            )
+            resp.raise_for_status()
+            return resp.json()
+        except Exception as e:
+            if tentativa == tentativas:
+                raise
+            espera = 2 * tentativa
+            print(f"    tentativa {tentativa}/{tentativas} falhou ({e}); nova tentativa em {espera}s")
+            time.sleep(espera)
 
 
 def fetch_historico_api(lat: float, lon: float, inicio: date, fim: date) -> dict:

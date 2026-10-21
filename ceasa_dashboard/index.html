@@ -1205,6 +1205,15 @@ function computeTrends(data, overrideDate=null){
 }
 
 // ── CHARTS ────────────────────────────────────────────────────
+// Verifica se uma data (YYYY-MM-DD) está dentro do período selecionado na barra
+// de filtros do topo (datas inicial/final + seleção de anos). Usado pelos blocos
+// que partem da base completa `ceasa` e precisam respeitar o mesmo recorte das tabelas.
+function dentroDoPeriodo(d){
+  if(F.inicio && d<F.inicio) return false;
+  if(F.fim    && d>F.fim)    return false;
+  if(F.anos.size && !F.anos.has(d.slice(0,4))) return false;
+  return true;
+}
 function drawPreco(key){
   const wrap=document.getElementById('preco-wrap'), lbl=document.getElementById('chart-produto-label');
   if(!key){if(charts.preco){charts.preco.destroy();charts.preco=null;}lbl.textContent='Selecione um produto para visualizar';wrap.innerHTML='<p class="no-data">Filtre um produto na busca acima ou clique em uma linha da tabela ao lado para visualizar o histórico de preços.</p>';return;}
@@ -1223,17 +1232,24 @@ function drawPreco(key){
     return sl.length?sl.reduce((a,b)=>a+b,0)/sl.length:null;
   });
   lbl.textContent=key;
-  if(charts.preco) charts.preco.destroy();
+  // As séries acima são calculadas sobre o histórico completo de propósito: a média
+  // móvel precisa dos dias anteriores ao início do período para já nascer correta.
+  // Só agora recortamos tudo para as datas visíveis no filtro.
+  const keep=dates.map((d,i)=>dentroDoPeriodo(d)?i:-1).filter(i=>i>=0);
+  const take=arr=>keep.map(i=>arr[i]);
+  if(charts.preco){charts.preco.destroy();charts.preco=null;}
+  if(!keep.length){wrap.innerHTML='<p class="no-data">Sem dados para o produto no período selecionado.</p>';return;}
+  const vDates=take(dates), vCom=take(pCom), vMax=take(pMax), vMin=take(pMin), vMov=take(pMov);
   wrap.innerHTML='<canvas id="cv-preco"></canvas>';
   const precoOpts=chartOpts('R$');
   precoOpts.plugins.legend.labels.filter=item=>item.text!=='';
   charts.preco=new Chart(document.getElementById('cv-preco').getContext('2d'),{
     type:'line',
-    data:{labels:dates.map(fmtD),datasets:[
-      {label:'Faixa Máx/Mín', data:pMax,borderWidth:0,borderColor:'transparent',backgroundColor:'rgba(154,170,187,.13)',fill:'+1',pointRadius:0,tension:.3,order:4},
-      {label:'',               data:pMin,borderWidth:0,borderColor:'transparent',backgroundColor:'transparent',          fill:false,pointRadius:0,tension:.3,order:4},
-      {label:`Média Móvel ${F.n}d`,data:pMov,borderColor:'#7B6DC8',borderWidth:2,pointRadius:0,fill:false,tension:.3,order:2},
-      {label:'Cotação',        data:pCom,borderColor:'#C8922A',borderWidth:2.8,pointRadius:0,fill:false,tension:.3,order:1},
+    data:{labels:vDates.map(fmtD),datasets:[
+      {label:'Faixa Máx/Mín', data:vMax,borderWidth:0,borderColor:'transparent',backgroundColor:'rgba(154,170,187,.13)',fill:'+1',pointRadius:0,tension:.3,order:4},
+      {label:'',               data:vMin,borderWidth:0,borderColor:'transparent',backgroundColor:'transparent',          fill:false,pointRadius:0,tension:.3,order:4},
+      {label:`Média Móvel ${F.n}d`,data:vMov,borderColor:'#7B6DC8',borderWidth:2,pointRadius:0,fill:false,tension:.3,order:2},
+      {label:'Cotação',        data:vCom,borderColor:'#C8922A',borderWidth:2.8,pointRadius:0,fill:false,tension:.3,order:1},
     ]},options:precoOpts});
   attachSync();
 }
@@ -1263,8 +1279,14 @@ function drawClima(){
   if(F.inicio)    data=data.filter(r=>r.data>=F.inicio);
   if(F.fim)       data=data.filter(r=>r.data<=F.fim);
   updateClimaTitle();
-  if(!data.length){wrap.innerHTML='<p class="no-data">Sem dados climáticos.</p>';return;}
-  if(charts.clima) charts.clima.destroy();
+  // Destruir o gráfico antigo ANTES de decidir se há dados: o canvas sai do DOM
+  // junto com o innerHTML, e um Chart órfão apontando para canvas removido fica
+  // na memória e continua respondendo a eventos (tooltip sincronizada, resize).
+  if(charts.clima){charts.clima.destroy();charts.clima=null;}
+  if(!data.length){wrap.innerHTML='<p class="no-data">Sem dados climáticos no período selecionado.</p>';return;}
+  // Ordena por data: o CSV é escrito em modo append, então um preenchimento de
+  // buraco pode gravar dias antigos depois dos recentes.
+  data=[...data].sort((a,b)=>a.data<b.data?-1:a.data>b.data?1:0);
   wrap.innerHTML='<canvas id="cv-clima"></canvas>';
   const labels=data.map(r=>fmtD(r.data));
   charts.clima=new Chart(document.getElementById('cv-clima').getContext('2d'),{
@@ -1538,7 +1560,10 @@ function renderPriceMatrix(){
   if(!data.length){content.innerHTML='<p class="pm-no-data">Sem dados para o produto.</p>';return;}
   const byDate=new Map();
   data.forEach(r=>{if(!byDate.has(r.data))byDate.set(r.data,[]);byDate.get(r.data).push(r);});
-  const allDates=[...byDate.keys()].sort();
+  // Últimas 7 datas DENTRO do período filtrado (lyAvg abaixo segue usando a base
+  // completa do produto, porque precisa olhar ~1 ano para trás).
+  const allDates=[...byDate.keys()].sort().filter(dentroDoPeriodo);
+  if(!allDates.length){content.innerHTML='<p class="pm-no-data">Sem dados no período selecionado.</p>';return;}
   const dates=allDates.slice(-7);
   const lyAvg=d=>{const s=addD(d,-385),e=addD(d,-345);const r=data.filter(x=>x.data>=s&&x.data<=e);return r.length?avg(r.map(x=>x.pcom)):null;};
   const rows=[
