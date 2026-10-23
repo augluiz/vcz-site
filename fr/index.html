@@ -34,6 +34,7 @@
 <link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/">
 <link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/">
 <link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/">
+<link rel="alternate" hreflang="it"    href="https://vczconsultoria.com.br/it/">
 <link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
 <!-- ── SCHEMA.ORG — DONNÉES STRUCTURÉES DE L'ENTREPRISE ─────────── -->
 <script type="application/ld+json">
@@ -182,6 +183,7 @@
   /* Grille 3x3 des 9 services, style carte sombre identique à /servicos.html,
      compact pour cette colonne — titre + texte court, toujours visibles. */
   .sobre-servicos-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  a.sobre-mini-card { display: block; text-decoration: none; }
 
   .sobre-mini-card {
     background: rgba(255,255,255,0.04);
@@ -339,7 +341,6 @@
     <li><a href="#sobre" onclick="closeMenu()">À propos</a></li>
     <li><a href="/fr/services.html" onclick="closeMenu()">Services</a></li>
     <li><a href="#frente" onclick="closeMenu()">Expérience</a></li>
-    <li><a href="/insights/" onclick="closeMenu()">Contenus</a></li>
     <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
     <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
     <li><a href="#contato" onclick="closeMenu()">Contact</a></li>
@@ -358,6 +359,7 @@
         <a href="/de/"><img class="flag" src="https://flagcdn.com/w20/de.png" alt="Deutsch"> DE</a>
         <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/fr.png" alt="Français"> FR</span>
         <a href="/da/"><img class="flag" src="https://flagcdn.com/w20/dk.png" alt="Dansk"> DA</a>
+        <a href="/it/"><img class="flag" src="https://flagcdn.com/w20/it.png" alt="Italiano"> IT</a>
       </div>
     </div>
     <a href="#contato" class="nav-cta">Nous contacter</a>
@@ -473,6 +475,22 @@
           <p class="sobre-mini-title">Étude de Marché</p>
           <p class="sobre-mini-desc">Comportement d'achat, perception de marque et tendances.</p>
         </div>
+        <a class="sobre-mini-card" href="/en/brazil-market-entry.html">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></span>
+            <span class="sobre-mini-num">10</span>
+          </div>
+          <p class="sobre-mini-title">Entrée sur le Marché Brésilien</p>
+          <p class="sobre-mini-desc">Pour l'entreprise étrangère qui veut vendre, acheter ou redresser ses résultats au Brésil.</p>
+        </a>
+        <a class="sobre-mini-card" href="/en/brazil-market-website.html">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+            <span class="sobre-mini-num">11</span>
+          </div>
+          <p class="sobre-mini-title">Web Design et Développement de Site</p>
+          <p class="sobre-mini-desc">Site, catalogue, landing page et e-commerce construits comme canal de vente.</p>
+        </a>
       </div>
     </div>
   </div>
@@ -568,6 +586,10 @@
         <input type="email" id="email" name="email" placeholder="votre@email.com" required>
       </div>
       <div class="form-group">
+        <label for="pais">Pays</label>
+        <input type="text" id="pais" name="pais" placeholder="Où vous êtes basé">
+      </div>
+      <div class="form-group">
         <label for="assunto">Domaine d'intérêt</label>
         <select id="assunto" name="assunto">
           <option value="" disabled selected>Sélectionner</option>
@@ -580,6 +602,8 @@
           <option>Projet Pilote</option>
           <option>Tableaux de Bord Gestion & Marché</option>
           <option>Étude de Marché</option>
+          <option>Entrée sur le Marché Brésilien</option>
+          <option>Web Design et Développement de Site</option>
           <option>Autre</option>
         </select>
       </div>

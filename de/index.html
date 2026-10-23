@@ -11,7 +11,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VCZ Consultoria — Strategische und kaufmännische Managementberatung</title>
+<title>VCZ Consultoria — Strategische Unternehmensberatung</title>
 <meta name="description" content="Strategische und kaufmännische Managementberatung für Einzelhandel, Industrie, Service und E-Commerce: Diagnose, Business Intelligence, Marktforschung, JBP.">
 <meta name="keywords" content="strategische und kaufmännische managementberatung, strategieberatung, business intelligence, marktforschung, JBP, joint business plan, management-dashboards, preisstrategie, forecast, einkaufsplanung, kategoriestruktur, rentabilitätsanalyse, einzelhandel, industrie, dienstleistungen, e-commerce, beratung brasilien">
 <meta property="og:title" content="VCZ Consultoria — Strategische und kaufmännische Managementberatung">
@@ -34,6 +34,7 @@
 <link rel="alternate" hreflang="de"    href="https://vczconsultoria.com.br/de/">
 <link rel="alternate" hreflang="fr"    href="https://vczconsultoria.com.br/fr/">
 <link rel="alternate" hreflang="da"    href="https://vczconsultoria.com.br/da/">
+<link rel="alternate" hreflang="it"    href="https://vczconsultoria.com.br/it/">
 <link rel="alternate" hreflang="x-default" href="https://vczconsultoria.com.br/">
 <!-- ── SCHEMA.ORG — STRUKTURIERTE UNTERNEHMENSDATEN ─────────────── -->
 <script type="application/ld+json">
@@ -181,6 +182,7 @@
   /* 3x3-Raster der 9 Leistungen, dunkles Kartendesign wie /servicos.html,
      kompakt für diese Spalte — Titel + Kurztext, immer sichtbar. */
   .sobre-servicos-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  a.sobre-mini-card { display: block; text-decoration: none; }
 
   .sobre-mini-card {
     background: rgba(255,255,255,0.04);
@@ -338,7 +340,6 @@
     <li><a href="#sobre" onclick="closeMenu()">Über uns</a></li>
     <li><a href="/de/dienstleistungen.html" onclick="closeMenu()">Leistungen</a></li>
     <li><a href="#frente" onclick="closeMenu()">Erfahrung</a></li>
-    <li><a href="/insights/" onclick="closeMenu()">Inhalte</a></li>
     <li><a href="/dashboards/" onclick="closeMenu()">Dashboards</a></li>
     <li><a href="/VCZ_Consultoria_Portfolio.pdf" target="_blank" rel="noopener" onclick="closeMenu()">Portfolio</a></li>
     <li><a href="#contato" onclick="closeMenu()">Kontakt</a></li>
@@ -357,6 +358,7 @@
         <span class="lang-item-active"><img class="flag" src="https://flagcdn.com/w20/de.png" alt="Deutsch"> DE</span>
         <a href="/fr/"><img class="flag" src="https://flagcdn.com/w20/fr.png" alt="Français"> FR</a>
         <a href="/da/"><img class="flag" src="https://flagcdn.com/w20/dk.png" alt="Dansk"> DA</a>
+        <a href="/it/"><img class="flag" src="https://flagcdn.com/w20/it.png" alt="Italiano"> IT</a>
       </div>
     </div>
     <a href="#contato" class="nav-cta">Kontakt aufnehmen</a>
@@ -472,6 +474,22 @@
           <p class="sobre-mini-title">Marktforschung</p>
           <p class="sobre-mini-desc">Kaufverhalten, Markenwahrnehmung und Trends.</p>
         </div>
+        <a class="sobre-mini-card" href="/en/brazil-market-entry.html">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></span>
+            <span class="sobre-mini-num">10</span>
+          </div>
+          <p class="sobre-mini-title">Markteintritt Brasilien</p>
+          <p class="sobre-mini-desc">Für ausländische Unternehmen, die in Brasilien verkaufen, einkaufen oder Ergebnisse korrigieren wollen.</p>
+        </a>
+        <a class="sobre-mini-card" href="/en/brazil-market-website.html">
+          <div class="sobre-mini-header">
+            <span class="sobre-mini-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+            <span class="sobre-mini-num">11</span>
+          </div>
+          <p class="sobre-mini-title">Webdesign und Website-Entwicklung</p>
+          <p class="sobre-mini-desc">Website, Katalog, Landingpage und E-Commerce als Vertriebskanal gebaut.</p>
+        </a>
       </div>
     </div>
   </div>
@@ -567,6 +585,10 @@
         <input type="email" id="email" name="email" placeholder="ihre@email.com" required>
       </div>
       <div class="form-group">
+        <label for="pais">Land</label>
+        <input type="text" id="pais" name="pais" placeholder="Wo Sie ansässig sind">
+      </div>
+      <div class="form-group">
         <label for="assunto">Interessensbereich</label>
         <select id="assunto" name="assunto">
           <option value="" disabled selected>Auswählen</option>
@@ -579,6 +601,8 @@
           <option>Pilotprojekt</option>
           <option>Management- und Marktdashboards</option>
           <option>Marktforschung</option>
+          <option>Markteintritt Brasilien</option>
+          <option>Webdesign und Website-Entwicklung</option>
           <option>Sonstiges</option>
         </select>
       </div>

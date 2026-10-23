@@ -1,3 +1,12 @@
 User-agent: *
 Allow: /
+
+# Material interno: arte de post e protótipo de layout.
+# São páginas de trabalho, não conteúdo — não devem disputar
+# posição no buscador com as páginas reais do site.
+Disallow: /post-instagram.html
+Disallow: /post-linkedin.html
+Disallow: /post-story.html
+Disallow: /prototipos-areas.html
+
 Sitemap: https://vczconsultoria.com.br/sitemap.xml
