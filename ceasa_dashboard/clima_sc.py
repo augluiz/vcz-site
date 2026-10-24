@@ -53,7 +53,7 @@ CIDADES = [
     {"nome": "Sao Jose",    "lat": -27.6138, "lon": -48.6358, "regiao": "Grande Florianopolis"},
     {"nome": "Lages",       "lat": -27.8181, "lon": -50.3261, "regiao": "Serra Catarinense"},
     {"nome": "Chapeco",     "lat": -27.1008, "lon": -52.6161, "regiao": "Oeste Catarinense"},
-    {"nome": "Tijucas",     "lat": -27.1208, "lon": -48.6353, "regiao": "Grande Florianopolis"},
+    {"nome": "Tijucas",     "lat": -27.2414, "lon": -48.6336, "regiao": "Grande Florianopolis"},
     {"nome": "Itajai",      "lat": -26.9078, "lon": -48.6631, "regiao": "Litoral Norte"},
     {"nome": "Joinville",   "lat": -26.3045, "lon": -48.8487, "regiao": "Norte Catarinense"},
     {"nome": "Blumenau",    "lat": -26.9194, "lon": -49.0661, "regiao": "Vale do Itajai"},
