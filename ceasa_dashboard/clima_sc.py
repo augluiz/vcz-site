@@ -95,7 +95,12 @@ VARIAVEIS_API = ",".join([
 
 # Colunas do CSV de historico e previsao (sem colunas extras de controle)
 COLUNAS_HISTORICO = [
-    "data", "cidade", "regiao", "lat", "lon",
+    # 'estado' existe no cabecalho do CSV desde a primeira versao do arquivo, mas
+    # tinha saido desta lista: as linhas gravadas a partir de 2026-06-07 saiam com
+    # 30 campos contra 31 do cabecalho, e o dashboard (PapaParse, header:true, que
+    # casa cabecalho e valores por posicao) lia tudo deslocado uma casa — a minima
+    # exibida era a maxima real. Mexer aqui exige acertar o CSV no mesmo commit.
+    "data", "cidade", "estado", "regiao", "lat", "lon",
     "temp_min", "temp_max", "temp_media",
     "sensacao_min", "sensacao_max",
     "precipitacao_mm", "chuva_mm", "neve_cm", "horas_precipitacao",
@@ -317,6 +322,7 @@ def api_para_linhas(data_json: dict, cidade: str, regiao: str, lat: float, lon: 
         rows.append({
             "data":               data_str,
             "cidade":             cidade,
+            "estado":             "SC",   # todas as cidades monitoradas sao de SC
             "regiao":             regiao,
             "lat":                lat,
             "lon":                lon,
