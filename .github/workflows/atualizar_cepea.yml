@@ -1,14 +1,22 @@
 name: Atualizar dados CEPEA
 
-# As paginas publicas de indicador do CEPEA ficam disponiveis o dia todo
-# (nao dependem de um PDF publicado em horario incerto, como o CEASA) —
-# por isso uma unica execucao diaria e suficiente.
+# ATENCAO — AGENDAMENTO DESLIGADO EM 25/10/2026
 #
-# Horario em UTC (Brasil = UTC-3, sem horario de verao):
-#   12:00 UTC = 09:00 BRT
+# A Cloudflare do CEPEA passou a bloquear o IP dos runners do GitHub
+# Actions (datacenter). Desde 05/10/2026 a execucao diaria falhava com
+# "pagina bloqueada por verificacao de seguranca" em 17 dos 18 produtos,
+# e o painel ficou tres semanas com dado velho sem ninguem notar.
+#
+# Confirmado em 25/10: o MESMO script roda sem erro a partir de um IP
+# residencial. Nao e o codigo nem os headers — e o IP de origem.
+#
+# A coleta passou a rodar na maquina local, agendada por
+#   cepea_dashboard/agendar_atualizacao.ps1
+#
+# O gatilho manual continua aqui de proposito: se um dia a Cloudflare
+# liberar, basta rodar pela aba Actions para conferir antes de religar
+# o cron. Nao reativar o schedule sem esse teste.
 on:
-  schedule:
-    - cron: '0 12 * * *'   # 09:00 BRT, todos os dias
   workflow_dispatch:          # botao "Run workflow" manual na aba Actions
 
 jobs:

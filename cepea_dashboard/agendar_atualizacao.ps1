@@ -20,9 +20,13 @@ $real = Get-ChildItem "$env:LOCALAPPDATA\Microsoft\WindowsApps\PythonSoftwareFou
 $PythonExe = if ($real) { $real.FullName } else { $stub }
 $WorkDir   = "C:\Users\augus\vcz-site\cepea_dashboard"
 
+# Desde 25/10/2026 a tarefa roda atualizar_e_publicar.ps1 em vez do script
+# Python direto. Motivo: a coleta saiu do GitHub Actions (a Cloudflare do
+# CEPEA bloqueia o IP dos runners), entao quem commita e publica os dados
+# agora e a maquina local — e isso o .py sozinho nao faz.
 $Action = New-ScheduledTaskAction `
-    -Execute $PythonExe `
-    -Argument "atualizar_diario.py" `
+    -Execute "powershell.exe" `
+    -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$WorkDir\atualizar_e_publicar.ps1`"" `
     -WorkingDirectory $WorkDir
 
 $Trigger = New-ScheduledTaskTrigger `
