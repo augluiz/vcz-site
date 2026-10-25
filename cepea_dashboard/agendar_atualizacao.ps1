@@ -32,9 +32,20 @@ $Action = New-ScheduledTaskAction `
 $Trigger = New-ScheduledTaskTrigger `
     -Weekly -DaysOfWeek Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday -At "09:00"
 
+# ATENCAO aos dois flags de bateria.
+# O padrao do Windows e DisallowStartIfOnBatteries=True: em notebook na
+# bateria a tarefa NAO inicia — fica em "Queued" esperando energia AC e
+# ainda reporta LastTaskResult=0, como se tivesse rodado. Foi isso que
+# fez parecer, em testes anteriores, que "o Agendador nao funciona neste
+# ambiente" (diagnosticado em 25/10/2026).
+#
+# -StartWhenAvailable cobre o outro caso: se a maquina estava desligada
+# ou dormindo as 09:00, a tarefa roda assim que ela voltar.
 $Settings = New-ScheduledTaskSettingsSet `
     -ExecutionTimeLimit (New-TimeSpan -Minutes 30) `
-    -StartWhenAvailable
+    -StartWhenAvailable `
+    -AllowStartIfOnBatteries `
+    -DontStopIfGoingOnBatteries
 
 Register-ScheduledTask `
     -TaskName "CEPEA-Atualizacao" `
