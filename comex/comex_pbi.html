@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Balança Comercial Brasileira | VCZ Consultoria</title>
+<meta name="description" content="Dashboard interativo de comércio exterior — exportações, importações e balanço comercial por país e estado. Dados MDIC/ComexStat.">
+<link rel="canonical" href="https://vczconsultoria.com.br/comex/comex_pbi.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F5F0E8;--panel:#fff;--panel2:#EDE7DC;
+  --navy:#0D1B2A;--navy2:#162B40;--navy3:#1E3550;
+  --gold:#C8922A;--gold-l:#E2AC4C;--gold-d:#B7A073;
+  --exp:#C8922A;--imp:#2B68A8;--pos:#2E7D52;--neg:#B83030;
+  --text:#1A2433;--text2:#3E5068;--text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --sh:0 1px 4px rgba(26,36,51,.08),0 0 0 1px rgba(26,36,51,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.05)}
+::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:4px}
+
+/* Loading */
+#loading{position:fixed;inset:0;background:rgba(13,27,42,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;gap:.85rem}
+#loading.hidden{display:none}
+.spin{width:34px;height:34px;border:3px solid rgba(200,146,42,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-family:'DM Mono',monospace;font-size:.72rem;color:#C8D8E8;letter-spacing:.05em}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:64px;background:rgba(13,27,42,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(183,160,115,.15)}
+.nav-logo img{height:42px}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,.4);padding:8px 18px;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:rgba(200,146,42,.08)}
+@media(max-width:768px){.nav-links,.nav-cta{display:none}}
+
+/* Header */
+.dash-hd{margin-top:64px;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.22);padding:.6rem 1.5rem .5rem;display:flex;align-items:baseline;gap:1.4rem;flex-wrap:wrap}
+.dash-hd h1{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:#F2EAD8;line-height:1.1}
+.dash-hd h1 em{color:var(--gold-l);font-style:italic}
+.dash-hd .lbl{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-d);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.15rem}
+.dash-hd .period-txt{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--text3);margin-left:auto}
+
+/* Mode tabs */
+.mode-tabs{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.22);display:flex;padding:0 1.5rem;gap:0;position:sticky;top:64px;z-index:200}
+.mode-tab{font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:#4A6A80;background:none;border:none;border-bottom:3px solid transparent;padding:.65rem 1.1rem;cursor:pointer;transition:color .18s,border-color .18s;margin-bottom:-2px;white-space:nowrap}
+.mode-tab:hover{color:#A8C8D8}
+.mode-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(200,146,42,.04)}
+
+/* Filter bar */
+.fbar{background:var(--navy);border-bottom:2px solid rgba(200,146,42,.18);padding:.45rem 1.5rem;display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;position:sticky;top:calc(64px + 37px);z-index:199}
+.fg{display:flex;flex-direction:column;gap:.18rem;flex-shrink:0}
+.fg .lbl{font-family:'DM Mono',monospace;font-size:.53rem;color:var(--gold-d);text-transform:uppercase;letter-spacing:.1em}
+.fi{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:4px;padding:.26rem .4rem;color:#EDE7DC;font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;cursor:pointer}
+.fi:focus{border-color:var(--gold)}
+.fi option{background:var(--navy2)}
+.fvsep{width:1px;background:rgba(255,255,255,.08);align-self:stretch;margin:.04rem 0;flex-shrink:0}
+.fbtn-reset{background:transparent;border:1px solid rgba(255,255,255,.16);border-radius:4px;padding:.26rem .65rem;color:#5A7A8A;font-family:'DM Mono',monospace;font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .18s;align-self:flex-end}
+.fbtn-reset:hover{border-color:var(--gold);color:var(--gold)}
+.farrow{font-family:'DM Mono',monospace;font-size:.58rem;color:#3A5A6A;align-self:flex-end;padding-bottom:.35rem}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;padding:.65rem 1.5rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.12)}
+.kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:.55rem .8rem}
+.kpi-lbl{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold-d);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.2rem}
+.kpi-val{font-family:'DM Mono',monospace;font-size:1.12rem;font-weight:500;color:#F2EAD8}
+.kpi-val.exp{color:var(--gold-l)}
+.kpi-val.imp{color:#7AABDC}
+.kpi-val.pos{color:#5AC882}
+.kpi-val.neg{color:#E06060}
+.kpi-delta{font-family:'DM Mono',monospace;font-size:.55rem;margin-top:.12rem;display:inline-block;padding:.06rem .28rem;border-radius:3px}
+.kpi-delta.up{background:rgba(90,200,130,.12);color:#5AC882}
+.kpi-delta.dn{background:rgba(224,96,96,.12);color:#E06060}
+.kpi-sub{font-family:'DM Sans',sans-serif;font-size:.62rem;color:#4A6A7A;margin-top:.1rem}
+
+/* Main grid */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:.8rem 1.5rem;align-items:start}
+.map-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:0 1.5rem .8rem}
+
+/* Table box */
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:var(--sh);border-top:3px solid var(--gold)}
+.tbox-head{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);padding:.45rem .85rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;color:var(--gold)}
+.tbox-cnt{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-d);background:rgba(200,146,42,.1);border:1px solid rgba(200,146,42,.22);border-radius:10px;padding:.08rem .4rem}
+.tbox-wrap{overflow-x:auto;max-height:460px;overflow-y:auto}
+table.cmp{width:100%;border-collapse:collapse;font-size:.7rem}
+table.cmp thead{position:sticky;top:0;z-index:2}
+table.cmp th{padding:.35rem .55rem;font-family:'DM Mono',monospace;font-size:.49rem;text-transform:uppercase;letter-spacing:.05em;background:#1A2F45;color:#E8D8C0;border-right:1px solid rgba(255,255,255,.08);text-align:left;cursor:pointer;white-space:nowrap;user-select:none}
+table.cmp th:last-child{border-right:none}
+table.cmp th.r,table.cmp td.r{text-align:right}
+table.cmp td{padding:.28rem .55rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);white-space:nowrap}
+table.cmp tr.pos td{background:rgba(46,125,82,.04)}
+table.cmp tr.neg td{background:rgba(184,48,48,.04)}
+table.cmp tr.total-row td{background:var(--navy2)!important;color:#E8D8C0;font-family:'DM Mono',monospace;font-size:.68rem;font-weight:600;position:sticky;bottom:0;z-index:1}
+table.cmp tr:hover:not(.total-row) td{background:rgba(200,146,42,.07)!important}
+.si{font-size:.42rem;color:rgba(255,255,255,.45);margin-left:.08rem}
+.badge-pos{background:rgba(90,200,130,.14);color:#5AC882;border-radius:3px;padding:.03rem .22rem;font-family:'DM Mono',monospace;font-size:.58rem}
+.badge-neg{background:rgba(224,96,96,.14);color:#E06060;border-radius:3px;padding:.03rem .22rem;font-family:'DM Mono',monospace;font-size:.58rem}
+
+/* Chart card */
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:var(--sh)}
+.chart-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);padding:.42rem .85rem}
+.chart-bar .ct{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.chart-bar .cs{font-family:'DM Sans',sans-serif;font-size:.63rem;color:var(--text3);margin-top:.06rem}
+.leg{display:flex;gap:.8rem;padding:.28rem .85rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.1);flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:.25rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#8AAABB}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.chart-body{padding:.65rem .75rem}
+canvas#chart-pais{height:340px!important}
+canvas#chart-uf{height:340px!important}
+
+/* Map card */
+.map-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:var(--sh)}
+.map-bar{background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15);padding:.38rem .7rem;display:flex;align-items:center;justify-content:space-between}
+.map-bar .mt{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.map-bar .ms{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--text3)}
+.map-wrap{height:260px;position:relative}
+.map-wrap .leaflet-container{background:#0D1B2A}
+.map-wrap .leaflet-tile-pane{filter:brightness(.78) saturate(.6)}
+
+/* Footer */
+.dash-footer{padding:.6rem 1.5rem;background:var(--navy);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.54rem;color:#3A5A6A;flex-wrap:wrap;gap:.4rem}
+.dash-footer a{color:var(--gold-d);text-decoration:none}
+.dash-footer a:hover{color:var(--gold)}
+
+/* Disc */
+.disc{font-family:'DM Mono',monospace;font-size:.5rem;color:#2E4A58;padding:.3rem 1.5rem .5rem;line-height:1.6}
+
+/* Tab panes */
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Responsive */
+@media(max-width:1100px){
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+  .main-grid{grid-template-columns:1fr}
+  .map-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .kpi-strip{padding:.5rem .9rem;gap:.4rem}
+  .main-grid,.map-grid{padding:.6rem .9rem}
+  .fbar{gap:.6rem;padding:.4rem .9rem}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spin"></div>
+  <p class="load-txt" id="load-txt">Carregando dados ComexStat…</p>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
+  <ul class="nav-links">
+    <li><a href="/#sobre">Sobre</a></li>
+    <li><a href="/insights/">Conteúdos</a></li>
+    <li><a href="/dashboards/" class="active">Dashboards</a></li>
+    <li><a href="/#contato">Contato</a></li>
+  </ul>
+  <a href="/#contato" class="nav-cta">Fale conosco</a>
+</nav>
+
+<div class="dash-hd">
+  <div>
+    <p class="lbl">MDIC · ComexStat</p>
+    <h1>Balança Comercial <em>Brasil</em></h1>
+  </div>
+  <p class="period-txt" id="period-txt">Carregando…</p>
+</div>
+
+<!-- Abas de modo -->
+<div class="mode-tabs">
+  <button class="mode-tab active" data-mode="pais" onclick="setMode('pais')">🌍 Por País</button>
+  <button class="mode-tab" data-mode="uf" onclick="setMode('uf')">🗺️ Por Estado (UF)</button>
+</div>
+
+<!-- Filtros -->
+<div class="fbar">
+  <div class="fg">
+    <span class="lbl">Ano</span>
+    <div style="display:flex;align-items:center;gap:.3rem">
+      <select class="fi" id="f-ano-ini" onchange="onFilter()"></select>
+      <span class="farrow">→</span>
+      <select class="fi" id="f-ano-fim" onchange="onFilter()"></select>
+    </div>
+  </div>
+  <div class="fvsep"></div>
+  <div class="fg">
+    <span class="lbl">Mês</span>
+    <div style="display:flex;align-items:center;gap:.3rem">
+      <select class="fi" id="f-mes-ini" onchange="onFilter()">
+        <option value="1">Jan</option><option value="2">Fev</option><option value="3">Mar</option>
+        <option value="4">Abr</option><option value="5">Mai</option><option value="6">Jun</option>
+        <option value="7">Jul</option><option value="8">Ago</option><option value="9">Set</option>
+        <option value="10">Out</option><option value="11">Nov</option><option value="12" selected>Dez</option>
+      </select>
+      <span class="farrow">→</span>
+      <select class="fi" id="f-mes-fim" onchange="onFilter()">
+        <option value="1">Jan</option><option value="2">Fev</option><option value="3">Mar</option>
+        <option value="4">Abr</option><option value="5">Mai</option><option value="6">Jun</option>
+        <option value="7">Jul</option><option value="8">Ago</option><option value="9">Set</option>
+        <option value="10">Out</option><option value="11">Nov</option><option value="12" selected>Dez</option>
+      </select>
+    </div>
+  </div>
+  <div class="fvsep"></div>
+  <button class="fbtn-reset" onclick="resetFiltros()">Resetar</button>
+</div>
+
+<!-- ─── TAB: POR PAÍS ─────────────────────────────────────────── -->
+<div id="pane-pais" class="tab-pane active">
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-lbl">Exportação</div><div class="kpi-val exp" id="kpi-pais-exp">—</div><div class="kpi-delta" id="kpi-pais-exp-d"></div></div>
+    <div class="kpi"><div class="kpi-lbl">Importação</div><div class="kpi-val imp" id="kpi-pais-imp">—</div><div class="kpi-delta" id="kpi-pais-imp-d"></div></div>
+    <div class="kpi"><div class="kpi-lbl">Balanço Comercial</div><div class="kpi-val" id="kpi-pais-bal">—</div><div class="kpi-delta" id="kpi-pais-bal-d"></div></div>
+    <div class="kpi"><div class="kpi-lbl">Corrente de Comércio</div><div class="kpi-val" id="kpi-pais-cor">—</div><div class="kpi-sub" id="kpi-pais-cor-s"></div></div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Tabela países -->
+    <div class="tbox">
+      <div class="tbox-head">
+        <h3>Comparativo por País</h3>
+        <span class="tbox-cnt" id="cnt-pais">—</span>
+      </div>
+      <div class="tbox-wrap">
+        <table class="cmp" id="tbl-pais">
+          <thead><tr>
+            <th onclick="sortBy('pais','nome')">País <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('pais','imp')">Importação <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('pais','exp')">Exportação <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('pais','bal')">Balanço <span class="si">↓</span></th>
+            <th class="r" onclick="sortBy('pais','cresc_imp')">Cresc. IMP <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('pais','cresc_exp')">Cresc. EXP <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('pais','d_bal')">Δ Balanço <span class="si">⇅</span></th>
+          </tr></thead>
+          <tbody id="tbl-pais-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Gráfico combo -->
+    <div class="chart-card">
+      <div class="chart-bar">
+        <div class="ct">Balanço Comercial, Exportação e Importação por Mês</div>
+        <div class="cs">Barras = Balanço · Linhas = EXP/IMP</div>
+      </div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-dot" style="background:rgba(46,125,82,.7)"></div>Balanço (barras)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#C8922A;border-radius:50%"></div>Exportação</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2B68A8;border-radius:50%"></div>Importação</div>
+      </div>
+      <div class="chart-body"><canvas id="chart-pais"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 4 mapas -->
+  <div class="map-grid">
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Exportação por País</span><span class="ms" id="ms-pais-exp">—</span></div>
+      <div class="map-wrap" id="map-pais-exp"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Importação por País</span><span class="ms" id="ms-pais-imp">—</span></div>
+      <div class="map-wrap" id="map-pais-imp"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Balanço Positivo (Superávit)</span><span class="ms" id="ms-pais-pos">—</span></div>
+      <div class="map-wrap" id="map-pais-pos"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Balanço Negativo (Déficit)</span><span class="ms" id="ms-pais-neg">—</span></div>
+      <div class="map-wrap" id="map-pais-neg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TAB: POR ESTADO ───────────────────────────────────────── -->
+<div id="pane-uf" class="tab-pane">
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-lbl">Exportação</div><div class="kpi-val exp" id="kpi-uf-exp">—</div><div class="kpi-delta" id="kpi-uf-exp-d"></div></div>
+    <div class="kpi"><div class="kpi-lbl">Importação</div><div class="kpi-val imp" id="kpi-uf-imp">—</div><div class="kpi-delta" id="kpi-uf-imp-d"></div></div>
+    <div class="kpi"><div class="kpi-lbl">Balanço Comercial</div><div class="kpi-val" id="kpi-uf-bal">—</div><div class="kpi-delta" id="kpi-uf-bal-d"></div></div>
+    <div class="kpi"><div class="kpi-lbl">Corrente de Comércio</div><div class="kpi-val" id="kpi-uf-cor">—</div><div class="kpi-sub" id="kpi-uf-cor-s"></div></div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Tabela UF -->
+    <div class="tbox">
+      <div class="tbox-head">
+        <h3>Comparativo por Estado (UF)</h3>
+        <span class="tbox-cnt" id="cnt-uf">—</span>
+      </div>
+      <div class="tbox-wrap">
+        <table class="cmp" id="tbl-uf">
+          <thead><tr>
+            <th onclick="sortBy('uf','nome')">Estado <span class="si">⇅</span></th>
+            <th onclick="sortBy('uf','regiao')">Região <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('uf','imp')">Importação <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('uf','exp')">Exportação <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('uf','bal')">Balanço <span class="si">↓</span></th>
+            <th class="r" onclick="sortBy('uf','cresc_imp')">Cresc. IMP <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('uf','cresc_exp')">Cresc. EXP <span class="si">⇅</span></th>
+            <th class="r" onclick="sortBy('uf','d_bal')">Δ Balanço <span class="si">⇅</span></th>
+          </tr></thead>
+          <tbody id="tbl-uf-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Gráfico combo UF -->
+    <div class="chart-card">
+      <div class="chart-bar">
+        <div class="ct">Balanço Comercial, Exportação e Importação por Mês</div>
+        <div class="cs">Barras = Balanço · Linhas = EXP/IMP</div>
+      </div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-dot" style="background:rgba(46,125,82,.7)"></div>Balanço (barras)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#C8922A;border-radius:50%"></div>Exportação</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2B68A8;border-radius:50%"></div>Importação</div>
+      </div>
+      <div class="chart-body"><canvas id="chart-uf"></canvas></div>
+    </div>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Exportação por Estado</span><span class="ms" id="ms-uf-exp">—</span></div>
+      <div class="map-wrap" id="map-uf-exp"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Importação por Estado</span><span class="ms" id="ms-uf-imp">—</span></div>
+      <div class="map-wrap" id="map-uf-imp"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Balanço Positivo (Superávit)</span><span class="ms" id="ms-uf-pos">—</span></div>
+      <div class="map-wrap" id="map-uf-pos"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-bar"><span class="mt">Balanço Negativo (Déficit)</span><span class="ms" id="ms-uf-neg">—</span></div>
+      <div class="map-wrap" id="map-uf-neg"></div>
+    </div>
+  </div>
+</div>
+
+<p class="disc">&#9432; Valores em US$ FOB. Crescimento = variação ano a ano (mesmo período). Fonte: MDIC/ComexStat.</p>
+
+<div class="dash-footer">
+  <span>VCZ Consultoria · Balança Comercial Brasileira · MDIC/ComexStat</span>
+  <a href="https://balanca.economia.gov.br" target="_blank" rel="noopener">Fonte oficial MDIC ↗</a>
+</div>
+
+<script>
+const API = 'https://vcz-api.onrender.com/api/v1/comex/publico';
+
+// ── Coordenadas ISO3 → [lat, lon] ─────────────────────────────────────────────
+const ISO3 = {
+  'ABW':[12.52,-69.98],'AFG':[33.93,67.71],'AGO':[-11.2,17.87],'ALB':[41.15,20.17],
+  'ARE':[23.42,53.85],'ARG':[-38.42,-63.62],'ARM':[40.07,45.04],'AUS':[-25.27,133.78],
+  'AUT':[47.52,14.55],'AZE':[40.14,47.58],'BDI':[-3.37,29.92],'BEL':[50.5,4.47],
+  'BEN':[9.31,2.32],'BFA':[12.36,-1.56],'BGD':[23.68,90.36],'BGR':[42.73,25.49],
+  'BHR':[25.93,50.64],'BLR':[53.71,27.95],'BOL':[-16.29,-63.59],'BRA':[-14.24,-51.93],
+  'BRB':[13.19,-59.54],'BRN':[4.54,114.73],'BTN':[27.51,90.43],'BWA':[-22.33,24.68],
+  'CAN':[56.13,-106.35],'CHE':[46.82,8.23],'CHL':[-35.68,-71.54],'CHN':[35.86,104.2],
+  'CIV':[7.54,-5.55],'CMR':[3.85,11.5],'COD':[-4.04,21.76],'COG':[-0.23,15.83],
+  'COL':[4.57,-74.3],'CRI':[9.75,-83.75],'CUB':[21.52,-77.78],'CYP':[35.13,33.43],
+  'CZE':[49.82,15.47],'DEU':[51.17,10.45],'DJI':[11.83,42.59],'DNK':[56.26,9.5],
+  'DOM':[18.74,-70.16],'DZA':[28.03,1.66],'ECU':[-1.83,-78.18],'EGY':[26.82,30.8],
+  'ESP':[40.46,-3.75],'EST':[58.6,25.01],'ETH':[9.15,40.49],'FIN':[61.92,25.75],
+  'FJI':[-16.58,179.41],'FRA':[46.23,2.21],'GBR':[55.38,-3.44],'GEO':[42.32,43.36],
+  'GHA':[7.95,-1.02],'GIN':[11.75,-15.46],'GRC':[39.07,21.82],'GTM':[15.78,-90.23],
+  'GUY':[4.86,-58.93],'HKG':[22.4,114.11],'HND':[15.2,-86.24],'HRV':[45.1,15.2],
+  'HTI':[18.97,-72.29],'HUN':[47.16,19.5],'IDN':[-0.79,113.92],'IND':[20.59,78.96],
+  'IRL':[53.41,-8.24],'IRN':[32.43,53.69],'IRQ':[33.22,43.68],'ISL':[64.96,-19.02],
+  'ISR':[31.05,34.85],'ITA':[41.87,12.57],'JAM':[18.11,-77.3],'JOR':[30.59,36.24],
+  'JPN':[36.2,138.25],'KAZ':[48.02,66.92],'KEN':[-0.02,37.91],'KHM':[12.57,104.99],
+  'KOR':[35.91,127.77],'KWT':[29.31,47.48],'LAO':[19.86,102.5],'LBN':[33.85,35.86],
+  'LBR':[6.43,-9.43],'LBY':[26.34,17.23],'LKA':[7.87,80.77],'LTU':[55.17,23.88],
+  'LUX':[49.82,6.13],'LVA':[56.88,24.6],'MAR':[31.79,-7.09],'MDA':[47.41,28.37],
+  'MDG':[-18.77,46.87],'MEX':[23.63,-102.55],'MKD':[41.61,21.75],'MLI':[17.57,-3.99],
+  'MMR':[21.92,95.96],'MNG':[46.86,103.85],'MOZ':[-18.67,35.53],'MRT':[21.01,-10.94],
+  'MUS':[-20.35,57.55],'MWI':[-13.25,34.3],'MYS':[4.21,101.97],'NAM':[-22.96,18.49],
+  'NER':[17.61,8.08],'NGA':[9.08,8.68],'NIC':[12.87,-85.21],'NLD':[52.13,5.29],
+  'NOR':[60.47,8.47],'NPL':[28.39,84.12],'NZL':[-40.9,174.89],'OMN':[21.51,55.92],
+  'PAK':[30.38,69.35],'PAN':[8.54,-80.78],'PER':[-9.19,-75.02],'PHL':[12.88,121.77],
+  'POL':[51.92,19.15],'PRT':[39.4,-8.22],'PRY':[-23.44,-58.44],'QAT':[25.35,51.18],
+  'ROU':[45.94,24.97],'RUS':[61.52,105.32],'RWA':[-1.94,29.87],'SAU':[23.89,45.08],
+  'SDN':[12.86,30.22],'SEN':[14.5,-14.45],'SGP':[1.35,103.82],'SLV':[13.79,-88.9],
+  'SOM':[5.15,46.2],'SRB':[44.02,21.01],'SUR':[3.92,-56.02],'SVK':[48.67,19.7],
+  'SVN':[46.15,14.99],'SWE':[60.13,18.64],'SWZ':[-26.52,31.47],'SYR':[34.8,38.99],
+  'THA':[15.87,100.99],'TJK':[38.86,71.28],'TKM':[38.97,59.56],'TTO':[10.69,-61.22],
+  'TUN':[33.89,9.54],'TUR':[38.96,35.24],'TZA':[-6.37,34.89],'TWN':[23.7,121.0],
+  'UGA':[1.37,32.29],'UKR':[48.38,31.17],'URY':[-32.52,-55.77],'USA':[37.09,-95.71],
+  'UZB':[41.38,64.59],'VEN':[6.42,-66.59],'VNM':[14.06,108.28],'YEM':[15.55,48.52],
+  'ZAF':[-30.56,22.94],'ZMB':[-13.13,27.85],'ZWE':[-19.02,29.15],
+};
+
+// Coordenadas dos estados brasileiros
+const UF_COORDS = {
+  'AC':[-9.0,-70.8],'AL':[-9.7,-36.6],'AM':[-3.4,-65.9],'AP':[1.4,-51.1],
+  'BA':[-12.9,-41.7],'CE':[-5.5,-39.3],'DF':[-15.8,-47.9],'ES':[-19.2,-40.3],
+  'GO':[-15.8,-49.6],'MA':[-5.4,-45.4],'MG':[-18.5,-44.5],'MS':[-20.5,-54.5],
+  'MT':[-12.6,-55.9],'PA':[-3.4,-52.3],'PB':[-7.2,-36.8],'PE':[-8.8,-36.5],
+  'PI':[-7.7,-42.7],'PR':[-24.9,-51.6],'RJ':[-22.2,-42.6],'RN':[-5.8,-36.6],
+  'RO':[-11.5,-63.6],'RR':[2.0,-61.4],'RS':[-30.2,-53.2],'SC':[-27.3,-50.2],
+  'SE':[-10.6,-37.4],'SP':[-22.3,-48.5],'TO':[-10.2,-48.3],
+};
+
+// ── Estado global ─────────────────────────────────────────────────────────────
+let _mode = 'pais';
+let _paisData = [], _paisAA = [], _ufData = [], _ufAA = [], _mensal = [];
+let _sortPais = {col:'bal', dir:-1};
+let _sortUf   = {col:'bal', dir:-1};
+let _charts = {}, _maps = {};
+let _lastYear = 2025;
+
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const REGIAO_COR = {
+  'Norte':'rgba(43,140,140,.8)', 'Nordeste':'rgba(200,146,42,.8)',
+  'Centro-Oeste':'rgba(100,80,160,.8)', 'Sudeste':'rgba(43,104,168,.8)',
+  'Sul':'rgba(46,125,82,.8)',
+};
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const el = id => document.getElementById(id);
+const getAnoIni = () => +el('f-ano-ini').value;
+const getAnoFim = () => +el('f-ano-fim').value;
+const getMesIni = () => +el('f-mes-ini').value;
+const getMesFim = () => +el('f-mes-fim').value;
+
+function fmtUSD(v) {
+  const a = Math.abs(v);
+  let s = a >= 1e9 ? 'US$ '+(a/1e9).toFixed(2)+' Bi'
+        : a >= 1e6 ? 'US$ '+(a/1e6).toFixed(1)+' Mi'
+        : 'US$ '+Math.round(a).toLocaleString('pt-BR');
+  return v < 0 ? '−'+s : s;
+}
+function fmtPct(v) {
+  if (v === null || v === undefined || !isFinite(v)) return '—';
+  const cls = v >= 0 ? 'badge-pos' : 'badge-neg';
+  const txt = (v >= 0 ? '+' : '') + (v*100).toFixed(1) + '%';
+  return `<span class="${cls}">${txt}</span>`;
+}
+function fmtDelta(v) {
+  if (!v && v !== 0) return '—';
+  const cls = v >= 0 ? 'badge-pos' : 'badge-neg';
+  return `<span class="${cls}">${fmtUSD(v)}</span>`;
+}
+function setDelta(id, pct) {
+  const d = el(id); if (!d) return;
+  if (pct === null || !isFinite(pct)) { d.textContent=''; d.className='kpi-delta'; return; }
+  const up = pct >= 0;
+  d.textContent = (up?'▲ +':'▼ ')+(Math.abs(pct)*100).toFixed(1)+'% vs ano ant.';
+  d.className = 'kpi-delta '+(up?'up':'dn');
+}
+
+// ── Merge atual + AA para calcular crescimento ────────────────────────────────
+function buildMerged(curr, prev) {
+  // curr e prev: [{fluxo, key (pais_cod ou uf), nome, iso3?, regiao?, valor_fob}]
+  const map = {};
+  curr.forEach(r => {
+    const k = r._key;
+    if (!map[k]) map[k] = { nome: r._nome, iso3: r.iso3||'', regiao: r.regiao||'', exp:0, imp:0, exp_aa:0, imp_aa:0 };
+    if (r.fluxo === 'E') map[k].exp = r.valor_fob;
+    else                  map[k].imp = r.valor_fob;
+  });
+  prev.forEach(r => {
+    const k = r._key;
+    if (!map[k]) map[k] = { nome: r._nome, iso3: r.iso3||'', regiao: r.regiao||'', exp:0, imp:0, exp_aa:0, imp_aa:0 };
+    if (r.fluxo === 'E') map[k].exp_aa = r.valor_fob;
+    else                  map[k].imp_aa = r.valor_fob;
+  });
+  return Object.entries(map).map(([key, d]) => {
+    const bal    = d.exp - d.imp;
+    const bal_aa = d.exp_aa - d.imp_aa;
+    const cresc_exp = d.exp_aa > 0 ? (d.exp - d.exp_aa) / d.exp_aa : null;
+    const cresc_imp = d.imp_aa > 0 ? (d.imp - d.imp_aa) / d.imp_aa : null;
+    // Crescimento Importação: IF(DIVIDE(IMP,IMP_AA)-1=-1, BLANK(), ...)
+    const cresc_i = (cresc_imp !== null && cresc_imp === -1) ? null : cresc_imp;
+    const cresc_e = (cresc_exp !== null && cresc_exp === -1) ? null : cresc_exp;
+    return { key, ...d, bal, bal_aa, cresc_exp: cresc_e, cresc_imp: cresc_i, d_bal: bal - bal_aa };
+  });
+}
+
+// ── Combo chart ───────────────────────────────────────────────────────────────
+function drawCombo(canvasId, labels, expData, impData, saldoData) {
+  if (_charts[canvasId]) { _charts[canvasId].destroy(); delete _charts[canvasId]; }
+  const ctx = el(canvasId); if (!ctx) return;
+  _charts[canvasId] = new Chart(ctx, {
+    data: {
+      labels,
+      datasets: [
+        { type:'line', label:'Exportação', data:expData, borderColor:'#C8922A', backgroundColor:'transparent',
+          tension:.3, pointRadius:2.5, pointHoverRadius:5, yAxisID:'y', borderWidth:2 },
+        { type:'line', label:'Importação', data:impData, borderColor:'#2B68A8', backgroundColor:'transparent',
+          tension:.3, pointRadius:2.5, pointHoverRadius:5, yAxisID:'y', borderWidth:2 },
+        { type:'bar',  label:'Balanço', data:saldoData,
+          backgroundColor: saldoData.map(v => v>=0?'rgba(46,125,82,.65)':'rgba(184,48,48,.6)'),
+          borderRadius:2, yAxisID:'y2' },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtUSD(c.raw)}`}}
+      },
+      scales:{
+        x:{ grid:{color:'rgba(26,36,51,.07)'}, ticks:{font:{family:'DM Mono',size:9},color:'#7A8A9A',maxRotation:45} },
+        y:{ position:'left', grid:{color:'rgba(26,36,51,.06)'}, ticks:{font:{family:'DM Mono',size:9},color:'#7A8A9A',callback:v=>fmtUSD(v)} },
+        y2:{ position:'right', grid:{display:false}, ticks:{font:{family:'DM Mono',size:9},color:'#7A8A9A',callback:v=>fmtUSD(v)} },
+      }
+    }
+  });
+}
+
+// ── Mapa de bolhas (Leaflet) ──────────────────────────────────────────────────
+const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+const TILE_ATTR = '© <a href="https://openstreetmap.org">OSM</a> © <a href="https://carto.com">CARTO</a>';
+
+function initMap(divId, center, zoom) {
+  if (_maps[divId]) { _maps[divId].remove(); delete _maps[divId]; }
+  const m = L.map(divId, { zoomControl:true, attributionControl:false, scrollWheelZoom:false }).setView(center, zoom);
+  L.tileLayer(TILE_URL, { attribution:TILE_ATTR, subdomains:'abcd', maxZoom:19 }).addTo(m);
+  L.control.attribution({ prefix:false }).addTo(m);
+  _maps[divId] = m;
+  return m;
+}
+
+function drawBubbleMap(divId, rows, colorHex, center, zoom, tooltipFn) {
+  const m = initMap(divId, center, zoom);
+  if (!rows.length) return;
+  const maxVal = Math.max(...rows.map(r=>r.val));
+  rows.forEach(r => {
+    if (!r.lat || !r.lon) return;
+    const radius = Math.max(4, Math.sqrt(r.val / maxVal) * 28);
+    L.circleMarker([r.lat, r.lon], {
+      radius, fillColor: colorHex, color: 'rgba(255,255,255,.25)',
+      weight:1, fillOpacity:.7
+    }).bindTooltip(tooltipFn(r), {sticky:true}).addTo(m);
+  });
+}
+
+// ── Render: Por País ──────────────────────────────────────────────────────────
+function renderPais() {
+  const rows = buildMerged(_paisData, _paisAA);
+  const totExp = rows.reduce((s,r)=>s+r.exp,0);
+  const totImp = rows.reduce((s,r)=>s+r.imp,0);
+  const totBal = totExp - totImp;
+  const totCor = totExp + totImp;
+  const totExpAA = rows.reduce((s,r)=>s+r.exp_aa,0);
+  const totImpAA = rows.reduce((s,r)=>s+r.imp_aa,0);
+  const totBalAA = totExpAA - totImpAA;
+
+  // KPIs
+  el('kpi-pais-exp').textContent = fmtUSD(totExp);
+  setDelta('kpi-pais-exp-d', totExpAA>0?(totExp-totExpAA)/totExpAA:null);
+  el('kpi-pais-imp').textContent = fmtUSD(totImp);
+  setDelta('kpi-pais-imp-d', totImpAA>0?(totImp-totImpAA)/totImpAA:null);
+  el('kpi-pais-bal').textContent = fmtUSD(totBal);
+  el('kpi-pais-bal').className   = 'kpi-val '+(totBal>=0?'pos':'neg');
+  setDelta('kpi-pais-bal-d', totBalAA!==0?(totBal-totBalAA)/Math.abs(totBalAA):null);
+  el('kpi-pais-cor').textContent = fmtUSD(totCor);
+  el('kpi-pais-cor-s').textContent= (totImp>0?'Cobertura '+(totExp/totImp).toFixed(2)+'×':'');
+
+  // Tabela
+  const sorted = [...rows].sort((a,b)=>{
+    const va=a[_sortPais.col]??0, vb=b[_sortPais.col]??0;
+    return typeof va==='string' ? va.localeCompare(vb)*_sortPais.dir : (va-vb)*_sortPais.dir;
+  });
+  const mono = "font-family:'DM Mono',monospace";
+  el('tbl-pais-body').innerHTML = sorted.map(r =>
+    `<tr class="${r.bal>=0?'pos':'neg'}">
+      <td>${r.nome}</td>
+      <td class="r" style="${mono};color:#7AABDC">${fmtUSD(r.imp)}</td>
+      <td class="r" style="${mono};color:var(--gold-l)">${fmtUSD(r.exp)}</td>
+      <td class="r" style="${mono};color:${r.bal>=0?'var(--pos)':'var(--neg)'}">${fmtUSD(r.bal)}</td>
+      <td class="r">${fmtPct(r.cresc_imp)}</td>
+      <td class="r">${fmtPct(r.cresc_exp)}</td>
+      <td class="r">${fmtDelta(r.d_bal)}</td>
+    </tr>`
+  ).join('') + `<tr class="total-row">
+    <td>TOTAL</td>
+    <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r">${fmtUSD(totExp)}</td>
+    <td class="r" style="color:${totBal>=0?'#5AC882':'#E06060'}">${fmtUSD(totBal)}</td>
+    <td class="r">—</td><td class="r">—</td><td class="r">—</td>
+  </tr>`;
+  el('cnt-pais').textContent = rows.length + ' países';
+
+  // Combo chart
+  const anoIni = getAnoIni(), anoFim = getAnoFim();
+  const mesIni = getMesIni(), mesFim = getMesFim();
+  const curr = _mensal.filter(r=>r.ano>=anoIni&&r.ano<=anoFim&&r.mes>=mesIni&&r.mes<=mesFim);
+  const keys = [...new Set(curr.map(r=>`${r.ano}-${String(r.mes).padStart(2,'0')}`))] .sort();
+  const mapE={},mapI={};
+  curr.filter(r=>r.fluxo==='E').forEach(r=>{ mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`]=r.valor_fob; });
+  curr.filter(r=>r.fluxo==='I').forEach(r=>{ mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`]=r.valor_fob; });
+  const expD = keys.map(k=>mapE[k]||0);
+  const impD = keys.map(k=>mapI[k]||0);
+  const salD = keys.map(k=>(mapE[k]||0)-(mapI[k]||0));
+  const lbls = keys.map(k=>{ const [a,m]=k.split('-'); return MESES[+m-1]+'/'+a.slice(2); });
+  drawCombo('chart-pais', lbls, expD, impD, salD);
+
+  // Mapas
+  const expRows = rows.filter(r=>r.exp>0&&ISO3[r.iso3]).map(r=>({lat:ISO3[r.iso3][0],lon:ISO3[r.iso3][1],val:r.exp,nome:r.nome}));
+  const impRows = rows.filter(r=>r.imp>0&&ISO3[r.iso3]).map(r=>({lat:ISO3[r.iso3][0],lon:ISO3[r.iso3][1],val:r.imp,nome:r.nome}));
+  const posRows = rows.filter(r=>r.bal>0&&ISO3[r.iso3]).map(r=>({lat:ISO3[r.iso3][0],lon:ISO3[r.iso3][1],val:r.bal,nome:r.nome}));
+  const negRows = rows.filter(r=>r.bal<0&&ISO3[r.iso3]).map(r=>({lat:ISO3[r.iso3][0],lon:ISO3[r.iso3][1],val:Math.abs(r.bal),nome:r.nome}));
+
+  const tip = label => r => `<b>${r.nome}</b><br>${label}: ${fmtUSD(r.val)}`;
+  drawBubbleMap('map-pais-exp', expRows, '#C8922A', [20,10], 1, tip('Exportação'));
+  drawBubbleMap('map-pais-imp', impRows, '#2B68A8', [20,10], 1, tip('Importação'));
+  drawBubbleMap('map-pais-pos', posRows, '#2E7D52', [20,10], 1, tip('Superávit'));
+  drawBubbleMap('map-pais-neg', negRows, '#B83030', [20,10], 1, tip('Déficit'));
+
+  el('ms-pais-exp').textContent = expRows.length+' países mapeados';
+  el('ms-pais-imp').textContent = impRows.length+' países mapeados';
+  el('ms-pais-pos').textContent = posRows.length+' superávit';
+  el('ms-pais-neg').textContent = negRows.length+' déficit';
+}
+
+// ── Render: Por UF ────────────────────────────────────────────────────────────
+function renderUF() {
+  const rows = buildMerged(_ufData, _ufAA);
+  const totExp = rows.reduce((s,r)=>s+r.exp,0);
+  const totImp = rows.reduce((s,r)=>s+r.imp,0);
+  const totBal = totExp - totImp;
+  const totExpAA = rows.reduce((s,r)=>s+r.exp_aa,0);
+  const totImpAA = rows.reduce((s,r)=>s+r.imp_aa,0);
+  const totBalAA = totExpAA - totImpAA;
+
+  // KPIs
+  el('kpi-uf-exp').textContent = fmtUSD(totExp);
+  setDelta('kpi-uf-exp-d', totExpAA>0?(totExp-totExpAA)/totExpAA:null);
+  el('kpi-uf-imp').textContent = fmtUSD(totImp);
+  setDelta('kpi-uf-imp-d', totImpAA>0?(totImp-totImpAA)/totImpAA:null);
+  el('kpi-uf-bal').textContent = fmtUSD(totBal);
+  el('kpi-uf-bal').className   = 'kpi-val '+(totBal>=0?'pos':'neg');
+  setDelta('kpi-uf-bal-d', totBalAA!==0?(totBal-totBalAA)/Math.abs(totBalAA):null);
+  el('kpi-uf-cor').textContent = fmtUSD(totExp+totImp);
+  el('kpi-uf-cor-s').textContent= totImp>0?'Cobertura '+(totExp/totImp).toFixed(2)+'×':'';
+
+  // Tabela
+  const sorted = [...rows].sort((a,b)=>{
+    const va=a[_sortUf.col]??0, vb=b[_sortUf.col]??0;
+    return typeof va==='string' ? va.localeCompare(vb)*_sortUf.dir : (va-vb)*_sortUf.dir;
+  });
+  const mono = "font-family:'DM Mono',monospace";
+  const rCor = r => REGIAO_COR[r.regiao];
+  el('tbl-uf-body').innerHTML = sorted.map(r =>
+    `<tr class="${r.bal>=0?'pos':'neg'}">
+      <td>${r.nome}</td>
+      <td>${rCor(r)?`<span style="background:${rCor(r)};color:#fff;padding:.02rem .24rem;border-radius:3px;font-size:.52rem;font-family:'DM Mono',monospace">${r.regiao||'—'}</span>`:(r.regiao||'—')}</td>
+      <td class="r" style="${mono};color:#7AABDC">${fmtUSD(r.imp)}</td>
+      <td class="r" style="${mono};color:var(--gold-l)">${fmtUSD(r.exp)}</td>
+      <td class="r" style="${mono};color:${r.bal>=0?'var(--pos)':'var(--neg)'}">${fmtUSD(r.bal)}</td>
+      <td class="r">${fmtPct(r.cresc_imp)}</td>
+      <td class="r">${fmtPct(r.cresc_exp)}</td>
+      <td class="r">${fmtDelta(r.d_bal)}</td>
+    </tr>`
+  ).join('') + `<tr class="total-row">
+    <td colspan="2">TOTAL</td>
+    <td class="r">${fmtUSD(totImp)}</td>
+    <td class="r">${fmtUSD(totExp)}</td>
+    <td class="r" style="color:${totBal>=0?'#5AC882':'#E06060'}">${fmtUSD(totBal)}</td>
+    <td class="r">—</td><td class="r">—</td><td class="r">—</td>
+  </tr>`;
+  el('cnt-uf').textContent = rows.length + ' estados';
+
+  // Combo chart (mesmo mensal da aba países)
+  const anoIni = getAnoIni(), anoFim = getAnoFim();
+  const mesIni = getMesIni(), mesFim = getMesFim();
+  const curr = _mensal.filter(r=>r.ano>=anoIni&&r.ano<=anoFim&&r.mes>=mesIni&&r.mes<=mesFim);
+  const keys = [...new Set(curr.map(r=>`${r.ano}-${String(r.mes).padStart(2,'0')}`))] .sort();
+  const mapE={},mapI={};
+  curr.filter(r=>r.fluxo==='E').forEach(r=>{ mapE[`${r.ano}-${String(r.mes).padStart(2,'0')}`]=r.valor_fob; });
+  curr.filter(r=>r.fluxo==='I').forEach(r=>{ mapI[`${r.ano}-${String(r.mes).padStart(2,'0')}`]=r.valor_fob; });
+  const expD=keys.map(k=>mapE[k]||0), impD=keys.map(k=>mapI[k]||0);
+  const salD=keys.map(k=>(mapE[k]||0)-(mapI[k]||0));
+  const lbls=keys.map(k=>{ const [a,m]=k.split('-'); return MESES[+m-1]+'/'+a.slice(2); });
+  drawCombo('chart-uf', lbls, expD, impD, salD);
+
+  // Mapas Brasil
+  const BR = [-15,-55]; const Z = 3;
+  const expRows = rows.filter(r=>r.exp>0&&UF_COORDS[r.key]).map(r=>({lat:UF_COORDS[r.key][0],lon:UF_COORDS[r.key][1],val:r.exp,nome:r.nome||r.key}));
+  const impRows = rows.filter(r=>r.imp>0&&UF_COORDS[r.key]).map(r=>({lat:UF_COORDS[r.key][0],lon:UF_COORDS[r.key][1],val:r.imp,nome:r.nome||r.key}));
+  const posRows = rows.filter(r=>r.bal>0&&UF_COORDS[r.key]).map(r=>({lat:UF_COORDS[r.key][0],lon:UF_COORDS[r.key][1],val:r.bal,nome:r.nome||r.key}));
+  const negRows = rows.filter(r=>r.bal<0&&UF_COORDS[r.key]).map(r=>({lat:UF_COORDS[r.key][0],lon:UF_COORDS[r.key][1],val:Math.abs(r.bal),nome:r.nome||r.key}));
+
+  const tip = label => r => `<b>${r.nome}</b><br>${label}: ${fmtUSD(r.val)}`;
+  drawBubbleMap('map-uf-exp', expRows, '#C8922A', BR, Z, tip('Exportação'));
+  drawBubbleMap('map-uf-imp', impRows, '#2B68A8', BR, Z, tip('Importação'));
+  drawBubbleMap('map-uf-pos', posRows, '#2E7D52', BR, Z, tip('Superávit'));
+  drawBubbleMap('map-uf-neg', negRows, '#B83030', BR, Z, tip('Déficit'));
+
+  el('ms-uf-exp').textContent = expRows.length+' estados';
+  el('ms-uf-imp').textContent = impRows.length+' estados';
+  el('ms-uf-pos').textContent = posRows.length+' superávit';
+  el('ms-uf-neg').textContent = negRows.length+' déficit';
+}
+
+// ── Sort ──────────────────────────────────────────────────────────────────────
+function sortBy(which, col) {
+  const s = which==='pais' ? _sortPais : _sortUf;
+  if (s.col===col) s.dir*=-1; else { s.col=col; s.dir=-1; }
+  const tbl = which==='pais' ? 'tbl-pais' : 'tbl-uf';
+  document.querySelectorAll(`#${tbl} th .si`).forEach(si=>{
+    const th = si.parentElement;
+    const thCol = th.getAttribute('onclick').match(/'([^']+)'\)$/)?.[1];
+    si.textContent = thCol===col ? (s.dir<0?'↓':'↑') : '⇅';
+  });
+  if (which==='pais') renderPais(); else renderUF();
+}
+
+// ── Fetch data ────────────────────────────────────────────────────────────────
+function qs(extra={}) {
+  const p = new URLSearchParams({
+    ano_ini: getAnoIni(), ano_fim: getAnoFim(),
+    mes_ini: getMesIni(), mes_fim: getMesFim(), top: 200, ...extra
+  });
+  return p.toString();
+}
+function qsAA(extra={}) {
+  const p = new URLSearchParams({
+    ano_ini: getAnoIni()-1, ano_fim: getAnoFim()-1,
+    mes_ini: getMesIni(), mes_fim: getMesFim(), top: 200, ...extra
+  });
+  return p.toString();
+}
+
+async function loadAll() {
+  el('loading').classList.remove('hidden');
+  el('load-txt').textContent = 'Consultando dados…';
+  try {
+    const [pd, paa, ud, uaa, mn] = await Promise.all([
+      fetch(`${API}/por-pais?${qs()}`).then(r=>r.json()),
+      fetch(`${API}/por-pais?${qsAA()}`).then(r=>r.json()),
+      fetch(`${API}/por-uf?${qs()}`).then(r=>r.json()),
+      fetch(`${API}/por-uf?${qsAA()}`).then(r=>r.json()),
+      fetch(`${API}/mensal?${new URLSearchParams({ano_ini:getAnoIni(),ano_fim:getAnoFim(),mes_ini:getMesIni(),mes_fim:getMesFim()})}`).then(r=>r.json()),
+    ]);
+
+    // Normaliza _key e _nome
+    _paisData = pd.map(r=>({...r, _key:r.pais_cod, _nome:r.pais_nome}));
+    _paisAA   = paa.map(r=>({...r, _key:r.pais_cod, _nome:r.pais_nome}));
+    _ufData   = ud.map(r=>({...r, _key:r.uf, _nome:r.uf_nome}));
+    _ufAA     = uaa.map(r=>({...r, _key:r.uf, _nome:r.uf_nome}));
+    _mensal   = mn;
+
+    const anoIni=getAnoIni(), anoFim=getAnoFim(), mesIni=getMesIni(), mesFim=getMesFim();
+    const periodoTxt = anoIni===anoFim ? String(anoIni) : `${anoIni}–${anoFim}`;
+    const mesTxt = mesIni===1&&mesFim===12 ? 'ano completo' : `${MESES[mesIni-1]}–${MESES[mesFim-1]}`;
+    el('period-txt').textContent = `${periodoTxt} · ${mesTxt} · Fonte: MDIC/ComexStat`;
+
+    if (_mode==='pais') renderPais(); else renderUF();
+  } catch(e) {
+    console.error(e);
+    el('load-txt').textContent = 'Erro ao carregar. Verifique o servidor.';
+    setTimeout(()=>el('loading').classList.add('hidden'), 3000);
+    return;
+  }
+  el('loading').classList.add('hidden');
+}
+
+// ── Modo (aba) ────────────────────────────────────────────────────────────────
+function setMode(mode) {
+  _mode = mode;
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='pane-'+mode));
+  if (mode==='pais') renderPais(); else renderUF();
+}
+
+// ── Filtros ───────────────────────────────────────────────────────────────────
+let _debounce;
+function onFilter() { clearTimeout(_debounce); _debounce=setTimeout(loadAll, 400); }
+function resetFiltros() {
+  el('f-ano-ini').value = String(_lastYear);
+  el('f-ano-fim').value = String(_lastYear);
+  el('f-mes-ini').value = '1';
+  el('f-mes-fim').value = '12';
+  loadAll();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const refs = await fetch(`${API}/refs`).then(r=>r.json());
+    const anos = (refs.anos||[]).map(Number).sort();
+    if (anos.length) {
+      _lastYear = anos[anos.length-1];
+      ['f-ano-ini','f-ano-fim'].forEach(id=>{
+        const sel=el(id); sel.innerHTML='';
+        anos.forEach(a=>{
+          const o=document.createElement('option');
+          o.value=String(a); o.text=String(a);
+          if(a===_lastYear) o.selected=true;
+          sel.appendChild(o);
+        });
+      });
+    }
+  } catch(e) {}
+  loadAll();
+}
+init();
+</script>
+</body>
+</html>

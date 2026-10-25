@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promoções por Rede | VCZ Consultoria</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F5F0E8; --panel:#FFFFFF; --panel2:#EDE7DC;
+  --navy:#0D1B2A; --navy2:#162B40; --steel:#9AAABB;
+  --gold:#C8922A; --gold-light:#E2AC4C; --gold-aged:#B7A073;
+  --text:#1A2433; --text2:#3E5068; --text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);
+  --shadow-sm:0 1px 3px rgba(26,36,51,.07),0 0 0 1px rgba(26,36,51,.06);
+  --th-bg:#1A2F45; --th-text:#E8D8C0;
+  --tr-even:#F4F6FA; --tr-odd:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.06);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(26,36,51,.22);border-radius:4px}
+
+#loading{position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;z-index:9999}
+#loading.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid rgba(200,146,42,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'DM Mono',monospace;font-size:.78rem;color:#C8D8E8;letter-spacing:.05em}
+
+nav{position:fixed;top:0;left:0;right:0;height:72px;background:rgba(13,27,42,.97);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:500;border-bottom:1px solid rgba(200,146,42,.15)}
+.nav-logo img{height:30px;display:block}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9AAABB;text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-aged);border:1px solid rgba(183,160,115,.35);border-radius:3px;padding:.25rem .55rem;white-space:nowrap}
+@media(max-width:900px){.nav-links{display:none}}
+
+.dash-header{padding:1.1rem 2rem .85rem;background:var(--navy);border-bottom:1px solid rgba(200,146,42,.2);margin-top:72px}
+.dash-header .label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold-aged);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.32rem}
+.dash-header h1{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;color:#F2EAD8;line-height:1.1}
+.dash-header h1 em{color:var(--gold-light);font-style:italic;font-weight:600}
+.dash-header .sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--steel);margin-top:.28rem;letter-spacing:.04em}
+.dash-header .sub a{color:var(--gold-aged)}
+.badge-beta{display:inline-block;margin-left:.6rem;font-family:'DM Mono',monospace;font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--navy);background:var(--gold-light);padding:.1rem .45rem;border-radius:9px;vertical-align:middle}
+
+.dash-main{max-width:1280px;margin:0 auto;padding:1.3rem 1.3rem 3rem}
+
+.tbox{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.1rem;box-shadow:var(--shadow-sm)}
+.tbox-head{padding:.6rem .9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;background:var(--navy2);border-bottom:1px solid rgba(200,146,42,.15)}
+.tbox-head h3{font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold-light)}
+.tbox-tools{display:flex;align-items:center;gap:.6rem}
+.tbox-cnt{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--gold-aged);background:rgba(200,146,42,.1);padding:.1rem .5rem;border-radius:10px;border:1px solid rgba(200,146,42,.25)}
+.tf-input{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:.3rem .55rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)}
+
+.tbl-scroll{overflow-x:auto}
+.dt{width:100%;border-collapse:collapse;font-size:.78rem}
+.dt thead{position:sticky;top:0;z-index:3}
+.dt th{padding:.42rem .6rem;font-family:'DM Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;background:var(--th-bg);color:var(--th-text);border-right:1px solid rgba(255,255,255,.12)}
+.dt th:hover{background:#0D1B2A}
+.dt th .si{font-size:.5rem;color:rgba(255,255,255,.65);margin-left:.14rem}
+.dt td{padding:.38rem .6rem;border-bottom:1px solid rgba(26,36,51,.06);color:var(--text);white-space:nowrap}
+.dt tbody tr:nth-child(even){background:var(--tr-even)}
+.dt tbody tr:nth-child(odd){background:var(--tr-odd)}
+.dt th.r,.dt td.r{text-align:right}
+.dt td.rede-cell{font-weight:600;color:var(--navy)}
+.no-data{text-align:center;padding:2.2rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+
+.chart-legenda{padding:.5rem .9rem 0;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text3)}
+.chart-box{padding:.9rem;height:380px}
+.charts-row{display:grid;grid-template-columns:1fr;gap:1.1rem}
+@media(min-width:1100px){.charts-row{grid-template-columns:1fr 1fr}}
+.charts-row .chart-box{height:340px}
+</style>
+</head>
+<body>
+
+<div id="loading"><div class="spinner"></div><div class="loading-text">Carregando dados de promoção…</div></div>
+
+<nav>
+  <a href="/" class="nav-logo"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
+  <ul class="nav-links">
+    <li><a href="/#sobre">Sobre</a></li>
+    <li><a href="/dashboards/" class="active">Dashboards</a></li>
+    <li><a href="/#contato">Contato</a></li>
+  </ul>
+  <div class="nav-right"><span class="nav-badge">Uso interno</span></div>
+</nav>
+
+<div class="dash-header">
+  <p class="label">Inteligência de Preços</p>
+  <h1>Promoções por <em>Rede</em><span class="badge-beta">Em avaliação</span></h1>
+  <p class="sub" id="last-update">Carregando… · <a href="index.html">← voltar pro Analisador de Preços</a></p>
+</div>
+
+<div class="dash-main">
+
+  <div class="tbox">
+    <div class="tbox-head">
+      <h3 id="tabela-title">Promoção por rede</h3>
+      <div class="tbox-tools">
+        <label style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--steel)">Dia:
+          <select class="tf-input" id="sel-dia"></select>
+        </label>
+        <span class="tbox-cnt" id="tabela-cnt">0 redes</span>
+      </div>
+    </div>
+    <p class="chart-legenda" style="padding-bottom:.5rem">
+      "Em promoção" = item com preço promocional menor que o preço regular naquele dia. Desconto médio é só entre os itens promocionados — não é o desconto médio do catálogo inteiro.
+    </p>
+    <div class="tbl-scroll"><table class="dt" id="tabela"><thead></thead><tbody></tbody></table></div>
+  </div>
+
+  <p class="chart-legenda" style="padding:0 0 .9rem">
+    ⚠ Rede Top: corrigido em 16/10/2026 um bug que confundia o preço de referência "por kg" de item vendido a peso
+    (hortifruti) com desconto real — chegava a indicar 90% de desconto que não existia. Dado de hoje (16/10) em diante
+    já está correto; dias anteriores a essa correção (30/09 a 14/10) podem mostrar desconto médio inflado pra essa rede.
+  </p>
+
+  <div class="charts-row">
+    <div class="tbox">
+      <div class="tbox-head"><h3>Desconto médio (%) — evolução</h3></div>
+      <div class="chart-box"><canvas id="chart-desconto"></canvas></div>
+    </div>
+    <div class="tbox">
+      <div class="tbox-head"><h3>Itens em promoção — evolução</h3></div>
+      <div class="chart-box"><canvas id="chart-qtd"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SITE_LABELS = {
+  bistek:'Bistek', kalunga:'Kalunga', koerich:'Koerich', superkoch:'Super Koch',
+  havan:'Havan', festval:'Festval', giassi:'Giassi', muffato:'Muffato',
+  comper:'Comper', meschke:'Meschke', savegnago:'Savegnago', saojoao:'São João',
+  cottonbaby:'Cottonbaby (site próprio)', paguemenos:'Pague Menos', minhacooper:'Minha Cooper',
+  redetop:'Rede Top', rissul:'Rissul', zaffari:'Zaffari',
+  drogariasaopaulo:'Drogaria São Paulo', zonasul:'Zona Sul', marche:'St Marche',
+};
+const SITE_ORDER = Object.keys(SITE_LABELS);
+const SITE_PALETTE = ['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300','#4a3aa7','#e34948'];
+const SITE_COLOR = {};
+SITE_ORDER.forEach((s,i) => { SITE_COLOR[s] = SITE_PALETTE[i % SITE_PALETTE.length]; });
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtD(iso){ const [y,m,d] = iso.split('-'); return `${d}/${m}/${y.slice(2)}`; }
+
+let DADOS = [];           // linhas cruas do promocoes.json
+let POR_DIA = new Map();  // dia -> [linhas]
+let DIAS = [];            // ordenado crescente
+let state = { dia: null, sort: {col:'desconto_medio_pct', dir:-1} };
+
+async function init(){
+  const resp = await fetch('dados/promocoes.json');
+  DADOS = await resp.json();
+  DADOS.forEach(r => {
+    if(!POR_DIA.has(r.data)) POR_DIA.set(r.data, []);
+    POR_DIA.get(r.data).push(r);
+  });
+  DIAS = [...POR_DIA.keys()].sort();
+  state.dia = DIAS[DIAS.length - 1] || null;
+
+  montarSeletorDia();
+  document.getElementById('last-update').innerHTML =
+    (state.dia ? `Dado mais recente: ${fmtD(state.dia)}` : 'Sem dados') +
+    ' · <a href="index.html">← voltar pro Analisador de Preços</a>';
+
+  renderTabela();
+  renderGraficos();
+  document.getElementById('loading').classList.add('hidden');
+}
+
+function montarSeletorDia(){
+  const sel = document.getElementById('sel-dia');
+  sel.innerHTML = DIAS.slice().reverse().map(d => `<option value="${d}">${fmtD(d)}</option>`).join('');
+  sel.value = state.dia;
+  sel.addEventListener('change', () => { state.dia = sel.value; renderTabela(); });
+}
+
+const COLS = [
+  {k:'site', lbl:'Rede'},
+  {k:'qtd_promo', lbl:'Itens em Promoção', r:true},
+  {k:'pct_catalogo', lbl:'% do Catálogo', r:true, suf:'%'},
+  {k:'desconto_medio_pct', lbl:'Desconto Médio', r:true, suf:'%'},
+  {k:'desconto_medio_rs', lbl:'Desconto Médio', r:true, pre:'R$ '},
+];
+
+function renderTabela(){
+  const linhas = (POR_DIA.get(state.dia) || []).slice();
+  const {col, dir} = state.sort;
+  linhas.sort((a,b) => {
+    if(col === 'site') return String(SITE_LABELS[a.site]||a.site).localeCompare(String(SITE_LABELS[b.site]||b.site),'pt') * dir;
+    return (a[col] - b[col]) * dir;
+  });
+
+  document.getElementById('tabela-cnt').textContent = `${linhas.length} rede${linhas.length!==1?'s':''}`;
+  document.getElementById('tabela-title').textContent = `Promoção por rede — ${state.dia ? fmtD(state.dia) : ''}`;
+
+  const thead = document.querySelector('#tabela thead');
+  const arrow = c => c===col ? (dir===1?' ▲':' ▼') : '';
+  thead.innerHTML = `<tr>${COLS.map(c=>`<th data-col="${c.k}" class="${c.r?'r':''}">${esc(c.lbl)}<span class="si">${arrow(c.k)}</span></th>`).join('')}</tr>`;
+  thead.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    const c = th.dataset.col;
+    state.sort.dir = state.sort.col===c ? -state.sort.dir : (c==='site'?1:-1);
+    state.sort.col = c;
+    renderTabela();
+  }));
+
+  const tbody = document.querySelector('#tabela tbody');
+  tbody.innerHTML = linhas.length ? linhas.map(r => `<tr>
+    <td class="rede-cell">${esc(SITE_LABELS[r.site]||r.site)}</td>
+    <td class="r">${r.qtd_promo.toLocaleString('pt-BR')} <span style="color:var(--text3)">/ ${r.total_itens.toLocaleString('pt-BR')}</span></td>
+    <td class="r">${r.pct_catalogo.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})}%</td>
+    <td class="r">${r.desconto_medio_pct.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})}%</td>
+    <td class="r">R$ ${r.desconto_medio_rs.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+  </tr>`).join('') : `<tr><td colspan="${COLS.length}" class="no-data">Nenhuma rede com item em promoção neste dia</td></tr>`;
+}
+
+let _chartDesconto, _chartQtd;
+function renderGraficos(){
+  // 1 linha por rede, só pras redes que aparecem em pelo menos 1 dia — evita
+  // poluir a legenda com rede sem promoção nenhuma no período
+  const sites = SITE_ORDER.filter(s => DADOS.some(r => r.site === s));
+  const labels = DIAS.map(fmtD);
+
+  const datasetsDesconto = sites.map(s => ({
+    label: SITE_LABELS[s] || s,
+    data: DIAS.map(d => { const r = (POR_DIA.get(d)||[]).find(x => x.site===s); return r ? r.desconto_medio_pct : null; }),
+    borderColor: SITE_COLOR[s], backgroundColor: SITE_COLOR[s],
+    spanGaps: true, tension: .25, pointRadius: 2, borderWidth: 1.8,
+  }));
+  const datasetsQtd = sites.map(s => ({
+    label: SITE_LABELS[s] || s,
+    data: DIAS.map(d => { const r = (POR_DIA.get(d)||[]).find(x => x.site===s); return r ? r.qtd_promo : null; }),
+    borderColor: SITE_COLOR[s], backgroundColor: SITE_COLOR[s],
+    spanGaps: true, tension: .25, pointRadius: 2, borderWidth: 1.8,
+  }));
+
+  const opcoesComuns = {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode:'nearest', axis:'x', intersect:false},
+    plugins: { legend: { position:'bottom', labels:{boxWidth:10, font:{size:10}} } },
+    scales: { y: { beginAtZero:true, grid:{color:'rgba(26,36,51,.08)'} }, x: { grid:{display:false} } },
+  };
+
+  if(_chartDesconto) _chartDesconto.destroy();
+  _chartDesconto = new Chart(document.getElementById('chart-desconto').getContext('2d'), {
+    type:'line', data:{labels, datasets:datasetsDesconto},
+    options: {...opcoesComuns, plugins:{...opcoesComuns.plugins, tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y==null?'—':ctx.parsed.y.toFixed(1)+'%'}`}}}},
+  });
+  if(_chartQtd) _chartQtd.destroy();
+  _chartQtd = new Chart(document.getElementById('chart-qtd').getContext('2d'), {
+    type:'line', data:{labels, datasets:datasetsQtd},
+    options: {...opcoesComuns, plugins:{...opcoesComuns.plugins, tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y==null?'—':ctx.parsed.y.toLocaleString('pt-BR')}`}}}},
+  });
+}
+
+init();
+</script>
+</body>
+</html>

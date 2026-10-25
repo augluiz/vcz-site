@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Preços — Varejo | VCZ Consultoria</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ──────────────────────────────────────────── */
+:root{
+  --bg:#F2EDE4;--panel:#FFFFFF;--panel2:#F8F4EE;--panel3:#F0EBE1;
+  --navy:#0D1B2A;--navy2:#162B40;--navy3:#1E3148;
+  --gold:#C8922A;--gold-l:#E2AC4C;--gold-d:#B7A073;
+  --warm:#F0EDED;--steel:#8A9BAB;
+  --text:#1A2433;--text2:#3A4D62;--text3:#7A8A9A;
+  --border:rgba(26,36,51,.1);--border2:rgba(26,36,51,.06);
+  --sh-sm:0 1px 4px rgba(26,36,51,.08),0 0 0 1px rgba(26,36,51,.05);
+  --sh-md:0 6px 20px rgba(26,36,51,.13),0 0 0 1px rgba(26,36,51,.07);
+  --green:#1C7845;--green-bg:rgba(28,120,69,.1);
+  --red:#B83030;  --red-bg:rgba(184,48,48,.1);
+  --amber:#7A5C00;--amber-bg:rgba(122,92,0,.1);
+  --blue:#1A6B9A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:rgba(26,36,51,.04)}
+::-webkit-scrollbar-thumb{background:#C0B090;border-radius:3px}
+input[type=number]::-webkit-inner-spin-button{opacity:.3}
+
+/* ── ANIMATIONS ──────────────────────────────────────── */
+@keyframes slideInRow{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+@keyframes flashCell{0%{background:rgba(200,146,42,.3)}100%{background:transparent}}
+.row-new{animation:slideInRow .2s ease-out}
+
+/* ── NAV ─────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;background:rgba(13,27,42,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(183,160,115,.13)}
+.nav-logo img{height:38px}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{font-family:'DM Mono',monospace;font-size:.53rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,146,42,.35);padding:6px 13px;text-decoration:none;border-radius:3px;transition:all .2s}
+.nav-cta:hover{background:rgba(200,146,42,.1)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-hbg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hbg span{display:block;width:20px;height:1.5px;background:var(--steel);transition:all .3s}
+@media(max-width:760px){
+  .nav-hbg{display:flex}
+  .nav-links{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(13,27,42,.98);flex-direction:column;gap:0;z-index:99}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:.85rem 4vw;border-bottom:1px solid rgba(183,160,115,.08)}
+  .nav-cta{display:none}
+}
+
+/* ── PAGE HEADER ─────────────────────────────────────── */
+.ph{padding-top:60px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);border-bottom:2px solid rgba(200,146,42,.2)}
+.ph-inner{padding:1.3rem 2rem 1rem;max-width:1900px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.ph-lbl{font-family:'DM Mono',monospace;font-size:.51rem;color:var(--gold-d);text-transform:uppercase;letter-spacing:.16em;margin-bottom:.28rem}
+.ph-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--warm);line-height:1}
+.ph-title em{color:var(--gold-l);font-style:italic}
+.ph-sub{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--steel);margin-top:.25rem;letter-spacing:.04em}
+.ph-tag{font-family:'DM Mono',monospace;font-size:.48rem;background:rgba(200,146,42,.12);color:var(--gold-d);border:1px solid rgba(200,146,42,.2);padding:.22rem .55rem;border-radius:3px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;align-self:flex-start;margin-top:.4rem}
+
+/* ── LAYOUT ──────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:280px 1fr;max-width:1900px;margin:0 auto}
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+.sidebar{background:var(--panel2);border-right:1px solid var(--border);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:#C8B09A}
+.sb-sec{padding:.9rem 1rem;border-bottom:1px solid rgba(26,36,51,.07)}
+.sb-hd{display:flex;align-items:center;gap:.42rem;margin-bottom:.68rem}
+.sb-icon{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+.sb-hd-lbl{font-family:'DM Mono',monospace;font-size:.51rem;color:var(--navy2);text-transform:uppercase;letter-spacing:.13em}
+.sb-row{display:flex;gap:.5rem;margin-bottom:.42rem;align-items:flex-end}
+.sb-f{display:flex;flex-direction:column;gap:.16rem;flex:1}
+.sb-f.half{flex:0 0 calc(50% - .25rem)}
+.lbl{font-family:'DM Mono',monospace;font-size:.47rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em}
+.lbl small{display:block;color:var(--text3);font-size:.43rem;text-transform:none;letter-spacing:0;margin-top:.04rem;font-family:'DM Sans',sans-serif}
+.si{background:var(--panel);border:1px solid rgba(26,36,51,.18);border-radius:4px;padding:.28rem .4rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;width:100%;transition:border-color .18s,box-shadow .18s}
+.si:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.1)}
+.si::placeholder{color:rgba(26,36,51,.3)}
+.ss{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%237A8A9A' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .4rem center;background-color:var(--panel);border:1px solid rgba(26,36,51,.18);border-radius:4px;padding:.28rem 1.4rem .28rem .4rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;width:100%;cursor:pointer;transition:border-color .18s}
+.ss:focus{border-color:var(--gold)}
+.ss option{background:var(--panel)}
+.sb-radio{display:flex;gap:.55rem;flex-wrap:wrap}
+.sb-radio label,.sb-chk label{font-family:'DM Sans',sans-serif;font-size:.75rem;color:var(--text2);display:flex;align-items:center;gap:.25rem;cursor:pointer;transition:color .15s}
+.sb-radio label:hover,.sb-chk label:hover{color:var(--navy)}
+.sb-radio input,.sb-chk input{accent-color:var(--gold)}
+/* elasticity slider — gradient track green→amber→red */
+.sl-wrap{position:relative;padding:.35rem 0}
+.sl{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:linear-gradient(90deg,#1C7845 0%,#8C6A00 50%,#B83030 100%);outline:none;cursor:pointer}
+.sl::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2.5px solid var(--gold);box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer}
+.sl-val{font-family:'DM Mono',monospace;font-size:.8rem;color:var(--gold);text-align:center;margin-top:.18rem}
+.elast-badge{display:inline-block;padding:.09rem .35rem;border-radius:3px;font-family:'DM Mono',monospace;font-size:.44rem;text-transform:uppercase;letter-spacing:.07em;margin-top:.2rem}
+.eb-vi{background:rgba(28,120,69,.12);color:#1C7845}
+.eb-i{background:rgba(28,120,69,.08);color:#2E8B57}
+.eb-m{background:rgba(122,92,0,.12);color:#7A5C00}
+.eb-e{background:rgba(184,48,48,.1);color:#B83030}
+.eb-ve{background:rgba(184,48,48,.16);color:#9A2020}
+/* tax breakdown bar */
+.tax-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:rgba(26,36,51,.08);margin:.25rem 0}
+.tax-seg{height:100%;transition:width .3s}
+.tax-total-row{display:flex;justify-content:space-between;align-items:center;padding:.26rem .38rem;background:rgba(200,146,42,.06);border:1px solid rgba(200,146,42,.2);border-radius:4px;margin-top:.28rem}
+.tax-total-lbl{font-family:'DM Mono',monospace;font-size:.46rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em}
+.tax-total-val{font-family:'DM Mono',monospace;font-size:.84rem;color:var(--gold);font-weight:500}
+/* conc */
+.conc-row{display:flex;gap:.38rem;align-items:flex-end;margin-bottom:.38rem}
+.btn-srch{background:rgba(200,146,42,.08);border:1px solid rgba(200,146,42,.25);border-radius:4px;padding:.26rem .38rem;color:var(--gold);font-family:'DM Mono',monospace;font-size:.47rem;cursor:pointer;flex-shrink:0;transition:all .18s;line-height:1}
+.btn-srch:hover{background:rgba(200,146,42,.18);color:var(--gold)}
+.sb-note{font-family:'DM Sans',sans-serif;font-size:.61rem;color:var(--text3);line-height:1.45;margin-top:.28rem}
+.btn-reset{width:100%;background:transparent;border:1px solid rgba(26,36,51,.15);border-radius:4px;padding:.27rem;color:var(--text3);font-family:'DM Mono',monospace;font-size:.47rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .18s}
+.btn-reset:hover{border-color:rgba(26,36,51,.35);color:var(--text2)}
+
+/* ── MAIN ────────────────────────────────────────────── */
+.main{padding:1rem 1.3rem;display:flex;flex-direction:column;gap:1rem;min-height:calc(100vh - 60px)}
+
+/* ── KPI STRIP ───────────────────────────────────────── */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem}
+.kpi-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;position:relative;overflow:hidden;box-shadow:var(--sh-sm);transition:transform .14s,box-shadow .14s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:3px}
+.ka-gold{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
+.ka-blue{background:linear-gradient(90deg,#1A6B9A,#3A8CBB)}
+.ka-dyn{transition:background .4s}
+.kpi-lbl{font-family:'DM Mono',monospace;font-size:.47rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.32rem}
+.kpi-val{font-family:'DM Mono',monospace;font-size:1.48rem;color:var(--navy);font-weight:500;line-height:1;transition:color .3s}
+.kpi-val.pos{color:var(--green)}
+.kpi-val.neg{color:var(--red)}
+.kpi-val.warn{color:var(--amber)}
+.kpi-val.mute{color:var(--text3)}
+.kpi-sub{font-family:'DM Sans',sans-serif;font-size:.62rem;color:var(--text3);margin-top:.26rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── CALC CARD ───────────────────────────────────────── */
+.calc-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:var(--sh-sm);overflow:hidden}
+.calc-hdr{background:var(--navy2);padding:.52rem 1rem;border-bottom:1px solid rgba(200,146,42,.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.calc-hdr-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em}
+.calc-hdr-sub{font-family:'DM Sans',sans-serif;font-size:.61rem;color:var(--steel);margin-top:.05rem}
+/* segmented control */
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px;gap:2px}
+.seg-btn{border:none;background:transparent;border-radius:4px;padding:.33rem .55rem;font-family:'DM Mono',monospace;font-size:.49rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);cursor:pointer;transition:all .16s;white-space:nowrap}
+.seg-btn.active{background:var(--navy);color:var(--gold);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.seg-btn:not(.active):hover{background:rgba(26,36,51,.07);color:var(--text)}
+.calc-body{padding:.85rem 1rem}
+.calc-pane{display:none}
+.calc-pane.active{display:flex;gap:1.2rem;align-items:stretch;flex-wrap:wrap}
+/* inputs col */
+.calc-inputs{display:flex;flex-direction:column;gap:.6rem;min-width:210px;flex:1}
+.cinp-group{display:flex;flex-direction:column;gap:.18rem}
+.cinp-lbl{font-family:'DM Mono',monospace;font-size:.49rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+.cinp-wrap{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:6px;overflow:hidden;background:var(--bg);transition:border-color .18s}
+.cinp-wrap:focus-within{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.1)}
+.cinp-pfx{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text3);padding:0 .45rem 0 .55rem;background:rgba(26,36,51,.04);border-right:1px solid var(--border);height:100%;display:flex;align-items:center;flex-shrink:0;white-space:nowrap}
+.cinp-sfx{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text3);padding:0 .55rem 0 .45rem;background:rgba(26,36,51,.04);border-left:1px solid var(--border);height:100%;display:flex;align-items:center;flex-shrink:0}
+.cinp{border:none;background:transparent;font-family:'DM Mono',monospace;font-size:.95rem;color:var(--text);padding:.36rem .45rem;outline:none;width:100%;min-width:0}
+.cinp::placeholder{color:rgba(26,36,51,.22)}
+.btn-add{background:rgba(200,146,42,.1);border:1px solid rgba(200,146,42,.3);border-radius:4px;padding:.3rem .7rem;color:var(--gold-l);font-family:'DM Mono',monospace;font-size:.5rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .18s;align-self:flex-start;margin-top:.2rem}
+.btn-add:hover{background:rgba(200,146,42,.22);border-color:var(--gold)}
+/* result panel */
+.calc-res-panel{flex:1;min-width:190px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);border-radius:6px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.5rem}
+.crp-lbl{font-family:'DM Mono',monospace;font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-d)}
+.crp-val{font-family:'DM Mono',monospace;font-size:1.9rem;color:var(--warm);font-weight:500;line-height:1.05;transition:color .28s;margin-top:.1rem}
+.crp-val.pos{color:#4EC87A}
+.crp-val.neg{color:#E07070}
+.crp-val.warn{color:#D4A030}
+.crp-meta{display:flex;flex-direction:column;gap:.2rem;margin-top:.2rem}
+.crp-row{display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:.56rem;padding:.15rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.crp-row:last-child{border:none}
+.crp-rl{color:rgba(183,160,115,.65)}
+.crp-rv{color:var(--warm)}
+/* margens grid */
+.mg-grid{display:grid;grid-template-columns:1fr 1fr;gap:.48rem;flex:1;align-content:start}
+.mg-card{background:var(--panel2);border:1px solid var(--border2);border-radius:6px;padding:.55rem .7rem}
+.mg-lbl{font-family:'DM Mono',monospace;font-size:.46rem;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin-bottom:.18rem}
+.mg-val{font-family:'DM Mono',monospace;font-size:1.05rem;color:var(--text);font-weight:500;transition:color .28s}
+.mg-val.pos{color:var(--green)}.mg-val.neg{color:var(--red)}.mg-val.warn{color:var(--amber)}
+
+/* ── SCENARIOS ───────────────────────────────────────── */
+.scen-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:var(--sh-sm);overflow:hidden}
+.scen-hdr{background:var(--navy2);padding:.52rem 1rem;border-bottom:1px solid rgba(200,146,42,.15);display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+.scen-hdr-l{flex-direction:column;gap:.05rem;display:flex}
+.scen-hdr-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em}
+.scen-hdr-sub{font-family:'DM Sans',sans-serif;font-size:.61rem;color:var(--steel)}
+.scen-hdr-r{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.btn-new{background:rgba(200,146,42,.11);border:1px solid rgba(200,146,42,.28);border-radius:4px;padding:.27rem .6rem;color:var(--gold-l);font-family:'DM Mono',monospace;font-size:.49rem;text-transform:uppercase;letter-spacing:.09em;cursor:pointer;transition:all .18s}
+.btn-new:hover{background:rgba(200,146,42,.22)}
+.qbtns{display:flex;gap:.28rem;flex-wrap:wrap}
+.qbtn{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.04);border-radius:3px;padding:.2rem .44rem;color:rgba(183,160,115,.7);font-family:'DM Mono',monospace;font-size:.45rem;cursor:pointer;transition:all .16s;white-space:nowrap}
+.qbtn:hover{background:rgba(255,255,255,.09);color:var(--gold-l)}
+.qbtn.up:hover{border-color:rgba(28,120,69,.45);color:#5AB87A}
+.qbtn.dn:hover{border-color:rgba(184,48,48,.38);color:#E07070}
+/* table */
+.scen-wrap{overflow-x:auto}
+.scen-t{width:100%;border-collapse:collapse}
+.scen-t th{background:var(--panel2);color:var(--text3);font-family:'DM Mono',monospace;font-size:.47rem;text-transform:uppercase;letter-spacing:.08em;padding:.36rem .55rem;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;position:sticky;top:0}
+.scen-t th:first-child{text-align:left;min-width:145px}
+.scen-t td{padding:.28rem .55rem;border-bottom:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:.69rem;color:var(--text2);vertical-align:middle;text-align:right;white-space:nowrap}
+.scen-t td:first-child{text-align:left;padding-left:0}
+.scen-t tr.srow:hover td{background:rgba(26,36,51,.025)}
+.scen-t tr.srow.is-base td{background:rgba(200,146,42,.04)}
+.scen-t tr.srow.is-base:hover td{background:rgba(200,146,42,.07)}
+/* color bar + name */
+.sname-cell{display:flex;align-items:center;min-width:145px}
+.scolor-bar{width:3px;align-self:stretch;flex-shrink:0;margin-right:.5rem;min-height:30px;border-radius:0 2px 2px 0}
+.sname-inp{background:transparent;border:none;border-bottom:1px solid transparent;padding:.08rem .12rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.75rem;width:96px;outline:none;transition:border-color .18s}
+.sname-inp:hover,.sname-inp:focus{border-bottom-color:var(--gold-d)}
+.base-chip{font-family:'DM Mono',monospace;font-size:.41rem;background:rgba(200,146,42,.13);color:var(--gold);border:1px solid rgba(200,146,42,.26);border-radius:3px;padding:.03rem .25rem;margin-left:.28rem;text-transform:uppercase;letter-spacing:.07em}
+/* editable inputs */
+.tv{background:var(--panel2);border:1px solid transparent;border-radius:3px;padding:.16rem .28rem;color:var(--text);font-family:'DM Mono',monospace;font-size:.7rem;width:72px;text-align:right;outline:none;transition:border-color .16s,box-shadow .16s}
+.tv:hover{border-color:var(--border)}
+.tv:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.12)}
+/* color-coded margin badge */
+.mg-badge{border-radius:3px;padding:.15rem .38rem;font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;display:inline-block;min-width:50px;text-align:center}
+/* mini decomp bar */
+.mbar{display:flex;height:7px;border-radius:3px;overflow:hidden;min-width:68px;background:rgba(26,36,51,.07)}
+.mbar-s{height:100%;transition:width .28s}
+/* actions */
+.act{display:flex;gap:.18rem;justify-content:flex-end}
+.act-btn{background:transparent;border:none;cursor:pointer;padding:.07rem .16rem;opacity:.35;transition:opacity .16s;line-height:1;font-size:.75rem;font-family:'DM Mono',monospace}
+.act-btn:hover{opacity:1}
+.act-btn.active{opacity:1}
+/* delta */
+.dlt-up{color:var(--green);font-size:.59rem;display:block}
+.dlt-dn{color:var(--red);font-size:.59rem;display:block}
+.cell-na{color:var(--text3)}
+/* empty state */
+.scen-empty{text-align:center!important;font-family:'DM Mono',monospace;font-size:.61rem;color:var(--text3);padding:1.8rem!important;background:var(--panel2)}
+/* footer legend */
+.scen-foot{padding:.5rem 1rem;border-top:1px solid var(--border2);background:var(--panel2);display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.leg{display:flex;align-items:center;gap:.25rem;font-family:'DM Mono',monospace;font-size:.45rem;color:var(--text3)}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+/* sort arrows */
+.th-sort{cursor:pointer;user-select:none}
+.th-sort:hover{color:var(--gold)}
+.sarr{font-size:.48rem;margin-left:.18rem;opacity:.3}
+.sarr.on{opacity:1;color:var(--gold)}
+
+/* ── CHARTS ──────────────────────────────────────────── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:var(--sh-sm);overflow:hidden}
+.chart-hdr{background:var(--navy2);padding:.48rem .9rem;border-bottom:1px solid rgba(200,146,42,.14)}
+.chart-title{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em}
+.chart-sub{font-family:'DM Sans',sans-serif;font-size:.61rem;color:var(--steel);margin-top:.05rem}
+.chart-body{padding:.75rem .9rem}
+.chart-body canvas{display:block;width:100%!important;height:220px!important}
+
+/* ── IPC ─────────────────────────────────────────────── */
+.ipc-row{display:flex;gap:.6rem;flex-wrap:wrap}
+.ipc-c{flex:1;min-width:105px;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:.48rem .65rem;text-align:center;box-shadow:var(--sh-sm)}
+.ipc-lbl{font-family:'DM Mono',monospace;font-size:.45rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.15rem}
+.ipc-v{font-family:'DM Mono',monospace;font-size:.98rem;font-weight:500}
+.ipc-desc{font-family:'DM Sans',sans-serif;font-size:.61rem;color:var(--text3);margin-top:.05rem}
+.ipc-above{color:var(--red)}.ipc-below{color:var(--green)}.ipc-near{color:var(--amber)}
+
+/* ── ELAST EXPLAINER ─────────────────────────────────── */
+details.elast-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:var(--sh-sm)}
+details.elast-box summary{padding:.68rem 1rem;font-family:'DM Mono',monospace;font-size:.54rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;cursor:pointer;list-style:none;display:flex;align-items:center;user-select:none}
+details.elast-box summary::after{content:'▾';margin-left:auto;font-size:.54rem;color:var(--gold-d);transition:transform .2s}
+details.elast-box[open] summary::after{transform:rotate(180deg)}
+details.elast-box summary::-webkit-details-marker{display:none}
+.elast-body{padding:.15rem 1rem 1rem}
+.elast-body p{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text2);line-height:1.6;margin-bottom:.38rem}
+.etbl{width:100%;border-collapse:collapse;font-size:.67rem;margin-top:.5rem}
+.etbl th{background:var(--panel2);color:var(--text3);font-family:'DM Mono',monospace;font-size:.46rem;text-transform:uppercase;letter-spacing:.08em;padding:.3rem .48rem;border:1px solid var(--border2)}
+.etbl td{padding:.28rem .48rem;border:1px solid var(--border2)}
+.etbl tr:nth-child(even) td{background:var(--panel2)}
+.tag-ie{color:var(--green);font-family:'DM Mono',monospace;font-size:.52rem}
+.tag-md{color:var(--amber);font-family:'DM Mono',monospace;font-size:.52rem}
+.tag-el{color:var(--red);font-family:'DM Mono',monospace;font-size:.52rem}
+
+/* ── REFORM ──────────────────────────────────────────── */
+.reform{background:var(--navy2);border:1px solid rgba(200,146,42,.17);border-radius:6px;padding:.58rem .85rem;font-family:'DM Sans',sans-serif;font-size:.67rem;color:var(--steel);line-height:1.55}
+.reform strong{color:var(--gold-d)}
+
+/* ── SEC HEADING ─────────────────────────────────────── */
+.sec-h{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;display:flex;align-items:center;gap:.42rem;margin-bottom:.6rem}
+.sec-h::after{content:'';flex:1;height:1px;background:rgba(200,146,42,.17)}
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(max-width:1100px){.layout{grid-template-columns:256px 1fr}}
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative;top:0;height:auto}
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .chart-grid{grid-template-columns:1fr}
+  .mg-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:500px){
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .calc-pane.active{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/"><img src="/logo-ouro.svg" alt="VCZ Consultoria"></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Início</a></li>
+    <li><a href="/ceasa_dashboard/">CEASA</a></li>
+    <li><a href="/ibge_sidra/">PMC/IBGE</a></li>
+    <li><a href="/simulador-precos/" class="active">Simulador de Preços</a></li>
+    <li><a href="/insights/">Insights</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-cta" href="/#contato">Contato</a>
+    <button class="nav-hbg" id="navBurger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="ph">
+  <div class="ph-inner">
+    <div>
+      <div class="ph-lbl">VCZ Consultoria — Ferramentas</div>
+      <h1 class="ph-title">Simulador de <em>Preços</em></h1>
+      <div class="ph-sub">Varejo alimentar e não alimentar · Impostos BR 2026 · Elasticidade · Cenários dinâmicos</div>
+    </div>
+    <div class="ph-tag">Reforma Tributária 2026</div>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+<aside class="sidebar">
+
+  <div class="sb-sec">
+    <div class="sb-hd"><div class="sb-icon" style="background:rgba(200,146,42,.14)">🏷</div><span class="sb-hd-lbl">Produto</span></div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Nome</label>
+      <input type="text" id="inNome" class="si" placeholder="Ex: Arroz 5kg Tipo 1" oninput="onBaseChange()">
+    </div></div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Categoria</label>
+      <div class="sb-radio">
+        <label><input type="radio" name="cat" value="alimentar" checked onchange="onBaseChange()"> Alimentar</label>
+        <label><input type="radio" name="cat" value="nao-alimentar" onchange="onBaseChange()"> Não Alimentar</label>
+      </div>
+    </div></div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Subcategoria</label>
+      <select id="inSubcat" class="ss" onchange="onSubcatChange()">
+        <option value="">Selecionar…</option>
+        <optgroup label="Alimentar">
+          <option value="alim-basico">Cesta básica (arroz, feijão)</option>
+          <option value="alim-hortifruti">Hortifruti</option>
+          <option value="alim-laticinios">Laticínios e ovos</option>
+          <option value="alim-carnes">Carnes e aves</option>
+          <option value="alim-processado">Processados / Bebidas</option>
+          <option value="alim-premium">Gourmet / Premium</option>
+        </optgroup>
+        <optgroup label="Não Alimentar">
+          <option value="nalim-limpeza">Higiene e limpeza</option>
+          <option value="nalim-pet">Pet food</option>
+          <option value="nalim-vestuario">Vestuário / Calçados</option>
+          <option value="nalim-eletro">Eletrodomésticos</option>
+          <option value="nalim-premium">Premium / Luxo</option>
+        </optgroup>
+      </select>
+    </div></div>
+    <div class="sb-row"><div class="sb-f">
+      <div class="sb-chk"><label><input type="checkbox" id="inEssencial" onchange="onEstadoChange()"> Cesta básica / produto essencial</label></div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:.57rem;color:var(--text3);margin-top:.18rem">Reduz ICMS para ~7% conforme UF</div>
+    </div></div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-hd"><div class="sb-icon" style="background:rgba(26,107,154,.14)">🏦</div><span class="sb-hd-lbl">Regime &amp; Estado</span></div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Regime tributário</label>
+      <select id="inRegime" class="ss" onchange="onRegimeChange()">
+        <option value="presumido">Lucro Presumido</option>
+        <option value="real">Lucro Real</option>
+        <option value="simples">Simples Nacional</option>
+      </select>
+    </div></div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Estado (UF)</label>
+      <select id="inEstado" class="ss" onchange="onEstadoChange()">
+        <option value="SP">SP — São Paulo (18%)</option>
+        <option value="MG">MG — Minas Gerais (18%)</option>
+        <option value="RJ">RJ — Rio de Janeiro (22%)</option>
+        <option value="RS">RS — Rio Grande do Sul (17%)</option>
+        <option value="PR">PR — Paraná (19,5%)</option>
+        <option value="SC">SC — Santa Catarina (17%)</option>
+        <option value="BA">BA — Bahia (20,5%)</option>
+        <option value="GO">GO — Goiás (19%)</option>
+        <option value="MT">MT — Mato Grosso (17%)</option>
+        <option value="MS">MS — Mato Grosso do Sul (17%)</option>
+        <option value="PE">PE — Pernambuco (20,5%)</option>
+        <option value="CE">CE — Ceará (20%)</option>
+        <option value="PA">PA — Pará (19%)</option>
+        <option value="MA">MA — Maranhão (23%)</option>
+        <option value="AM">AM — Amazonas (20%)</option>
+        <option value="ES">ES — Espírito Santo (17%)</option>
+        <option value="DF">DF — Distrito Federal (20%)</option>
+        <option value="PB">PB — Paraíba (20%)</option>
+        <option value="RN">RN — Rio Grande do Norte (20%)</option>
+        <option value="AL">AL — Alagoas (19%)</option>
+        <option value="PI">PI — Piauí (22,5%)</option>
+        <option value="SE">SE — Sergipe (19%)</option>
+        <option value="TO">TO — Tocantins (20%)</option>
+        <option value="RO">RO — Rondônia (19,5%)</option>
+        <option value="AC">AC — Acre (19%)</option>
+        <option value="AP">AP — Amapá (18%)</option>
+        <option value="RR">RR — Roraima (20%)</option>
+      </select>
+    </div></div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-hd"><div class="sb-icon" style="background:rgba(184,48,48,.14)">%</div><span class="sb-hd-lbl">Impostos</span></div>
+    <div class="sb-row">
+      <div class="sb-f half"><label class="lbl">ICMS (%)</label><input type="number" id="inIcms" class="si" min="0" step=".1" oninput="onBaseChange()"></div>
+      <div class="sb-f half"><label class="lbl">PIS (%)</label><input type="number" id="inPis" class="si" min="0" step=".01" oninput="onBaseChange()"></div>
+    </div>
+    <div class="sb-row">
+      <div class="sb-f half"><label class="lbl">COFINS (%)</label><input type="number" id="inCofins" class="si" min="0" step=".01" oninput="onBaseChange()"></div>
+      <div class="sb-f half"><label class="lbl">IPI (%)</label><input type="number" id="inIpi" class="si" min="0" step=".1" value="0" oninput="onBaseChange()"></div>
+    </div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Outros / DIFAL / ST (%)</label>
+      <input type="number" id="inOutros" class="si" min="0" step=".1" value="0" oninput="onBaseChange()">
+    </div></div>
+    <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.12rem">Composição</div>
+    <div class="tax-bar" id="taxBar"></div>
+    <div class="tax-total-row">
+      <span class="tax-total-lbl">Total impostos</span>
+      <span class="tax-total-val" id="taxTotal">0,00%</span>
+    </div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-hd"><div class="sb-icon" style="background:rgba(28,120,69,.14)">$</div><span class="sb-hd-lbl">Despesas &amp; Volume</span></div>
+    <div class="sb-row"><div class="sb-f">
+      <label class="lbl">Despesas operacionais (% do preço)<small>Frete, embalagem, comissão, overhead</small></label>
+      <input type="number" id="inDesp" class="si" min="0" max="80" step=".1" value="8" oninput="onBaseChange()">
+    </div></div>
+    <div class="sb-row"><div class="sb-f"><label class="lbl">Volume base (unid./mês)</label>
+      <input type="number" id="inVol" class="si" min="1" step="1" value="500" oninput="onBaseChange()">
+    </div></div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-hd"><div class="sb-icon" style="background:rgba(122,92,0,.14)">〜</div><span class="sb-hd-lbl">Elasticidade</span></div>
+    <label class="lbl" style="display:block;margin-bottom:.3rem">Coeficiente<small>0 = inelástico · −3 = muito elástico</small></label>
+    <div class="sl-wrap"><input type="range" id="inElastSlider" class="sl" min="-3" max="0" step=".05" value="-1" oninput="onElastSlider()"></div>
+    <div class="sl-val" id="elastDisplay">−1,00</div>
+    <div id="elastBadge"></div>
+    <div class="sb-row" style="margin-top:.42rem"><div class="sb-f"><label class="lbl">Ou digitar</label>
+      <input type="number" id="inElastNum" class="si" min="-5" max="0" step=".05" value="-1" oninput="onElastNum()">
+    </div></div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-hd"><div class="sb-icon" style="background:rgba(26,107,154,.14)">🔍</div><span class="sb-hd-lbl">Concorrência</span></div>
+    <div id="concRows"></div>
+    <button class="btn-new" id="btnAddConc" style="width:100%;font-size:.46rem;margin-bottom:.32rem" onclick="addConcRow()">+ Concorrente</button>
+    <div class="sb-note">"Buscar" abre Google Shopping com o nome do produto.</div>
+  </div>
+
+  <div class="sb-sec"><button class="btn-reset" onclick="resetAll()">↺ Limpar tudo</button></div>
+
+</aside>
+
+<!-- ══ MAIN ══════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- ① KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="kpi-accent ka-gold"></div>
+      <div class="kpi-lbl">Preço · Cenário Base</div>
+      <div class="kpi-val mute" id="kpiPreco">—</div>
+      <div class="kpi-sub" id="kpiPrecoSub">Nenhum cenário ainda</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-accent ka-dyn" id="kpiMgBar" style="background:linear-gradient(90deg,#8A9BAB,#8A9BAB)"></div>
+      <div class="kpi-lbl">Margem Líquida</div>
+      <div class="kpi-val mute" id="kpiMg">—</div>
+      <div class="kpi-sub" id="kpiMgSub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-accent ka-dyn" id="kpiLucroBar" style="background:linear-gradient(90deg,#8A9BAB,#8A9BAB)"></div>
+      <div class="kpi-lbl">Lucro / mês · Base</div>
+      <div class="kpi-val mute" id="kpiLucro">—</div>
+      <div class="kpi-sub" id="kpiLucroSub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-accent ka-blue"></div>
+      <div class="kpi-lbl">Volume Base (unid.)</div>
+      <div class="kpi-val mute" id="kpiVol">—</div>
+      <div class="kpi-sub" id="kpiVolSub">—</div>
+    </div>
+  </div>
+
+  <!-- ② CALCULADORA RÁPIDA -->
+  <div class="calc-card">
+    <div class="calc-hdr">
+      <div>
+        <div class="calc-hdr-title">Calculadora Rápida</div>
+        <div class="calc-hdr-sub">Calcule qualquer variável e adicione direto como cenário</div>
+      </div>
+      <div class="seg">
+        <button class="seg-btn active" onclick="switchCalc('preco',this)">→ Calcular Preço</button>
+        <button class="seg-btn" onclick="switchCalc('custo',this)">→ Custo Máx.</button>
+        <button class="seg-btn" onclick="switchCalc('margens',this)">Ver Margens</button>
+      </div>
+    </div>
+    <div class="calc-body">
+
+      <!-- PANE A: calcular preço -->
+      <div id="panePreco" class="calc-pane active">
+        <div class="calc-inputs">
+          <div class="cinp-group">
+            <div class="cinp-lbl">Custo unitário</div>
+            <div class="cinp-wrap"><span class="cinp-pfx">R$</span><input id="cpCusto" type="number" class="cinp" min="0" step=".01" placeholder="0,00" oninput="calcPreco()"></div>
+          </div>
+          <div class="cinp-group">
+            <div class="cinp-lbl">Margem líquida desejada</div>
+            <div class="cinp-wrap"><input id="cpMargem" type="number" class="cinp" min="0" max="100" step=".5" value="20" style="padding-left:.55rem" oninput="calcPreco()"><span class="cinp-sfx">%</span></div>
+          </div>
+          <button class="btn-add" onclick="addCalcToScen('preco')">+ Adicionar como Cenário</button>
+        </div>
+        <div class="calc-res-panel">
+          <div><div class="crp-lbl">Preço de venda sugerido</div><div class="crp-val" id="cpRes">—</div></div>
+          <div class="crp-meta" id="cpMeta"></div>
+        </div>
+      </div>
+
+      <!-- PANE B: custo máximo -->
+      <div id="paneCusto" class="calc-pane">
+        <div class="calc-inputs">
+          <div class="cinp-group">
+            <div class="cinp-lbl">Preço de venda</div>
+            <div class="cinp-wrap"><span class="cinp-pfx">R$</span><input id="ccPreco" type="number" class="cinp" min="0" step=".01" placeholder="0,00" oninput="calcCusto()"></div>
+          </div>
+          <div class="cinp-group">
+            <div class="cinp-lbl">Margem líquida desejada</div>
+            <div class="cinp-wrap"><input id="ccMargem" type="number" class="cinp" min="0" max="100" step=".5" value="20" style="padding-left:.55rem" oninput="calcCusto()"><span class="cinp-sfx">%</span></div>
+          </div>
+          <button class="btn-add" onclick="addCalcToScen('custo')">+ Adicionar como Cenário</button>
+        </div>
+        <div class="calc-res-panel">
+          <div><div class="crp-lbl">Custo máximo permitido</div><div class="crp-val" id="ccRes">—</div></div>
+          <div class="crp-meta" id="ccMeta"></div>
+        </div>
+      </div>
+
+      <!-- PANE C: ver margens -->
+      <div id="paneMargens" class="calc-pane">
+        <div class="calc-inputs">
+          <div class="cinp-group">
+            <div class="cinp-lbl">Custo unitário</div>
+            <div class="cinp-wrap"><span class="cinp-pfx">R$</span><input id="cmCusto" type="number" class="cinp" min="0" step=".01" placeholder="0,00" oninput="calcMargens()"></div>
+          </div>
+          <div class="cinp-group">
+            <div class="cinp-lbl">Preço de venda</div>
+            <div class="cinp-wrap"><span class="cinp-pfx">R$</span><input id="cmPreco" type="number" class="cinp" min="0" step=".01" placeholder="0,00" oninput="calcMargens()"></div>
+          </div>
+          <button class="btn-add" onclick="addCalcToScen('margens')">+ Adicionar como Cenário</button>
+        </div>
+        <div class="mg-grid">
+          <div class="mg-card"><div class="mg-lbl">Markup</div><div class="mg-val" id="cm1">—</div></div>
+          <div class="mg-card"><div class="mg-lbl">Margem Bruta</div><div class="mg-val" id="cm2">—</div></div>
+          <div class="mg-card"><div class="mg-lbl">Impostos / un.</div><div class="mg-val" id="cm3">—</div></div>
+          <div class="mg-card"><div class="mg-lbl">Margem Líquida</div><div class="mg-val" id="cm4">—</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ③ TABELA DE CENÁRIOS -->
+  <div class="scen-card">
+    <div class="scen-hdr">
+      <div class="scen-hdr-l">
+        <div class="scen-hdr-title">Cenários de Preço</div>
+        <div class="scen-hdr-sub">Edite custo e preço em qualquer linha — todos os KPIs recalculam instantaneamente</div>
+      </div>
+      <div class="scen-hdr-r">
+        <div class="qbtns">
+          <button class="qbtn up" onclick="addRelScen(.05)" title="Cópia do cenário base com preço +5%">Base +5%</button>
+          <button class="qbtn up" onclick="addRelScen(.10)" title="Cópia do cenário base com preço +10%">Base +10%</button>
+          <button class="qbtn dn" onclick="addRelScen(-.05)" title="Cópia do cenário base com preço −5%">Base −5%</button>
+          <button class="qbtn dn" onclick="addRelScen(-.10)" title="Cópia do cenário base com preço −10%">Base −10%</button>
+        </div>
+        <button class="btn-new" onclick="addScenario()">+ Novo Cenário</button>
+      </div>
+    </div>
+    <div class="scen-wrap">
+      <table class="scen-t">
+        <thead><tr>
+          <th style="text-align:left">Nome</th>
+          <th>Custo (R$)</th>
+          <th>Preço (R$)</th>
+          <th class="th-sort" onclick="sortBy('markup')">Markup <span class="sarr" id="sa-markup"></span></th>
+          <th>Mg. Bruta</th>
+          <th>Impostos</th>
+          <th class="th-sort" onclick="sortBy('mgLiqPct')">Mg. Líq. <span class="sarr" id="sa-mgLiqPct"></span></th>
+          <th>Estrutura</th>
+          <th class="th-sort" onclick="sortBy('volume')">Vol. Est. <span class="sarr" id="sa-volume"></span></th>
+          <th class="th-sort" onclick="sortBy('lucro')">Lucro/mês <span class="sarr" id="sa-lucro"></span></th>
+          <th style="min-width:70px">Ações</th>
+        </tr></thead>
+        <tbody id="scenBody"></tbody>
+      </table>
+    </div>
+    <div class="scen-foot">
+      <div class="leg"><div class="leg-dot" style="background:#1C7845"></div>Excelente ≥20%</div>
+      <div class="leg"><div class="leg-dot" style="background:#2E8B57"></div>Boa 10–20%</div>
+      <div class="leg"><div class="leg-dot" style="background:#8C6A00"></div>Baixa 5–10%</div>
+      <div class="leg"><div class="leg-dot" style="background:#B83030"></div>Crítica &lt;5%</div>
+      <div class="leg" style="margin-left:.5rem"><div class="leg-dot" style="background:#5B8DB8"></div>Custo</div>
+      <div class="leg"><div class="leg-dot" style="background:#E67E22"></div>Impostos</div>
+      <div class="leg"><div class="leg-dot" style="background:#9AAABB"></div>Despesas</div>
+    </div>
+  </div>
+
+  <!-- ④ IPC -->
+  <div id="ipcSection" style="display:none">
+    <div class="sec-h">Índice de Posição Competitiva (IPC)</div>
+    <div id="ipcRow" class="ipc-row"></div>
+  </div>
+
+  <!-- ⑤ CHARTS -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-hdr"><div class="chart-title">Comparativo de Cenários</div><div class="chart-sub">Margem líquida % e lucro mensal</div></div>
+      <div class="chart-body"><canvas id="chartComp"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-hdr"><div class="chart-title">Curva de Demanda</div><div class="chart-sub">Volume e receita em função do preço — cenário base</div></div>
+      <div class="chart-body"><canvas id="chartDem"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ⑥ ELASTICIDADE -->
+  <details class="elast-box">
+    <summary>O que é Elasticidade de Preço? — clique para expandir</summary>
+    <div class="elast-body">
+      <p>A elasticidade mede <strong>o quanto a demanda (volume vendido) reage a uma variação de preço</strong>. É sempre negativa: preço sobe → demanda cai.</p>
+      <p><em>Elasticidade = %ΔQuantidade ÷ %ΔPreço</em> — ex: −0,8 significa que +10% no preço causa −8% nas vendas.</p>
+      <table class="etbl">
+        <thead><tr><th>Faixa</th><th>Tipo</th><th>Na prática</th><th>Exemplos BR</th></tr></thead>
+        <tbody>
+          <tr><td class="tag-ie">0 a −0,5</td><td class="tag-ie">Muito inelástico</td><td>Preço +10% → vendas −5% ou menos. Receita sobe.</td><td>Arroz, feijão, sal</td></tr>
+          <tr><td class="tag-ie">−0,5 a −0,8</td><td class="tag-ie">Inelástico</td><td>Preço +10% → vendas −5% a −8%. Receita ainda sobe.</td><td>Leite, ovos, pão</td></tr>
+          <tr><td class="tag-md">−0,8 a −1,2</td><td class="tag-md">Moderado</td><td>Variação de receita pequena nos dois sentidos.</td><td>Carnes, cervejas</td></tr>
+          <tr><td class="tag-el">−1,2 a −2,0</td><td class="tag-el">Elástico</td><td>Preço +10% → vendas −12% a −20%. Receita cai.</td><td>Processados, higiene</td></tr>
+          <tr><td class="tag-el">abaixo −2,0</td><td class="tag-el">Muito elástico</td><td>Pequena alta → grande queda de vendas.</td><td>Eletrônicos, luxo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- ⑦ REFORMA -->
+  <div class="reform">
+    <strong>Reforma Tributária 2026–2033:</strong> PIS, COFINS, IPI, ICMS e ISS serão substituídos por CBS e IBS. Em 2026 começa fase de testes com alíquota de 0,1%. Consulte seu contador para o impacto específico ao seu segmento e regime.
+  </div>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+/* ── DATA ──────────────────────────────────────────────── */
+const ICMS_UF={AC:19,AL:19,AP:18,AM:20,BA:20.5,CE:20,DF:20,ES:17,GO:19,MA:23,MT:17,MS:17,MG:18,PA:19,PB:20,PR:19.5,PE:20.5,PI:22.5,RJ:22,RN:20,RS:17,RO:19.5,RR:20,SC:17,SP:18,SE:19,TO:20};
+const ICMS_ESS={AC:7,AL:7,AP:7,AM:7,BA:7,CE:7,DF:7,ES:7,GO:7,MA:7,MT:7,MS:7,MG:7,PA:7,PB:7,PR:7,PE:7,PI:7,RJ:7,RN:7,RS:7,RO:7,RR:7,SC:7,SP:7,SE:7,TO:7};
+const PC_REGIME={presumido:{pis:.65,cofins:3.0},real:{pis:1.65,cofins:7.6},simples:{pis:.5,cofins:1.0}};
+const ELAST_REF={'alim-basico':-.4,'alim-hortifruti':-.6,'alim-laticinios':-.5,'alim-carnes':-1,'alim-processado':-1.2,'alim-premium':-1.8,'nalim-limpeza':-1.1,'nalim-pet':-.8,'nalim-vestuario':-1.6,'nalim-eletro':-2,'nalim-premium':-2.5};
+const COLORS=['#C8922A','#5B8DB8','#27AE60','#E74C3C','#9B59B6','#16A085','#E67E22','#2980B9','#C0392B','#8E44AD'];
+
+/* ── STATE ─────────────────────────────────────────────── */
+let scenarios=[],nextId=1,sortCol=null,sortAsc=false;
+let cComp=null,cDem=null,concCount=0;
+
+/* ── HELPERS ───────────────────────────────────────────── */
+const n=id=>parseFloat(document.getElementById(id)?.value)||0;
+const sv=id=>document.getElementById(id)?.value||'';
+const b=id=>document.getElementById(id)?.checked||false;
+const fmt=v=>isNaN(v)||!isFinite(v)?'—':v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fR=v=>'R$ '+fmt(v);
+const fP=v=>fmt(v)+'%';
+const safe=v=>(isNaN(v)||!isFinite(v))?0:v;
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const impTotal=()=>n('inIcms')+n('inPis')+n('inCofins')+n('inIpi')+n('inOutros');
+
+/* ── CORE CALC ─────────────────────────────────────────── */
+function calcOne(custo,preco){
+  const imp=impTotal(),desp=n('inDesp');
+  const impVal=safe(preco*imp/100),despVal=safe(preco*desp/100);
+  const mgBruta=preco-custo,mgBrutaPct=preco>0?safe(mgBruta/preco*100):0;
+  const mgLiq=mgBruta-impVal-despVal,mgLiqPct=preco>0?safe(mgLiq/preco*100):0;
+  const markup=custo>0?safe((preco-custo)/custo*100):0;
+  return{custo,preco,imp,impVal,despVal,mgBruta,mgBrutaPct,mgLiq,mgLiqPct,markup};
+}
+const baseSc=()=>scenarios.find(s=>s.isBase)||scenarios[0]||null;
+function calcVol(preco){
+  const e=parseFloat(document.getElementById('inElastSlider').value)||-1;
+  const vb=n('inVol')||100,bs=baseSc();
+  if(!bs||bs.preco===0||preco===0) return vb;
+  return Math.max(0,vb*(1+e*(preco-bs.preco)/bs.preco));
+}
+
+/* ── MARGIN STYLE ──────────────────────────────────────── */
+function mgSt(pct){
+  if(pct<0)  return{bg:'rgba(184,48,48,.14)',c:'#B83030',bc:'#B83030'};
+  if(pct<5)  return{bg:'rgba(184,48,48,.09)',c:'#C04040',bc:'#C04040'};
+  if(pct<10) return{bg:'rgba(140,106,0,.11)',c:'#8C6A00',bc:'#C89A20'};
+  if(pct<20) return{bg:'rgba(28,120,69,.1)', c:'#1C7845',bc:'#3BAA6A'};
+  return          {bg:'rgba(28,120,69,.16)',c:'#146038',bc:'#25CC78'};
+}
+
+/* ── MINI BAR ──────────────────────────────────────────── */
+function miniBar(custo,preco,impVal,despVal){
+  if(preco===0) return '<span class="cell-na">—</span>';
+  const cp=Math.max(0,Math.min(custo/preco*100,100));
+  const ip=Math.max(0,Math.min(impVal/preco*100,100-cp));
+  const dp=Math.max(0,Math.min(despVal/preco*100,100-cp-ip));
+  const mp=Math.max(0,100-cp-ip-dp);
+  const extra=Math.max(0,cp+ip+dp-100);
+  const{bc}=mgSt(100-cp-ip-dp);
+  const tip=`Custo ${cp.toFixed(1)}% · Impostos ${ip.toFixed(1)}% · Desp ${dp.toFixed(1)}% · Mg ${(100-cp-ip-dp).toFixed(1)}%`;
+  return`<div class="mbar" title="${tip}">
+    <div class="mbar-s" style="width:${cp.toFixed(1)}%;background:#5B8DB8"></div>
+    <div class="mbar-s" style="width:${ip.toFixed(1)}%;background:#E67E22"></div>
+    <div class="mbar-s" style="width:${dp.toFixed(1)}%;background:#9AAABB"></div>
+    <div class="mbar-s" style="width:${mp.toFixed(1)}%;background:${bc}"></div>
+    ${extra>0?`<div class="mbar-s" style="width:${Math.min(extra,8).toFixed(1)}%;background:#B83030"></div>`:''}
+  </div>`;
+}
+
+/* ── CRUD ──────────────────────────────────────────────── */
+function addScenario(custo=0,preco=0,nome=null){
+  const id=nextId++;
+  scenarios.push({id,nome:nome||`Cenário ${id}`,custo,preco,isBase:scenarios.length===0});
+  renderAll();
+}
+function delScenario(id){
+  const i=scenarios.findIndex(s=>s.id===id);
+  if(i<0)return;
+  const wasBase=scenarios[i].isBase;
+  scenarios.splice(i,1);
+  if(wasBase&&scenarios.length>0)scenarios[0].isBase=true;
+  renderAll();
+}
+function dupScenario(id){const sc=scenarios.find(s=>s.id===id);if(sc)addScenario(sc.custo,sc.preco,sc.nome+' (cópia)');}
+function setBase(id){scenarios.forEach(s=>s.isBase=s.id===id);renderAll();}
+function updF(id,f,v){const sc=scenarios.find(s=>s.id===id);if(sc)sc[f]=parseFloat(v)||0;renderAll();}
+function updN(id,v){const sc=scenarios.find(s=>s.id===id);if(sc)sc.nome=v;}
+function addRelScen(pct){
+  const bs=baseSc();
+  if(!bs||bs.preco===0){return;}
+  const p=+(bs.preco*(1+pct)).toFixed(2);
+  const sig=pct>0?'+':'';
+  addScenario(bs.custo,p,`${bs.nome} ${sig}${(pct*100).toFixed(0)}%`);
+}
+
+/* ── SORT ──────────────────────────────────────────────── */
+function sortBy(col){
+  if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=false;}
+  renderAll();
+}
+
+/* ── RENDER SCENARIOS ──────────────────────────────────── */
+function renderScenarios(){
+  const body=document.getElementById('scenBody');
+  ['markup','mgLiqPct','volume','lucro'].forEach(c=>{
+    const el=document.getElementById('sa-'+c);
+    if(!el)return;
+    el.textContent=sortCol===c?(sortAsc?'↑':'↓'):'';
+    el.className='sarr'+(sortCol===c?' on':'');
+  });
+  if(!scenarios.length){
+    body.innerHTML='<tr><td colspan="11" class="scen-empty">Nenhum cenário ainda. Use a Calculadora acima ou "+ Novo Cenário".</td></tr>';
+    return;
+  }
+  const bs=baseSc();
+  const bsc=bs?calcOne(bs.custo,bs.preco):null;
+  const bsVol=bs?n('inVol'):0,bsLucro=bsc?bsc.mgLiq*bsVol:0;
+
+  let rows=scenarios.map((sc,i)=>{
+    const c=calcOne(sc.custo,sc.preco);
+    const vol=sc.isBase?n('inVol'):calcVol(sc.preco);
+    const lucro=sc.preco>0?c.mgLiq*vol:null;
+    return{sc,c,vol,lucro,i};
+  });
+  if(sortCol){
+    const key=r=>({markup:r.c.markup,mgLiqPct:r.c.mgLiqPct,volume:r.vol,lucro:r.lucro})[sortCol]??-Infinity;
+    rows.sort((a,b2)=>sortAsc?key(a)-key(b2):key(b2)-key(a));
+  }
+
+  body.innerHTML=rows.map(({sc,c,vol,lucro})=>{
+    const color=COLORS[scenarios.indexOf(sc)%COLORS.length];
+    const has=sc.preco>0;
+    const{bg,c:mgc}=has?mgSt(c.mgLiqPct):{bg:'transparent',c:'var(--text3)'};
+    const dVol=(!sc.isBase&&bsVol>0&&has)?delt(vol,bsVol):'';
+    const dLuc=(!sc.isBase&&bsLucro!==0&&has&&lucro!==null)?delt(lucro,bsLucro):'';
+    return`<tr class="srow${sc.isBase?' is-base':''}" id="sr${sc.id}">
+      <td><div class="sname-cell">
+        <div class="scolor-bar" style="background:${color}"></div>
+        <input class="sname-inp" value="${esc(sc.nome)}" onchange="updN(${sc.id},this.value)" title="Renomear">
+        ${sc.isBase?'<span class="base-chip">BASE</span>':''}
+      </div></td>
+      <td><input type="number" class="tv" value="${sc.custo||''}" min="0" step=".01" placeholder="—" oninput="updF(${sc.id},'custo',this.value)"></td>
+      <td><input type="number" class="tv" value="${sc.preco||''}" min="0" step=".01" placeholder="—" oninput="updF(${sc.id},'preco',this.value)"></td>
+      <td>${has?fP(c.markup):'<span class="cell-na">—</span>'}</td>
+      <td class="${has&&c.mgBrutaPct<0?'cell-na':''}">${has?fP(c.mgBrutaPct):'<span class="cell-na">—</span>'}</td>
+      <td>${has?fR(c.impVal):'<span class="cell-na">—</span>'}</td>
+      <td><span class="mg-badge" style="background:${bg};color:${mgc}">${has?fP(c.mgLiqPct):'—'}</span></td>
+      <td>${miniBar(sc.custo,sc.preco,c.impVal,c.despVal)}</td>
+      <td style="text-align:right">${has?fmt(vol)+(dVol?`<span class="${dVol.cls} dlt-${dVol.dir}">${dVol.txt}</span>`:''):'<span class="cell-na">—</span>'}</td>
+      <td style="${has&&lucro<0?'color:var(--red)':has&&lucro>0?'color:var(--green)':'color:var(--text3)'}">${has&&lucro!==null?fR(lucro)+(dLuc?`<span class="${dLuc.cls} dlt-${dLuc.dir}">${dLuc.txt}</span>`:''):'<span class="cell-na">—</span>'}</td>
+      <td><div class="act">
+        <button class="act-btn${sc.isBase?' active':''}" onclick="setBase(${sc.id})" title="${sc.isBase?'Base atual':'Definir base'}">${sc.isBase?'⭐':'☆'}</button>
+        <button class="act-btn" onclick="dupScenario(${sc.id})" title="Duplicar" style="color:var(--blue)">⧉</button>
+        ${scenarios.length>1?`<button class="act-btn" onclick="delScenario(${sc.id})" title="Remover" style="color:var(--red)">✕</button>`:''}
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function delt(v,base){
+  if(!base)return null;
+  const pct=(v-base)/Math.abs(base)*100;
+  const dir=pct>=0?'up':'dn';
+  const txt=(pct>=0?'+':'')+fmt(pct)+'%';
+  const cls=pct>=0?'dlt-up':'dlt-dn';
+  return{dir,txt,cls};
+}
+
+/* ── KPI STRIP ─────────────────────────────────────────── */
+function updateKPIs(){
+  const bs=baseSc();
+  const vol=n('inVol')||100;
+  document.getElementById('kpiVol').textContent=fmt(vol);
+  document.getElementById('kpiVol').className='kpi-val';
+  document.getElementById('kpiVolSub').textContent=`Elasticidade ${parseFloat(document.getElementById('inElastSlider').value).toFixed(2)}`;
+  if(!bs||bs.preco===0){
+    ['kpiPreco','kpiMg','kpiLucro'].forEach(id=>{document.getElementById(id).textContent='—';document.getElementById(id).className='kpi-val mute';});
+    document.getElementById('kpiPrecoSub').textContent='Nenhum cenário base';
+    document.getElementById('kpiMgSub').textContent='—';
+    document.getElementById('kpiLucroSub').textContent='—';
+    ['kpiMgBar','kpiLucroBar'].forEach(id=>document.getElementById(id).style.background='linear-gradient(90deg,#8A9BAB,#8A9BAB)');
+    return;
+  }
+  const c=calcOne(bs.custo,bs.preco);
+  const lucro=c.mgLiq*vol;
+  const{bc}=mgSt(c.mgLiqPct);
+  const mgCls=c.mgLiqPct<0?'neg':c.mgLiqPct<10?'warn':'pos';
+  document.getElementById('kpiPreco').textContent=fR(bs.preco);
+  document.getElementById('kpiPreco').className='kpi-val';
+  document.getElementById('kpiPrecoSub').textContent=`Custo ${fR(bs.custo)} · Markup ${fP(c.markup)}`;
+  document.getElementById('kpiMg').textContent=fP(c.mgLiqPct);
+  document.getElementById('kpiMg').className='kpi-val '+mgCls;
+  document.getElementById('kpiMgSub').textContent=`Líq. ${fR(c.mgLiq)}/un. · Bruta ${fP(c.mgBrutaPct)}`;
+  document.getElementById('kpiMgBar').style.background=`linear-gradient(90deg,${bc},${bc}88)`;
+  document.getElementById('kpiLucro').textContent=fR(lucro);
+  document.getElementById('kpiLucro').className='kpi-val '+(lucro<0?'neg':lucro>0?'pos':'mute');
+  document.getElementById('kpiLucroSub').textContent=`${fmt(vol)} un. × ${fR(c.mgLiq)}/un.`;
+  document.getElementById('kpiLucroBar').style.background=lucro>=0?'linear-gradient(90deg,#1C7845,#3BAA6A)':'linear-gradient(90deg,#B83030,#DD5050)';
+}
+
+/* ── IPC ───────────────────────────────────────────────── */
+function renderIPC(){
+  const sec=document.getElementById('ipcSection');
+  const bs=baseSc();const pv=bs?bs.preco:0;
+  const cs=[n('inConc1'),n('inConc2'),n('inConc3')].filter(v=>v>0);
+  if(!pv||!cs.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  document.getElementById('ipcRow').innerHTML=cs.map((cp,i)=>{
+    const ipc=pv/cp*100;
+    const[cl,d]=ipc>105?['ipc-above','Acima']:ipc<95?['ipc-below','Abaixo']:['ipc-near','Paridade'];
+    return`<div class="ipc-c"><div class="ipc-lbl">Concorrente ${i+1}</div><div class="ipc-v ${cl}">IPC ${ipc.toFixed(0)}</div><div class="ipc-desc">${fR(cp)} · ${d}</div></div>`;
+  }).join('');
+}
+
+/* ── RENDER ALL ────────────────────────────────────────── */
+function renderAll(){renderScenarios();updateKPIs();renderIPC();updateCharts();}
+
+/* ── CALCULADORA ───────────────────────────────────────── */
+function switchCalc(mode,btn){
+  document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.calc-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('active');
+}
+const denom=mg=>1-impTotal()/100-n('inDesp')/100-mg/100;
+const crRow=(l,v)=>`<div class="crp-row"><span class="crp-rl">${l}</span><span class="crp-rv">${v}</span></div>`;
+
+function calcPreco(){
+  const cu=n('cpCusto'),mg=n('cpMargem'),d=denom(mg);
+  const res=document.getElementById('cpRes'),meta=document.getElementById('cpMeta');
+  if(cu<=0){res.textContent='—';res.className='crp-val';meta.innerHTML='';return;}
+  if(d<=0){res.textContent='Inviável';res.className='crp-val neg';meta.innerHTML=crRow('Impostos+desp+mg ≥ 100%','—');return;}
+  const pv=cu/d,c=calcOne(cu,pv);
+  res.textContent=fR(pv);res.className='crp-val pos';
+  meta.innerHTML=crRow('Markup',fP(c.markup))+crRow('Impostos/un.',fR(c.impVal))+crRow('Mg. bruta',fP(c.mgBrutaPct))+crRow('Mg. líquida',fP(c.mgLiqPct));
+}
+function calcCusto(){
+  const pv=n('ccPreco'),mg=n('ccMargem'),d=denom(mg);
+  const res=document.getElementById('ccRes'),meta=document.getElementById('ccMeta');
+  if(pv<=0){res.textContent='—';res.className='crp-val';meta.innerHTML='';return;}
+  const cm=pv*d;
+  res.textContent=fR(cm);res.className=cm>0?'crp-val pos':'crp-val neg';
+  const c=calcOne(Math.max(0,cm),pv);
+  meta.innerHTML=crRow('Impostos/un.',fR(c.impVal))+crRow('Despesas/un.',fR(c.despVal))+(cm<=0?crRow('Atenção','Margem inviável'):crRow('Se custo > '+fR(cm),'Mg. < '+fP(mg)));
+}
+function calcMargens(){
+  const cu=n('cmCusto'),pv=n('cmPreco'),has=pv>0&&cu>0;
+  const set=(id,v,cls)=>{const el=document.getElementById(id);el.textContent=v;el.className='mg-val'+(cls?' '+cls:'');};
+  if(!has){['cm1','cm2','cm3','cm4'].forEach(id=>set(id,'—',''));return;}
+  const c=calcOne(cu,pv);
+  set('cm1',fP(c.markup),'');set('cm2',fP(c.mgBrutaPct),c.mgBrutaPct<0?'neg':'');
+  set('cm3',fR(c.impVal),'');set('cm4',fP(c.mgLiqPct),c.mgLiqPct<0?'neg':c.mgLiqPct<10?'warn':'pos');
+}
+function addCalcToScen(mode){
+  let cu=0,pv=0,nome='';
+  if(mode==='preco'){cu=n('cpCusto');const d=denom(n('cpMargem'));if(cu<=0||d<=0)return;pv=cu/d;nome=`Preço p/${fP(n('cpMargem'))} mg`;}
+  else if(mode==='custo'){pv=n('ccPreco');if(pv<=0)return;cu=Math.max(0,pv*denom(n('ccMargem')));nome=`Custo máx p/${fP(n('ccMargem'))} mg`;}
+  else{cu=n('cmCusto');pv=n('cmPreco');if(!cu||!pv)return;nome=`C:${fR(cu)} P:${fR(pv)}`;}
+  addScenario(+cu.toFixed(2),+pv.toFixed(2),nome);
+}
+
+/* ── CHARTS ────────────────────────────────────────────── */
+function grad(ctx,color){
+  const g=ctx.createLinearGradient(0,0,0,220);
+  g.addColorStop(0,color+'90');g.addColorStop(1,color+'08');return g;
+}
+function updateCharts(){
+  // comparison bar chart
+  const ctx1=document.getElementById('chartComp').getContext('2d');
+  if(cComp){cComp.destroy();cComp=null;}
+  if(scenarios.length){
+    const lbls=scenarios.map(s=>s.nome.length>15?s.nome.slice(0,15)+'…':s.nome);
+    const mgs=scenarios.map(s=>{const c=calcOne(s.custo,s.preco);return s.preco>0?+c.mgLiqPct.toFixed(2):null;});
+    const lucs=scenarios.map(s=>{if(!s.preco)return null;const c=calcOne(s.custo,s.preco);const v=s.isBase?n('inVol'):calcVol(s.preco);return+(c.mgLiq*v).toFixed(2);});
+    const bgs=scenarios.map((_,i)=>COLORS[i%COLORS.length]+'BB');
+    const bds=scenarios.map((_,i)=>COLORS[i%COLORS.length]);
+    cComp=new Chart(ctx1,{type:'bar',data:{labels:lbls,datasets:[
+      {label:'Margem Líq. %',data:mgs,backgroundColor:bgs,borderColor:bds,borderWidth:1.5,borderRadius:4,yAxisID:'y1'},
+      {label:'Lucro/mês R$',data:lucs,backgroundColor:bds.map(c=>c+'28'),borderColor:bds,borderWidth:1,borderRadius:4,yAxisID:'y2'},
+    ]},options:{responsive:true,maintainAspectRatio:false,
+      scales:{
+        y1:{position:'left',ticks:{callback:v=>v+'%',font:{family:"'DM Mono',monospace",size:9}},grid:{color:'rgba(26,36,51,.06)'}},
+        y2:{position:'right',ticks:{callback:v=>'R$'+v.toFixed(0),font:{family:"'DM Mono',monospace",size:9}},grid:{display:false}},
+        x:{ticks:{font:{family:"'DM Sans',sans-serif",size:9}},grid:{display:false}}
+      },
+      plugins:{legend:{position:'bottom',labels:{font:{family:"'DM Sans',sans-serif",size:10},boxWidth:10,padding:6}},
+        tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?`Margem: ${ctx.parsed.y?.toFixed(1)}%`:`Lucro: R$ ${ctx.parsed.y?.toFixed(2)}`}}}
+    }});
+  }
+  // demand curve
+  const ctx2=document.getElementById('chartDem').getContext('2d');
+  if(cDem){cDem.destroy();cDem=null;}
+  const bs=baseSc();
+  if(bs&&bs.preco>0){
+    const pb=bs.preco,vb=n('inVol')||100,el=parseFloat(document.getElementById('inElastSlider').value)||-1;
+    const lbls=[],vols=[],recs=[];
+    for(let d=-0.4;d<=0.401;d+=0.025){const p=pb*(1+d),v=Math.max(0,vb*(1+el*d));lbls.push('R$'+p.toFixed(2));vols.push(+v.toFixed(1));recs.push(+(p*v).toFixed(2));}
+    cDem=new Chart(ctx2,{type:'line',data:{labels:lbls,datasets:[
+      {label:'Volume',data:vols,borderColor:'#3498DB',backgroundColor:grad(ctx2,'#3498DB'),yAxisID:'y1',tension:.4,pointRadius:0,borderWidth:2,fill:true},
+      {label:'Receita R$',data:recs,borderColor:'#C8922A',backgroundColor:grad(ctx2,'#C8922A'),yAxisID:'y2',tension:.4,pointRadius:0,borderWidth:2,borderDash:[5,3],fill:true},
+    ]},options:{responsive:true,maintainAspectRatio:false,
+      scales:{
+        x:{ticks:{maxTicksLimit:9,font:{family:"'DM Mono',monospace",size:8}},grid:{color:'rgba(26,36,51,.06)'}},
+        y1:{position:'left',ticks:{font:{family:"'DM Mono',monospace",size:9}},grid:{color:'rgba(26,36,51,.06)'},title:{display:true,text:'Unidades',font:{size:9}}},
+        y2:{position:'right',ticks:{callback:v=>'R$'+v.toFixed(0),font:{family:"'DM Mono',monospace",size:9}},grid:{display:false}}
+      },
+      plugins:{legend:{position:'bottom',labels:{font:{family:"'DM Sans',sans-serif",size:10},boxWidth:10,padding:6}},
+        tooltip:{mode:'index',intersect:false}}
+    }});
+  }
+}
+
+/* ── ELASTICITY ────────────────────────────────────────── */
+function updElast(v){
+  document.getElementById('elastDisplay').textContent=(v<0?'−':'')+Math.abs(v).toFixed(2).replace('.',',');
+  const a=Math.abs(v);
+  const[cls,lbl]=a<=.5?['eb-vi','Muito inelástico']:a<=.8?['eb-i','Inelástico']:a<=1.2?['eb-m','Moderado']:a<=2?['eb-e','Elástico']:['eb-ve','Muito elástico'];
+  document.getElementById('elastBadge').innerHTML=`<span class="elast-badge ${cls}">${lbl}</span>`;
+}
+function onElastSlider(){const v=parseFloat(document.getElementById('inElastSlider').value);document.getElementById('inElastNum').value=v;updElast(v);renderAll();}
+function onElastNum(){const v=Math.max(-5,Math.min(0,parseFloat(document.getElementById('inElastNum').value)||0));document.getElementById('inElastSlider').value=Math.max(-3,v);updElast(v);renderAll();}
+function onSubcatChange(){const k=sv('inSubcat');if(k&&ELAST_REF[k]!==undefined){const v=ELAST_REF[k];document.getElementById('inElastSlider').value=Math.max(-3,v);document.getElementById('inElastNum').value=v;updElast(v);}onBaseChange();}
+
+/* ── TAX BAR ───────────────────────────────────────────── */
+function updTaxBar(){
+  const ic=n('inIcms'),pi=n('inPis'),co=n('inCofins'),ip=n('inIpi'),ot=n('inOutros'),tot=ic+pi+co+ip+ot;
+  document.getElementById('taxTotal').textContent=fP(tot);
+  if(!tot){document.getElementById('taxBar').innerHTML='';return;}
+  const pct=v=>(v/tot*100).toFixed(1);
+  document.getElementById('taxBar').innerHTML=`
+    <div class="mbar-s" style="width:${pct(ic)}%;background:#E74C3C" title="ICMS ${ic}%"></div>
+    <div class="mbar-s" style="width:${pct(pi+co)}%;background:#E67E22" title="PIS+COFINS ${(pi+co).toFixed(2)}%"></div>
+    <div class="mbar-s" style="width:${pct(ip)}%;background:#F39C12" title="IPI ${ip}%"></div>
+    <div class="mbar-s" style="width:${pct(ot)}%;background:#BDC3C7" title="Outros ${ot}%"></div>`;
+}
+
+/* ── SIDEBAR EVENTS ────────────────────────────────────── */
+function onRegimeChange(){const r=sv('inRegime'),pc=PC_REGIME[r]||PC_REGIME.presumido;document.getElementById('inPis').value=pc.pis;document.getElementById('inCofins').value=pc.cofins;onBaseChange();}
+function onEstadoChange(){const uf=sv('inEstado'),ess=b('inEssencial');document.getElementById('inIcms').value=(ess?ICMS_ESS[uf]:ICMS_UF[uf])??18;onBaseChange();}
+function onBaseChange(){updTaxBar();calcPreco();calcCusto();calcMargens();renderAll();}
+
+/* ── CONCORRÊNCIA ──────────────────────────────────────── */
+function renderConcRows(){
+  let h='';
+  for(let i=1;i<=concCount;i++){
+    h+=`<div class="conc-row"><div class="sb-f"><label class="lbl">Concorrente ${i} (R$)</label>
+      <input type="number" id="inConc${i}" class="si" min="0" step=".01" placeholder="0,00" oninput="renderIPC()"></div>
+      <button class="btn-srch" onclick="searchConc()" title="Google Shopping">🔍</button></div>`;
+  }
+  document.getElementById('concRows').innerHTML=h;
+  document.getElementById('btnAddConc').style.display=concCount>=3?'none':'';
+}
+function addConcRow(){if(concCount<3){concCount++;renderConcRows();}}
+function searchConc(){const nm=document.getElementById('inNome').value.trim()||'produto';window.open(`https://shopping.google.com.br/search?q=${encodeURIComponent(nm)}`,'_blank');}
+
+/* ── RESET ─────────────────────────────────────────────── */
+function resetAll(){
+  scenarios=[];nextId=1;sortCol=null;sortAsc=false;concCount=1;
+  ['inNome','inSubcat'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('inDesp').value=8;document.getElementById('inVol').value=500;
+  document.getElementById('inIpi').value=0;document.getElementById('inOutros').value=0;
+  document.getElementById('inEssencial').checked=false;
+  document.getElementById('inElastSlider').value=-1;document.getElementById('inElastNum').value=-1;
+  document.querySelector('input[name="cat"][value="alimentar"]').checked=true;
+  renderConcRows();updElast(-1);onRegimeChange();onEstadoChange();renderAll();
+}
+
+/* ── INIT ──────────────────────────────────────────────── */
+concCount=1;renderConcRows();onRegimeChange();onEstadoChange();updElast(-1);renderAll();
+</script>
+</body>
+</html>

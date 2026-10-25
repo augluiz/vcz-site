@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 6000 4800" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <rect id="Prancheta1" x="0" y="0" width="6000" height="4800" style="fill:none;"/>
+    <g id="Prancheta11" serif:id="Prancheta1">
+        <g transform="matrix(1.039888,0,0,1,-233.148899,0)">
+            <path d="M4230.702,3491.405L4477.254,3491.405L5707.784,1118.16L5461.159,1118.192L4230.702,3491.405Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:0.98px;"/>
+        </g>
+        <g transform="matrix(0.998254,0,0,1,-36.945225,0)">
+            <path d="M4741.336,3244.914L5722.324,3244.914L5594.498,3491.405L4613.388,3491.405L4741.336,3244.914Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        </g>
+        <g transform="matrix(0.998254,0,0,1,-420.418664,-2127.109768)">
+            <path d="M4741.336,3244.914L5722.324,3244.914L5594.498,3491.405L4613.388,3491.405L4741.336,3244.914Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,54,0)">
+            <path d="M527.626,1118.192L311.307,1207.186L1217.441,3491.377L1469.203,3491.222L527.626,1118.192Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        </g>
+        <path d="M4187.309,3074.522C3969.585,3329.582 3645.769,3491.405 3284.455,3491.405C3230.007,3491.405 3176.411,3487.731 3123.901,3480.616L2972.031,3195.458C3069.832,3229.806 3174.979,3248.489 3284.455,3248.489C3487.757,3248.489 3676.13,3184.059 3830.252,3074.522L4187.309,3074.522Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        <g transform="matrix(1,0,0,1,54,0)">
+            <path d="M1941.537,1118.192L2165.118,1210.1L1539.777,3260.472L1397.581,2901.775L1941.537,1118.192Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        </g>
+        <path d="M3124.294,1128.929C3176.678,1121.849 3230.143,1118.192 3284.455,1118.192C3651.339,1118.192 3979.558,1285.043 4197.302,1546.936L3846.57,1546.936C3689.514,1430.204 3494.99,1361.109 3284.455,1361.109C3175.146,1361.109 3070.154,1379.734 2972.48,1413.982L3124.294,1128.929Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        <path d="M2965.835,3448.071C2465.426,3308.725 2097.796,2849.353 2097.796,2304.799C2097.796,1760.106 2465.613,1300.64 2966.217,1161.42L2783.355,1505.182C2517.583,1672.194 2340.78,1968.012 2340.78,2304.799C2340.78,2641.379 2517.366,2937.041 2782.866,3104.109L2965.835,3448.071Z" style="fill:rgb(200,146,42);stroke:rgb(200,146,42);stroke-width:1px;"/>
+        <g transform="matrix(1.260315,0,0,1.260315,-600.447671,-665.865758)">
+            <g transform="matrix(502.519805,0,0,502.519805,4622.530425,3887.883227)">
+            </g>
+            <text x="1131.023px" y="3887.883px" style="font-family:'CormorantGaramond-Light', 'Cormorant Garamond';font-weight:300;font-size:502.52px;fill:rgb(245,240,232);fill-opacity:0.4;">CONSUL<tspan x="3074.267px 3385.829px " y="3887.883px 3887.883px ">TO</tspan>RIA</text>
+        </g>
+        <g transform="matrix(0.73777,-0.001343,0.001981,0.500009,615.759687,3649.674623)">
+            <path d="M-27.511,-36.182L6662.087,-18.22" style="fill:none;stroke:rgb(183,160,115);stroke-width:6.61px;"/>
+        </g>
+    </g>
+</svg>

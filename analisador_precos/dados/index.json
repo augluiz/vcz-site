@@ -1,5 +1,55 @@
 [
   {
+    "data": "2026-10-24",
+    "linhas": 238777,
+    "arquivo": "dias/2026-10-24.csv"
+  },
+  {
+    "data": "2026-10-23",
+    "linhas": 238583,
+    "arquivo": "dias/2026-10-23.csv"
+  },
+  {
+    "data": "2026-10-22",
+    "linhas": 238465,
+    "arquivo": "dias/2026-10-22.csv"
+  },
+  {
+    "data": "2026-10-20",
+    "linhas": 237655,
+    "arquivo": "dias/2026-10-20.csv"
+  },
+  {
+    "data": "2026-10-19",
+    "linhas": 83893,
+    "arquivo": "dias/2026-10-19.csv"
+  },
+  {
+    "data": "2026-10-18",
+    "linhas": 239094,
+    "arquivo": "dias/2026-10-18.csv"
+  },
+  {
+    "data": "2026-10-17",
+    "linhas": 234744,
+    "arquivo": "dias/2026-10-17.csv"
+  },
+  {
+    "data": "2026-10-16",
+    "linhas": 238470,
+    "arquivo": "dias/2026-10-16.csv"
+  },
+  {
+    "data": "2026-10-15",
+    "linhas": 237128,
+    "arquivo": "dias/2026-10-15.csv"
+  },
+  {
+    "data": "2026-10-14",
+    "linhas": 181723,
+    "arquivo": "dias/2026-10-14.csv"
+  },
+  {
     "data": "2026-10-13",
     "linhas": 183904,
     "arquivo": "dias/2026-10-13.csv"

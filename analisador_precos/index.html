@@ -577,18 +577,25 @@ const SITE_LABELS = {
   havan:'Havan', festval:'Festval', giassi:'Giassi', muffato:'Muffato',
   comper:'Comper', meschke:'Meschke', savegnago:'Savegnago', saojoao:'São João',
   cottonbaby:'Cottonbaby (site próprio)', // não é concorrente — é o e-commerce do próprio cliente, pra comparar preço direto vs. redes
+  paguemenos:'Pague Menos', minhacooper:'Minha Cooper', redetop:'Rede Top',
+  rissul:'Rissul', zaffari:'Zaffari', drogariasaopaulo:'Drogaria São Paulo',
+  zonasul:'Zona Sul', marche:'St Marche',
 };
 // Ordem padrão das colunas de rede — nunca reordenada automaticamente por
 // filtro/ranking (cor segue a identidade da rede, não o ranking do momento;
 // ver dataviz skill: "color follows the entity, never its rank"). O usuário
 // pode arrastar as colunas (wireSiteColDrag) pra mudar isso manualmente —
 // aí sim state.siteColOrder muda, mas a cor de cada rede continua igual.
-const SITE_ORDER = ['bistek','kalunga','koerich','superkoch','havan','festval','giassi','muffato','comper','meschke','savegnago','saojoao','cottonbaby'];
+// Corrigido em 18/10/2026: faltavam 8 redes aqui (paguemenos até marche,
+// adicionadas entre 07/10 e 15/10) — ficavam de fora do gráfico de
+// dispersão, das colunas da tabela e de qualquer coisa que dependa desta
+// lista, mesmo já estando na coleta há dias.
+const SITE_ORDER = ['bistek','kalunga','koerich','superkoch','havan','festval','giassi','muffato','comper','meschke','savegnago','saojoao','cottonbaby','paguemenos','minhacooper','redetop','rissul','zaffari','drogariasaopaulo','zonasul','marche'];
 
 // Paleta categórica validada (dataviz skill, ordem fixa de 8 hues — CVD-safe
-// nos pares adjacentes). Como temos 12 redes, os 4 últimos slots reciclam as
-// 4 primeiras cores — na prática dificilmente 9+ redes vendem o mesmo produto
-// ao mesmo tempo pra colidir de verdade no gráfico de evolução.
+// nos pares adjacentes). Com 21 redes, os slots reciclam a cada 8 — na
+// prática dificilmente 9+ redes vendem o mesmo produto ao mesmo tempo pra
+// colidir de verdade no gráfico de evolução.
 const SITE_PALETTE = ['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300','#4a3aa7','#e34948'];
 const SITE_COLOR = {};
 SITE_ORDER.forEach((s,i) => { SITE_COLOR[s] = SITE_PALETTE[i % SITE_PALETTE.length]; });
@@ -2177,7 +2184,13 @@ function renderDispersao(){
              ticks: { stepSize: 1, autoSkip: false,
                callback: v => { const s = sitesComDado[Math.round(v)]; return s ? (SITE_LABELS[s]||s) : ''; } },
              grid: { color: 'rgba(255,255,255,.06)' } },
-        y: { ticks: { callback: v => fmtR(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
+        // escala log no eixo Y: preço de produto varia de ~R$2 a dezenas de
+        // milhares (eletro na Koerich, por ex.) — em escala linear isso
+        // esmaga todo mundo que não é outlier numa faixa achatada perto do
+        // zero (pedido do usuário pra revisar, 18/10/2026: "eixo como rede
+        // não sei se é a melhor opção" — o problema real era a escala, não
+        // o eixo em si, resolvido sem precisar trocar a estrutura do gráfico)
+        y: { type: 'logarithmic', min: 1, ticks: { callback: v => fmtR(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
       },
       plugins: {
         legend: { display: false },

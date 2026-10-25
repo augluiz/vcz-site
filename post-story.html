@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>VCZ — Story Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Archivo:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px 48px;
+    gap: 16px;
+  }
+
+  .hint {
+    font-family: monospace;
+    color: #444;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  /* ══════════════════════════════════════
+     STORY 1080 × 1920 — escalado 44%
+  ══════════════════════════════════════ */
+  .story {
+    width: 1080px;
+    height: 1920px;
+    background: #0D1B2A;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transform-origin: top center;
+    transform: scale(0.44);
+    margin-bottom: -1076px;
+  }
+
+  /* ── VCZ marca d'água de fundo ─────── */
+  .bg-mark {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1400px;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* glow suave no centro */
+  .glow {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(200,146,42,0.07) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* degradê no topo */
+  .glow-top {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1080px;
+    height: 700px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(40,66,98,0.45) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LOGO ─────────────────────────── */
+  .logo-wrap {
+    z-index: 1;
+    margin-top: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-wrap img {
+    height: 100px;
+    width: auto;
+  }
+
+  /* ── HEADLINE ─────────────────────── */
+  .headline-wrap {
+    z-index: 1;
+    text-align: center;
+    margin-top: 52px;
+    padding: 0 80px;
+  }
+
+  .announce {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #E2AC4C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+
+  .announce::before,
+  .announce::after {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 1px;
+    background: #E2AC4C;
+    flex-shrink: 0;
+  }
+
+  .headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    font-weight: 300;
+    line-height: 1.05;
+    color: #F0EDED;
+    letter-spacing: 0.01em;
+  }
+
+  .headline em {
+    font-style: italic;
+    color: #C8922A;
+  }
+
+  .gold-rule {
+    width: 64px;
+    height: 1px;
+    background: rgba(200,146,42,0.6);
+    margin: 36px auto 0;
+  }
+
+  /* ── MOCKUP BROWSER ───────────────── */
+  .browser-wrap {
+    z-index: 1;
+    width: 920px;
+    margin-top: 68px;
+    display: flex;
+    flex-direction: column;
+    filter: drop-shadow(0 48px 96px rgba(0,0,0,0.75));
+  }
+
+  .browser-bar {
+    background: #131f2e;
+    border: 1px solid rgba(200,146,42,0.18);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .dots { display: flex; gap: 8px; }
+  .dots span { width: 13px; height: 13px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .url-bar {
+    flex: 1;
+    background: rgba(255,255,255,0.055);
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(200,146,42,0.75);
+    letter-spacing: 0.04em;
+  }
+
+  .browser-screen {
+    background: #0D1B2A;
+    border: 1px solid rgba(200,146,42,0.18);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    position: relative;
+    height: 620px;
+  }
+
+  /* grade interna do screen */
+  .browser-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,146,42,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,146,42,0.035) 1px, transparent 1px);
+    background-size: 38px 38px;
+    z-index: 0;
+  }
+
+  /* mini nav */
+  .s-nav {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 38px;
+    border-bottom: 1px solid rgba(200,146,42,0.07);
+  }
+
+  .s-logo img { height: 30px; width: auto; }
+
+  .s-links {
+    display: flex;
+    gap: 18px;
+  }
+
+  .s-links span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #9AAABB;
+  }
+
+  .s-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .s-lang {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #9AAABB;
+  }
+
+  .s-cta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #C8922A;
+    border: 1px solid rgba(200,146,42,0.45);
+    padding: 6px 14px;
+  }
+
+  /* hero da tela */
+  .s-hero {
+    position: relative;
+    z-index: 1;
+    padding: 40px 38px 0;
+  }
+
+  .s-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #C8922A;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .s-eyebrow::before {
+    content: '';
+    display: block;
+    width: 26px;
+    height: 1px;
+    background: #C8922A;
+  }
+
+  .s-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px;
+    font-weight: 300;
+    line-height: 1.0;
+    color: #F0EDED;
+  }
+
+  .s-h1 em {
+    font-style: italic;
+    color: #C8922A;
+  }
+
+  .s-rule {
+    width: 40px;
+    height: 1px;
+    background: #C8922A;
+    margin: 18px 0;
+  }
+
+  .s-sub {
+    font-family: 'Archivo', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #9AAABB;
+    line-height: 1.6;
+    max-width: 340px;
+  }
+
+  .s-btns {
+    display: flex;
+    gap: 14px;
+    margin-top: 24px;
+    align-items: center;
+  }
+
+  .s-btn-p {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #0D1B2A;
+    background: #C8922A;
+    padding: 10px 20px;
+  }
+
+  .s-btn-g {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #9AAABB;
+  }
+
+  .s-mark {
+    position: absolute;
+    right: -4%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 62%;
+    height: auto;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* ── RODAPÉ ─────────────────────────── */
+  .bottom {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    margin-top: auto;
+    padding-bottom: 110px;
+  }
+
+  .bottom-sub {
+    font-family: 'Archivo', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: #9AAABB;
+    letter-spacing: 0.04em;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .cta-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: #0D1B2A;
+    background: #C8922A;
+    padding: 28px 80px;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .bottom-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 26px;
+    font-weight: 300;
+    color: rgba(240,237,237,0.2);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<p class="hint">Preview 44% — para exportar: F12 → Ctrl+Shift+P → "Capture full size screenshot"</p>
+
+<div class="story">
+  <img src="logo-mark.svg" class="bg-mark" alt="" aria-hidden="true">
+  <div class="glow-top"></div>
+  <div class="glow"></div>
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <img src="logo-full-ouro.svg" alt="VCZ Consultoria">
+  </div>
+
+  <!-- HEADLINE -->
+  <div class="headline-wrap">
+    <p class="announce">Novo site está no ar</p>
+    <h1 class="headline">Venha conferir<br>como ficou <em>o site</em></h1>
+    <div class="gold-rule"></div>
+  </div>
+
+  <!-- SEPARADOR -->
+  <div style="width:80px;height:1px;background:#C8922A;opacity:0.6;z-index:1;margin-top:36px;"></div>
+
+  <!-- BROWSER MOCKUP -->
+  <div class="browser-wrap">
+    <div class="browser-bar">
+      <div class="dots">
+        <span class="dot-r"></span>
+        <span class="dot-y"></span>
+        <span class="dot-g"></span>
+      </div>
+      <div class="url-bar">vczconsultoria.com.br</div>
+    </div>
+    <div class="browser-screen">
+      <div class="s-nav">
+        <div class="s-logo"><img src="logo-solo-ouro.svg" alt="VCZ"></div>
+        <div class="s-links">
+          <span>Sobre</span>
+          <span>Experiência</span>
+          <span>Conteúdos</span>
+          <span>Portfolio</span>
+          <span>Contato</span>
+        </div>
+        <div class="s-nav-right">
+          <span class="s-lang">PT · EN · ES</span>
+          <div class="s-cta">Fale conosco</div>
+        </div>
+      </div>
+      <div class="s-hero">
+        <p class="s-eyebrow">Inteligência Comercial Aplicada</p>
+        <h2 class="s-h1">Decisões mais <em>claras.</em><br>Resultados mais sólidos.</h2>
+        <div class="s-rule"></div>
+        <p class="s-sub">A VCZ transforma dados de mercado em direção estratégica — para que cada decisão comercial seja tomada com método, evidência e critério. Atuamos em varejo, indústria e e-commerce, em todo o Brasil.</p>
+        <div class="s-btns">
+          <span class="s-btn-p">Conheça os serviços</span>
+          <span class="s-btn-g">Sobre a VCZ ↓</span>
+        </div>
+        <img src="logo-mark.svg" class="s-mark" alt="" aria-hidden="true">
+      </div>
+    </div>
+  </div>
+
+  <!-- RODAPÉ -->
+  <div class="bottom">
+    <p class="bottom-sub">Acesse e conheça a consultoria</p>
+    <a class="cta-btn" href="https://vczconsultoria.com.br" target="_blank" rel="noopener">vczconsultoria.com.br</a>
+    <p class="bottom-tagline">Varejo · Indústria · E-commerce</p>
+  </div>
+
+</div>
+
+<p class="hint" style="margin-top:1076px;">1080 × 1920 px · Cormorant Garamond · Archivo · IBM Plex Mono</p>
+
+</body>
+</html>

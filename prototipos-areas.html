@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>VCZ — Protótipos: Áreas Impactadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px 48px;
+    gap: 40px;
+  }
+
+  .hint {
+    font-family: monospace;
+    color: #555;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    background: #EDE8DC;
+    position: relative;
+    overflow: hidden;
+    transform-origin: top center;
+    transform: scale(0.45);
+    margin-bottom: -742px;
+  }
+
+  .v-label {
+    position: absolute;
+    top: 22px;
+    right: 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(107,92,74,0.55);
+  }
+
+  /* ══════════════════════════════
+     VARIAÇÃO A — ORGÂNICA
+     Fiel à referência: palavras flutuam
+     com stagger orgânico, cor navy
+  ══════════════════════════════ */
+  #va {
+    display: flex;
+    flex-direction: column;
+    padding: 88px 88px 80px;
+  }
+
+  .va-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 80px;
+    line-height: 1.0;
+    color: #1A2640;
+    margin-bottom: 56px;
+  }
+
+  .va-cloud {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .va-row {
+    display: flex;
+    align-items: baseline;
+    gap: 64px;
+  }
+
+  .va-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 60px;
+    line-height: 1.15;
+    color: #1A2640;
+  }
+
+  .va-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* ══════════════════════════════
+     VARIAÇÃO B — CENTRALIZADA
+     Palavras centralizadas com
+     tamanhos variando por peso visual
+  ══════════════════════════════ */
+  #vb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 88px 60px 80px;
+  }
+
+  .vb-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 100px;
+    line-height: 1.0;
+    color: #B7A073;
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .vb-cloud {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .vb-row {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 56px;
+  }
+
+  .vb-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    line-height: 1.1;
+    color: #1E1610;
+  }
+
+  .vb-word.accent {
+    color: #C8922A;
+  }
+
+  .vb-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  /* ══════════════════════════════
+     VARIAÇÃO C — DUAS COLUNAS
+     Separador dourado vertical,
+     bold × italic, mais editorial
+  ══════════════════════════════ */
+  #vc {
+    display: flex;
+    flex-direction: column;
+    padding: 88px 88px 80px;
+  }
+
+  .vc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 100px;
+    line-height: 0.96;
+    color: #C8922A;
+    margin-bottom: 48px;
+  }
+
+  .vc-rule {
+    width: 60px;
+    height: 1px;
+    background: rgba(200,146,42,0.4);
+    margin-bottom: 48px;
+  }
+
+  .vc-grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .vc-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(180,130,50,0.18);
+  }
+
+  .vc-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .vc-left {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 54px;
+    line-height: 1.0;
+    color: #1E1610;
+  }
+
+  .vc-right {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 46px;
+    line-height: 1.0;
+    color: #6B5C4A;
+    text-align: right;
+  }
+
+  .vc-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* Shared footer VCZ mark */
+  .vcz-mark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: #C8922A;
+  }
+</style>
+</head>
+<body>
+
+<p class="hint">Protótipos · Áreas Impactadas · 1080×1350px · preview 45%</p>
+
+<!-- ══════════════════
+     VARIAÇÃO A — Orgânica
+══════════════════ -->
+<div class="slide" id="va">
+  <span class="v-label">A</span>
+
+  <h2 class="va-title">Áreas impactadas</h2>
+
+  <div class="va-cloud">
+    <div class="va-row" style="padding-left:200px">
+      <span class="va-word">Sortimento</span>
+    </div>
+    <div class="va-row" style="padding-left:20px">
+      <span class="va-word">Pricing</span>
+      <span class="va-word">CRM</span>
+    </div>
+    <div class="va-row" style="padding-left:260px">
+      <span class="va-word">Prazo Pagamento</span>
+    </div>
+    <div class="va-row" style="padding-left:0px">
+      <span class="va-word">Logística</span>
+    </div>
+    <div class="va-row" style="padding-left:130px">
+      <span class="va-word">Custos</span>
+    </div>
+    <div class="va-row" style="padding-left:70px">
+      <span class="va-word">Trade</span>
+    </div>
+    <div class="va-row" style="padding-left:190px">
+      <span class="va-word">Rentabilidade</span>
+    </div>
+    <div class="va-row" style="padding-left:30px">
+      <span class="va-word">Contratos</span>
+    </div>
+    <div class="va-row" style="padding-left:160px">
+      <span class="va-word">Operação</span>
+    </div>
+  </div>
+
+  <div class="va-footer">
+    <span class="vcz-mark">VCZ</span>
+  </div>
+</div>
+
+<!-- ══════════════════
+     VARIAÇÃO B — Centralizada
+══════════════════ -->
+<div class="slide" id="vb">
+  <span class="v-label">B</span>
+
+  <h2 class="vb-title">Áreas impactadas</h2>
+
+  <div class="vb-cloud">
+    <div class="vb-row">
+      <span class="vb-word" style="font-size:52px">Pricing</span>
+      <span class="vb-word accent" style="font-size:68px">Trade</span>
+      <span class="vb-word" style="font-size:44px">Custos</span>
+    </div>
+    <div class="vb-row">
+      <span class="vb-word" style="font-size:70px">Sortimento</span>
+      <span class="vb-word" style="font-size:52px">CRM</span>
+    </div>
+    <div class="vb-row">
+      <span class="vb-word" style="font-size:46px">Logística</span>
+      <span class="vb-word accent" style="font-size:66px">Contratos</span>
+    </div>
+    <div class="vb-row">
+      <span class="vb-word" style="font-size:64px">Rentabilidade</span>
+      <span class="vb-word" style="font-size:48px">Operação</span>
+    </div>
+    <div class="vb-row">
+      <span class="vb-word" style="font-size:70px; font-weight:600">Prazo Pagamento</span>
+    </div>
+  </div>
+
+  <div class="vb-footer">
+    <span class="vcz-mark">VCZ</span>
+  </div>
+</div>
+
+<!-- ══════════════════
+     VARIAÇÃO C — Duas Colunas
+══════════════════ -->
+<div class="slide" id="vc">
+  <span class="v-label">C</span>
+
+  <h2 class="vc-title">Áreas<br>impactadas</h2>
+  <div class="vc-rule"></div>
+
+  <div class="vc-grid">
+    <div class="vc-row">
+      <span class="vc-left">Pricing</span>
+      <span class="vc-right">Sortimento</span>
+    </div>
+    <div class="vc-row">
+      <span class="vc-left">Trade</span>
+      <span class="vc-right">CRM</span>
+    </div>
+    <div class="vc-row">
+      <span class="vc-left">Logística</span>
+      <span class="vc-right">Prazo Pagamento</span>
+    </div>
+    <div class="vc-row">
+      <span class="vc-left">Contratos</span>
+      <span class="vc-right">Custos</span>
+    </div>
+    <div class="vc-row">
+      <span class="vc-left">Operação</span>
+      <span class="vc-right">Rentabilidade</span>
+    </div>
+  </div>
+
+  <div class="vc-footer">
+    <span class="vcz-mark">VCZ</span>
+  </div>
+</div>
+
+<p class="hint" style="margin-top:742px;">Qual variação prefere? A · B · C</p>
+
+</body>
+</html>
