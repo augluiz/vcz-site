@@ -1,9 +1,9 @@
 /* Gerado por atualizar.py / atualizar_diario.py — não editar manualmente */
 window.CEPEA_DATA = {
-  "timestamp": "2026-10-04T12:27:04",
+  "timestamp": "2026-10-25T10:24:54",
   "fonte": "CEPEA/ESALQ-USP",
   "data_inicio": "01/01/2025",
-  "data_fim": "04/10/2026",
+  "data_fim": "25/10/2026",
   "produtos": [
     {
       "id": "acucar",
@@ -11,11 +11,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 50kg",
       "praca": "São Paulo/SP",
       "cor": "#AB47BC",
-      "preco": 123.37,
-      "preco_ant": 121.23,
-      "variacao": 2.14,
-      "variacao_pct": 1.7652,
-      "data_ref": "2026-10-02",
+      "preco": 125.44,
+      "preco_ant": 125.98,
+      "variacao": -0.54,
+      "variacao_pct": -0.4286,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -1560,6 +1560,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 123.37
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 122.78
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 122.58
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 122.58
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 122.6
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 123.16
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 123.78
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 123.94
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 124.68
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 125.74
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 125.62
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 125.52
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 125.59
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 125.98
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 125.44
         }
       ],
       "ok": true
@@ -1570,11 +1626,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/arroba",
       "praca": "São Paulo/SP",
       "cor": "#78909C",
-      "preco": 420.89,
-      "preco_ant": 421.0,
-      "variacao": -0.11,
-      "variacao_pct": -0.0261,
-      "data_ref": "2026-10-02",
+      "preco": 404.71,
+      "preco_ant": 404.32,
+      "variacao": 0.39,
+      "variacao_pct": 0.0965,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -3119,6 +3175,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 420.89
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 419.33
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 417.76
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 415.1
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 413.51
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 409.7
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 408.7
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 406.35
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 406.49
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 407.41
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 407.84
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 407.41
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 407.14
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 404.32
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 404.71
         }
       ],
       "ok": true
@@ -3129,11 +3241,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 50kg",
       "praca": "RS/SC",
       "cor": "#E8D44D",
-      "preco": 83.07,
-      "preco_ant": 82.79,
-      "variacao": 0.28,
-      "variacao_pct": 0.3382,
-      "data_ref": "2026-10-02",
+      "preco": 81.92,
+      "preco_ant": 81.78,
+      "variacao": 0.14,
+      "variacao_pct": 0.1712,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -4678,6 +4790,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 83.07
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 83.1
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 82.85
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 82.48
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 82.58
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 82.07
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 82.21
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 81.85
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 81.91
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 82.06
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 82.04
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 82.03
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 81.82
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 81.78
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 81.92
         }
       ],
       "ok": true
@@ -4688,11 +4856,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/cab.",
       "praca": "Mato Grosso",
       "cor": "#D2691E",
-      "preco": 3456.83,
-      "preco_ant": 3453.55,
-      "variacao": 3.28,
-      "variacao_pct": 0.095,
-      "data_ref": "2026-10-02",
+      "preco": 3518.84,
+      "preco_ant": 3512.3,
+      "variacao": 6.54,
+      "variacao_pct": 0.1862,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -6237,6 +6405,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 3456.83
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 3461.27
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 3467.5
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 3470.58
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 3478.44
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 3481.33
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 3484.95
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 3485.9
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 3487.66
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 3489.71
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 3498.89
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 3501.39
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 3507.45
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 3512.3
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 3518.84
         }
       ],
       "ok": true
@@ -6247,11 +6471,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/arroba",
       "praca": "São Paulo/SP",
       "cor": "#E06060",
-      "preco": 369.9,
-      "preco_ant": 366.5,
-      "variacao": 3.4,
-      "variacao_pct": 0.9277,
-      "data_ref": "2026-10-02",
+      "preco": 381.4,
+      "preco_ant": 380.55,
+      "variacao": 0.85,
+      "variacao_pct": 0.2234,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -7796,6 +8020,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 369.9
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 372.95
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 373.25
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 376.1
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 376.3
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 377.8
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 378.0
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 379.4
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 380.2
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 380.7
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 380.7
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 380.45
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 380.4
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 380.55
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 381.4
         }
       ],
       "ok": true
@@ -7806,11 +8086,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Cerrado/MG",
       "cor": "#8D6E63",
-      "preco": 1572.01,
-      "preco_ant": 1577.42,
-      "variacao": -5.41,
-      "variacao_pct": -0.343,
-      "data_ref": "2026-10-02",
+      "preco": 1601.95,
+      "preco_ant": 1619.85,
+      "variacao": -17.9,
+      "variacao_pct": -1.105,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -9355,6 +9635,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 1572.01
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 1568.56
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 1568.95
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 1566.59
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 1544.99
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 1531.88
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 1547.28
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 1571.19
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 1577.21
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 1601.25
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 1606.94
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 1610.14
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 1620.92
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 1619.85
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 1601.95
         }
       ],
       "ok": true
@@ -9365,11 +9701,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/litro",
       "praca": "Interior SP",
       "cor": "#5B8FC4",
-      "preco": 2.5639,
-      "preco_ant": 2.582,
-      "variacao": -0.0181,
-      "variacao_pct": -0.701,
-      "data_ref": "2026-10-02",
+      "preco": 2.74,
+      "preco_ant": 2.6892,
+      "variacao": 0.0508,
+      "variacao_pct": 1.889,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -10878,6 +11214,18 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 2.5639
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 2.6374
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 2.6892
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 2.74
         }
       ],
       "ok": true
@@ -10903,7 +11251,9 @@ window.CEPEA_DATA = {
           "preco": 288.68
         }
       ],
-      "ok": true
+      "ok": true,
+      "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
+      "coleta_erro_em": "2026-10-25"
     },
     {
       "id": "frango",
@@ -10911,11 +11261,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/kg",
       "praca": "Paraná/PR",
       "cor": "#FF8C00",
-      "preco": 8.33,
-      "preco_ant": 8.3,
-      "variacao": 0.03,
-      "variacao_pct": 0.3614,
-      "data_ref": "2026-10-02",
+      "preco": 8.27,
+      "preco_ant": 8.49,
+      "variacao": -0.22,
+      "variacao_pct": -2.5913,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -12460,6 +12810,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 8.33
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 8.32
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 8.32
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 8.38
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 8.38
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 8.38
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 8.39
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 8.39
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 8.49
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 8.49
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 8.49
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 8.49
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 8.49
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 8.49
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 8.27
         }
       ],
       "ok": true
@@ -13986,7 +14392,9 @@ window.CEPEA_DATA = {
           "preco": 2.01
         }
       ],
-      "ok": true
+      "ok": true,
+      "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
+      "coleta_erro_em": "2026-10-25"
     },
     {
       "id": "mandioca",
@@ -13994,11 +14402,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/t",
       "praca": "Entrada Oeste - PR",
       "cor": "#DAA520",
-      "preco": 619.67,
-      "preco_ant": 611.7,
-      "variacao": 7.97,
-      "variacao_pct": 1.3029,
-      "data_ref": "2026-09-25",
+      "preco": 618.11,
+      "preco_ant": 618.97,
+      "variacao": -0.86,
+      "variacao_pct": -0.1389,
+      "data_ref": "2026-10-16",
       "historico": [
         {
           "data": "2026-09-04",
@@ -14015,6 +14423,14 @@ window.CEPEA_DATA = {
         {
           "data": "2026-09-25",
           "preco": 619.67
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 618.97
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 618.11
         }
       ],
       "ok": true
@@ -14025,11 +14441,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Campinas/SP",
       "cor": "#D4A830",
-      "preco": 68.53,
-      "preco_ant": 68.58,
-      "variacao": -0.05,
-      "variacao_pct": -0.0729,
-      "data_ref": "2026-10-02",
+      "preco": 64.27,
+      "preco_ant": 64.24,
+      "variacao": 0.03,
+      "variacao_pct": 0.0467,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -15574,6 +15990,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 68.53
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 67.26
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 67.23
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 67.24
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 67.18
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 67.35
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 65.59
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 65.43
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 64.81
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 64.85
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 64.74
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 64.34
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 64.3
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 64.24
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 64.27
         }
       ],
       "ok": true
@@ -17100,7 +17572,9 @@ window.CEPEA_DATA = {
           "preco": 17.51
         }
       ],
-      "ok": true
+      "ok": true,
+      "coleta_erro": "tabela 'imagenet-indicador1' não encontrada",
+      "coleta_erro_em": "2026-10-25"
     },
     {
       "id": "ovos",
@@ -17108,11 +17582,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/cx 30dz",
       "praca": "Grande SP/SP",
       "cor": "#FFF3CD",
-      "preco": 140.65,
-      "preco_ant": 133.11,
-      "variacao": 7.54,
-      "variacao_pct": 5.6645,
-      "data_ref": "2026-10-02",
+      "preco": 129.09,
+      "preco_ant": 131.88,
+      "variacao": -2.79,
+      "variacao_pct": -2.1156,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2026-09-17",
@@ -17137,6 +17611,18 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 140.65
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 134.59
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 131.88
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 129.09
         }
       ],
       "ok": true
@@ -17147,11 +17633,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Paranaguá/PR",
       "cor": "#4CAF50",
-      "preco": 159.94,
-      "preco_ant": 160.9,
-      "variacao": -0.96,
-      "variacao_pct": -0.5966,
-      "data_ref": "2026-10-02",
+      "preco": 152.41,
+      "preco_ant": 151.92,
+      "variacao": 0.49,
+      "variacao_pct": 0.3225,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -18696,6 +19182,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 159.94
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 158.09
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 155.67
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 153.9
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 154.91
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 154.75
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 154.15
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 154.29
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 154.7
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 154.61
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 154.24
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 153.4
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 152.13
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 151.92
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 152.41
         }
       ],
       "ok": true
@@ -20157,7 +20699,9 @@ window.CEPEA_DATA = {
           "preco": 5.86
         }
       ],
-      "ok": true
+      "ok": true,
+      "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
+      "coleta_erro_em": "2026-10-25"
     },
     {
       "id": "tilapia",
@@ -20165,11 +20709,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/kg",
       "praca": "São Paulo/SP",
       "cor": "#40E0D0",
-      "preco": 9.45,
-      "preco_ant": 9.48,
+      "preco": 9.42,
+      "preco_ant": 9.45,
       "variacao": -0.03,
-      "variacao_pct": -0.3165,
-      "data_ref": "2026-10-02",
+      "variacao_pct": -0.3175,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -21694,6 +22238,14 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 9.45
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 9.45
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 9.42
         }
       ],
       "ok": true
@@ -21704,11 +22256,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Paraná/PR",
       "cor": "#FFA726",
-      "preco": 1553.71,
-      "preco_ant": 1538.31,
-      "variacao": 15.4,
-      "variacao_pct": 1.0011,
-      "data_ref": "2026-10-02",
+      "preco": 1560.32,
+      "preco_ant": 1560.67,
+      "variacao": -0.35,
+      "variacao_pct": -0.0224,
+      "data_ref": "2026-10-23",
       "historico": [
         {
           "data": "2025-01-02",
@@ -23253,6 +23805,62 @@ window.CEPEA_DATA = {
         {
           "data": "2026-10-02",
           "preco": 1553.71
+        },
+        {
+          "data": "2026-10-05",
+          "preco": 1551.32
+        },
+        {
+          "data": "2026-10-06",
+          "preco": 1526.89
+        },
+        {
+          "data": "2026-10-07",
+          "preco": 1538.46
+        },
+        {
+          "data": "2026-10-08",
+          "preco": 1560.92
+        },
+        {
+          "data": "2026-10-09",
+          "preco": 1562.68
+        },
+        {
+          "data": "2026-10-13",
+          "preco": 1561.58
+        },
+        {
+          "data": "2026-10-14",
+          "preco": 1570.32
+        },
+        {
+          "data": "2026-10-15",
+          "preco": 1574.15
+        },
+        {
+          "data": "2026-10-16",
+          "preco": 1571.18
+        },
+        {
+          "data": "2026-10-19",
+          "preco": 1565.19
+        },
+        {
+          "data": "2026-10-20",
+          "preco": 1563.34
+        },
+        {
+          "data": "2026-10-21",
+          "preco": 1560.04
+        },
+        {
+          "data": "2026-10-22",
+          "preco": 1560.67
+        },
+        {
+          "data": "2026-10-23",
+          "preco": 1560.32
         }
       ],
       "ok": true
