@@ -215,48 +215,221 @@
   </url>
 
   <!-- ── LANDINGS DEDICADAS ──────────────────────────────────────
-       Uma página por intenção de busca. São as únicas páginas do
-       site que competem por keyword de serviço — home e página de
-       serviços ranqueiam a marca, não o termo.
-       PT e EN apenas: os demais idiomas têm card apontando para EN.
+       Uma página por intenção de busca, em 7 idiomas. São as únicas
+       páginas do site que competem por keyword de serviço — home e
+       página de serviços ranqueiam a marca, não o termo.
   ──────────────────────────────────────────────────────────── -->
+
 
   <!-- Entrada no Mercado Brasileiro -->
   <url>
     <loc>https://vczconsultoria.com.br/mercado-brasil.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
-    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
   </url>
+
 
   <url>
     <loc>https://vczconsultoria.com.br/en/brazil-market-entry.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
-    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
   </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/es/entrada-mercado-brasil.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/de/markteintritt-brasilien.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/fr/implantation-bresil.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/da/markedsadgang-brasilien.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-entry.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/entrada-mercado-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/markteintritt-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/implantation-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/markedsadgang-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/ingresso-mercato-brasile.html"/>
+  </url>
+
 
   <!-- Web Design e Desenvolvimento de Site -->
   <url>
     <loc>https://vczconsultoria.com.br/web-design.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
-    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
   </url>
+
 
   <url>
     <loc>https://vczconsultoria.com.br/en/brazil-market-website.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
-    <xhtml:link rel="alternate" hreflang="en"    href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/es/diseno-web-brasil.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/de/webdesign-brasilien.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/fr/site-web-bresil.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/da/website-brasilien.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
+  </url>
+
+
+  <url>
+    <loc>https://vczconsultoria.com.br/it/sito-web-brasile.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-br" href="https://vczconsultoria.com.br/web-design.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vczconsultoria.com.br/en/brazil-market-website.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vczconsultoria.com.br/es/diseno-web-brasil.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vczconsultoria.com.br/de/webdesign-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vczconsultoria.com.br/fr/site-web-bresil.html"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://vczconsultoria.com.br/da/website-brasilien.html"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vczconsultoria.com.br/it/sito-web-brasile.html"/>
   </url>
 
   <!-- Dashboards de Inteligência -->
