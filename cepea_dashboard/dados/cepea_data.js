@@ -9693,7 +9693,9 @@ window.CEPEA_DATA = {
           "preco": 1601.95
         }
       ],
-      "ok": true
+      "ok": true,
+      "coleta_erro": "tabela 'imagenet-indicador1' não encontrada",
+      "coleta_erro_em": "2026-10-26"
     },
     {
       "id": "etanol",
@@ -11253,7 +11255,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
-      "coleta_erro_em": "2026-10-25"
+      "coleta_erro_em": "2026-10-26"
     },
     {
       "id": "frango",
@@ -14394,7 +14396,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
-      "coleta_erro_em": "2026-10-25"
+      "coleta_erro_em": "2026-10-26"
     },
     {
       "id": "mandioca",
@@ -17574,7 +17576,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "tabela 'imagenet-indicador1' não encontrada",
-      "coleta_erro_em": "2026-10-25"
+      "coleta_erro_em": "2026-10-26"
     },
     {
       "id": "ovos",
@@ -19240,7 +19242,9 @@ window.CEPEA_DATA = {
           "preco": 152.41
         }
       ],
-      "ok": true
+      "ok": true,
+      "coleta_erro": "tabela 'imagenet-indicador1' não encontrada",
+      "coleta_erro_em": "2026-10-26"
     },
     {
       "id": "suino",
@@ -20701,7 +20705,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
-      "coleta_erro_em": "2026-10-25"
+      "coleta_erro_em": "2026-10-26"
     },
     {
       "id": "tilapia",
