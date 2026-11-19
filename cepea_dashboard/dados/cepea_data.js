@@ -1,9 +1,9 @@
 /* Gerado por atualizar.py / atualizar_diario.py — não editar manualmente */
 window.CEPEA_DATA = {
-  "timestamp": "2026-11-17T15:06:04",
+  "timestamp": "2026-11-19T06:29:10",
   "fonte": "CEPEA/ESALQ-USP",
   "data_inicio": "01/01/2025",
-  "data_fim": "17/11/2026",
+  "data_fim": "19/11/2026",
   "produtos": [
     {
       "id": "acucar",
@@ -11,11 +11,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 50kg",
       "praca": "São Paulo/SP",
       "cor": "#AB47BC",
-      "preco": 128.39,
-      "preco_ant": 127.03,
-      "variacao": 1.36,
-      "variacao_pct": 1.0706,
-      "data_ref": "2026-11-16",
+      "preco": 127.42,
+      "preco_ant": 128.39,
+      "variacao": -0.97,
+      "variacao_pct": -0.7555,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -1676,6 +1676,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 128.39
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 127.42
         }
       ],
       "ok": true
@@ -1686,11 +1690,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/arroba",
       "praca": "São Paulo/SP",
       "cor": "#78909C",
-      "preco": 419.46,
-      "preco_ant": 417.69,
-      "variacao": 1.77,
-      "variacao_pct": 0.4238,
-      "data_ref": "2026-11-16",
+      "preco": 415.58,
+      "preco_ant": 419.46,
+      "variacao": -3.88,
+      "variacao_pct": -0.925,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -3351,6 +3355,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 419.46
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 415.58
         }
       ],
       "ok": true
@@ -3361,11 +3369,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 50kg",
       "praca": "RS/SC",
       "cor": "#E8D44D",
-      "preco": 80.77,
-      "preco_ant": 80.93,
-      "variacao": -0.16,
-      "variacao_pct": -0.1977,
-      "data_ref": "2026-11-16",
+      "preco": 81.62,
+      "preco_ant": 80.77,
+      "variacao": 0.85,
+      "variacao_pct": 1.0524,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -5026,6 +5034,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 80.77
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 81.62
         }
       ],
       "ok": true
@@ -5036,11 +5048,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/cab.",
       "praca": "Mato Grosso",
       "cor": "#D2691E",
-      "preco": 3638.3,
-      "preco_ant": 3630.37,
-      "variacao": 7.93,
-      "variacao_pct": 0.2184,
-      "data_ref": "2026-11-16",
+      "preco": 3641.82,
+      "preco_ant": 3638.3,
+      "variacao": 3.52,
+      "variacao_pct": 0.0967,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -6701,6 +6713,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 3638.3
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 3641.82
         }
       ],
       "ok": true
@@ -6711,11 +6727,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/arroba",
       "praca": "São Paulo/SP",
       "cor": "#E06060",
-      "preco": 394.25,
-      "preco_ant": 395.4,
-      "variacao": -1.15,
-      "variacao_pct": -0.2908,
-      "data_ref": "2026-11-16",
+      "preco": 395.3,
+      "preco_ant": 394.25,
+      "variacao": 1.05,
+      "variacao_pct": 0.2663,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -8376,6 +8392,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 394.25
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 395.3
         }
       ],
       "ok": true
@@ -8386,11 +8406,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Cerrado/MG",
       "cor": "#8D6E63",
-      "preco": 1669.0,
-      "preco_ant": 1647.96,
-      "variacao": 21.04,
-      "variacao_pct": 1.2767,
-      "data_ref": "2026-11-16",
+      "preco": 1688.0,
+      "preco_ant": 1669.0,
+      "variacao": 19.0,
+      "variacao_pct": 1.1384,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -10051,6 +10071,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 1669.0
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 1688.0
         }
       ],
       "ok": true
@@ -11608,11 +11632,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Distrito Federal",
       "cor": "#8B4513",
-      "preco": 294.13,
-      "preco_ant": 288.68,
-      "variacao": 5.45,
-      "variacao_pct": 1.8879,
-      "data_ref": "2026-11-16",
+      "preco": 304.14,
+      "preco_ant": 294.13,
+      "variacao": 10.01,
+      "variacao_pct": 3.4033,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2026-09-21",
@@ -11625,6 +11649,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 294.13
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 304.14
         }
       ],
       "ok": true
@@ -11635,11 +11663,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/kg",
       "praca": "Paraná/PR",
       "cor": "#FF8C00",
-      "preco": 8.09,
-      "preco_ant": 8.11,
-      "variacao": -0.02,
-      "variacao_pct": -0.2466,
-      "data_ref": "2026-11-16",
+      "preco": 8.32,
+      "preco_ant": 8.09,
+      "variacao": 0.23,
+      "variacao_pct": 2.843,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -13300,6 +13328,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 8.09
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 8.32
         }
       ],
       "ok": true
@@ -14828,7 +14860,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
-      "coleta_erro_em": "2026-11-17"
+      "coleta_erro_em": "2026-11-18"
     },
     {
       "id": "mandioca",
@@ -14883,11 +14915,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Campinas/SP",
       "cor": "#D4A830",
-      "preco": 67.18,
-      "preco_ant": 67.34,
-      "variacao": -0.16,
-      "variacao_pct": -0.2376,
-      "data_ref": "2026-11-16",
+      "preco": 67.21,
+      "preco_ant": 67.18,
+      "variacao": 0.03,
+      "variacao_pct": 0.0447,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -16548,6 +16580,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 67.18
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 67.21
         }
       ],
       "ok": true
@@ -18076,7 +18112,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "tabela 'imagenet-indicador1' não encontrada",
-      "coleta_erro_em": "2026-11-17"
+      "coleta_erro_em": "2026-11-18"
     },
     {
       "id": "ovos",
@@ -18084,11 +18120,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/cx 30dz",
       "praca": "Grande SP/SP",
       "cor": "#FFF3CD",
-      "preco": 136.65,
-      "preco_ant": 138.43,
-      "variacao": -1.78,
-      "variacao_pct": -1.2858,
-      "data_ref": "2026-11-16",
+      "preco": 136.45,
+      "preco_ant": 136.65,
+      "variacao": -0.2,
+      "variacao_pct": -0.1464,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2026-09-17",
@@ -18137,6 +18173,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 136.65
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 136.45
         }
       ],
       "ok": true
@@ -18147,11 +18187,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Paranaguá/PR",
       "cor": "#4CAF50",
-      "preco": 166.07,
-      "preco_ant": 164.49,
-      "variacao": 1.58,
-      "variacao_pct": 0.9605,
-      "data_ref": "2026-11-16",
+      "preco": 167.43,
+      "preco_ant": 166.07,
+      "variacao": 1.36,
+      "variacao_pct": 0.8189,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -19812,6 +19852,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 166.07
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 167.43
         }
       ],
       "ok": true
@@ -21275,7 +21319,7 @@ window.CEPEA_DATA = {
       ],
       "ok": true,
       "coleta_erro": "nenhuma linha de preço reconhecida na tabela",
-      "coleta_erro_em": "2026-11-17"
+      "coleta_erro_em": "2026-11-18"
     },
     {
       "id": "tilapia",
@@ -22838,11 +22882,11 @@ window.CEPEA_DATA = {
       "unidade": "R$/sc 60kg",
       "praca": "Paraná/PR",
       "cor": "#FFA726",
-      "preco": 1572.56,
-      "preco_ant": 1571.11,
-      "variacao": 1.45,
-      "variacao_pct": 0.0923,
-      "data_ref": "2026-11-16",
+      "preco": 1571.36,
+      "preco_ant": 1572.56,
+      "variacao": -1.2,
+      "variacao_pct": -0.0763,
+      "data_ref": "2026-11-17",
       "historico": [
         {
           "data": "2025-01-02",
@@ -24503,6 +24547,10 @@ window.CEPEA_DATA = {
         {
           "data": "2026-11-16",
           "preco": 1572.56
+        },
+        {
+          "data": "2026-11-17",
+          "preco": 1571.36
         }
       ],
       "ok": true
