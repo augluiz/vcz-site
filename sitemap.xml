@@ -478,14 +478,6 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Analisador de preços de varejo -->
-  <url>
-    <loc>https://vczconsultoria.com.br/analisador_precos/</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
   <!-- Painel de mercado financeiro -->
   <url>
     <loc>https://vczconsultoria.com.br/brapi_dashboard/</loc>
